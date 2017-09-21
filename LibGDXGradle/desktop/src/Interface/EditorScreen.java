@@ -58,7 +58,6 @@ public class EditorScreen implements Screen {
 		if (click.isPressed()) {
 			System.out.println("Click!");
 		}
-
 	}
 
 	@Override
