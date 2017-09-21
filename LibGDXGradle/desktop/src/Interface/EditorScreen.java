@@ -14,7 +14,6 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 public class EditorScreen implements Screen {
 	
 	private OrthographicCamera cam;
-	private SpriteBatch batch;
 	public ShapeRenderer shapeRenderer;
 	private ClickListener click;
 	
