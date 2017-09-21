@@ -38,11 +38,12 @@ public class EditorScreen implements Screen {
 		shapeRenderer.begin(ShapeType.Line);
 		shapeRenderer.setColor(Color.WHITE);
 		
-		// Draw the grid 
+		// Draw the vertical lines
 		for (int i = 0; i < width; i = i + 10) {
 			shapeRenderer.line(i, 0, i, height);
 		}
 		
+		// Draw horizontal lines
 		for (int i = 0; i < height; i = i + 10) {
 			shapeRenderer.line(0, i, width, i);
 		}
