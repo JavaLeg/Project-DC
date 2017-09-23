@@ -14,16 +14,30 @@ public class EditorScreen implements Screen {
 	
     private SpriteBatch batch;
     private Texture texture;
-    private Sprite sprite;
+    private Array <Sprite> sprites;
 	
-	public Array <Sprite> sprites;
+    private int height;
+    private int width;
+ 
 
 	// Show only operates once, after it will render
 	@Override
 	public void show() {
+		height = Gdx.graphics.getHeight();
+		width = Gdx.graphics.getWidth();
+		sprites = new Array<Sprite>();
         batch = new SpriteBatch();
-        texture = new Texture("temp_tile.jpg");
-        sprite = new Sprite(texture);
+        Texture cur_texture = new Texture("tmp.jpg");
+        
+        for (int j = 0; j < height; j = j + 50) {
+	        for (int i = 0; i < width; i = i + 50) {
+	            Sprite cur_sprite = new Sprite(cur_texture);
+	            cur_sprite.setSize(50, 50);
+	            cur_sprite.setCenter(i, j);
+	            sprites.add(cur_sprite);
+	        }
+        }
+	        
 	}
 	
 	@Override
@@ -32,7 +46,9 @@ public class EditorScreen implements Screen {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         
         batch.begin();
-        sprite.draw(batch);
+		for (Sprite cur_sprite : sprites) {
+        	cur_sprite.draw(batch);
+        }
         batch.end();
 	}
 
