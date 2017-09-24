@@ -2,17 +2,17 @@ package Tileset;
 
 import java.awt.image.BufferedImage;
 
-public class Tile {
+public class Object {
 	private BufferedImage image;
 	private int height;
 	private int width;
 	
-	public Tile() {
+	public Object() {
 		this.height = 16;
 		this.width = 16;
 	}
 	
-	public Tile(int height, int width) {
+	public Object(int height, int width) {
 		this.height = height;
 		this.width = width;
 	}

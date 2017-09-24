@@ -1,6 +1,6 @@
 package Tileset;
 
-public class EnemyObject extends Tile {
+public class EnemyObject extends Object {
 	// TODO: add more enemy specific fields here
 	private double hp;
 	
