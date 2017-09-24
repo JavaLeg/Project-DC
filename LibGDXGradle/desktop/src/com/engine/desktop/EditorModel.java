@@ -11,4 +11,5 @@ public class EditorModel {
 		s = new State();
 	}
 	
+	
 }
