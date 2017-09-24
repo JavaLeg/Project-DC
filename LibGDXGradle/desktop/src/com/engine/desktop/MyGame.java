@@ -6,7 +6,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 import Interface.MainMenuScreen;
 
-public class MyGame extends Game{
+public class MyGame extends Game {
 
 	public SpriteBatch batch;
 	public BitmapFont font;

@@ -41,7 +41,6 @@ public class EditorScreen implements Screen {
 	        }
         } 
 	}
-
 	
 	@Override
 	public void render(float delta) {

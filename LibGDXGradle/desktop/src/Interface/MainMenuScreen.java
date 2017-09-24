@@ -29,9 +29,8 @@ public class MainMenuScreen implements Screen {
     private static final int WORLD_WIDTH  = 250;
     private static final int WORLD_HEIGHT = 250;
 	
-    public MainMenuScreen(final MyGame game)
-    {
-    	this.game = game;
+    public MainMenuScreen(final MyGame game) {
+    		this.game = game;
     	
         atlas = new TextureAtlas(Gdx.files.internal("uiskin.atlas"));
         skin = new Skin(Gdx.files.internal("uiskin.json"), atlas);
@@ -80,6 +79,7 @@ public class MainMenuScreen implements Screen {
                 ((Game)Gdx.app.getApplicationListener()).setScreen(new EditorScreen());
             }
         });
+        
         exitButton.addListener(new ClickListener(){
             @Override
             public void clicked(InputEvent event, float x, float y) {
