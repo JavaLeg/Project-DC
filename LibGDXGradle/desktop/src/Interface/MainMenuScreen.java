@@ -15,6 +15,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
+import com.engine.desktop.DCGame;
 import com.engine.desktop.MyGame;
 
 public class MainMenuScreen implements Screen {
@@ -24,12 +25,12 @@ public class MainMenuScreen implements Screen {
     private OrthographicCamera camera;
     private TextureAtlas atlas;
     protected Skin skin;
-    final MyGame game;
+    final DCGame game;
     
     private static final int WORLD_WIDTH  = 250;
     private static final int WORLD_HEIGHT = 250;
 	
-    public MainMenuScreen(final MyGame game)
+    public MainMenuScreen(final DCGame game)
     {
     	this.game = game;
     	
