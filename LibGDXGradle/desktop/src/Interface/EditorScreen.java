@@ -56,11 +56,12 @@ public class EditorScreen implements Screen {
 		
 		homeButton = new TextButton("Home", skin);
         mainTable = new Table();
+        mainTable.left();
+        mainTable.add(homeButton);
         //Set table to fill stage
         mainTable.setFillParent(true);
         //Set alignment of contents in the table.
-        mainTable.left();
-        mainTable.add(homeButton);
+
         
         homeButton.addListener(new ClickListener(){
             @Override
@@ -72,6 +73,9 @@ public class EditorScreen implements Screen {
         camera = new OrthographicCamera();
         camera.position.set(camera.viewportWidth / 2, camera.viewportHeight / 2, 0);
         camera.update();
+        
+        
+        
         viewport = new FitViewport(WORLD_HEIGHT, WORLD_WIDTH, camera);
         viewport.apply();
         stage = new Stage(viewport); 
@@ -102,8 +106,7 @@ public class EditorScreen implements Screen {
 	public void render(float delta) {
         Gdx.gl.glClearColor(1, 1, 1, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-        stage.act();
-        stage.draw();
+
         
         batch.begin();
         // Draw sprites and listen for inputs.
@@ -123,6 +126,9 @@ public class EditorScreen implements Screen {
 			//model.select(row, col);
 		}
         batch.end();
+        
+        stage.act();
+        stage.draw();
 	}
 
 	@Override
