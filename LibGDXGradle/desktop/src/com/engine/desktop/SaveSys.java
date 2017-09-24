@@ -7,7 +7,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 
 /*
- * Save System
+ * Save System (Can work for game state + game object models)
  */
 
 public class SaveSys {
