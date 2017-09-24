@@ -38,9 +38,14 @@ public class EditorScreen implements Screen {
     private int width;
     public Vector3 touchPos;			// The click spot
     private Table mainTable;
+    //private EditorModel model;
  
     private static final int WORLD_WIDTH  = 250;
     private static final int WORLD_HEIGHT = 250;
+    
+    /*public void setModel(EditorModel m) {
+    	this.model = m;
+    }*/
 
 	// Show only operates once, after it will render
 	@Override
@@ -114,6 +119,8 @@ public class EditorScreen implements Screen {
 			int col  = (int) ((touchPos.x - 160) / 25);
 			int row = (int) (touchPos.y / 20);
 			System.out.println("Row = " + row + ", Col = " + col);
+			
+			//model.select(row, col);
 		}
         batch.end();
 	}
