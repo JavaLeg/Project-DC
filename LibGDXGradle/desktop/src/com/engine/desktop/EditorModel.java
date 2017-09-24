@@ -26,12 +26,14 @@ public class EditorModel {
 		state.setTerrain(selected, TERRAIN.WALL);
 	}
 	
-	public void removeWall() {
-		state.deleteTerrain(selected);
-	}
+
 	
 	public void addItem() {
 		state.setTerrain(selected, GAME_OBJ.ITEM);
+	}
+	
+	public void clearTile() {
+		state.deleteTile();
 	}
 	
 }

@@ -7,20 +7,52 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
+import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.utils.Scaling;
+import com.badlogic.gdx.utils.viewport.FitViewport;
+import com.badlogic.gdx.utils.viewport.ScalingViewport;
+import com.badlogic.gdx.utils.viewport.Viewport;
+import com.engine.desktop.DCGame;
 
 public class EditorScreen implements Screen {
 	
 	private OrthographicCamera cam;
 	public ShapeRenderer shapeRenderer;
 	private ClickListener click;
+    protected Stage stage;
+    private Viewport viewport;
+    private OrthographicCamera camera;
+    private TextureAtlas atlas;
+    protected Skin skin;
+	
+    private static final int WORLD_WIDTH  = 250;
+    private static final int WORLD_HEIGHT = 250;
+    
+    public EditorScreen()
+    {	
+        atlas = new TextureAtlas(Gdx.files.internal("uiskin.atlas"));
+        skin = new Skin(Gdx.files.internal("uiskin.json"), atlas);
+
+        camera = new OrthographicCamera();
+        viewport = new FitViewport(WORLD_HEIGHT, WORLD_WIDTH, camera);
+        viewport.apply();
+
+        camera.position.set(camera.viewportWidth / 2, camera.viewportHeight / 2, 0);
+        camera.update();
+
+        stage = new Stage(viewport);   
+
+    }
 	
 	// Show only operates once, after it will render
 	@Override
 	public void show() {
-		
+
 		// Get height, width of current screen 
 		int height = Gdx.graphics.getHeight();
 		int width = Gdx.graphics.getWidth();
