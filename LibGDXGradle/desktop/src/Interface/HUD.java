@@ -1,6 +1,5 @@
 package Interface;
 
-import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -24,11 +23,13 @@ public class HUD {
 	private TextureAtlas atlas;
 	
 	private Table mainTable;
+	private TextButton exitButton;
 	
     private static final int WORLD_WIDTH  = 400;
     private static final int WORLD_HEIGHT = 400;
 	
 	public HUD() {
+		Gdx.input.setInputProcessor(stage);
 		
 		atlas = new TextureAtlas(Gdx.files.internal("uiskin.atlas"));
 		skin = new Skin(Gdx.files.internal("uiskin.json"), atlas);
@@ -38,10 +39,11 @@ public class HUD {
 		
 		// Implement list of buttons later
 		TextButton button = new TextButton("Hey nice", skin);
+		exitButton = new TextButton("Exit", skin);
         Label HUDlabel = new Label("Editor Mode", 
         		new Label.LabelStyle(new BitmapFont(), Color.CYAN));
 		
-		buttonHandler(button);
+		//buttonHandler(button);
         
         
         mainTable = new Table();
@@ -50,6 +52,8 @@ public class HUD {
         mainTable.add(HUDlabel);
         mainTable.row();
         mainTable.add(button);
+        mainTable.row();
+        mainTable.add(exitButton);
         mainTable.setFillParent(true);
         
         stage.addActor(mainTable);
@@ -59,11 +63,15 @@ public class HUD {
 		return stage;
 	}
 	
+	public TextButton getExit() {
+		return exitButton;
+	}
+	
 	public void buttonHandler(TextButton button) {
         button.addListener(new ClickListener(){
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                ((Game)Gdx.app.getApplicationListener()).setScreen(new MainMenuScreen(null));
+                System.out.println("Button Pressed!");
             }
         });
 	}

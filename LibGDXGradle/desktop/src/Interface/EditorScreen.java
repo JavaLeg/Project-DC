@@ -1,6 +1,7 @@
 package Interface;
 
 
+import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
@@ -9,10 +10,13 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
+import com.engine.desktop.DCGame;
 
 public class EditorScreen implements Screen {
 	
@@ -34,6 +38,11 @@ public class EditorScreen implements Screen {
     private static final int WORLD_HEIGHT = 250;
     
     private HUD hud;
+    private DCGame game;
+    
+    public EditorScreen(DCGame g) {
+    	this.game = g;
+    }
     
     /*public void setModel(EditorModel m) {
     	this.model = m;
@@ -73,7 +82,14 @@ public class EditorScreen implements Screen {
 	            sprites.add(cur_sprite);
 	        }
         } 
-        //stage.addActor(mainTable);
+        
+        // Exit button
+        hud.getExit().addListener(new ClickListener(){
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+            	((Game)Gdx.app.getApplicationListener()).setScreen(new MainMenuScreen(game));
+            }
+        });
 	}
 
 	
@@ -102,8 +118,9 @@ public class EditorScreen implements Screen {
 		}
         batch.end();
         
+        hud.getStage().act();
         hud.getStage().draw();
-        
+           
         stage.act();
         stage.draw();
 	}
