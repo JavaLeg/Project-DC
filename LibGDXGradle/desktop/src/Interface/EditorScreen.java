@@ -20,6 +20,7 @@ import com.engine.desktop.DCGame;
 
 public class EditorScreen implements Screen {
 	
+	// Sprite batch for world map
     private SpriteBatch batch;
     private Texture texture;
     private Array <Sprite> sprites;		// The grids
@@ -39,6 +40,7 @@ public class EditorScreen implements Screen {
     
     private HUD hud;
     private DCGame game;
+    private Preview preview;
     
     public EditorScreen(DCGame g) {
     	this.game = g;
@@ -53,12 +55,16 @@ public class EditorScreen implements Screen {
 	public void show() {
 			
 		hud = new HUD();
-        
+		
+        /*
+		batch = new SpriteBatch();
+		preview = new Preview(batch);
+		*/
+		
+		
         camera = new OrthographicCamera();
         camera.position.set(camera.viewportWidth / 2, camera.viewportHeight / 2, 0);
         camera.update();
-        
-        
         
         viewport = new FitViewport(WORLD_HEIGHT, WORLD_WIDTH, camera);
         viewport.apply();
@@ -83,6 +89,7 @@ public class EditorScreen implements Screen {
 	        }
         } 
         
+        
         // Exit button
         hud.getExit().addListener(new ClickListener(){
             @Override
@@ -95,6 +102,8 @@ public class EditorScreen implements Screen {
 	
 	@Override
 	public void render(float delta) {
+		
+		
         Gdx.gl.glClearColor(1, 1, 1, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
@@ -118,9 +127,15 @@ public class EditorScreen implements Screen {
 		}
         batch.end();
         
+        
+       
+		//preview.batchDraw();
+        
         hud.getStage().act();
         hud.getStage().draw();
            
+        //preview.getStage().act();
+        //preview.getStage().draw();
         stage.act();
         stage.draw();
 	}
