@@ -1,7 +1,8 @@
+package com.engine.desktop;
 private static final int DEFAULT_MAP_WIDTH = 50; 
 private static final int DEFAULT_MAP_HEIGHT = 50;
 
-public class State {
+public class State{
 	// COORD 0,0 is the top left of the map
 	
 	// Coords of player
