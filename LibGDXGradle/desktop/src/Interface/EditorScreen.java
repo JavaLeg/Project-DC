@@ -1,6 +1,6 @@
 package Interface;
 
-import com.badlogic.gdx.Game;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
@@ -8,14 +8,8 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.Vector3;
-import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
-import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
@@ -25,23 +19,21 @@ public class EditorScreen implements Screen {
     private SpriteBatch batch;
     private Texture texture;
     private Array <Sprite> sprites;		// The grids
-	private TextButton homeButton;
     
-    protected Skin skin;
     protected Stage stage;
     private Viewport viewport;
     
-    private TextureAtlas atlas;
     private OrthographicCamera camera;
     // Dimensions of screen
     private int height;			
     private int width;
     public Vector3 touchPos;			// The click spot
-    private Table mainTable;
     //private EditorModel model;
  
     private static final int WORLD_WIDTH  = 250;
     private static final int WORLD_HEIGHT = 250;
+    
+    private HUD hud;
     
     /*public void setModel(EditorModel m) {
     	this.model = m;
@@ -50,25 +42,8 @@ public class EditorScreen implements Screen {
 	// Show only operates once, after it will render
 	@Override
 	public void show() {
-		
-		atlas = new TextureAtlas(Gdx.files.internal("uiskin.atlas"));
-		skin = new Skin(Gdx.files.internal("uiskin.json"), atlas);
-		
-		homeButton = new TextButton("Home", skin);
-        mainTable = new Table();
-        mainTable.left();
-        mainTable.add(homeButton);
-        //Set table to fill stage
-        mainTable.setFillParent(true);
-        //Set alignment of contents in the table.
-
-        
-        homeButton.addListener(new ClickListener(){
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                ((Game)Gdx.app.getApplicationListener()).setScreen(new MainMenuScreen(null));
-            }
-        });       
+			
+		hud = new HUD();
         
         camera = new OrthographicCamera();
         camera.position.set(camera.viewportWidth / 2, camera.viewportHeight / 2, 0);
@@ -98,7 +73,7 @@ public class EditorScreen implements Screen {
 	            sprites.add(cur_sprite);
 	        }
         } 
-        stage.addActor(mainTable);
+        //stage.addActor(mainTable);
 	}
 
 	
@@ -126,6 +101,8 @@ public class EditorScreen implements Screen {
 			//model.select(row, col);
 		}
         batch.end();
+        
+        hud.getStage().draw();
         
         stage.act();
         stage.draw();
