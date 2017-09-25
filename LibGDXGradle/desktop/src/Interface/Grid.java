@@ -7,6 +7,8 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.utils.Array;
 
+// Main class that holds the grid (creates the GRID using Image)
+
 public class Grid {
 
 	int rows;
@@ -20,7 +22,6 @@ public class Grid {
 		
 		images = new Array <Image>();
 		cur_texture = new Texture(Gdx.files.internal("tmp.png"));
-		// TextureRegion region = new TextureRegion(cur_texture, 0, 0, 2000, 2000);
 		
 		for (int i = 80; i <= width; i = i + y) {
 			for (int j = 80; j <= height; j = j + x) {
@@ -35,6 +36,7 @@ public class Grid {
 		}
 	}
 	
+	// Return the Array of images
 	public Array <Image> getGrid() {
 		return this.images;
 	}

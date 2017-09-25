@@ -36,18 +36,15 @@ public class EditorScreen implements Screen {
     private Viewport viewport_right;	// Holds the grid preview
     
     private OrthographicCamera camera;
-    // Dimensions of screen
     private int height;			
     private int width;
     private Table mainTable;
-    public Vector3 touchPos;			// The click spot
-    //private EditorModel model;
+    public Vector3 touchPos;			
  
     private static final int WORLD_WIDTH  = 250;
     private static final int WORLD_HEIGHT = 250;
     
     private Grid grid;
-    private HUD hud;
     private DCGame game;
 	private TextButton exitButton;
     
@@ -136,13 +133,10 @@ public class EditorScreen implements Screen {
         stage_left.act();
         stage_left.draw();
         
-		// X range is 160->635
-		// Y range is 0->480
+        // This will become redundant once we add listeners to each Image
 		if (Gdx.input.isTouched()) {
 			touchPos.set(Gdx.input.getX(), Gdx.input.getY(), 0);
-			int col  = (int) ((touchPos.x - 168) / 25);
-			int row = (int) (touchPos.y / 25);
-			System.out.println("Row = " + row + ", Col = " + col + "[X = " + 
+			System.out.println("[X = " + 
 			touchPos.x + ", Y = " + touchPos.y + "]");
 		}
 	}
