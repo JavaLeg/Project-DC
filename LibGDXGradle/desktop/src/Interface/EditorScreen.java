@@ -1,14 +1,22 @@
 package Interface;
 
-
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -21,24 +29,27 @@ import com.engine.desktop.DCGame;
 public class EditorScreen implements Screen {
 	
     private SpriteBatch batch;
-    private Texture texture;
-    private Array <Sprite> sprites;		// The grids
     
-    protected Stage stage;
-    private Viewport viewport;
+    protected Stage stage_left;
+    protected Stage stage_right;
+    private Viewport viewport_left;		// Holds the menu buttons
+    private Viewport viewport_right;	// Holds the grid preview
     
     private OrthographicCamera camera;
     // Dimensions of screen
     private int height;			
     private int width;
+    private Table mainTable;
     public Vector3 touchPos;			// The click spot
     //private EditorModel model;
  
     private static final int WORLD_WIDTH  = 250;
     private static final int WORLD_HEIGHT = 250;
     
+    private Grid grid;
     private HUD hud;
     private DCGame game;
+	private TextButton exitButton;
     
     public EditorScreen(DCGame g) {
     	this.game = g;
@@ -51,45 +62,64 @@ public class EditorScreen implements Screen {
 	// Show only operates once, after it will render
 	@Override
 	public void show() {
-			
-		hud = new HUD();
         
         camera = new OrthographicCamera();
         camera.position.set(camera.viewportWidth / 2, camera.viewportHeight / 2, 0);
         camera.update();
         
-        
-        
-        viewport = new FitViewport(WORLD_HEIGHT, WORLD_WIDTH, camera);
-        viewport.apply();
-        stage = new Stage(viewport); 
-        
 		height = Gdx.graphics.getHeight();
 		width = Gdx.graphics.getWidth();
-		
-		sprites = new Array<Sprite>();
-        batch = new SpriteBatch();
+        
+		// Configure the RHS of screen (grid preview)
+        viewport_right = new FitViewport(width, height, camera);
+        viewport_right.apply();
+        viewport_right.setScreenPosition(200, 200);		// Sets viewport's position
+        viewport_right.update(720, 720, true);			// Updates the right pos and sets size
+        stage_right = new Stage(viewport_right); 
+        Gdx.input.setInputProcessor(stage_right);
+        
+        viewport_left = new FitViewport(width, height, camera);
+        viewport_left.apply();
+        viewport_left.setScreenPosition(100, 100);
+        viewport_left.update(200, 200, true);
+        stage_left = new Stage(viewport_left);        
+        Gdx.input.setInputProcessor(stage_left);
+        
         touchPos = new Vector3();
         
-        Texture cur_texture = new Texture("tmp.jpg");
+        // Creates the grid of images
+        grid = new Grid(80, 80, 480, 720, "tmp.png");
+        Array<Image> to_draw = grid.getGrid();
         
-        // Create grid system and put into sprites to be drawn
-        for (int j = 0; j < width; j = j + 25) {
-	        for (int i = 0; i < height; i = i + 20) {
-	            Sprite cur_sprite = new Sprite(cur_texture);
-	            cur_sprite.setSize(25, 20);
-	            cur_sprite.setCenter(j, i);
-	            sprites.add(cur_sprite);
-	        }
-        } 
+        for (Image cur: to_draw) {
+        	stage_right.addActor(cur);
+        }
         
-        // Exit button
-        hud.getExit().addListener(new ClickListener(){
+   
+        // Typical buttons (from HUD)
+		TextureAtlas atlas = new TextureAtlas(Gdx.files.internal("uiskin.atlas"));
+		Skin skin = new Skin(Gdx.files.internal("uiskin.json"), atlas);
+        
+		TextButton button = new TextButton("Hey nice", skin);
+		exitButton = new TextButton("Exit", skin);
+        Label HUDlabel = new Label("Editor Mode", 
+        		new Label.LabelStyle(new BitmapFont(), Color.CYAN));
+        mainTable = new Table();
+        mainTable.left();
+        
+        mainTable.add(HUDlabel);
+        mainTable.row();
+        mainTable.add(button);
+        mainTable.row();
+        mainTable.add(exitButton);
+        exitButton.addListener(new ClickListener(){
             @Override
             public void clicked(InputEvent event, float x, float y) {
-            	((Game)Gdx.app.getApplicationListener()).setScreen(new MainMenuScreen(game));
+                System.out.println("EXIT!");
             }
         });
+        mainTable.setFillParent(true);
+        stage_left.addActor(mainTable);
 	}
 
 	
@@ -98,31 +128,23 @@ public class EditorScreen implements Screen {
         Gdx.gl.glClearColor(1, 1, 1, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
+        // Draw both stage right and stage left
+        // If window resize (update TODO)
+        stage_right.act();
+        stage_right.draw();
         
-        batch.begin();
-        // Draw sprites and listen for inputs.
-		for (Sprite cur_sprite : sprites) {
-        	cur_sprite.draw(batch);
-        }
-		
+        stage_left.act();
+        stage_left.draw();
+        
 		// X range is 160->635
 		// Y range is 0->480
 		if (Gdx.input.isTouched()) {
-			// Can reset texture using sprite.setTexture(...);
 			touchPos.set(Gdx.input.getX(), Gdx.input.getY(), 0);
-			int col  = (int) ((touchPos.x - 160) / 25);
-			int row = (int) (touchPos.y / 20);
-			System.out.println("Row = " + row + ", Col = " + col);
-			
-			//model.select(row, col);
+			int col  = (int) ((touchPos.x - 168) / 25);
+			int row = (int) (touchPos.y / 25);
+			System.out.println("Row = " + row + ", Col = " + col + "[X = " + 
+			touchPos.x + ", Y = " + touchPos.y + "]");
 		}
-        batch.end();
-        
-        hud.getStage().act();
-        hud.getStage().draw();
-           
-        stage.act();
-        stage.draw();
 	}
 
 	@Override
@@ -152,9 +174,7 @@ public class EditorScreen implements Screen {
 	@Override
 	public void dispose() {
         batch.dispose();
-        texture.dispose();
-		// TODO Auto-generated method stub
-		
+		// TODO Auto-generated method stub	
 	}
 
 }
