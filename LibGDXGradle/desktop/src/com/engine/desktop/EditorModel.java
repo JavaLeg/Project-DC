@@ -6,10 +6,11 @@ import com.badlogic.gdx.maps.tiled.TiledMap;
 
 public class EditorModel {
 	private State state;
-	private TiledMap m;
 	private Tile[][] map;
-	private Tile selectedTile;
+	
 	private int selected[];
+	private Object selectedObj;
+	
 	private SaveSys saveHandle;
 	
 	public EditorModel() throws IOException {
@@ -23,8 +24,20 @@ public class EditorModel {
 	 * Any click on the preview screen in EditorScreen should call this function
 	 */
 	public void select(int row, int col) {
+		
 		selected[0] = row;
 		selected[1] = col;
+		
+		if(!state.isTileEmpty(selected))
+			getSelection();
+	}
+	
+	/*
+	 * After selecting a tile, if not empty
+	 * The gameObj (w/e it is that resides on the tile) should be selected
+	 */
+	public void getSelection() {
+		selectedObj = state.getObj(selected);
 	}
 	
 	public void setTerrain(TERRAIN t) {
@@ -56,6 +69,7 @@ public class EditorModel {
 			state.setPlayer(selected);
 		}
 	}
+	
 
 	/*
 	 * Should clear the tile regardless of what terrain/item
