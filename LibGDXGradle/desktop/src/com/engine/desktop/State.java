@@ -1,17 +1,18 @@
-private static final int DEFAULT_MAP_WIDTH = 50; 
-private static final int DEFAULT_MAP_HEIGHT = 50;
+package com.engine.desktop;
 
 public class State {
+	
+	private static final int DEFAULT_MAP_WIDTH = 50; 
+	private static final int DEFAULT_MAP_HEIGHT = 50;
+	
 	// COORD 0,0 is the top left of the map
 	
 	// Coords of player
-	int[2] playerCoord;
+	int[] playerCoord;
 	
 	// Matrix of Tiles
 	Tile[][] map;
 	// The first index is x, the second index is y
-	
-	
 	
 	//************************//
 	//******* CREATORS *******//
@@ -28,7 +29,7 @@ public class State {
 		for(int i = 0; i <  DEFAULT_MAP_WIDTH; i++){
 			for(int j = 0; j < DEFAULT_MAP_HEIGHT; j++){
 				int[] coord = {i,j};
-				Tile[i][j] = new Tile(coord); 
+				map[i][j] = new Tile(coord); 
 			}
 		}
 	}
