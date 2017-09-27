@@ -1,9 +1,12 @@
 package Tileset;
 
-import java.awt.image.BufferedImage;
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
 
 public class Object {
-	private BufferedImage image;
+	private Image image;
 	private int height;
 	private int width;
 	
@@ -17,7 +20,18 @@ public class Object {
 		this.width = width;
 	}
 	
-	public void setImage(BufferedImage image) {
+	// use the whole image
+	public void setImage(String imageName) {
+		Texture tilemap = new Texture(Gdx.files.internal(imageName));
+		Image image = new Image(tilemap);
+		this.image = image;
+	}
+	
+	// use a subsection via texture region at a given position? TESTING NEEDED
+	public void setImage(String imageName, int x, int y, int width, int height) {
+		Texture tilemap = new Texture(Gdx.files.internal(imageName));
+		TextureRegion region = new TextureRegion(tilemap, x, y, width, height);
+		Image image = new Image(region);
 		this.image = image;
 	}
 
@@ -29,7 +43,7 @@ public class Object {
 		return width;
 	}
 	
-	public BufferedImage getImage() {
+	public Image getImage() {
 		return image;
 	}
 }

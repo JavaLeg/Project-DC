@@ -29,7 +29,8 @@ public class TileSetFactoryProducer {
 //			return new MainCharacterFactory();
 //		case WALL:
 //			return new WallFactory();
-			
+		default:
+			break;
 		}
 		return null;
 	}
