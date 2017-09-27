@@ -50,7 +50,7 @@ public class EditorScreen implements Screen {
         batch.begin();
         // Draw sprites and listen for inputs.
 		for (Sprite cur_sprite : sprites) {
-        	cur_sprite.draw(batch);
+        		cur_sprite.draw(batch);
         }
 		if (Gdx.input.isTouched()) {
 			// Insert into touchPos to calculate later?
