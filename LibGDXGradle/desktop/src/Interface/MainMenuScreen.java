@@ -15,7 +15,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
-import com.engine.desktop.MyGame;
+import com.engine.desktop.DCGame;
 
 public class MainMenuScreen implements Screen {
 
@@ -24,13 +24,14 @@ public class MainMenuScreen implements Screen {
     private OrthographicCamera camera;
     private TextureAtlas atlas;
     protected Skin skin;
-    final MyGame game;
+    final DCGame game;
     
     private static final int WORLD_WIDTH  = 250;
     private static final int WORLD_HEIGHT = 250;
 	
-    public MainMenuScreen(final MyGame game) {
-    		this.game = game;
+    public MainMenuScreen(final DCGame game)
+    {
+    	this.game = game;
     	
         atlas = new TextureAtlas(Gdx.files.internal("uiskin.atlas"));
         skin = new Skin(Gdx.files.internal("uiskin.json"), atlas);
@@ -76,7 +77,7 @@ public class MainMenuScreen implements Screen {
         playButton.addListener(new ClickListener(){
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                ((Game)Gdx.app.getApplicationListener()).setScreen(new EditorScreen());
+                ((Game)Gdx.app.getApplicationListener()).setScreen(new EditorScreen(game));
             }
         });
         
