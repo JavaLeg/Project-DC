@@ -2,11 +2,13 @@ package Tileset;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 
 public class Object {
 	private Image image;
+	private Sprite sprite;
 	private int height;
 	private int width;
 	
@@ -34,6 +36,11 @@ public class Object {
 		Image image = new Image(region);
 		this.image = image;
 	}
+	
+	public void setSprite(String imageName, int x, int y, int width, int height) {
+		Texture texture = new Texture(Gdx.files.internal(imageName));
+		this.sprite = new Sprite(texture, x, y, width, height);
+	}
 
 	public int getHeight() {
 		return height;
@@ -45,5 +52,9 @@ public class Object {
 	
 	public Image getImage() {
 		return image;
+	}
+	
+	public Sprite getSprite() {
+		return sprite;
 	}
 }

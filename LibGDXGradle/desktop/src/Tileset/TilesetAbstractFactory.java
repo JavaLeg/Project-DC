@@ -1,25 +1,25 @@
 package Tileset;
 
 public abstract class TilesetAbstractFactory {
-	enum EnemyType {
+	public static enum EnemyType {
 		TEST_01
 	}
 	
-	enum GroundType {
+	public static enum GroundType {
 		TEST_01
 	}
 	
-	enum MainCharacterType {
+	public static enum MainCharacterType {
 		TEST_01
 	}
 	
-	enum WallType {
+	public static enum WallType {
 		TEST_01
 	}
 	
-	abstract Enemy getEnemy(EnemyType type);
-	abstract Ground getGround(GroundType type);
-	abstract MainCharacter getMainCharacter(MainCharacterType type);
-	abstract Wall getWall(WallType type);
+	public abstract EnemyObject getEnemy(EnemyType type);
+//	public abstract GroundObject getGround(GroundType type);
+//	public abstract MainCharacterObject getMainCharacter(MainCharacterType type);
+//	public abstract WallObject getWall(WallType type);
 	
 }

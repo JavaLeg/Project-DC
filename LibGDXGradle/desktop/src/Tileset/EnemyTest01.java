@@ -6,7 +6,9 @@ public class EnemyTest01 extends EnemyObject implements Enemy {
 		// set hp to 100, option size is set to 16x16 pixels
 		super(100);
 		// get the skull image
-		this.setImage("72_16x16_Tileset.png", 0, 112, this.getWidth(), this.getHeight());
+		String imageName = "72_16x16_Tileset.png";
+		this.setImage(imageName, 0, 144, this.getWidth(), this.getHeight());
+		this.setSprite(imageName, 0, 144, this.getWidth(), this.getHeight());
 	}
 }
 

@@ -3,7 +3,7 @@ package Tileset;
 public class EnemyFactory extends TilesetAbstractFactory {
 
 	@Override
-	Enemy getEnemy(EnemyType type) {
+	public EnemyObject getEnemy(EnemyType type) {
 		
 		// For a specific type of enemy, return that object
 		switch (type) {
@@ -13,22 +13,22 @@ public class EnemyFactory extends TilesetAbstractFactory {
 		return null;
 	}
 
-	@Override
-	Ground getGround(GroundType type) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	MainCharacter getMainCharacter(MainCharacterType type) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	Wall getWall(WallType type) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+//	@Override
+//	public Ground getGround(GroundType type) {
+//		// TODO Auto-generated method stub
+//		return null;
+//	}
+//
+//	@Override
+//	public MainCharacter getMainCharacter(MainCharacterType type) {
+//		// TODO Auto-generated method stub
+//		return null;
+//	}
+//
+//	@Override
+//	public Wall getWall(WallType type) {
+//		// TODO Auto-generated method stub
+//		return null;
+//	}
 
 }
