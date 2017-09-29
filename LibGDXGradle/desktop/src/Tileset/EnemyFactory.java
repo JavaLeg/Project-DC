@@ -1,5 +1,7 @@
 package Tileset;
 
+import Tileset.EnemySubclass.EnemyTest01;
+
 public class EnemyFactory extends TilesetAbstractFactory {
 
 	@Override
