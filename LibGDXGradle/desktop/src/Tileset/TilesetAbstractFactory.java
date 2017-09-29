@@ -9,7 +9,7 @@ public abstract class TilesetAbstractFactory {
 		TEST_01
 	}
 	
-	public static enum MainCharacterType {
+	public static enum PlayerType {
 		TEST_01
 	}
 	
@@ -18,8 +18,8 @@ public abstract class TilesetAbstractFactory {
 	}
 	
 	public abstract EnemyObject getEnemy(EnemyType type);
-//	public abstract GroundObject getGround(GroundType type);
-//	public abstract MainCharacterObject getMainCharacter(MainCharacterType type);
-//	public abstract WallObject getWall(WallType type);
+	public abstract GroundObject getGround(GroundType type);
+	public abstract PlayerObject getMainCharacter(PlayerType type);
+	public abstract WallObject getWall(WallType type);
 	
 }

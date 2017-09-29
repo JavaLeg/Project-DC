@@ -1,5 +1,4 @@
 package Tileset;
-
 public class EnemyTest01 extends EnemyObject implements Enemy {
 	
 	public EnemyTest01() {
