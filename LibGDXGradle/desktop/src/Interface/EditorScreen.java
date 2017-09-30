@@ -7,6 +7,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
@@ -64,35 +65,34 @@ public class EditorScreen implements Screen {
         camera.position.set(camera.viewportWidth / 2, camera.viewportHeight / 2, 0);
         camera.update();
         
+        InputMultiplexer multiplexer = new InputMultiplexer();
+        
 		height = Gdx.graphics.getHeight();
 		width = Gdx.graphics.getWidth();
         
 		// Configure the RHS of screen (grid preview)
         viewport_right = new FitViewport(width, height, camera);
         viewport_right.apply();
-        viewport_right.setScreenPosition(200, 200);		// Sets viewport's position
+        viewport_right.setScreenPosition(0, 0);		// Sets viewport's position
         viewport_right.update(720, 720, true);			// Updates the right pos and sets size
         stage_right = new Stage(viewport_right); 
-        Gdx.input.setInputProcessor(stage_right);
         
         viewport_left = new FitViewport(width, height, camera);
         viewport_left.apply();
         viewport_left.setScreenPosition(100, 100);
         viewport_left.update(200, 200, true);
         stage_left = new Stage(viewport_left);        
-        Gdx.input.setInputProcessor(stage_left);
         
         touchPos = new Vector3();
         
         // Creates the grid of images
-        grid = new Grid(80, 80, 480, 720, "tmp.png");
+        grid = new Grid(40, 40, 480, 720, "tmp.png");
         Array<Image> to_draw = grid.getGrid();
         
         for (Image cur: to_draw) {
         	stage_right.addActor(cur);
         }
-        
-   
+         
         // Typical buttons (from HUD)
 		TextureAtlas atlas = new TextureAtlas(Gdx.files.internal("uiskin.atlas"));
 		Skin skin = new Skin(Gdx.files.internal("uiskin.json"), atlas);
@@ -115,8 +115,13 @@ public class EditorScreen implements Screen {
                 System.out.println("EXIT!");
             }
         });
+        
+        Gdx.input.setInputProcessor(multiplexer);
+        multiplexer.addProcessor(stage_left);
+        multiplexer.addProcessor(stage_right);
         mainTable.setFillParent(true);
         stage_left.addActor(mainTable);
+        
 	}
 
 	
@@ -134,11 +139,13 @@ public class EditorScreen implements Screen {
         stage_left.draw();
         
         // This will become redundant once we add listeners to each Image
+        /*
 		if (Gdx.input.isTouched()) {
 			touchPos.set(Gdx.input.getX(), Gdx.input.getY(), 0);
 			System.out.println("[X = " + 
 			touchPos.x + ", Y = " + touchPos.y + "]");
 		}
+		*/
 	}
 
 	@Override
