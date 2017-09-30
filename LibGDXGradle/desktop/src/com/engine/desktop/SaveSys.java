@@ -62,22 +62,4 @@ public class SaveSys {
         ObjectInputStream is = new ObjectInputStream(in);
         return (State)is.readObject();
     }
-    
-    /*
-     * 		SaveSys s = null;
-		try {
-			s = new SaveSys();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
-		State state = new State();
-		try {
-			s.Save(state,"testFile.txt");
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-     */
 }
