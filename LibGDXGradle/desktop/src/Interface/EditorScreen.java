@@ -24,6 +24,7 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.FitViewport;
+import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.engine.desktop.DCGame;
 
@@ -71,33 +72,24 @@ public class EditorScreen implements Screen {
 		width = Gdx.graphics.getWidth();
         
 		// Configure the RHS of screen (grid preview)
-        viewport_right = new FitViewport(width, height, camera);
-        viewport_right.apply();
-        viewport_right.setScreenPosition(0, 0);		// Sets viewport's position
-        viewport_right.update(720, 720, true);			// Updates the right pos and sets size
+        viewport_right = new ScreenViewport(camera);
+        viewport_right.setScreenX(400);		// Sets viewport's position
+        viewport_right.update(720, 0, false);			// Updates the right pos and sets size
         stage_right = new Stage(viewport_right); 
         
-        viewport_left = new FitViewport(width, height, camera);
-        viewport_left.apply();
+        viewport_left = new ScreenViewport(camera);
         viewport_left.setScreenPosition(100, 100);
         viewport_left.update(200, 200, true);
         stage_left = new Stage(viewport_left);        
         
         touchPos = new Vector3();
-        
-        // Creates the grid of images
-        grid = new Grid(40, 40, 480, 720, "tmp.png");
-        Array<Image> to_draw = grid.getGrid();
-        
-        for (Image cur: to_draw) {
-        	stage_right.addActor(cur);
-        }
          
-        // Typical buttons (from HUD)
+        // Creating the table
 		TextureAtlas atlas = new TextureAtlas(Gdx.files.internal("uiskin.atlas"));
 		Skin skin = new Skin(Gdx.files.internal("uiskin.json"), atlas);
         
-		TextButton button = new TextButton("Hey nice", skin);
+		TextButton wallButton = new TextButton("Wall", skin);
+		TextButton groundButton = new TextButton("Ground", skin);
 		exitButton = new TextButton("Exit", skin);
         Label HUDlabel = new Label("Editor Mode", 
         		new Label.LabelStyle(new BitmapFont(), Color.CYAN));
@@ -105,8 +97,6 @@ public class EditorScreen implements Screen {
         mainTable.left();
         
         mainTable.add(HUDlabel);
-        mainTable.row();
-        mainTable.add(button);
         mainTable.row();
         mainTable.add(exitButton);
         exitButton.addListener(new ClickListener(){
@@ -116,12 +106,38 @@ public class EditorScreen implements Screen {
             }
         });
         
+        mainTable.row();;
+        mainTable.add(wallButton);
+        wallButton.addListener(new ClickListener(){
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                System.out.println("Wall!");
+            }
+        });
+        mainTable.row();
+        mainTable.add(groundButton);
+        groundButton.addListener(new ClickListener(){
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                System.out.println("Ground!");
+            }
+        }); 
+        
+        // Finish creating the table
         Gdx.input.setInputProcessor(multiplexer);
         multiplexer.addProcessor(stage_left);
         multiplexer.addProcessor(stage_right);
         mainTable.setFillParent(true);
-        stage_left.addActor(mainTable);
+        mainTable.padRight(100);
+        stage_right.addActor(mainTable);
         
+        // Creates the grid of images
+        grid = new Grid(40, 40, 480, 480, "tmp.png");
+        Array<Image> to_draw = grid.getGrid();
+        
+        for (Image cur: to_draw) {
+        	stage_right.addActor(cur);
+        }      
 	}
 
 	
@@ -132,11 +148,17 @@ public class EditorScreen implements Screen {
 
         // Draw both stage right and stage left
         // If window resize (update TODO)
+        stage_right.getViewport().update(300, 800, true);		// First value is X from right of screen
+        viewport_right.update(800, 800, false);					// Second is Y from top of screen
+        
+        //stage_left.getViewport().update(300, 1000, true);
+        //viewport_left.update(200, 200, false);			// Updates the right pos and sets size
+        
         stage_right.act();
         stage_right.draw();
         
-        stage_left.act();
-        stage_left.draw();
+        //stage_left.act();
+        //stage_left.draw();
         
         // This will become redundant once we add listeners to each Image
         /*
