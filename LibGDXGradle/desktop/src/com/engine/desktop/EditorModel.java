@@ -8,6 +8,4 @@ public class EditorModel {
 	public EditorModel() {
 		m = new TiledMap();
 	}
-	
-	
 }

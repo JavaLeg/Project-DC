@@ -26,6 +26,10 @@ import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.engine.desktop.DCGame;
 
+import State.DynamicGame;
+import State.State;
+
+
 public class EditorScreen implements Screen {
 	
     private SpriteBatch batch;
@@ -60,7 +64,9 @@ public class EditorScreen implements Screen {
 	// Show only operates once, after it will render
 	@Override
 	public void show() {
-        
+  
+		
+		
         camera = new OrthographicCamera();
         camera.position.set(camera.viewportWidth / 2, camera.viewportHeight / 2, 0);
         camera.update();
