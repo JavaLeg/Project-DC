@@ -4,7 +4,7 @@ import java.io.IOException;
 
 import com.badlogic.gdx.maps.tiled.TiledMap;
 
-public class EditorModel {
+public class EditorController {
 	private State state;
 	private Tile[][] map;
 
@@ -13,7 +13,7 @@ public class EditorModel {
 	
 	private SaveSys saveHandle;
 	
-	public EditorModel() throws IOException {
+	public EditorController() throws IOException {
 		this.m = new TiledMap();
 		this.state = new State();
 		this.saveHandle = new SaveSys();
