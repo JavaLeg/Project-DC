@@ -7,7 +7,7 @@ import com.badlogic.gdx.maps.tiled.TiledMap;
 public class EditorModel {
 	private State state;
 	private Tile[][] map;
-	
+
 	private int selected[];
 	private Object selectedObj;
 	
