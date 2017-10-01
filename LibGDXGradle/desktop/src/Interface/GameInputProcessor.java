@@ -49,8 +49,8 @@ public class GameInputProcessor implements InputProcessor {
 		case Keys.S:
 			activeGame.makeAction(Action.MOVE_DOWN);
 			break;
+			
 		// PLAYER SPECIAL/ATTACK
-		
 		case Keys.Z:
 		case Keys.J:
 			activeGame.makeAction(Action.ATTACK);

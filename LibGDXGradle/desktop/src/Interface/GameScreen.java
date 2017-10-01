@@ -11,6 +11,7 @@ import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
 import State.DynamicGame;
+import State.RunGame;
 import State.State;
 
 public class GameScreen implements Screen {
@@ -28,7 +29,9 @@ public class GameScreen implements Screen {
     private Table mainTable;
     public Vector3 touchPos;	
 	
-	
+	private RunGame gameThread;
+    
+    
 	public GameScreen() {
 		
 	}
@@ -64,6 +67,9 @@ public class GameScreen implements Screen {
 		GameInputProcessor inputProcessor = new GameInputProcessor(g);
 		Gdx.input.setInputProcessor(inputProcessor);
         
+		gameThread = new RunGame(g, 30);
+		gameThread.run();
+		
         
 	}
 
@@ -108,8 +114,8 @@ public class GameScreen implements Screen {
 
 	@Override
 	public void dispose() {
-		// TODO Auto-generated method stub
-		
+		// terminate game
+		gameThread.stop();
 	}
 
 }

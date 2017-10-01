@@ -22,10 +22,15 @@ public class DynamicGame {
 	
 	public void step() {
 		// execute each game step (for any realtime enemies)
-		System.out.print("Game step.");
+		
+		
+		
+		
+		//System.out.print("Game step.\n");
 		steps++;
 		if (steps >= 30) {
-			System.out.print("30 steps");
+			System.out.print("1 second of game time.\n");
+			steps = 0;
 		}
 	}
 	
