@@ -20,10 +20,14 @@ public class EditorController {
 		
 	}
 	
+	
 	/*
 	 * Any click on the preview screen in EditorScreen should call this function
 	 */
 	public void select(int row, int col) {
+		
+		if(selectedObj != null)
+			
 		
 		selected[0] = row;
 		selected[1] = col;
@@ -31,6 +35,14 @@ public class EditorController {
 		if(!state.isTileEmpty(selected))
 			getSelection();
 	}
+	
+	/*
+	 * Quick-place object, according to the selected coordinate
+	 */
+	private place(Object o) {
+		state.setobject(selected)
+	}
+
 	
 	/*
 	 * After selecting a tile, if not empty
