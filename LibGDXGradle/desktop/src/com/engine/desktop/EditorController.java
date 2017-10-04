@@ -6,7 +6,6 @@ import com.badlogic.gdx.maps.tiled.TiledMap;
 
 public class EditorController {
 	private State state;
-	private Tile[][] map;
 
 	private int selected[];
 	private Object selectedObj;
@@ -27,7 +26,7 @@ public class EditorController {
 	public void select(int row, int col) {
 		
 		if(selectedObj != null)
-			
+			place(selectedObj.getClass())
 		
 		selected[0] = row;
 		selected[1] = col;
