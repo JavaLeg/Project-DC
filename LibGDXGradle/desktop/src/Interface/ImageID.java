@@ -7,11 +7,15 @@ import com.badlogic.gdx.scenes.scene2d.ui.Image;
 public class ImageID extends Image {
 	
 	private int status;		// 0 for empty, 1 for ground, 2 for wall, 3, 4, 5, etc.
+	private int column;
+	private int row;
 
-	public ImageID(Texture cur_texture, int status) {
+	public ImageID(Texture cur_texture, int status, int row, int column) {
 		// TODO Auto-generated constructor stub
 		super(cur_texture);
 		this.status = status;
+		this.row = row;
+		this.column = column;
 	}
 
 	public void setPosition(int x, int y) {
@@ -41,7 +45,13 @@ public class ImageID extends Image {
 	public void changeStatus() {
 		this.status++;
 		if (this.status > 2) this.status = 0;
-		
-		return;
+	}
+	
+	public int getColumn() {
+		return this.column;
+	}
+	
+	public int getRow() {
+		return this.row;
 	}
 }

@@ -57,7 +57,9 @@ public class EditorScreen implements Screen {
 	private Texture ground_texture;
 	private Texture wall_texture;
 	private Texture empty_texture;
-	private int current_click;
+	private int current_click = 1;
+	
+	private Array<ImageID> draw;
 	
     public EditorScreen(DCGame g) {
     	this.game = g;
@@ -71,8 +73,9 @@ public class EditorScreen implements Screen {
 	@Override
 	public void show() {
         
-		current_click = 1;
-		
+		grid = new Grid(40, 40, 480, 480, "tmp.png");
+		draw = grid.getGrid();								// Creates the grid
+			
 		ground_texture = new Texture(Gdx.files.internal("ground.jpg"));
 		wall_texture = new Texture(Gdx.files.internal("wall.jpg"));
 		empty_texture = new Texture(Gdx.files.internal("empty.png"));
@@ -101,13 +104,18 @@ public class EditorScreen implements Screen {
         
         touchPos = new Vector3();
          
-        // Creating the table
+        ////////////////////////////////
+        // MAINTABLE creation started //
+        ////////////////////////////////
+        
 		TextureAtlas atlas = new TextureAtlas(Gdx.files.internal("uiskin.atlas"));
 		Skin skin = new Skin(Gdx.files.internal("uiskin.json"), atlas);
         
 		TextButton wallButton = new TextButton("Wall", skin);
 		TextButton groundButton = new TextButton("Ground", skin);
 		TextButton emptyButton = new TextButton("Empty", skin);
+		TextButton setGround = new TextButton("Fill ground", skin);
+		TextButton reset = new TextButton("Reset", skin);
 		
 		exitButton = new TextButton("Exit", skin);
         Label HUDlabel = new Label("Editor Mode", 
@@ -125,7 +133,7 @@ public class EditorScreen implements Screen {
             }
         });
         
-        mainTable.row();;
+        mainTable.row();
         mainTable.add(wallButton);
         wallButton.addListener(new ClickListener(){
             @Override
@@ -151,7 +159,28 @@ public class EditorScreen implements Screen {
             }
         }); 
         
-        // Finish creating the table
+        mainTable.row();
+        mainTable.add(setGround);
+        setGround.addListener(new ClickListener(){
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                grid.setValue(1, ground_texture);
+            }
+        }); 
+        
+        mainTable.row();
+        mainTable.add(reset);
+        reset.addListener(new ClickListener(){
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+            	grid.setValue(0, empty_texture);
+            }
+        }); 
+        
+        /////////////////////////////////
+        // MAINTABLE creation finished //
+        /////////////////////////////////
+        
         Gdx.input.setInputProcessor(multiplexer);
         // multiplexer.addProcessor(stage_left);
         multiplexer.addProcessor(stage_right);
@@ -159,19 +188,15 @@ public class EditorScreen implements Screen {
         // mainTable.padRight(100);
         
         // Creates the grid of images
-        grid = new Grid(40, 40, 480, 480, "tmp.png");
-        status = new int[11][12];
         
-        Array<ImageID> to_draw = grid.getGrid();
-        
-        for (final ImageID cur: to_draw) {
+        for (final ImageID cur: draw) {
             cur.addListener(new InputListener() {
                 public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
-                        Gdx.app.log("Example", "touch started at (" + x + ", " + y + ")");
-                        System.out.println("Cur click = " + current_click);
+                        // Gdx.app.log("Example", "touch started at (" + x + ", " + y + ")");
                      
                         cur.setStatus(current_click);
-                        System.out.println("Status = " + cur.getStatus());
+                        System.out.println("Pos = (" + cur.getRow() + ", " + cur.getColumn() 
+                        + "), status = " + cur.getStatus());
                         
                         if (cur.getStatus() == 0) {		// If currently empty, make it a ground
                         	cur.setDrawable(new SpriteDrawable(new Sprite(empty_texture)));
@@ -179,12 +204,14 @@ public class EditorScreen implements Screen {
                         	cur.setDrawable(new SpriteDrawable(new Sprite(ground_texture)));
                         } else if (cur.getStatus() == 2) {
                         	cur.setDrawable(new SpriteDrawable(new Sprite(wall_texture)));
-                        }
+                        }                       
+                        
                         return false;
                 }
             });
             stage_right.addActor(cur);
         }  
+        mainTable.setPosition(-60, -40, 0);			// Set position
         stage_right.addActor(mainTable);
 	}
 
