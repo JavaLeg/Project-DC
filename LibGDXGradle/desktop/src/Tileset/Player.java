@@ -1,5 +1,5 @@
 package Tileset;
 
-public interface Player {
-	// TODO: Player functions
+public class Player extends GameObject {
+
 }

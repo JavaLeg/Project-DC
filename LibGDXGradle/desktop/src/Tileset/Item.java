@@ -1,5 +1,5 @@
 package Tileset;
 
-public interface Item {
+public class Item extends GameObject {
 
 }

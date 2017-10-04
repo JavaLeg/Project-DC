@@ -1,5 +1,5 @@
 package Tileset;
 
-public interface Trap {
+public class Trap extends GameObject {
 
 }

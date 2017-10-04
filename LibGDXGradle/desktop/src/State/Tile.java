@@ -1,16 +1,16 @@
 package State;
 
 import Tileset.*;
+import Tileset.EnemyFactory.EnemyType;
+import Tileset.GameObject.ObjectType;
 
 public class Tile {
-	int xCoord; // probably redundant info to make things easier
-	int yCoord; 
-	
-	Player player;
-	Enemy enemy;
-	Trap trap;
-	Item item;
-	Terrain terrain;
+	private Coordinates coord;
+	private Player player;
+	private Enemy enemy;
+	private Trap trap;
+	private Item item;
+	private Terrain terrain;
 	
 	
 	//************************//
@@ -24,21 +24,19 @@ public class Tile {
 		this.trap = null;
 		this.item = null;
 		this.terrain = null;
-		
-		this.xCoord = -1;
-		this.yCoord = -1;
+		this.coord = new Coordinates();
 	}
 	
-	// Create a Tile given x and y coords as int[2]
-	public Tile(int[] coords){
+	// Create a Tile given x and y coords as Coordinates object
+	public Tile(Coordinates coord){
 		this.player = null;
 		this.enemy = null;
 		this.trap = null;
 		this.item = null;
 		this.terrain = null;
-		
-		this.xCoord = coords[0];
-		this.yCoord = coords[1];
+		this.coord = new Coordinates();
+		this.coord.setX(coord.getX());
+		this.coord.setY(coord.getY());
 	}
 	
 	
@@ -47,210 +45,114 @@ public class Tile {
 	//****** COORDINATES *****//
 	//************************//
 	
-	// Get Tile coords as int[2]
-	public int[] getCoord(){
-		return new int[]{this.xCoord, this.yCoord};
+	// Get Tile coords as Coordinates object
+	public Coordinates getCoord(){
+		return this.coord;
 	}
 	
-	// Set Tile coords given int[2]
-	public void setCoord(int[] coords){
-		this.xCoord = coords[0];
-		this.yCoord = coords[1];
+	// Set Tile coords given Coordinate object
+	public void setCoord(Coordinates coord){
+		this.coord.setX(coord.getX());
+		this.coord.setY(coord.getY());
 	}
 	
 	
 	
 	//************************//
-	//******* PLAYER *********//
+	//******* GENERAL ********//
 	//************************//
 	
-	// Check Tile has player
-	public boolean hasPlayer(){
-		if (this.player != null){
-			return true;
-		} else {
+	// Checks if Tile has object type, returns false if invalid type
+	public boolean hasObject(ObjectType type) {
+		switch(type) {
+		case PLAYER:
+			return (this.player != null);
+		case ENEMY:
+			return (this.enemy != null);
+		case TRAP:
+			return (this.trap != null);
+		case ITEM:
+			return (this.item != null);
+		case TERRAIN:
+			return (this.terrain != null);
+		default:
 			return false;
 		}
 	}
 	
-	// Get player or return null if no player
-	public Player getPlayer(){
-		return this.player;
-	}
-	
-	// Set player if empty return true if successful or false if already exists
-	public boolean setPlayer(Player newPlayer){
-		if (this.hasPlayer()){
-			return false;
-		} else {
-			this.player = newPlayer;
-			return true;
+	// Gets object, can return null
+	public GameObject getObject(ObjectType type) {
+		switch(type) {
+		case PLAYER:
+			return this.player;
+		case ENEMY:
+			return this.enemy;
+		case TRAP:
+			return this.trap;
+		case ITEM:
+			return this.item;
+		case TERRAIN:
+			return this.terrain;
+		default:
+			return null;
 		}
 	}
 	
-	// Delete player, return true if successful or false if not exists
-	public boolean deletePlayer(){
-		if(this.hasPlayer()){
+	// Set object if empty, returns false if already has object of that type or new object is invalid
+	public boolean setObject(GameObject newObject) {
+		ObjectType type = newObject.getType();
+		
+		switch(type) {
+		case PLAYER:
+			if(this.player != null) return false;
+			this.player = (Player) newObject;
+			return true;
+		case ENEMY:
+			if(this.enemy != null) return false;
+			this.enemy = (Enemy) newObject;
+			return true;
+		case TRAP: 
+			if(this.trap != null) return false;
+			this.trap = (Trap) newObject;
+			return true;
+		case ITEM:
+			if(this.item != null) return false;
+			this.item = (Item) newObject;
+			return true;
+		case TERRAIN:
+			if(this.terrain != null) return false;
+			this.terrain = (Terrain) newObject;
+			return true;
+		default:
+			return false;
+		}
+	}
+	
+	// Deletes object if exists, returns false if does not exist or invalid type
+	public boolean deleteObject(ObjectType type) {
+		switch(type) {
+		case PLAYER:
+			if(this.player == null) return false;
 			this.player = null;
 			return true;
-		} else {
-			return false;
-		}
-	}
-	
-	
-	//************************//
-	//******** ENEMY *********//
-	//************************//
-	
-	// Check Tile has enemy
-	public boolean hasEnemy(){
-		if (this.enemy != null){
-			return true;
-		} else {
-			return false;
-		}
-	}
-	
-	// Get enemy or return null if no enemy
-	public Enemy getEnemy(){
-		return this.enemy;
-	}
-	
-	// Set enemy if empty return true if successful or false if already exists
-	public boolean setEnemy(Enemy newEnemy){
-		if (this.hasEnemy()){
-			return false;
-		} else {
-			this.enemy = newEnemy;
-			return true;
-		}
-	}
-	
-	// Delete enemy, return true if successful or false if not exists
-	public boolean deleteEnemy(){
-		if(this.hasEnemy()){
+		case ENEMY:
+			if(this.enemy == null) return false;
 			this.enemy = null;
 			return true;
-		} else {
-			return false;
-		}
-	}
-	
-	
-	//************************//
-	//******** TRAP **********//
-	//************************//
-	
-	// Check Tile has trap
-	public boolean hasTrap(){
-		if (this.trap != null){
-			return true;
-		} else {
-			return false;
-		}
-	}
-	
-	// Get trap or return null if no trap
-	public Trap getTrap(){
-		return this.trap;
-	}
-	
-	// Set trap if empty return true if successful or false if already exists
-	public boolean setTrap(Trap newTrap){
-		if (this.hasTrap()){
-			return false;
-		} else {
-			this.trap = newTrap;
-			return true;
-		}
-	}
-	
-	// Delete trap, return true if successful or false if not exists
-	public boolean deleteTrap(){
-		if(this.hasTrap()){
+		case TRAP:
+			if(this.trap == null) return false;
 			this.trap = null;
 			return true;
-		} else {
-			return false;
-		}
-	}
-	
-	
-	//************************//
-	//******** ITEM **********//
-	//************************//
-	
-	// Check Tile has item
-	public boolean hasItem(){
-		if(this.item != null){
-			return true;
-		} else {
-			return false;
-		}
-	}
-	
-	// Get item or return null if no item
-	public Item getItem(){
-		return this.item;
-	}
-	
-	// Set item if empty return true if successful or false if already exists
-	public boolean setItem(Item newItem){
-		if(this.hasItem()){
-			return false;
-		} else {
-			this.item = newItem;
-			return true;
-		}
-	}
-	
-	// Delete item, return true if successful or false if not exists
-	public boolean deleteItem(){
-		if(this.hasItem()){
+		case ITEM:
+			if(this.item == null) return false;
 			this.item = null;
 			return true;
-		} else {
-			return false;
-		}
-	}
-	
-	
-	//************************//
-	//******* TERRAIN ********//
-	//************************//
-	
-	// Check Tile has terrain
-	public boolean hasTerrain(){
-		if (this.terrain != null){
-			return true;
-		} else {
-			return false;
-		}
-	}
-	
-	// Get terrain or return null if no terrain
-	public Terrain getTerrain(){
-		return this.terrain;
-	}
-	
-	// Set terrain if empty return true if successful or false if already exists
-	public boolean setTerrain(Terrain newTerrain){
-		if (this.hasTerrain()){
-			return false;
-		} else {
-			this.terrain = newTerrain;
-			return true;
-		}
-	}
-	
-	// Delete terrain, return true if successful or false if not exists
-	public boolean deleteTerrain(){
-		if(this.hasTerrain()){
+		case TERRAIN:
+			if(this.terrain == null) return false;
 			this.terrain = null;
 			return true;
-		} else {
+		default:
 			return false;
 		}
-	}	
+	}
 }
