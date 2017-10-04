@@ -17,41 +17,30 @@ public class Grid {
 	int columns;
 	int size_x;
 	int size_y;
-	private Array <Image> images;		// The grids
+	private Array <ImageID> images;		// The grids
 	private Texture cur_texture;
 	
 	public Grid(int x, int y, int height, int width, String path) {
 		
-		images = new Array <Image>();
-		cur_texture = new Texture(Gdx.files.internal("tmp.png"));
+		images = new Array <ImageID>();
+		cur_texture = new Texture(Gdx.files.internal("empty.png"));
 		
-		for (int i = 80; i <= width; i = i + y) {
-			for (int j = 80; j <= height; j = j + x) {
+		for (int i = 40; i <= width; i = i + y) {
+			for (int j = 40; j <= height; j = j + x) {
 				// System.out.println("I = " + i + ", J = " + j);
-				final Image cur_image = new Image(cur_texture);
+				final ImageID cur_image = new ImageID(cur_texture, 0);
 	            cur_image.setPosition(i, j);
 	            cur_image.setSize(x, y);
 	            cur_image.setWidth(x);
 	            cur_image.setHeight(y);
-	            
-	            cur_image.addListener(new InputListener() {
-	                public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
-	                        Gdx.app.log("Example", "touch started at (" + x + ", " + y + ")");
-	                        cur_image.setVisible(false);
-	                        return false;
-	                }
-	                public void touchUp (InputEvent event, float x, float y, int pointer, int button) {
-                        Gdx.app.log("Example", "touch ended at (" + x + ", " + y + ")");
-                        return;
-                }
-	            });
+	            cur_image.setColor(Color.WHITE);
 	            images.add(cur_image);
 			}
 		}
 	}
 	
 	// Return the Array of images
-	public Array <Image> getGrid() {
+	public Array <ImageID> getGrid() {
 		return this.images;
 	}
 }
