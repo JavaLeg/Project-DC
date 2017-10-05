@@ -1,10 +1,16 @@
 package State;
 
+import java.io.Serializable;
+
 import Tileset.*;
 import Tileset.EnemyFactory.EnemyType;
 import Tileset.GameObject.ObjectType;
 
-public class Tile {
+public class Tile implements Serializable{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private Coordinates coord;
 	private Player player;
 	private Enemy enemy;

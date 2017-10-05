@@ -5,6 +5,9 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+
+import java.io.IOException;
+
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
@@ -25,6 +28,7 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.engine.desktop.DCGame;
+import com.engine.desktop.EditorController;
 
 public class EditorScreen implements Screen {
 	
@@ -48,14 +52,15 @@ public class EditorScreen implements Screen {
     private Grid grid;
     private DCGame game;
 	private TextButton exitButton;
+	
+	private EditorController controller;
     
-    public EditorScreen(DCGame g) {
+    public EditorScreen(DCGame g) throws IOException {
     	this.game = g;
+    	this.controller = new EditorController();
     }
     
-    /*public void setModel(EditorModel m) {
-    	this.model = m;
-    }*/
+
 
 	// Show only operates once, after it will render
 	@Override
@@ -99,6 +104,7 @@ public class EditorScreen implements Screen {
 		Skin skin = new Skin(Gdx.files.internal("uiskin.json"), atlas);
         
 		TextButton button = new TextButton("Hey nice", skin);
+		TextButton saveButton = new TextButton("Save", skin);
 		exitButton = new TextButton("Exit", skin);
         Label HUDlabel = new Label("Editor Mode", 
         		new Label.LabelStyle(new BitmapFont(), Color.CYAN));
@@ -108,6 +114,20 @@ public class EditorScreen implements Screen {
         mainTable.add(HUDlabel);
         mainTable.row();
         mainTable.add(button);
+        mainTable.row();
+        mainTable.add(saveButton);
+        saveButton.addListener(new ClickListener(){
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+            	try {
+					controller.saveMap("test_map.txt");
+					System.out.println("Map Saved!");
+				} catch (IOException e) {
+					System.out.println("I/O Error! Cannot save map.");
+					e.printStackTrace();
+				}
+            }
+        });
         mainTable.row();
         mainTable.add(exitButton);
         exitButton.addListener(new ClickListener(){
