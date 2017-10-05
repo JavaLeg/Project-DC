@@ -3,7 +3,6 @@ package com.maindc.desktop;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
 import com.engine.desktop.DCGame;
-import com.engine.desktop.MyGame;
 import com.maindc.DC_Main;
 
 public class DesktopLauncher {

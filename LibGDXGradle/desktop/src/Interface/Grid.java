@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.SpriteDrawable;
@@ -25,18 +26,18 @@ public class Grid {
 	private Texture cur_texture;
 	
 	public Grid(int x, int y, int height, int width, String path) {
-		
 		//
 		images = new Array <ImageID>();
 		cur_texture = new Texture(Gdx.files.internal("empty.png"));
-		
+		// TextureRegion region = new TextureRegion(cur_texture, 0, 112, 16, 16);
+		TextureRegion region = new TextureRegion(cur_texture);
 		int col = 0;
 		int row = 0;
 		
 		for (int i = 40; i <= width; i = i + y) {
 			for (int j = 40; j <= height; j = j + x) {
-				// System.out.println("I = " + i + ", J = " + j);
-				final ImageID cur_image = new ImageID(cur_texture, 0, col, row);
+				System.out.println("I = " + i + ", J = " + j);
+				ImageID cur_image = new ImageID(region, 0, col, row);
 	            cur_image.setPosition(i, j);
 	            cur_image.setSize(x, y);
 	            cur_image.setWidth(x);

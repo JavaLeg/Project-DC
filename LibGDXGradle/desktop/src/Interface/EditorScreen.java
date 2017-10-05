@@ -45,6 +45,7 @@ public class EditorScreen implements Screen {
     private Table mainTable;
     public Vector3 touchPos;			
  
+	// This will be useless soon
     private static final int WORLD_WIDTH  = 250;
     private static final int WORLD_HEIGHT = 250;
     
@@ -217,7 +218,6 @@ public class EditorScreen implements Screen {
         mainTable.setPosition(-60, -40, 0);			// Set position
         stage_right.addActor(mainTable);
 	}
-
 	
 	@Override
 	public void render(float delta) {

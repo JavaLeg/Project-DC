@@ -2,6 +2,7 @@ package Interface;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 
 /* Class ImageID
@@ -15,12 +16,13 @@ public class ImageID extends Image {
 	private int column;
 	private int row;
 
-	public ImageID(Texture cur_texture, int status, int row, int column) {
-		super(cur_texture);
+	public ImageID(TextureRegion region, int status, int row, int column) {
+		super(region);
 		this.status = status;
 		this.row = row;
 		this.column = column;
 	}
+
 
 	//
 	public void setPosition(int x, int y) {
