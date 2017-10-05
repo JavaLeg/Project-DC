@@ -24,8 +24,7 @@ public class EditorController {
 		this.saveHandle = new SaveSys();
 		this.coord = new Coordinates();
 	}
-	
-	
+		
 	/*
 	 * Any click on the preview screen in EditorScreen should call this function
 	 */
@@ -73,6 +72,10 @@ public class EditorController {
 	
 	public void saveMap(String filename) throws IOException {
 		saveHandle.Save(state, filename);
+	}
+	
+	public void loadMap(String filename) throws IOException, ClassNotFoundException{
+		this.state = saveHandle.Load(filename);
 	}
 	
 	

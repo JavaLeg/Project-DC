@@ -56,10 +56,16 @@ public class SaveSys {
 	 * byte[] -> Object
 	 */
     public State Load(String fileName) throws IOException, ClassNotFoundException {
-    	Path path = Paths.get(dirPath); 	
+    	Path path = Paths.get(dirPath + "/" + fileName); 	
     	byte[] data = Files.readAllBytes(path);
         ByteArrayInputStream in = new ByteArrayInputStream(data);
         ObjectInputStream is = new ObjectInputStream(in);
         return (State)is.readObject();
+    }
+    
+    public File[] getLibrary(){
+		File directory = new File(dirPath);
+		File[] library = directory.listFiles();
+		return library;
     }
 }

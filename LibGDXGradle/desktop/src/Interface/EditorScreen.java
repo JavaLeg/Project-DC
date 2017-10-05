@@ -60,7 +60,9 @@ public class EditorScreen implements Screen {
     	this.controller = new EditorController();
     }
     
-
+    public EditorController getController() {
+    	return controller;
+    }
 
 	// Show only operates once, after it will render
 	@Override
