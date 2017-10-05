@@ -38,7 +38,6 @@ public class Grid {
 	            cur_image.setSize(x, y);
 	            cur_image.setWidth(x);
 	            cur_image.setHeight(y);
-	            cur_image.setColor(Color.WHITE);
 	            images.add(cur_image);
 	            col++;
 			}

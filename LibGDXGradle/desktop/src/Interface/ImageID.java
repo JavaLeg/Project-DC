@@ -4,6 +4,11 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 
+/* Class ImageID
+ * 
+ * 
+ */
+
 public class ImageID extends Image {
 	
 	private int status;		// 0 for empty, 1 for ground, 2 for wall, 3, 4, 5, etc.

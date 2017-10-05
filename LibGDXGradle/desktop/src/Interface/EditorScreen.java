@@ -235,7 +235,6 @@ public class EditorScreen implements Screen {
         //stage_left.act();
         //stage_left.draw();
         
-        // This will become redundant once we add listeners to each Image
         /*
 		if (Gdx.input.isTouched()) {
 			touchPos.set(Gdx.input.getX(), Gdx.input.getY(), 0);
