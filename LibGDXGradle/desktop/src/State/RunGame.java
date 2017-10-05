@@ -4,6 +4,7 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
+
 public class RunGame {
 	private DynamicGame activeGame;
 	private ScheduledExecutorService executor;
@@ -12,7 +13,7 @@ public class RunGame {
 	
 	public RunGame(DynamicGame g, int stepRate) {
 		this.activeGame = g;
-		this.stepRate = stepRate;
+		this.stepRate = stepRate; // per second
 	}
 	
 	public void run() {	
