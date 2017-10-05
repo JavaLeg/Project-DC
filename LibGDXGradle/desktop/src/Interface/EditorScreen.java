@@ -67,7 +67,7 @@ public class EditorScreen implements Screen {
 	
 	private Array<ImageID> draw;
 	
-    public EditorScreen(DCGame g) {
+    public EditorScreen(DCGame g) throws IOException {
     	this.game = g;
     	this.controller = new EditorController();
     }
