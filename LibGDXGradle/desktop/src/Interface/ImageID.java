@@ -22,6 +22,7 @@ public class ImageID extends Image {
 		this.column = column;
 	}
 
+	//
 	public void setPosition(int x, int y) {
 		super.setPosition(x, y);
 	}

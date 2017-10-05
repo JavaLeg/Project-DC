@@ -26,6 +26,7 @@ public class Grid {
 	
 	public Grid(int x, int y, int height, int width, String path) {
 		
+		//
 		images = new Array <ImageID>();
 		cur_texture = new Texture(Gdx.files.internal("empty.png"));
 		

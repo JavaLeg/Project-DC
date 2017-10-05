@@ -165,6 +165,7 @@ public class EditorScreen implements Screen {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 grid.setValue(1, ground_texture);
+                // For James
             }
         }); 
         
@@ -174,6 +175,7 @@ public class EditorScreen implements Screen {
             @Override
             public void clicked(InputEvent event, float x, float y) {
             	grid.setValue(0, empty_texture);
+            	// For James
             }
         }); 
         
@@ -198,6 +200,7 @@ public class EditorScreen implements Screen {
                         System.out.println("Pos = (" + cur.getRow() + ", " + cur.getColumn() 
                         + "), status = " + cur.getStatus());
                         
+                        // For James
                         if (cur.getStatus() == 0) {		// If currently empty, make it a ground
                         	cur.setDrawable(new SpriteDrawable(new Sprite(empty_texture)));
                         } else if (cur.getStatus() == 1) {		// If currently ground, make wall
