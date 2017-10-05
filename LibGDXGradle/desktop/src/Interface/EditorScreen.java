@@ -60,9 +60,6 @@ public class EditorScreen implements Screen {
 	private TextButton exitButton;
 	
 	private EditorController controller;
-    
-
-
 	private Texture ground_texture;
 	private Texture wall_texture;
 	private Texture empty_texture;
@@ -70,7 +67,7 @@ public class EditorScreen implements Screen {
 	
 	private Array<ImageID> draw;
 	
-    public EditorScreen(DCGame g) throws IOException {
+    public EditorScreen(DCGame g) {
     	this.game = g;
     	this.controller = new EditorController();
     }
@@ -120,8 +117,6 @@ public class EditorScreen implements Screen {
         
 		TextureAtlas atlas = new TextureAtlas(Gdx.files.internal("uiskin.atlas"));
 		Skin skin = new Skin(Gdx.files.internal("uiskin.json"), atlas);
-        
-
 		TextButton wallButton = new TextButton("Wall", skin);
 		TextButton groundButton = new TextButton("Ground", skin);
 		TextButton emptyButton = new TextButton("Empty", skin);
