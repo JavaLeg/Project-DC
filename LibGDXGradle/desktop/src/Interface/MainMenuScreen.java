@@ -93,6 +93,12 @@ public class MainMenuScreen implements Screen {
             	((Game)Gdx.app.getApplicationListener()).setScreen(new GameScreen());
             }
         });
+        LibButton.addListener(new ClickListener(){
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+            	((Game)Gdx.app.getApplicationListener()).setScreen(new LibraryScreen());
+            }
+        });
 
         //Add buttons to table
         mainTable.add(playButton);
