@@ -6,6 +6,9 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 
+import State.Coordinates;
+import State.State;
+
 public class GameObject {
 	public static enum ObjectType {
 		PLAYER, ENEMY, TRAP, ITEM, TERRAIN
@@ -16,16 +19,26 @@ public class GameObject {
 	private Sprite sprite;
 	private int height;
 	private int width;
+	private Coordinates position;
 	
 	
 	public GameObject() {
 		this.height = 16;
 		this.width = 16;
+		this.position = new Coordinates(0,0);
 	}
 	
-	public GameObject(int height, int width) {
+	
+	public GameObject(Coordinates position) {
+		this.height = 16;
+		this.width = 16;
+		this.position = position;
+	}
+	
+	public GameObject(int height, int width, Coordinates position) {
 		this.height = height;
 		this.width = width;
+		this.position = position;
 	}
 	
 	public ObjectType getType() {
@@ -68,4 +81,27 @@ public class GameObject {
 	public Sprite getSprite() {
 		return sprite;
 	}	
+	
+	public Coordinates getCoord() {
+		return position;
+	}
+	
+	
+	
+	
+	// Dynamic Game Components
+	//
+	
+	public void create(State s) {
+		
+	}
+	
+	public void step(State s) {
+		
+	}
+	
+	public void destroy(State s) {
+		
+	}
+	
 }

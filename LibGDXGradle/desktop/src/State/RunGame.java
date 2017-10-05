@@ -27,8 +27,4 @@ public class RunGame {
 	public void stop() {
 		executor.shutdown();
 	}
-	
-	
-	
-	
 }

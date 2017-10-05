@@ -12,9 +12,6 @@ import State.DynamicGame;
 // Handles direct user input and updates model
 public class GameInputProcessor implements InputProcessor {
 	private DynamicGame activeGame;
-
-	
-	
 	
 	public GameInputProcessor(DynamicGame g) {
 		this.activeGame = g;
