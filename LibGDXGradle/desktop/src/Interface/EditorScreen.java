@@ -232,9 +232,6 @@ public class EditorScreen implements Screen {
         stage_right.act();
         stage_right.draw();
         
-        //stage_left.act();
-        //stage_left.draw();
-        
         /*
 		if (Gdx.input.isTouched()) {
 			touchPos.set(Gdx.input.getX(), Gdx.input.getY(), 0);

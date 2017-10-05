@@ -16,7 +16,6 @@ public class ImageID extends Image {
 	private int row;
 
 	public ImageID(Texture cur_texture, int status, int row, int column) {
-		// TODO Auto-generated constructor stub
 		super(cur_texture);
 		this.status = status;
 		this.row = row;

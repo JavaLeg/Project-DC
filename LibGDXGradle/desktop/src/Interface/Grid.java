@@ -11,7 +11,9 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.SpriteDrawable;
 import com.badlogic.gdx.utils.Array;
 
-// Main class that holds the grid (creates the GRID using Image)
+/* class Grid
+ * 
+ */
 
 public class Grid {
 
