@@ -18,7 +18,7 @@ public class EditorController {
 	private SaveSys saveHandle;
 	
 	public EditorController() throws IOException {
-		this.m = new TiledMap();
+		//this.m = new TiledMap(); COMPILE
 		this.state = new State();
 		this.saveHandle = new SaveSys();
 		

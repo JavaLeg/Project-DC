@@ -29,6 +29,9 @@ public class DynamicGame {
 			g.step(activeState);
 		}
 		
+		// Conflict Resolution
+		
+		
 		steps++;
 		if (steps >= 30) {
 			steps = 0;

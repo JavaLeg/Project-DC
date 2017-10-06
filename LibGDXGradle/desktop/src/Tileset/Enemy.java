@@ -20,6 +20,7 @@ public class Enemy extends GameObject {
 	public Enemy(double hp, int height, int width, Coordinates position) {
 		super(height, width, position);
 		this.setHp(hp);
+		this.moveBehaviour = null;
 	}
 
 	public double getHp() {
@@ -46,7 +47,11 @@ public class Enemy extends GameObject {
 		// handle movement behaviour
 		if (sinceLastMove == moveRate) {
 			// move one step
-			
+			if (moveBehaviour != null) {
+				
+				
+				
+			}
 			
 			
 		} else {
