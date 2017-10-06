@@ -1,5 +1,8 @@
 package State;
 
+import java.util.LinkedList;
+import java.util.List;
+
 import Tileset.*;
 import Tileset.GameObject.ObjectType;
 
@@ -91,7 +94,20 @@ public class State {
 	}
 	
 	
-	
+	public List<GameObject> getAllObjects() {
+		List<GameObject> ret = new LinkedList<GameObject>();
+		for (Tile[] ta : map) {
+			for (Tile t : ta) {		
+				for (ObjectType type : ObjectType.values()) {
+					GameObject toAdd = getObject(type, t.getCoord());
+					if (toAdd != null) {
+						ret.add(toAdd);
+					}
+				}	
+			}
+		}
+		return ret;
+	}
 	
 	//************************//
 	//******* PLAYER *********//
@@ -176,5 +192,17 @@ public class State {
 		
 	}
 	*/
+	
+	// Terrain helper
+	
+	public boolean isBlocked(Coordinates pos) {
+		return !((Terrain) this.map[pos.getX()][pos.getY()].getObject(ObjectType.TERRAIN)).checkPassable();
+	}
+	
+	public boolean isBlocked(Coordinates pos, ObjectType type) {
+		if (type == null) return isBlocked(pos);
+		return (!((Terrain) this.map[pos.getX()][pos.getY()].getObject(ObjectType.TERRAIN)).checkPassable()
+				&& (this.map[pos.getX()][pos.getY()].getObject(type) != null));
+	}
 	
 }

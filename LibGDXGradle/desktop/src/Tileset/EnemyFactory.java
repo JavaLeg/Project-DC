@@ -10,8 +10,8 @@ public class EnemyFactory {
 	
 	public Enemy getEnemy(EnemyType type) {
 		switch(type) {
-		case SLIME:
-			return new EnemySlime();
+		//case SLIME:
+		//	return new EnemySlime();
 		/*case SKELETON:
 		case ZOMBIE:
 		case WOLF:*/

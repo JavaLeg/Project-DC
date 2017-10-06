@@ -68,7 +68,7 @@ public class MainMenuScreen implements Screen {
         //Create buttons
         TextButton playButton = new TextButton("Editor", skin);
         TextButton LibButton = new TextButton("Library", skin);
-        TextButton RunButton = new TextButton("Run", skin);
+        TextButton runButton = new TextButton("Run", skin);
         TextButton exitButton = new TextButton("Exit", skin);
 
         //Add listeners to buttons
@@ -86,6 +86,13 @@ public class MainMenuScreen implements Screen {
                 Gdx.app.exit();
             }
         });
+        
+        runButton.addListener(new ClickListener(){
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+            	((Game)Gdx.app.getApplicationListener()).setScreen(new GameScreen());
+            }
+        });
         LibButton.addListener(new ClickListener(){
             @Override
             public void clicked(InputEvent event, float x, float y) {
@@ -98,7 +105,7 @@ public class MainMenuScreen implements Screen {
         mainTable.row();
         mainTable.add(LibButton);
         mainTable.row();
-        mainTable.add(RunButton);
+        mainTable.add(runButton);
         mainTable.row();
         mainTable.add(exitButton);
         

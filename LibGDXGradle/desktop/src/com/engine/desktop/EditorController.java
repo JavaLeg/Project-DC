@@ -4,17 +4,21 @@ import java.io.IOException;
 
 import com.badlogic.gdx.maps.tiled.TiledMap;
 
+import State.Coordinates;
+import State.State;
+import State.Tile;
+
 public class EditorController {
 	private State state;
 	private Tile[][] map;
 
-	private int selected[];
+	private Coordinates selected;
 	private Object selectedObj;
 	
 	private SaveSys saveHandle;
 	
 	public EditorController() throws IOException {
-		this.m = new TiledMap();
+		//this.m = new TiledMap(); COMPILE
 		this.state = new State();
 		this.saveHandle = new SaveSys();
 		
@@ -24,12 +28,12 @@ public class EditorController {
 	 * Any click on the preview screen in EditorScreen should call this function
 	 */
 	public void select(int row, int col) {
+
+		selected.setX(row);
+		selected.setY(col);
 		
-		selected[0] = row;
-		selected[1] = col;
-		
-		if(!state.isTileEmpty(selected))
-			getSelection();
+		//if(!state.isTileEmpty(selected)) COMPILE
+		//	getSelection();
 	}
 	
 	/*
@@ -37,17 +41,17 @@ public class EditorController {
 	 * The gameObj (w/e it is that resides on the tile) should be selected
 	 */
 	public void getSelection() {
-		selectedObj = state.getObj(selected);
+		//selectedObj = state.getObject(selected); COMPILE
 	}
 	
 	public void setTerrain(TERRAIN t) {
 		
 		switch(t) {
 		case WALL:
-			state.setWall(selected);
+			//state.setWall(selected); COMPILE
 			break;
 		case TRAP:
-			state.setTrap(selected);
+			//state.setTrap(selected); COMPILE
 			break;
 		}
 
@@ -60,10 +64,10 @@ public class EditorController {
 		// Item should be its own thing??
 		// Can add an enum later
 		case ITEM:
-			state.setItem(selected);
+			//state.setItem(selected); COMPILE
 			break;
 		case ENEMY:
-			state.setEnemy(selected);
+			//state.setEnemy(selected); COMPILE
 			break;
 		case PLAYER:
 			state.setPlayer(selected);
@@ -75,11 +79,11 @@ public class EditorController {
 	 * Should clear the tile regardless of what terrain/item
 	 */
 	public void clearTile() {
-		state.deleteTile(selected);
+		//state.deleteTile(selected); COMPILE
 	}
 	
 	public void saveMap(String filename) {
-		saveHandle.Save(state, filename);
+		//saveHandle.Save(state, filename); COMPILE
 	}
 	
 	
