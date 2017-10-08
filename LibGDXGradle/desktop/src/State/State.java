@@ -1,12 +1,14 @@
 package State;
 
-import java.util.LinkedList;
-import java.util.List;
-
+import java.io.Serializable;
 import Tileset.*;
 import Tileset.GameObject.ObjectType;
 
-public class State {
+public class State implements Serializable{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private static final int DEFAULT_MAP_WIDTH = 50; // 50 tiles 
 	private static final int DEFAULT_MAP_HEIGHT = 50;
 	

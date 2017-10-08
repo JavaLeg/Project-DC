@@ -1,6 +1,11 @@
 package com.engine.desktop;
 
+import State.Coordinates;
+import State.State;
+import Tileset.GameObject.ObjectType;
+
 import java.io.IOException;
+import java.util.ArrayList;
 
 import com.badlogic.gdx.maps.tiled.TiledMap;
 
@@ -10,20 +15,21 @@ import State.Tile;
 
 public class EditorController {
 	private State state;
-	private Tile[][] map;
-
-	private Coordinates selected;
-	private Object selectedObj;
-	
+	private ObjectType obj;
 	private SaveSys saveHandle;
+	private Coordinates coord;
+
 	
+	/*
+	 * Constructor initializes a save handle and a state (model) instance
+	 */
 	public EditorController() throws IOException {
-		//this.m = new TiledMap(); COMPILE
+
 		this.state = new State();
 		this.saveHandle = new SaveSys();
-		
+		this.coord = new Coordinates();
 	}
-	
+		
 	/*
 	 * Any click on the preview screen in EditorScreen should call this function
 	 */
@@ -32,46 +38,34 @@ public class EditorController {
 		selected.setX(row);
 		selected.setY(col);
 		
-		//if(!state.isTileEmpty(selected)) COMPILE
-		//	getSelection();
+		coord.setX(row);
+		coord.setY(row);
+						
+		if(!state.isTileEmpty(coord)) {
+			getSelection();
+		}else if(obj != null) {
+			place();
+		}
 	}
 	
 	/*
-	 * After selecting a tile, if not empty
-	 * The gameObj (w/e it is that resides on the tile) should be selected
+	 * Quick-place object, according to the coord coordinate
 	 */
-	public void getSelection() {
-		//selectedObj = state.getObject(selected); COMPILE
+	private void place() {
+		state.setObject(coordObj, coord);
 	}
 	
-	public void setTerrain(TERRAIN t) {
-		
-		switch(t) {
-		case WALL:
-			//state.setWall(selected); COMPILE
-			break;
-		case TRAP:
-			//state.setTrap(selected); COMPILE
-			break;
-		}
-
-
+	/*
+	 * Retrieve any objects on a tile
+	 */
+	public ArrayList<ObjectType> getSelection() {
+		return obj = state.getObj(coord);
 	}
-	
-	public void setGameObj(GAME_OBJ g) {
-		switch(g) {
-		
-		// Item should be its own thing??
-		// Can add an enum later
-		case ITEM:
-			//state.setItem(selected); COMPILE
-			break;
-		case ENEMY:
-			//state.setEnemy(selected); COMPILE
-			break;
-		case PLAYER:
-			state.setPlayer(selected);
-		}
+	/*
+	 * Object selection from editor menu
+	 */
+	public void selectObj(ObjectType t) {
+		obj = t;
 	}
 	
 
@@ -79,12 +73,16 @@ public class EditorController {
 	 * Should clear the tile regardless of what terrain/item
 	 */
 	public void clearTile() {
-		//state.deleteTile(selected); COMPILE
+		state.deleteTile(coord);
 	}
 	
-	public void saveMap(String filename) {
-		//saveHandle.Save(state, filename); COMPILE
+	public void saveMap(String filename) throws IOException {
+		saveHandle.Save(state, filename);
+
 	}
 	
+	public void loadMap(String filename) throws IOException, ClassNotFoundException{
+		this.state = saveHandle.Load(filename);
+	}
 	
 }

@@ -1,5 +1,7 @@
 package Interface;
 
+import java.io.IOException;
+
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
@@ -76,7 +78,12 @@ public class MainMenuScreen implements Screen {
         playButton.addListener(new ClickListener(){
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                ((Game)Gdx.app.getApplicationListener()).setScreen(new EditorScreen(game));
+                try {
+					((Game)Gdx.app.getApplicationListener()).setScreen(new EditorScreen(game));
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
             }
         });
         
@@ -96,7 +103,12 @@ public class MainMenuScreen implements Screen {
         LibButton.addListener(new ClickListener(){
             @Override
             public void clicked(InputEvent event, float x, float y) {
-            	((Game)Gdx.app.getApplicationListener()).setScreen(new LibraryScreen());
+            	try {
+					((Game)Gdx.app.getApplicationListener()).setScreen(new LibraryScreen(game));
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
             }
         });
 
