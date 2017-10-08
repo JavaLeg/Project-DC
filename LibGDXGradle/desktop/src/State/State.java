@@ -1,7 +1,6 @@
 package State;
 
 import java.io.Serializable;
-
 import Tileset.*;
 import Tileset.GameObject.ObjectType;
 
@@ -97,7 +96,20 @@ public class State implements Serializable{
 	}
 	
 	
-	
+	public List<GameObject> getAllObjects() {
+		List<GameObject> ret = new LinkedList<GameObject>();
+		for (Tile[] ta : map) {
+			for (Tile t : ta) {		
+				for (ObjectType type : ObjectType.values()) {
+					GameObject toAdd = getObject(type, t.getCoord());
+					if (toAdd != null) {
+						ret.add(toAdd);
+					}
+				}	
+			}
+		}
+		return ret;
+	}
 	
 	//************************//
 	//******* PLAYER *********//
@@ -182,5 +194,17 @@ public class State implements Serializable{
 		
 	}
 	*/
+	
+	// Terrain helper
+	
+	public boolean isBlocked(Coordinates pos) {
+		return !((Terrain) this.map[pos.getX()][pos.getY()].getObject(ObjectType.TERRAIN)).checkPassable();
+	}
+	
+	public boolean isBlocked(Coordinates pos, ObjectType type) {
+		if (type == null) return isBlocked(pos);
+		return (!((Terrain) this.map[pos.getX()][pos.getY()].getObject(ObjectType.TERRAIN)).checkPassable()
+				&& (this.map[pos.getX()][pos.getY()].getObject(type) != null));
+	}
 	
 }

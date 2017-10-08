@@ -34,6 +34,10 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 import com.engine.desktop.DCGame;
 import com.engine.desktop.EditorController;
 
+import State.DynamicGame;
+import State.State;
+
+
 public class EditorScreen implements Screen {
 	
     private SpriteBatch batch;
@@ -79,38 +83,38 @@ public class EditorScreen implements Screen {
 	@Override
 	public void show() {
         
-        /////////////////////////////////////////////
-        // Stage setup (camera, viewport) finished //
-        /////////////////////////////////////////////
-		
-		grid = new Grid(40, 40, 480, 480, "tmp.png");
-		draw = grid.getGrid();								// Creates the grid
-			
-		ground_texture = new Texture(Gdx.files.internal("ground.jpg"));
-		wall_texture = new Texture(Gdx.files.internal("wall.jpg"));
-		empty_texture = new Texture(Gdx.files.internal("empty.png"));
-		
-        camera = new OrthographicCamera();
-        camera.position.set(camera.viewportWidth, camera.viewportHeight, 0);
-        camera.update();
-        
-        InputMultiplexer multiplexer = new InputMultiplexer();		// For multiple stage listeners
+    /////////////////////////////////////////////
+    // Stage setup (camera, viewport) finished //
+    /////////////////////////////////////////////
+
+    grid = new Grid(40, 40, 480, 480, "tmp.png");
+    draw = grid.getGrid();								// Creates the grid
+
+    ground_texture = new Texture(Gdx.files.internal("ground.jpg"));
+    wall_texture = new Texture(Gdx.files.internal("wall.jpg"));
+    empty_texture = new Texture(Gdx.files.internal("empty.png"));
+
+    camera = new OrthographicCamera();
+    camera.position.set(camera.viewportWidth, camera.viewportHeight, 0);
+    camera.update();
+
+    InputMultiplexer multiplexer = new InputMultiplexer();		// For multiple stage listeners
         
 		height = Gdx.graphics.getHeight();
 		width = Gdx.graphics.getWidth();
         
 		// Configure the RHS of screen (grid preview)
-        viewport_right = new ScreenViewport(camera);
-        viewport_right.setScreenX(200);					// Sets viewport's position
-        viewport_right.update(400, 300, false);			// Updates the right pos and sets size
-        stage_right = new Stage(viewport_right); 
-        
-        touchPos = new Vector3();
-         
-        ////////////////////////////////
-        // MAINTABLE creation started //
-        ////////////////////////////////
-        
+    viewport_right = new ScreenViewport(camera);
+    viewport_right.setScreenX(200);					// Sets viewport's position
+    viewport_right.update(400, 300, false);			// Updates the right pos and sets size
+    stage_right = new Stage(viewport_right); 
+
+    touchPos = new Vector3();
+
+    ////////////////////////////////
+    // MAINTABLE creation started //
+    ////////////////////////////////
+
 		TextureAtlas atlas = new TextureAtlas(Gdx.files.internal("uiskin.atlas"));
 		Skin skin = new Skin(Gdx.files.internal("uiskin.json"), atlas);
 		TextButton wallButton = new TextButton("Wall", skin);

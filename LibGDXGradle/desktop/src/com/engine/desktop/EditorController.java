@@ -9,6 +9,10 @@ import java.util.ArrayList;
 
 import com.badlogic.gdx.maps.tiled.TiledMap;
 
+import State.Coordinates;
+import State.State;
+import State.Tile;
+
 public class EditorController {
 	private State state;
 	private ObjectType obj;
@@ -20,6 +24,7 @@ public class EditorController {
 	 * Constructor initializes a save handle and a state (model) instance
 	 */
 	public EditorController() throws IOException {
+
 		this.state = new State();
 		this.saveHandle = new SaveSys();
 		this.coord = new Coordinates();
@@ -29,6 +34,9 @@ public class EditorController {
 	 * Any click on the preview screen in EditorScreen should call this function
 	 */
 	public void select(int row, int col) {
+
+		selected.setX(row);
+		selected.setY(col);
 		
 		coord.setX(row);
 		coord.setY(row);
@@ -46,7 +54,6 @@ public class EditorController {
 	private void place() {
 		state.setObject(coordObj, coord);
 	}
-
 	
 	/*
 	 * Retrieve any objects on a tile
@@ -54,7 +61,6 @@ public class EditorController {
 	public ArrayList<ObjectType> getSelection() {
 		return obj = state.getObj(coord);
 	}
-	
 	/*
 	 * Object selection from editor menu
 	 */
@@ -72,11 +78,11 @@ public class EditorController {
 	
 	public void saveMap(String filename) throws IOException {
 		saveHandle.Save(state, filename);
+
 	}
 	
 	public void loadMap(String filename) throws IOException, ClassNotFoundException{
 		this.state = saveHandle.Load(filename);
 	}
-	
 	
 }
