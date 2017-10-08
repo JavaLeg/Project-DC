@@ -40,7 +40,6 @@ public class EditorScreen implements Screen {
     
     protected Stage stage_left;
     protected Stage stage_right;
-    private Viewport viewport_left;		// Holds the menu buttons
     private Viewport viewport_right;	// Holds the grid preview
     
     private OrthographicCamera camera;
@@ -80,6 +79,10 @@ public class EditorScreen implements Screen {
 	@Override
 	public void show() {
         
+        /////////////////////////////////////////////
+        // Stage setup (camera, viewport) finished //
+        /////////////////////////////////////////////
+		
 		grid = new Grid(40, 40, 480, 480, "tmp.png");
 		draw = grid.getGrid();								// Creates the grid
 			
@@ -91,7 +94,7 @@ public class EditorScreen implements Screen {
         camera.position.set(camera.viewportWidth, camera.viewportHeight, 0);
         camera.update();
         
-        InputMultiplexer multiplexer = new InputMultiplexer();
+        InputMultiplexer multiplexer = new InputMultiplexer();		// For multiple stage listeners
         
 		height = Gdx.graphics.getHeight();
 		width = Gdx.graphics.getWidth();
@@ -101,13 +104,6 @@ public class EditorScreen implements Screen {
         viewport_right.setScreenX(200);					// Sets viewport's position
         viewport_right.update(400, 300, false);			// Updates the right pos and sets size
         stage_right = new Stage(viewport_right); 
-        
-        /*
-        viewport_left = new ScreenViewport(camera);
-        viewport_left.setScreenPosition(100, 100);
-        viewport_left.update(200, 200, true);
-        stage_left = new Stage(viewport_left);        
-        */
         
         touchPos = new Vector3();
          
@@ -193,9 +189,10 @@ public class EditorScreen implements Screen {
         // multiplexer.addProcessor(stage_left);
         multiplexer.addProcessor(stage_right);
         mainTable.setFillParent(true);
-        // mainTable.padRight(100);
         
-        // Creates the grid of images
+        //////////////////////////////////////////////////
+        // Adding the Image actors and attach listeners //
+        //////////////////////////////////////////////////
         
         for (final ImageID cur: draw) {
             cur.addListener(new InputListener() {
@@ -220,7 +217,7 @@ public class EditorScreen implements Screen {
             });
             stage_right.addActor(cur);
         }  
-        mainTable.setPosition(-60, -40, 0);			// Set position
+        mainTable.setPosition(-60, -40, 0);			
         stage_right.addActor(mainTable);
 	}
 	
@@ -241,6 +238,9 @@ public class EditorScreen implements Screen {
         stage_right.draw();
         
         /*
+         * This keeps track of clicked over positions (may be used later)
+         * However a huge downside is the manual row + column calculation
+         * 
 		if (Gdx.input.isTouched()) {
 			touchPos.set(Gdx.input.getX(), Gdx.input.getY(), 0);
 			System.out.println("[X = " + 

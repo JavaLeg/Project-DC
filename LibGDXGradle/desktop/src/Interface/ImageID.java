@@ -22,33 +22,17 @@ public class ImageID extends Image {
 		this.row = row;
 		this.column = column;
 	}
-
-
-	//
-	public void setPosition(int x, int y) {
-		super.setPosition(x, y);
-	}
-	
-	public void setSize(int x, int y) {
-		super.setSize(x, y);
-	}
-	
-	public void setWidth(int x) {
-		super.setWidth(x);
-	}
-	
-	public void setHeight(int y) {
-		super.setHeight(y);
-	}
 	
 	public int getStatus() {
 		return this.status;
 	}
 	
+	// Status holds the image type (ground / wall / empty)
 	public void setStatus(int start) {
 		this.status = start;
 	}
 	
+	// Increments the status (UNUSED)
 	public void changeStatus() {
 		this.status++;
 		if (this.status > 2) this.status = 0;
