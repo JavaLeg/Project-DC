@@ -1,13 +1,13 @@
 package State;
 
 import java.io.Serializable;
+import java.util.HashMap;
+
 import Tileset.*;
 import Tileset.GameObject.ObjectType;
 
 public class State implements Serializable{
-	/**
-	 * 
-	 */
+	
 	private static final long serialVersionUID = 1L;
 	private static final int DEFAULT_MAP_WIDTH = 50; // 50 tiles 
 	private static final int DEFAULT_MAP_HEIGHT = 50;
@@ -15,8 +15,8 @@ public class State implements Serializable{
 	// Coords of player
 	private Coordinates playerCoord;
 	
-	// Matrix of Tiles
-	private Tile[][] map;
+	// Map is hashmap of hashmap of tiles
+	private HashMap<Integer, HashMap<Integer, Tile>> map;
 	// The first index is x, the second index is y
 	
 	
@@ -26,19 +26,13 @@ public class State implements Serializable{
 	
 	// default create an empty State
 	public State(){
-		// Default player position is outside the map -1,-1
-		this.playerCoord = new Coordinates();
-		
-		this.map = new Tile[DEFAULT_MAP_WIDTH][DEFAULT_MAP_HEIGHT];
-		
-		// Initialize Tile objects 
+		// Initialise map
+		this.map = new HashMap<Integer, HashMap<Integer, Tile>>(DEFAULT_MAP_WIDTH); 
+		// Initialise Tiles
 		Coordinates tempCoord = new Coordinates();
-		for(int i = 0; i <  DEFAULT_MAP_WIDTH; i++){
-			for(int j = 0; j < DEFAULT_MAP_HEIGHT; j++){
-				tempCoord.setX(i);
-				tempCoord.setY(j);
-				map[i][j] = new Tile(tempCoord); 
-			}
+		for (int i = 0; i < DEFAULT_MAP_WIDTH; i++) {
+			this.map.put(i, HashMap<Integer, Tile>);
+			
 		}
 	}
 	
@@ -206,5 +200,16 @@ public class State implements Serializable{
 		return (!((Terrain) this.map[pos.getX()][pos.getY()].getObject(ObjectType.TERRAIN)).checkPassable()
 				&& (this.map[pos.getX()][pos.getY()].getObject(type) != null));
 	}
-	
+
+
+	public Tile getTile(Coordinates coord) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+
+	public DynamicObject[] getAllDynamicObjects() {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }
