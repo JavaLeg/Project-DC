@@ -8,10 +8,10 @@ public class TerrainFactory {
 		WALL//, WATER, MOUNTAIN, TREE
 	}
 	
-	public Terrain getTerrain(TerrainType type, Coordinates coords) {
+	public Terrain getTerrain(TerrainType type, Coordinates coord) {
 		switch(type) {
 		case WALL:
-			return new TerrainWall(coords);
+			return new TerrainWall(coord);
 		/*case SKELETON:
 		case ZOMBIE:
 		case WOLF:*/
