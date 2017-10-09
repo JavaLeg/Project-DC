@@ -1,18 +1,17 @@
 package Tileset;
 
+import State.Coordinates;
 import Tileset.TerrainSubclass.*;
 
 public class TerrainFactory {
 	public static enum TerrainType {
-		PATH, WALL//, WATER, MOUNTAIN, TREE
+		WALL//, WATER, MOUNTAIN, TREE
 	}
 	
-	public Terrain getTerrain(TerrainType type) {
+	public Terrain getTerrain(TerrainType type, Coordinates coords) {
 		switch(type) {
-		case PATH:
-			return new TerrainPath();
 		case WALL:
-			return new TerrainWall();
+			return new TerrainWall(coords);
 		/*case SKELETON:
 		case ZOMBIE:
 		case WOLF:*/

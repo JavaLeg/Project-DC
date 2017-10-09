@@ -1,13 +1,16 @@
 package State;
 
 import java.io.Serializable;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+
 import Tileset.*;
+import Tileset.DynamicObject.DynamicObjectType;
 import Tileset.GameObject.ObjectType;
 
 public class State implements Serializable{
-	/**
-	 * 
-	 */
+	
 	private static final long serialVersionUID = 1L;
 	private static final int DEFAULT_MAP_WIDTH = 50; // 50 tiles 
 	private static final int DEFAULT_MAP_HEIGHT = 50;
@@ -15,7 +18,7 @@ public class State implements Serializable{
 	// Coords of player
 	private Coordinates playerCoord;
 	
-	// Matrix of Tiles
+	// Map is hashmap of hashmap of tiles
 	private Tile[][] map;
 	// The first index is x, the second index is y
 	
@@ -31,7 +34,7 @@ public class State implements Serializable{
 		
 		this.map = new Tile[DEFAULT_MAP_WIDTH][DEFAULT_MAP_HEIGHT];
 		
-		// Initialize Tile objects 
+		// Initialise Tile objects 
 		Coordinates tempCoord = new Coordinates();
 		for(int i = 0; i <  DEFAULT_MAP_WIDTH; i++){
 			for(int j = 0; j < DEFAULT_MAP_HEIGHT; j++){
@@ -67,30 +70,30 @@ public class State implements Serializable{
 	//******* GENERAL ********//
 	//************************//
 	
-	public GameObject getObject(ObjectType type, Coordinates coord) {
-		return this.map[coord.getX()][coord.getY()].getObject(type);
+	public GameObject getObject(Coordinates coord) {
+		return this.map[coord.getX()][coord.getY()].getObject();
 	}
 	
 	public boolean setObject(GameObject newObject, Coordinates coord) {
 		return this.map[coord.getX()][coord.getY()].setObject(newObject);
 	}
 	
-	public boolean deleteObject(ObjectType type, Coordinates coord) {
-		return this.map[coord.getX()][coord.getY()].deleteObject(type);
+	public boolean deleteObject(Coordinates coord) {
+		return this.map[coord.getX()][coord.getY()].deleteObject();
 	}
 	
-	public boolean moveObject(ObjectType type, Coordinates from, Coordinates to) {
+	public boolean moveObject(Coordinates from, Coordinates to) {
 		// From tile does not have object
-		if (!this.map[from.getX()][from.getY()].hasObject(type)) {
+		if (!this.map[from.getX()][from.getY()].hasObject()) {
 			return false;
 		}
 		// To Tile already has object
-		if (this.map[to.getX()][to.getY()].hasObject(type)) {
+		if (this.map[to.getX()][to.getY()].hasObject()) {
 			return false;
 		} 
 		// Do the move
-		GameObject temp = this.map[from.getX()][from.getY()].getObject(type);
-		this.map[from.getX()][from.getY()].deleteObject(type);
+		GameObject temp = this.map[from.getX()][from.getY()].getObject();
+		this.map[from.getX()][from.getY()].deleteObject();
 		this.map[to.getX()][to.getY()].setObject(temp);
 		return true;
 	}
@@ -100,16 +103,24 @@ public class State implements Serializable{
 		List<GameObject> ret = new LinkedList<GameObject>();
 		for (Tile[] ta : map) {
 			for (Tile t : ta) {		
-				for (ObjectType type : ObjectType.values()) {
-					GameObject toAdd = getObject(type, t.getCoord());
-					if (toAdd != null) {
-						ret.add(toAdd);
-					}
-				}	
+				ret.add(t.getObject());
 			}
 		}
 		return ret;
 	}
+	
+	public List<DynamicObject> getAllDynamicObjects() {
+		List<DynamicObject> ret = new LinkedList<DynamicObject>();
+		for (Tile[] ta : map) {
+			for (Tile t : ta) {		
+				if(t.getObject().isDynamic()) {
+					ret.add((DynamicObject) t.getObject());
+				}
+			}	
+		}
+		return ret;
+	}
+	
 	
 	//************************//
 	//******* PLAYER *********//
@@ -122,7 +133,7 @@ public class State implements Serializable{
 	
 	// Get player object
 	public Player getPlayer(){
-		return (Player) this.map[playerCoord.getX()][playerCoord.getY()].getObject(ObjectType.PLAYER);
+		return (Player) this.map[playerCoord.getX()][playerCoord.getY()].getObject();
 	}
 	
 	// Remove player from current coords and set player coords to -1,-1
@@ -133,7 +144,7 @@ public class State implements Serializable{
 			return false;
 		}
 		// Try to delete, return false if fail
-		if(!this.map[this.playerCoord.getX()][this.playerCoord.getY()].deleteObject(ObjectType.PLAYER)) {
+		if(!this.map[this.playerCoord.getX()][this.playerCoord.getY()].deleteObject()) {
 			return false;
 		}
 		
@@ -163,8 +174,28 @@ public class State implements Serializable{
 	
 	
 	//************************//
+	//******* TERRAIN ********//
+	//************************//
+	
+	public boolean isBlocked(Coordinates pos) {
+		return !((Terrain) this.map[pos.getX()][pos.getY()].getObject()).isPassable();
+	}
+	
+	public boolean isBlocked(Coordinates pos, ObjectType type) {
+		if (type == null) return isBlocked(pos);
+		return (!((Terrain) this.map[pos.getX()][pos.getY()].getObject()).isPassable()
+				&& (this.map[pos.getX()][pos.getY()].hasObject()));
+	}
+	
+	
+	
+	//************************//
 	//******** TILES *********//
 	//************************//
+	
+	public Tile getTile(Coordinates coords) {
+		return this.map[coords.getX()][coords.getY()]; 
+	}
 	
 	// Swaps the contents of two Tiles
 	public void swapTiles(Coordinates from, Coordinates to) {
@@ -172,6 +203,11 @@ public class State implements Serializable{
 		tempTile = this.map[from.getX()][from.getY()];
 		this.map[from.getX()][from.getY()] = this.map[to.getX()][to.getY()];
 		this.map[to.getX()][to.getY()] = tempTile;
+	}
+
+
+	public void deleteTile(Coordinates coord) {
+		this.map[coord.getX()][coord.getY()].deleteObject();
 	}
 		
 	/*
@@ -194,17 +230,4 @@ public class State implements Serializable{
 		
 	}
 	*/
-	
-	// Terrain helper
-	
-	public boolean isBlocked(Coordinates pos) {
-		return !((Terrain) this.map[pos.getX()][pos.getY()].getObject(ObjectType.TERRAIN)).checkPassable();
-	}
-	
-	public boolean isBlocked(Coordinates pos, ObjectType type) {
-		if (type == null) return isBlocked(pos);
-		return (!((Terrain) this.map[pos.getX()][pos.getY()].getObject(ObjectType.TERRAIN)).checkPassable()
-				&& (this.map[pos.getX()][pos.getY()].getObject(type) != null));
-	}
-	
 }
