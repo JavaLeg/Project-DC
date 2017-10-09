@@ -7,6 +7,10 @@ import State.State;
 public class DynamicObject extends GameObject {
 	// Dynamic types are: Enemy, Player, Trap
 	// Not dynamic types are: Terrain, Item
+	public static enum DynamicObjectType {
+		PLAYER, ENEMY
+	} 
+	
 	private double hp;
 	private double damage; // how much damage entity deals
 	

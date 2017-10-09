@@ -12,7 +12,7 @@ import State.Coordinates;
 // Game object is in charge of: image/sprite, ObjectType, Coordinates
 public class GameObject extends Actor {
 	public static enum ObjectType {
-		PLAYER, ENEMY, TERRAIN
+		PLAYER, ENEMY, TERRAIN;
 	}
 	
 	ObjectType type;
@@ -30,6 +30,17 @@ public class GameObject extends Actor {
 		this.sprite = null; // set by object's subclass
 	}
 	
+	
+	
+	public boolean isDynamic() {
+		if(this.type == ObjectType.PLAYER) {
+			return true;
+		} else if (this.type == ObjectType.ENEMY) {
+			return true;
+		} else {
+			return false;
+		}
+	}
 	
 	
 	public ObjectType getType() {

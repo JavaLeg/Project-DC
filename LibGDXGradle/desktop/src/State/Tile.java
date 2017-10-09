@@ -58,10 +58,15 @@ public class Tile implements Serializable{
 	public ObjectType checkObject() {
 		return this.object.getType();
 	}
+	
+	// Check  has object
+	public boolean hasObject() {
+		return this.object != null;
+	}
 
 	
 	// Gets object, can return null
-	public GameObject getObject(ObjectType type) {
+	public GameObject getObject() {
 		return this.object;
 	}
 	
