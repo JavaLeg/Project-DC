@@ -14,7 +14,6 @@ public class DesktopLauncher {
 	      config.height = 480;
 	      config.title = "Project-DC";
 		
-	      
 	      new LwjglApplication(new DCGame(), config);
 	}
 }

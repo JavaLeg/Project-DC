@@ -25,12 +25,12 @@ public class MainMenuScreen implements Screen {
     private OrthographicCamera camera;
     private TextureAtlas atlas;
     protected Skin skin;
-    final DCGame game;
+    final Game game;
     
     private static final int WORLD_WIDTH  = 250;
     private static final int WORLD_HEIGHT = 250;
 	
-    public MainMenuScreen(final DCGame game)
+    public MainMenuScreen(final Game game)
     {
     	this.game = game;
     	
@@ -64,9 +64,6 @@ public class MainMenuScreen implements Screen {
          * Add buttons to table
          * Add table to stage
          */
-        
-        
-
         //Create buttons
         TextButton playButton = new TextButton("Editor", skin);
         TextButton LibButton = new TextButton("Library", skin);
