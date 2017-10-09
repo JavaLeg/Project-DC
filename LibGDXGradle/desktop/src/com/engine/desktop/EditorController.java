@@ -2,6 +2,7 @@ package com.engine.desktop;
 
 import State.Coordinates;
 import State.State;
+import Tileset.GameObject;
 import Tileset.GameObject.ObjectType;
 
 import java.io.IOException;
@@ -15,7 +16,7 @@ import State.Tile;
 
 public class EditorController {
 	private State state;
-	private ObjectType obj;
+	private GameObject obj;
 	private SaveSys saveHandle;
 	private Coordinates coord;
 
@@ -34,15 +35,12 @@ public class EditorController {
 	 * Any click on the preview screen in EditorScreen should call this function
 	 */
 	public void select(int row, int col) {
-
-		selected.setX(row);
-		selected.setY(col);
 		
 		coord.setX(row);
-		coord.setY(row);
+		coord.setY(col);
 						
-		if(!state.isTileEmpty(coord)) {
-			getSelection();
+		if(state.getTile(coord).hasObject()) {
+			get();
 		}else if(obj != null) {
 			place();
 		}
@@ -52,20 +50,20 @@ public class EditorController {
 	 * Quick-place object, according to the coord coordinate
 	 */
 	private void place() {
-		state.setObject(coordObj, coord);
+		state.setObject(obj, coord);
 	}
 	
 	/*
 	 * Retrieve any objects on a tile
 	 */
-	public ArrayList<ObjectType> getSelection() {
-		return obj = state.getObj(coord);
+	public GameObject get() {
+		return state.getTile(coord).getObject();
 	}
 	/*
 	 * Object selection from editor menu
 	 */
-	public void selectObj(ObjectType t) {
-		obj = t;
+	public void selectObj() {
+		obj = state.getTile(coord).getObject();
 	}
 	
 

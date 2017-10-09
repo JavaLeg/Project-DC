@@ -178,14 +178,15 @@ public class State implements Serializable{
 	//************************//
 	
 	public boolean isBlocked(Coordinates pos) {
-		if(!((Terrain) this.map[pos.getX()][pos.getY()].getObject()).isPassable()) {
-			return true;
-		} else if (this.map[pos.getX()][pos.getY()].checkObject() == ObjectType.ENEMY) {
-			return true;
-		} else {
-			return false;
-		}
+		return !((Terrain) this.map[pos.getX()][pos.getY()].getObject()).isPassable();
 	}
+	
+	public boolean isBlocked(Coordinates pos, ObjectType type) {
+		if (type == null) return isBlocked(pos);
+		return (!((Terrain) this.map[pos.getX()][pos.getY()].getObject()).isPassable()
+				&& (this.map[pos.getX()][pos.getY()].hasObject()));
+	}
+	
 	
 	
 	//************************//
@@ -202,6 +203,11 @@ public class State implements Serializable{
 		tempTile = this.map[from.getX()][from.getY()];
 		this.map[from.getX()][from.getY()] = this.map[to.getX()][to.getY()];
 		this.map[to.getX()][to.getY()] = tempTile;
+	}
+
+
+	public void deleteTile(Coordinates coord) {
+		this.map[coord.getX()][coord.getY()].deleteObject();
 	}
 		
 	/*
