@@ -71,22 +71,12 @@ public class Tile implements Serializable{
 	}
 	
 	// Set object if empty, returns false if already has object
-	public boolean setObject(GameObject newObject) {
-		if(this.object != null) {
-			return false;
-		} else {
-			this.object = newObject;
-			return true;
-		}
+	public void setObject(GameObject newObject) {
+		this.object = newObject;
 	}
 	
 	// Deletes object if exists, returns false if does not exist or invalid type
-	public boolean deleteObject() {
-		if(this.object == null) {
-			return false;
-		} else {
-			this.object = null;
-			return true;
-		}
+	public void deleteObject() {
+		this.object = null;
 	}
 }

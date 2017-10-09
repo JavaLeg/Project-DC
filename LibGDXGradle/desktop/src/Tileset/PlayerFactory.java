@@ -8,10 +8,10 @@ public class PlayerFactory {
 		WARRIOR//, ARCHER, TANK, ROGUE
 	}
 	
-	public Player getTerrain(PlayerType type, Coordinates coords) {
+	public Player getPlayer(PlayerType type, Coordinates coord) {
 		switch(type) {
 		case WARRIOR:
-			return new PlayerWarrior(coords);
+			return new PlayerWarrior(coord);
 		/*case SKELETON:
 		case ZOMBIE:
 		case WOLF:*/

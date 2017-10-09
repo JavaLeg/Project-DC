@@ -71,7 +71,7 @@ public class EditorController {
 	 * Should clear the tile regardless of what terrain/item
 	 */
 	public void clearTile() {
-		state.deleteTile(coord);
+		state.clearTile(coord);
 	}
 	
 	public void saveMap(String filename) throws IOException {
