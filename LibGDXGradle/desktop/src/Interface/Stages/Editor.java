@@ -4,10 +4,13 @@ import java.util.HashMap;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
@@ -15,9 +18,13 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
+/*
+ * Stage for the editor UI (Tools on the left of the screen)
+ */
 public class Editor extends Stage{
 	private TextureAtlas atlas;
 	private Skin skin;
+	
 	
 	public Editor(Viewport v, TextureAtlas atlas, Skin skin) {
 		super(v);
@@ -59,8 +66,11 @@ public class Editor extends Stage{
 			mainTable.add(button);
 			
 		}
+		//mainTable.setPosition(-100, -40, 0);
 		
 		// Add this actor
+		
+		super.addActor(new Image(new TextureRegion(new Texture(Gdx.files.internal("wall2.jpg")))));
 		super.addActor(mainTable);
 	}
 	

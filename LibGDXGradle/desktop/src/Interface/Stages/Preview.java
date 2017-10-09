@@ -4,9 +4,11 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.utils.SpriteDrawable;
 import com.badlogic.gdx.utils.Array;
@@ -29,7 +31,7 @@ public class Preview extends Stage{
 	}
 	
 	private void initialise() {
-			    
+		/*
 		grid = new Grid(40, 40, 480, 480, "tmp.png");
 		draw = grid.getGrid();		
 		
@@ -41,7 +43,8 @@ public class Preview extends Stage{
 						return false;
                 }
             });
-		}
-		super.addActor(grid);
+		}*/
+		super.addActor(new Image(new TextureRegion(new Texture(Gdx.files.internal("ground2.jpg")))));
+		//super.addActor(grid);
 	}
 }

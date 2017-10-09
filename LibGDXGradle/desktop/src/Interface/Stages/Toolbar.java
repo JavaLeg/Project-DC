@@ -1,7 +1,7 @@
 package Interface.Stages;
 
-import com.badlogic.gdx.scenes.scene2d.ui.HorizontalGroup;
+import com.badlogic.gdx.scenes.scene2d.Stage;
 
-public class Toolbar extends HorizontalGroup{
+public class Toolbar extends Stage{
 
 }

@@ -22,7 +22,6 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
-import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -37,6 +36,7 @@ import com.engine.desktop.EditorController;
 
 import Interface.Stages.Editor;
 import Interface.Stages.Preview;
+import Interface.Stages.PreviewViewport;
 import State.DynamicGame;
 import State.State;
 
@@ -52,6 +52,9 @@ public class EditorScreen implements Screen {
     
     private Editor editorStage;
     private Preview previewStage;
+    
+    private int APP_WIDTH = Gdx.graphics.getWidth();
+    private int APP_HEIGHT = Gdx.graphics.getHeight();
 	
     public EditorScreen(Game game) throws IOException {
     	this.game = game;
@@ -71,25 +74,20 @@ public class EditorScreen implements Screen {
 		Skin skin = new Skin(Gdx.files.internal("uiskin.json"), atlas);
 		
 		Camera editor_camera = new OrthographicCamera();
-		editor_camera.position.set(400, 240, 0);
-		editor_camera.update();
-		//Camera preview_camera = new OrthographicCamera();
-		Viewport editor_viewport = new FitViewport(800, 480, editor_camera);
-		editor_viewport.apply();
-		editor_viewport.setScreenPosition(100,100);
-		editor_viewport.update(200, 200, true);
-		//Viewport preview_viewport = new FitViewport(800, -480);
-		
+		Camera preview_camera = new OrthographicCamera();
+
+		Viewport editor_viewport = new FitViewport(APP_WIDTH, APP_HEIGHT, editor_camera);
+		Viewport preview_viewport = new PreviewViewport(APP_WIDTH, APP_HEIGHT, preview_camera);
 		
 		editorStage = new Editor(editor_viewport, atlas, skin);
-		//previewStage = new Preview(preview_viewport, atlas, skin);
+		previewStage = new Preview(preview_viewport, atlas, skin);
 				
 		//UI.add(editorStage);
 		//UI.add(previewStage);
 		
-		//InputMultiplexer multiplexer = new InputMultiplexer();
-		//multiplexer.addProcessor(editorStage);
-		//multiplexer.addProcessor(previewStage);
+		InputMultiplexer multiplexer = new InputMultiplexer();
+		multiplexer.addProcessor(editorStage);
+		multiplexer.addProcessor(previewStage);
 
 		
 	}
@@ -99,19 +97,13 @@ public class EditorScreen implements Screen {
         Gdx.gl.glClearColor(1, 1, 1, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
-        // Draw both stage right and stage left
-        // If window resize (update TODO)
-        //stage_right.getViewport().update(500, 800, true);		// First value is X from right of screen
-        //viewport_right.update(800, 800, false);					// Second is Y from top of screen
-        
-        //stage_left.getViewport().update(300, 1000, true);
-        //viewport_left.update(200, 200, false);			// Updates the right pos and sets size
-        
+        editorStage.getViewport().apply();
         editorStage.act();
         editorStage.draw();
         
-        //previewStage.act();
-        //previewStage.draw();
+        previewStage.getViewport().apply();
+        previewStage.act();
+        previewStage.draw();
 	}
 
 	@Override
