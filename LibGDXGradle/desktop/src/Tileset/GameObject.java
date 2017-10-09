@@ -10,7 +10,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import State.Coordinates;
 
 // Game object is in charge of: image/sprite, ObjectType, Coordinates
-public class GameObject extends Actor {
+public class GameObject extends Image {
 	public static enum ObjectType {
 		PLAYER, ENEMY, TERRAIN;
 	}
@@ -18,7 +18,6 @@ public class GameObject extends Actor {
 	ObjectType type;
 	private Coordinates position;
 	private Image image;
-	private Sprite sprite;
 	// height and width are in Actor
 
 
@@ -27,7 +26,6 @@ public class GameObject extends Actor {
 		this.setSize(width,height);
 		this.position = position;
 		this.image = null; // set by object's subclass
-		this.sprite = null; // set by object's subclass
 	}
 	
 	
@@ -80,16 +78,5 @@ public class GameObject extends Actor {
 		TextureRegion region = new TextureRegion(tilemap, x, y, (int)f, (int)g);
 		Image image = new Image(region);
 		this.image = image;
-	}
-		
-	
-	public Sprite getSprite() {
-		return sprite;
-	}	
-	
-	
-	public void setSprite(String imageName, int x, int y, float f, float g) {
-		Texture texture = new Texture(Gdx.files.internal(imageName));
-		this.sprite = new Sprite(texture, x, y, (int)f, (int)g);
 	}
 }
