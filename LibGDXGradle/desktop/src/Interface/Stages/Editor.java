@@ -135,12 +135,13 @@ public class Editor extends Stage{
 		map.put("Empty", 0);
 		
 		Table mainTable = new Table();
+		Table titleTable = new Table();
 		
         Label HUDlabel = new Label("Editor Mode", 
         		new Label.LabelStyle(new BitmapFont(), Color.CYAN));
         
 
-        mainTable.add(HUDlabel);
+        titleTable.add(HUDlabel);
 		
 		for (final String s : temp) {
 			TextButton button = generateButton(s);
@@ -153,12 +154,14 @@ public class Editor extends Stage{
 		        }
 			});
 			
-		}		
+		}
+		titleTable.setPosition(50, 450, 0);
 		mainTable.setPosition(140, 300, 0);
 		
 		// Add this actor
 		super.addActor(new Image(new TextureRegion(new Texture(Gdx.files.internal("EditorScreen/midwall_background_side.png")))));
 		super.addActor(mainTable);
+		super.addActor(titleTable);
 	}
 		
 	
