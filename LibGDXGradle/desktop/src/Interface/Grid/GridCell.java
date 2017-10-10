@@ -3,19 +3,24 @@ package Interface.Grid;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 
-public class GridCell extends Image {
+import Interface.ImageStack;
+
+public class GridCell extends Actor {
 	private static final int gridWidth = 40;
 	private static int gridHeight = 40;
 	
 	public final int xPos;
 	public final int yPos;
 	
-	private Image currImage;
+	private ImageStack cellContents;
 	
 	public GridCell(int x, int y) {
-		super(new TextureRegion(new Texture(Gdx.files.internal("empty.png"))));
+		//super(new TextureRegion(new Texture(Gdx.files.internal("empty.png"))));
+		super();
+		this.cellContents = new ImageStack(new TextureRegion(new Texture(Gdx.files.internal("EditorScreen/empty.png"))));
 		
 		this.xPos = x;
 		this.yPos = y;
@@ -25,6 +30,10 @@ public class GridCell extends Image {
 		int right = left + gridWidth;
 		int bottom = yPos * gridHeight;
 		int top = bottom + gridHeight;
+	}
+	
+	public ImageStack getCellContents() {
+		return cellContents;
 	}
 	
 }

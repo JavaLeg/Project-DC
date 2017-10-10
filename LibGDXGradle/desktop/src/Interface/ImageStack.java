@@ -7,24 +7,25 @@ import com.badlogic.gdx.scenes.scene2d.ui.Stack;
 
 public class ImageStack extends Stack {
 	
-	private int status;		// 0 for empty, 1 for ground, 2 for wall, 3, 4, 5, etc.
-	private int column;
-	private int row;
+	//private int status;		// 0 for empty, 1 for ground, 2 for wall, 3, 4, 5, etc.
+	//private int column;
+	//private int row;
 	private Image terrain;
 	private Image object;
 	
 	private boolean object_exists;
 	
-	public ImageStack(TextureRegion region, int status, int row, int column) {
+	public ImageStack(TextureRegion region) {
 		super();
 		terrain = new Image(region);
 		object_exists = false;
 		this.add(terrain);
-		this.status = status;
-		this.row = row;
-		this.column = column;
+		//this.status = status;
+		//this.row = row;
+		//this.column = column;
 	}
 	
+	/*
 	public int getStatus() {
 		return this.status;
 	}
@@ -32,7 +33,7 @@ public class ImageStack extends Stack {
 	/*
 	 * Holds the new block type
 	 * Possible unnecessary
-	 */
+	
 	public void setStatus(int start) {
 		this.status = start;
 	}
@@ -42,6 +43,7 @@ public class ImageStack extends Stack {
 		this.status++;
 		if (this.status > 2) this.status = 0;
 	}
+	*/
 	
 	/*
 	 * Changes the current block, there is a difference
@@ -75,6 +77,7 @@ public class ImageStack extends Stack {
 		this.add(terrain);
 	}
 	
+	/*
 	public int getColumn() {
 		return this.column;
 	}
@@ -82,5 +85,6 @@ public class ImageStack extends Stack {
 	public int getRow() {
 		return this.row;
 	}
+	*/
 	
 }

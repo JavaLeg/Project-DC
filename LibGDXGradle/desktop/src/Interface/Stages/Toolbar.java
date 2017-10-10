@@ -22,6 +22,7 @@ public class Toolbar extends Stage{
 	private TextureAtlas atlas;
 	private Skin skin;
 	private Editor related;
+	private TableTuple toolbarPos;
 
 	/*
 	 * Dimensions: 280 x 40
@@ -30,6 +31,7 @@ public class Toolbar extends Stage{
 		super(v);
 		this.atlas = atlas;
 		this.skin = skin;
+		this.toolbarPos = new TableTuple(100, 20);
 		initialise();
 	}
 	
@@ -55,7 +57,7 @@ public class Toolbar extends Stage{
 		        }
 			});
 		}
-		mainTable.setPosition(100, 20, 0);
+		mainTable.setPosition(toolbarPos.getX(), toolbarPos.getY(), 0);
 		
 		// Add this actor
 		super.addActor(new Image(new TextureRegion(new Texture(Gdx.files.internal("EditorScreen/tb_bg.png")))));
