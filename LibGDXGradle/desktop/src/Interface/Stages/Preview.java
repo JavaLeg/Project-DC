@@ -1,4 +1,5 @@
 package Interface.Stages;
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
@@ -15,6 +16,7 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 
 import Interface.Grid.GridCell;
 import Interface.ImageID;
+import Interface.ImageStack;
 
 public class Preview extends Stage{
 	private int rowActors;
@@ -28,30 +30,39 @@ public class Preview extends Stage{
 	 */
 	public Preview(Viewport v, int viewWidth, int viewHeight, int cellWidth, int cellHeight) {
 		super(v);
-		this.rowActors = viewWidth/cellWidth;
-		this.colActors = viewHeight/cellHeight;
-		this.tablePos = new TableTuple(50, 50);
+		this.rowActors = viewWidth/cellWidth - 2;
+		this.colActors = viewHeight/cellHeight + 1;
+		//this.tablePos = new TableTuple(-160, -400);
 		initialise(cellWidth, cellHeight);
 	}
 	
 	private void initialise(int cellWidth, int cellHeight) {
 		//super.addActor(new Image(new TextureRegion(new Texture(Gdx.files.internal("EditorScreen/ground3.jpg")))));
-		GridCell[] cells = new GridCell[rowActors * colActors];
-		//Table gridTable = new Table();
+		ImageStack[] cells = new ImageStack[rowActors * colActors];
+		Table gridTable = new Table();
 		
 		for(int i = 0; i < rowActors; i++) {
 			for(int j = 0; j < colActors; j++) {
 				System.out.println("x: " + i + " y: " + j);
 				GridCell gc = new GridCell(cellWidth, cellHeight);
-				//gridTable.add(gc);
-				super.addActor(gc);
+				gridTable.add(gc);
+				//ImageStack cell = ImageStack(new TextureRegion(new Texture(Gdx.files.internal("EditorScreen/empty.png"))));
+				//super.addActor(gc);
+				//gridTable.addActor(gc);
 			}
-			//gridTable.row();
+			gridTable.row();
 		}
 		//gridTable.setPosition(tablePos.getX(), tablePos.getY());
-		//super.addActor(gridTable);
+		gridTable.top();
+		gridTable.setFillParent(true);
+		super.addActor(gridTable);
 	}
 	
+	private ImageStack ImageStack(TextureRegion textureRegion) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 	public void setDependence(Stage s) {
 		this.related = s;
 	}

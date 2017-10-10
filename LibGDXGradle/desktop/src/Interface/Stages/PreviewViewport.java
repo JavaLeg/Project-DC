@@ -38,7 +38,8 @@ public class PreviewViewport extends Viewport{
 		//Double ratio = (double) (7/20);
 		
 		//setScreenBounds((screenWidth - viewportWidth) / 2, (screenHeight - viewportHeight) / 2, viewportWidth, viewportHeight);
-		setScreenBounds(screenWidth*7/20, (screenHeight - viewportHeight) / 2, viewportWidth, viewportHeight);
+		//setScreenBounds(0, 0, viewportWidth, viewportHeight);
+		setScreenBounds((screenWidth*7/40), (screenHeight - viewportHeight) / 2 - 40, viewportWidth, viewportHeight);
 
 		apply(centerCamera);
 	}

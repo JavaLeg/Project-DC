@@ -72,8 +72,9 @@ public class EditorScreen implements Screen {
 		
 		Camera editor_camera = new OrthographicCamera();
 		Camera preview_camera = new OrthographicCamera();
+		
 		Camera toolbar_camera = new OrthographicCamera();
-
+		
 		// Every viewport initializes with (0, 0) at bottom left of the stage
 		Viewport editor_viewport = new FitViewport(APP_WIDTH, APP_HEIGHT, editor_camera);
 		Viewport preview_viewport = new PreviewViewport(APP_WIDTH, APP_HEIGHT, preview_camera);
@@ -82,7 +83,7 @@ public class EditorScreen implements Screen {
 		Editor editorStage = new Editor(editor_viewport, atlas, skin);
 		Preview previewStage = new Preview(preview_viewport, 520, 480, 40, 40);
 		Toolbar toolbarStage = new Toolbar(toolbar_viewport, atlas, skin);
-		
+				
 		UI = new ArrayList<Stage>();
 		UI.add(editorStage);
 		UI.add(previewStage);
