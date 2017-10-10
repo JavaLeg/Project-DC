@@ -37,7 +37,7 @@ public class PreviewViewport extends Viewport{
 		// Ratio used is 7/20 for the split coordinate of the screen
 		//Double ratio = (double) (7/20);
 		
-		setScreenBounds((screenWidth - viewportWidth) / 2, (screenHeight - viewportHeight) / 2, viewportWidth, viewportHeight);
+		//setScreenBounds((screenWidth - viewportWidth) / 2, (screenHeight - viewportHeight) / 2, viewportWidth, viewportHeight);
 		setScreenBounds(screenWidth*7/20, (screenHeight - viewportHeight) / 2, viewportWidth, viewportHeight);
 
 		apply(centerCamera);

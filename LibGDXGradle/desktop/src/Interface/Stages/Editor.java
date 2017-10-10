@@ -34,7 +34,7 @@ public class Editor extends Stage{
 	}
 	
 	private void initialise() {
-
+		
 		String[] temp;
 		temp = new String[] {"Wall", "Ground", "Empty", "Fill ground", "Reset", "Exit"};
 		
@@ -48,29 +48,27 @@ public class Editor extends Stage{
 		Table mainTable = new Table();
 		
         Label HUDlabel = new Label("Editor Mode", 
-        		new Label.LabelStyle(new BitmapFont(), Color.BLACK));
+        		new Label.LabelStyle(new BitmapFont(), Color.CYAN));
         
 
         mainTable.add(HUDlabel);
 		
 		for (final String s : temp) {
 			TextButton button = generateButton(s);
-			
+			mainTable.row();
+			mainTable.add(button);	
 			button.addListener(new ClickListener(){
 				@Override
 		        public void clicked(InputEvent event, float x, float y) {
 					System.out.println("Clicked: " + s);
 		        }
 			});
-			mainTable.row();
-			mainTable.add(button);
 			
-		}
-		//mainTable.setPosition(-100, -40, 0);
+		}		
+		mainTable.setPosition(140, 300, 0);
 		
 		// Add this actor
-		
-		super.addActor(new Image(new TextureRegion(new Texture(Gdx.files.internal("wall2.jpg")))));
+		super.addActor(new Image(new TextureRegion(new Texture(Gdx.files.internal("EditorScreen/midwall_background_side.png")))));
 		super.addActor(mainTable);
 	}
 	

@@ -37,6 +37,8 @@ import com.engine.desktop.EditorController;
 import Interface.Stages.Editor;
 import Interface.Stages.Preview;
 import Interface.Stages.PreviewViewport;
+import Interface.Stages.Toolbar;
+import Interface.Stages.ToolbarViewport;
 import State.DynamicGame;
 import State.State;
 
@@ -49,10 +51,7 @@ public class EditorScreen implements Screen {
 	
     private SpriteBatch batch;
     private Game game;
-    
-    private Editor editorStage;
-    private Preview previewStage;
-    
+        
     private int APP_WIDTH = Gdx.graphics.getWidth();
     private int APP_HEIGHT = Gdx.graphics.getHeight();
 	
@@ -62,10 +61,6 @@ public class EditorScreen implements Screen {
     	this.model = new EditorModel();
     }
     
-    /*public EditorController getController() {
-    	return controller;
-    }*/
-
 	// Show only operates once, after it will render
 	@Override
 	public void show() {
@@ -75,21 +70,23 @@ public class EditorScreen implements Screen {
 		
 		Camera editor_camera = new OrthographicCamera();
 		Camera preview_camera = new OrthographicCamera();
+		Camera toolbar_camera = new OrthographicCamera();
 
 		Viewport editor_viewport = new FitViewport(APP_WIDTH, APP_HEIGHT, editor_camera);
 		Viewport preview_viewport = new PreviewViewport(APP_WIDTH, APP_HEIGHT, preview_camera);
+		Viewport toolbar_viewport = new ToolbarViewport(APP_WIDTH, APP_HEIGHT, toolbar_camera);
 		
-		editorStage = new Editor(editor_viewport, atlas, skin);
-		previewStage = new Preview(preview_viewport, atlas, skin);
-				
-		//UI.add(editorStage);
-		//UI.add(previewStage);
+		Editor editorStage = new Editor(editor_viewport, atlas, skin);
+		Preview previewStage = new Preview(preview_viewport, atlas, skin);
+		Toolbar toolbarStage = new Toolbar(toolbar_viewport, atlas, skin);
 		
-		InputMultiplexer multiplexer = new InputMultiplexer();
-		multiplexer.addProcessor(editorStage);
-		multiplexer.addProcessor(previewStage);
-
+		UI = new ArrayList<Stage>();
+		UI.add(editorStage);
+		UI.add(previewStage);
+		UI.add(toolbarStage);
 		
+		InputMultiplexer multiplexer = new InputMultiplexer(editorStage, previewStage, toolbarStage);
+		Gdx.input.setInputProcessor(multiplexer);
 	}
 	
 	@Override
@@ -97,18 +94,18 @@ public class EditorScreen implements Screen {
         Gdx.gl.glClearColor(1, 1, 1, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
-        editorStage.getViewport().apply();
-        editorStage.act();
-        editorStage.draw();
-        
-        previewStage.getViewport().apply();
-        previewStage.act();
-        previewStage.draw();
+        for(Stage s: UI) {
+        	s.getViewport().apply();
+        	s.act();
+        	s.draw();
+        }
 	}
 
 	@Override
 	public void resize(int width, int height) {
-		// TODO Auto-generated method stub
+		for(Stage s: UI) {
+			s.getViewport().update(width, height, true);
+		}
 		
 	}
 

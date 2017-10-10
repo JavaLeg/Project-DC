@@ -31,20 +31,6 @@ public class Preview extends Stage{
 	}
 	
 	private void initialise() {
-		/*
-		grid = new Grid(40, 40, 480, 480, "tmp.png");
-		draw = grid.getGrid();		
-		
-		for (final ImageID cur: draw) {
-            cur.addListener(new InputListener() {
-                public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
-                        System.out.println("Pos = (" + cur.getRow() + ", " + cur.getColumn() 
-                        + "), status = " + cur.getStatus());
-						return false;
-                }
-            });
-		}*/
-		super.addActor(new Image(new TextureRegion(new Texture(Gdx.files.internal("ground2.jpg")))));
-		//super.addActor(grid);
+		//super.addActor(new Image(new TextureRegion(new Texture(Gdx.files.internal("EditorScreen/ground3.jpg")))));
 	}
 }
