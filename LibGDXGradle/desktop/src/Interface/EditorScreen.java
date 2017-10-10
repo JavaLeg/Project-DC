@@ -73,6 +73,7 @@ public class EditorScreen implements Screen {
 		Camera preview_camera = new OrthographicCamera();
 		Camera toolbar_camera = new OrthographicCamera();
 
+		// Every viewport initializes with (0, 0) at bottom left of the stage
 		Viewport editor_viewport = new FitViewport(APP_WIDTH, APP_HEIGHT, editor_camera);
 		Viewport preview_viewport = new PreviewViewport(APP_WIDTH, APP_HEIGHT, preview_camera);
 		Viewport toolbar_viewport = new ToolbarViewport(APP_WIDTH, APP_HEIGHT, toolbar_camera);

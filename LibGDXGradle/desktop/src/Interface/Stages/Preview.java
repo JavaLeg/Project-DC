@@ -22,6 +22,9 @@ public class Preview extends Stage{
 	private int rowActors;
 	private int colActors;
 	
+	/*
+	 * Dimensions: 520 x 480
+	 */
 	public Preview(Viewport v, int viewWidth, int viewHeight, int cellWidth, int cellHeight) {
 		super(v);
 		this.rowActors = viewWidth/cellWidth;
