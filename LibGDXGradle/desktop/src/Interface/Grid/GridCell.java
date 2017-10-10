@@ -13,6 +13,8 @@ public class GridCell extends Image{
 	private Image currImage;
 	
 	public GridCell(int x, int y) {
+		super(new TextureRegion(new Texture(Gdx.files.internal("empty.png"))));
+		
 		this.xPos = x;
 		this.yPos = y;
 		
@@ -24,11 +26,6 @@ public class GridCell extends Image{
 		int right = left + gridWidth;
 		int bottom = yPos * gridHeight;
 		int top = bottom + gridHeight;
-		
-		// Set default
-		Image currImage = new Image(new TextureRegion(new Texture(
-				Gdx.files.internal("empty.png"))));
-		
 	}
 	
 }

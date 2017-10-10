@@ -35,6 +35,7 @@ import com.engine.desktop.DCGame;
 import com.engine.desktop.EditorController;
 
 import Interface.Stages.Editor;
+import Interface.Stages.GridPreview;
 import Interface.Stages.Preview;
 import Interface.Stages.PreviewViewport;
 import Interface.Stages.Toolbar;
@@ -77,7 +78,7 @@ public class EditorScreen implements Screen {
 		Viewport toolbar_viewport = new ToolbarViewport(APP_WIDTH, APP_HEIGHT, toolbar_camera);
 		
 		Editor editorStage = new Editor(editor_viewport, atlas, skin);
-		Preview previewStage = new Preview(preview_viewport, atlas, skin);
+		Preview previewStage = new Preview(preview_viewport, 280, 480, 40, 40);
 		Toolbar toolbarStage = new Toolbar(toolbar_viewport, atlas, skin);
 		
 		UI = new ArrayList<Stage>();

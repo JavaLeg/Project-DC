@@ -1,6 +1,4 @@
 package Interface.Stages;
-
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
@@ -16,21 +14,30 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 
 import Interface.Grid;
 import Interface.ImageID;
+import Interface.Grid.GridCell;
 
 public class Preview extends Stage{
 	private TextureAtlas atlas;
 	private Skin skin;
-	private Array<ImageID> draw;
-	private Grid grid;
+	private int rowActors;
+	private int colActors;
 	
-	public Preview(Viewport v, TextureAtlas atlas, Skin skin) {
+	public Preview(Viewport v, int viewWidth, int viewHeight, int cellWidth, int cellHeight) {
 		super(v);
-		this.atlas = atlas;
-		this.skin = skin;
-		initialise();
+		this.rowActors = viewWidth/cellWidth;
+		this.colActors = viewHeight/cellHeight;
+		//initialise(cellWidth, cellHeight);
 	}
 	
-	private void initialise() {
+	private void initialise(int cellWidth, int cellHeight) {
 		//super.addActor(new Image(new TextureRegion(new Texture(Gdx.files.internal("EditorScreen/ground3.jpg")))));
+		Image[] cellImgs = new Image[rowActors * colActors];
+		
+		for(int i = 0; i < rowActors; i++) {
+			for(int j = 0; j < colActors; j++) {
+				GridCell gc = new GridCell(cellWidth, cellHeight);
+				super.addActor(gc));
+			}
+		}
 	}
 }
