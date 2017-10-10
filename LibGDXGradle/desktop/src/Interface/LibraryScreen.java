@@ -43,7 +43,7 @@ public class LibraryScreen implements Screen{
     private static final int WORLD_HEIGHT = 250;
 
     public LibraryScreen(Game game) throws IOException {
-    	this.game = game;
+    	this.game = (DCGame) game;
     	this.fileHandle = new SaveSys();
     }
     
@@ -86,7 +86,7 @@ public class LibraryScreen implements Screen{
                 public void clicked(InputEvent event, float x, float y) {
                 	try {
                 		EditorScreen es = new EditorScreen(game);
-                		es.getController().loadMap(fileLabel.getText().toString());
+//                		es.getController().loadMap(fileLabel.getText().toString());
                 		
                 		System.out.println("Loaded " + fileLabel.getText().toString());
     					((Game)Gdx.app.getApplicationListener()).setScreen(es);
@@ -94,10 +94,11 @@ public class LibraryScreen implements Screen{
     				} catch (IOException e) {
     					System.out.println("Error: could not load file " + fileLabel.getText().toString());
     					e.printStackTrace();
-    				} catch (ClassNotFoundException e) {
-    					System.out.println("Error: could not find file " + fileLabel.getText().toString());
-						e.printStackTrace();
-					}
+    				} 
+//                	catch (ClassNotFoundException e) {
+//    					System.out.println("Error: could not find file " + fileLabel.getText().toString());
+//						e.printStackTrace();
+//					}
                 }
         	});
         	

@@ -2,10 +2,12 @@ package Interface.Grid;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
 
-public class GridCell extends Image{
-	private static final gridWidth;
-	private static final gridHeight;
+public class GridCell extends Image {
+	private static final int gridWidth = 40;
+	private static int gridHeight = 40;
 	
 	public final int xPos;
 	public final int yPos;
@@ -17,9 +19,6 @@ public class GridCell extends Image{
 		
 		this.xPos = x;
 		this.yPos = y;
-		
-		this.gridWidth = 40;
-		this.gridHeight = 40;
 		
 		// Determine grid lines
 		int left = xPos * gridWidth;

@@ -12,9 +12,8 @@ import com.badlogic.gdx.scenes.scene2d.utils.SpriteDrawable;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
-import Interface.Grid;
-import Interface.ImageID;
 import Interface.Grid.GridCell;
+import Interface.ImageID;
 
 public class Preview extends Stage{
 	private TextureAtlas atlas;
@@ -39,7 +38,7 @@ public class Preview extends Stage{
 		for(int i = 0; i < rowActors; i++) {
 			for(int j = 0; j < colActors; j++) {
 				GridCell gc = new GridCell(cellWidth, cellHeight);
-				super.addActor(gc));
+				super.addActor(gc);
 			}
 		}
 	}
