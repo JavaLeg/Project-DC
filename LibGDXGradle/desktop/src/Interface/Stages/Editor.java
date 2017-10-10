@@ -277,7 +277,9 @@ public class Editor extends Stage{
 			return;
 		
 		this.clear();
-			
+		
+		// Check if table already exists
+		// If so, pass that table instead of generating
 		switch(s) {
 		case TERRAIN:
 			if(terrainTable == null)

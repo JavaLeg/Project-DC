@@ -17,6 +17,7 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 import Interface.Grid.GridCell;
 import Interface.ImageID;
 import Interface.ImageStack;
+import Interface.PreviewCell;
 
 public class Preview extends Stage{
 	private int rowActors;
@@ -32,23 +33,22 @@ public class Preview extends Stage{
 		super(v);
 		this.rowActors = viewWidth/cellWidth - 2;
 		this.colActors = viewHeight/cellHeight + 1;
-		//this.tablePos = new TableTuple(-160, -400);
 		initialise(cellWidth, cellHeight);
 	}
 	
 	private void initialise(int cellWidth, int cellHeight) {
-		//super.addActor(new Image(new TextureRegion(new Texture(Gdx.files.internal("EditorScreen/ground3.jpg")))));
-		ImageStack[] cells = new ImageStack[rowActors * colActors];
 		Table gridTable = new Table();
+		//ImageStack[] cells = new ImageStack[rowActors * colActors];
 		
 		for(int i = 0; i < rowActors; i++) {
 			for(int j = 0; j < colActors; j++) {
 				System.out.println("x: " + i + " y: " + j);
-				GridCell gc = new GridCell(cellWidth, cellHeight);
-				gridTable.add(gc);
-				//ImageStack cell = ImageStack(new TextureRegion(new Texture(Gdx.files.internal("EditorScreen/empty.png"))));
-				//super.addActor(gc);
-				//gridTable.addActor(gc);
+				
+				//GridCell gc = new GridCell(cellWidth, cellHeight);
+				//gridTable.add(gc);
+				
+				PreviewCell cell = new PreviewCell();
+				gridTable.add(cell);
 			}
 			gridTable.row();
 		}

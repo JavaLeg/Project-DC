@@ -1,11 +1,16 @@
 package Interface;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Stack;
 
-public class ImageStack extends Stack {
+
+/*
+ * Name change from image stack as it seems more appropriate
+ */
+public class PreviewCell extends Stack {
 	
 	//private int status;		// 0 for empty, 1 for ground, 2 for wall, 3, 4, 5, etc.
 	//private int column;
@@ -15,9 +20,13 @@ public class ImageStack extends Stack {
 	
 	private boolean object_exists;
 	
-	public ImageStack(TextureRegion region) {
+	/*
+	 * Initialises to empty
+	 */
+	public PreviewCell() {
 		super();
-		terrain = new Image(region);
+		
+		terrain = new Image(new Texture(Gdx.files.internal("EditorScreen/empty_grid.png")));
 		object_exists = false;
 		this.add(terrain);
 		//this.status = status;

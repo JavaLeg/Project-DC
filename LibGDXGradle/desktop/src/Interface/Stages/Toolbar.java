@@ -37,10 +37,12 @@ public class Toolbar extends Stage{
 	
 	private void initialise() {		
 		Table mainTable = new Table();
+		int pad = 0;
 		
 		for(final ToolbarSelection s: ToolbarSelection.values()) {
 			TextButton button = generateButton(s.name());
-			mainTable.add(button);	
+			mainTable.add(button).pad(5);	
+			pad += 5;
 			button.addListener(new ClickListener(){
 				@Override
 		        public void clicked(InputEvent event, float x, float y) {
@@ -57,7 +59,7 @@ public class Toolbar extends Stage{
 		        }
 			});
 		}
-		mainTable.setPosition(toolbarPos.getX(), toolbarPos.getY(), 0);
+		mainTable.setPosition(toolbarPos.getX() + pad, toolbarPos.getY(), 0);
 		
 		// Add this actor
 		super.addActor(new Image(new TextureRegion(new Texture(Gdx.files.internal("EditorScreen/tb_bg.png")))));
