@@ -42,8 +42,8 @@ public class LibraryScreen implements Screen{
     private static final int WORLD_WIDTH  = 250;
     private static final int WORLD_HEIGHT = 250;
 
-    public LibraryScreen(DCGame g) throws IOException {
-    	this.game = g;
+    public LibraryScreen(Game game) throws IOException {
+    	this.game = game;
     	this.fileHandle = new SaveSys();
     }
     

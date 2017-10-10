@@ -1,14 +1,11 @@
 package Interface;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Color;
+import Tileset.GameObject;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
-import com.badlogic.gdx.scenes.scene2d.InputEvent;
-import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.scenes.scene2d.ui.Image;
-import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.scenes.scene2d.ui.Stack;
 import com.badlogic.gdx.scenes.scene2d.utils.SpriteDrawable;
 import com.badlogic.gdx.utils.Array;
 
@@ -22,12 +19,12 @@ public class Grid {
 	int columns;
 	int size_x;
 	int size_y;
-	private Array <ImageID> images;		// The grids
+	private Array <ImageStack> images;		// The grids
 	private Texture cur_texture;
 	
 	public Grid(int x, int y, int height, int width, String path) {
 		//
-		images = new Array <ImageID>();
+		images = new Array <ImageStack>();
 		cur_texture = new Texture(Gdx.files.internal("empty.png"));
 		// TextureRegion region = new TextureRegion(cur_texture, 0, 112, 16, 16);
 		TextureRegion region = new TextureRegion(cur_texture);
@@ -37,12 +34,12 @@ public class Grid {
 		for (int i = 40; i <= width; i = i + y) {
 			for (int j = 40; j <= height; j = j + x) {
 				System.out.println("I = " + i + ", J = " + j);
-				ImageID cur_image = new ImageID(region, 0, col, row);
-	            cur_image.setPosition(i, j);
-	            cur_image.setSize(x, y);
-	            cur_image.setWidth(x);
-	            cur_image.setHeight(y);
-	            images.add(cur_image);
+				ImageStack cur = new ImageStack(region, 0, col, row);
+	            cur.setPosition(i, j);
+	            cur.setSize(x, y);
+	            cur.setWidth(x);
+	            cur.setHeight(y);
+	            images.add(cur);
 	            col++;
 			}
 			row++;
@@ -50,10 +47,13 @@ public class Grid {
 		}
 	}
 	
+	/*
+	 * For setting the entire grid to one texture
+	 */
 	public void setValue(int value, Texture nxt) {
 		for (int i = 0; i < images.size; i++) {
 			images.get(i).setStatus(value);
-			images.get(i).setDrawable(new SpriteDrawable(new Sprite(nxt)));
+			images.get(i).setToTerrain(nxt);
 		}
 	}
 	
@@ -63,8 +63,7 @@ public class Grid {
 		}
 	}
 	
-	// Return the Array of images
-	public Array <ImageID> getGrid() {
+	public Array <ImageStack> getGrid() {
 		return this.images;
 	}
 }
