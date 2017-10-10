@@ -73,6 +73,7 @@ public class Tile implements Serializable{
 	// Set object if empty, returns false if already has object
 	public void setObject(GameObject newObject) {
 		this.object = newObject;
+		newObject.setCoord(this.coord);
 	}
 	
 	// Deletes object if exists, returns false if does not exist or invalid type

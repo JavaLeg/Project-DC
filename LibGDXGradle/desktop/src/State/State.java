@@ -20,9 +20,8 @@ public class State implements Serializable{
 	// Coords of player
 	private Coordinates playerCoord;
 	
-	// Map is hashmap of hashmap of tiles
 	private List<List<Tile>> map;
-	// The first index is x, the second index is y
+	// The outer index is x, the inner index is y
 	private int mapWidth;
 	private int mapHeight;
 	
