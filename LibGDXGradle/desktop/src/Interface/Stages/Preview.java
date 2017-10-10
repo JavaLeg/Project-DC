@@ -20,6 +20,7 @@ public class Preview extends Stage{
 	private Skin skin;
 	private int rowActors;
 	private int colActors;
+	private Stage related;
 	
 	/*
 	 * Dimensions: 520 x 480
@@ -41,5 +42,13 @@ public class Preview extends Stage{
 				super.addActor(gc);
 			}
 		}
+	}
+	
+	public void setDependence(Stage s) {
+		this.related = s;
+	}
+	
+	public void setDependence(Editor s) {
+		this.related = s;
 	}
 }

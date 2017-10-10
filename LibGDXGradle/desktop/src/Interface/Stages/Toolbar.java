@@ -21,6 +21,7 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 public class Toolbar extends Stage{
 	private TextureAtlas atlas;
 	private Skin skin;
+	private Editor related;
 
 	/*
 	 * Dimensions: 280 x 40
@@ -32,26 +33,28 @@ public class Toolbar extends Stage{
 		initialise();
 	}
 	
-	private void initialise() {
-		String[] temp;
-		temp = new String[] {"Map", "Creatures", "Terrain"};
-		
-		// Hard-coded for now, can deal with it later when images replace these buttons
-		final HashMap<String, Integer> map = new HashMap<String, Integer>();
-		
+	private void initialise() {		
 		Table mainTable = new Table();
 		
-		for (final String s : temp) {
-			TextButton button = generateButton(s);
+		for(final ToolbarSelection s: ToolbarSelection.values()) {
+			TextButton button = generateButton(s.name());
 			mainTable.add(button);	
 			button.addListener(new ClickListener(){
 				@Override
 		        public void clicked(InputEvent event, float x, float y) {
-					System.out.println("Clicked: " + s);
+					switch(s){
+					case CREATURE:
+						related.update(ToolbarSelection.CREATURE);
+						break;
+					case TERRAIN:
+						related.update(ToolbarSelection.TERRAIN);
+						break;
+					default:
+						break;
+					}
 		        }
 			});
-			
-		}		
+		}
 		mainTable.setPosition(100, 20, 0);
 		
 		// Add this actor
@@ -62,5 +65,13 @@ public class Toolbar extends Stage{
 	private TextButton generateButton(String s) {
 		TextButton button = new TextButton(s, skin);
 		return button;
+	}
+	
+	public void setDependence(Stage s) {
+		this.related = s;
+	}
+	
+	public void setDependence(Editor s) {
+		this.related = s;
 	}
 }

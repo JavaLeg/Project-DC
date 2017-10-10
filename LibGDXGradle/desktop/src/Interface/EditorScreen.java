@@ -8,6 +8,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
@@ -87,8 +88,25 @@ public class EditorScreen implements Screen {
 		UI.add(previewStage);
 		UI.add(toolbarStage);
 		
+		
+		//Hash map for stage dependencies
+		HashMap<Stage, Stage> map = new HashMap<Stage, Stage>();
+		
+		/* 
+		 * Key depends on Value
+		 * Note: Can extend to hashMap of arrays if necessary
+		 */
+		map.put(toolbarStage, editorStage);
+		map.put(previewStage, editorStage);
+		map.put(editorStage, previewStage);
+		
 		// For dealing with unique processes between stages
-		setDependencies(UI);
+		//setDependencies(UI, map);
+		
+		// Manually set for now
+		editorStage.setDependence(previewStage);
+		previewStage.setDependence(editorStage);
+		toolbarStage.setDependence(editorStage);
 		
 		InputMultiplexer multiplexer = new InputMultiplexer(editorStage, previewStage, toolbarStage);
 		Gdx.input.setInputProcessor(multiplexer);
@@ -137,9 +155,13 @@ public class EditorScreen implements Screen {
         batch.dispose();
 		// TODO Auto-generated method stub	
 	}
+
 	
-	private void setDependencies(ArrayList<Stage> UI) {
+	private void setDependencies(ArrayList<Stage> UI, HashMap<Stage, Stage> map) {
 		
+		for(Stage s: UI) {
+			((Stage) s).setDependence((Stage)map.get(s));
+		}
 	}
 
 }
