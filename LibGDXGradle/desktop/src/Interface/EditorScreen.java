@@ -87,6 +87,9 @@ public class EditorScreen implements Screen {
 		UI.add(previewStage);
 		UI.add(toolbarStage);
 		
+		// For dealing with unique processes between stages
+		setDependencies(UI);
+		
 		InputMultiplexer multiplexer = new InputMultiplexer(editorStage, previewStage, toolbarStage);
 		Gdx.input.setInputProcessor(multiplexer);
 	}
@@ -133,6 +136,10 @@ public class EditorScreen implements Screen {
 	public void dispose() {
         batch.dispose();
 		// TODO Auto-generated method stub	
+	}
+	
+	private void setDependencies(ArrayList<Stage> UI) {
+		
 	}
 
 }
