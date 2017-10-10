@@ -1,5 +1,7 @@
 package Tileset;
 
+import com.badlogic.gdx.graphics.Texture;
+
 import State.Coordinates;
 import State.State;
 
@@ -15,8 +17,8 @@ public class DynamicObject extends GameObject {
 	private double damage; // how much damage entity deals
 	
 	
-	public DynamicObject(ObjectType type, int width, int height, Coordinates position, double hp, double damage) {
-		super(type, width, height, position);
+	public DynamicObject(ObjectType type, int width, int height, Coordinates position, Texture texture, double hp, double damage) {
+		super(type, width, height, position, texture);
 		this.hp = hp;
 		this.damage = damage;
 	}
