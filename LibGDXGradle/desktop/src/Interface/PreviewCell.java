@@ -7,7 +7,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Stack;
 
 import Interface.Stages.Selections.CreatureSelection;
-import Interface.Stages.Selections.EditorSelection;
+// import Interface.Stages.Selections.EditorSelection;
 import Interface.Stages.Selections.TerrainSelection;
 
 
@@ -21,6 +21,7 @@ public class PreviewCell extends Stack {
 	//private int row;
 	private Image terrain;
 	private Image object;
+	private boolean object_exists;
 
 	
 	/*
@@ -28,8 +29,9 @@ public class PreviewCell extends Stack {
 	 */
 	public PreviewCell() {
 		super();
-		
-		terrain = new Image(new Texture(Gdx.files.internal("EditorScreen/empty_grid.png")));
+		Texture cur_texture = new Texture(Gdx.files.internal("EditorScreen/empty_grid.png"));
+		TextureRegion gnd = new TextureRegion(cur_texture, 40, 40);
+		terrain = new Image(gnd);
 		this.add(terrain);
 		
 		//this.status = status;
@@ -59,10 +61,14 @@ public class PreviewCell extends Stack {
 		if (this.status > 2) this.status = 0;
 	}
 	*/
-	public void placeTerrain(Image s) {
+	public void placeTerrain(Texture s) {
 		this.clearChildren();
 		
-		terrain = s;
+		// JAMES, use texture regions so you can preset the size
+		TextureRegion nxt = new TextureRegion(s, 40, 40);
+		Image n = new Image(nxt);
+	
+		terrain = n;
 		this.add(terrain);
 		
 		if(object != null) {	
@@ -70,10 +76,15 @@ public class PreviewCell extends Stack {
 		}
 	}
 	
-	public void placeCreature(Image s) {
+	public void placeCreature(Texture s) {
+		
 		this.clearChildren();
 		
-		object = s;
+		// JAMES, use texture regions so you can preset the size
+		TextureRegion nxt = new TextureRegion(s, 40, 40);
+		Image n = new Image(nxt);
+		
+		object = n;
 		
 		this.add(terrain);
 		this.add(object);
@@ -85,8 +96,9 @@ public class PreviewCell extends Stack {
 	 * This allows for overlapping images
 	 * @param object_type: true if object is not terrain
 	 */
-	public void changeImage(Texture nxt, boolean object_type) {
+	public void changeImage(Texture nxt_text, boolean object_type) {
 		
+		TextureRegion nxt = new TextureRegion(nxt_text, 100, 100);
 		this.clearChildren();
 		if (object_type == true) {
 			object = new Image(nxt);

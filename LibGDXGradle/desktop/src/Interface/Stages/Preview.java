@@ -53,14 +53,16 @@ public class Preview extends Stage{
 				System.out.println("x: " + i + " y: " + j);
 								
 				final PreviewCell cell = new PreviewCell();
-				
+				cell.setSize(40, 40);
+				cell.setWidth(40);
+				cell.setHeight(40);
 				cell.addListener(new ClickListener(){
 					@Override
 			        public void clicked(InputEvent event, float x, float y) {
 						if(t_select != null) {
-							cell.placeTerrain(new Image(new Texture(Gdx.files.internal("SpriteFamily/Terrain/sprite_020.png"))));
+							cell.placeTerrain(new Texture(Gdx.files.internal("SpriteFamily/Terrain/sprite_020.png")));
 						}else if(cr_select != null) {
-							cell.placeCreature(new Image(new Texture(Gdx.files.internal("SpriteFamily/Creature/sprite_107.png"))));
+							cell.placeCreature(new Texture(Gdx.files.internal("SpriteFamily/Creature/sprite_107.png")));
 						}
 			        }
 				});
@@ -73,13 +75,15 @@ public class Preview extends Stage{
 		gridTable.top();
 		gridTable.setFillParent(true);
 		super.addActor(gridTable);
+		System.out.println("hlo");
 	}
 
-	
+	/*
 	private ImageStack ImageStack(TextureRegion textureRegion) {
 		// TODO Auto-generated method stub
 		return null;
 	}
+	*/
 
 	public void setDependence(Stage s) {
 		this.related = s;
