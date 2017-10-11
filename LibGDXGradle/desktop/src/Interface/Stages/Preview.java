@@ -19,6 +19,7 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 import Interface.Stages.Selections.CreatureSelection;
 
 import Interface.Stages.Selections.TerrainSelection;
+import Interface.Stages.Selections.ToolbarSelection;
 import Interface.PreviewCell;
 
 public class Preview extends Stage{
@@ -27,8 +28,13 @@ public class Preview extends Stage{
 	private Stage related;
 	private TableTuple tablePos;
 	
-	private TerrainSelection t_select;
-	private CreatureSelection cr_select;
+	CreatureSelection cr_select;
+	TerrainSelection t_select;
+	
+	private Image selectedImage;
+	
+	// Should rename it soon, Image Stack can hold more than one "layer" of object objects.
+	private ToolbarSelection selectedLayer;
 	
 	
 	/*
@@ -59,15 +65,11 @@ public class Preview extends Stage{
 				cell.addListener(new ClickListener(){
 					@Override
 			        public void clicked(InputEvent event, float x, float y) {
-						if(t_select != null) {
-							cell.placeTerrain(new Texture(Gdx.files.internal("SpriteFamily/Terrain/sprite_020.png")));
-						}else if(cr_select != null) {
-							cell.placeCreature(new Texture(Gdx.files.internal("SpriteFamily/Creature/sprite_107.png")));
-						}
+						cell.setImage(selectedImage, selectedLayer);
 			        }
 				});
 
-				gridTable.add(cell);	
+				gridTable.add(cell).size(40, 40);	
 			}
 			gridTable.row();
 		}
@@ -75,7 +77,6 @@ public class Preview extends Stage{
 		gridTable.top();
 		gridTable.setFillParent(true);
 		super.addActor(gridTable);
-		System.out.println("hlo");
 	}
 
 	/*
@@ -101,5 +102,10 @@ public class Preview extends Stage{
 	public void setSelection(CreatureSelection s) {
 		this.cr_select = s;
 		this.t_select = null;
+	}
+	
+	public void setSelection(Texture s, ToolbarSelection ts) {
+		this.selectedImage = new Image(new TextureRegion(s));
+		this.selectedLayer = ts;
 	}
 }

@@ -9,6 +9,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Stack;
 import Interface.Stages.Selections.CreatureSelection;
 // import Interface.Stages.Selections.EditorSelection;
 import Interface.Stages.Selections.TerrainSelection;
+import Interface.Stages.Selections.ToolbarSelection;
 
 
 /*
@@ -19,8 +20,10 @@ public class PreviewCell extends Stack {
 	//private int status;		// 0 for empty, 1 for ground, 2 for wall, 3, 4, 5, etc.
 	//private int column;
 	//private int row;
+	private Texture currTexture;
 	private Image terrain;
 	private Image object;
+	private Image empty;
 	private boolean object_exists;
 
 	
@@ -30,8 +33,11 @@ public class PreviewCell extends Stack {
 	public PreviewCell() {
 		super();
 		Texture cur_texture = new Texture(Gdx.files.internal("EditorScreen/empty_grid.png"));
-		TextureRegion gnd = new TextureRegion(cur_texture, 40, 40);
+		//TextureRegion gnd = new TextureRegion(cur_texture, 40, 40);
+		// Changed, we can lock grid size. Done in the loop in preview
+		TextureRegion gnd = new TextureRegion(cur_texture);
 		terrain = new Image(gnd);
+		empty = terrain;
 		this.add(terrain);
 		
 		//this.status = status;
@@ -61,11 +67,37 @@ public class PreviewCell extends Stack {
 		if (this.status > 2) this.status = 0;
 	}
 	*/
+	
+	public void setImage(Image i, ToolbarSelection ts) {
+		this.clearChildren();
+		
+		switch(ts) {
+		
+		case TERRAIN:
+			terrain = i;
+			this.add(terrain);
+			
+			if(object != null) {	
+				this.add(object);
+			}
+			
+		case CREATURE:
+			object = i;
+			this.add(terrain);
+			this.add(object);
+			
+		default:
+			break;
+		}
+		
+		
+	}
+	
 	public void placeTerrain(Texture s) {
 		this.clearChildren();
 		
 		// JAMES, use texture regions so you can preset the size
-		TextureRegion nxt = new TextureRegion(s, 40, 40);
+		TextureRegion nxt = new TextureRegion(s, 0, 0, 40, 40);
 		Image n = new Image(nxt);
 	
 		terrain = n;

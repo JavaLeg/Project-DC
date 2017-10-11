@@ -3,6 +3,7 @@ package Interface.Stages;
 import java.util.HashMap;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
@@ -50,6 +51,7 @@ public class Editor extends Stage{
 	
 	//private Stage related;
 	private Preview related;
+	private String path;
 	
 	//private CreatureTable currTable;
 	//private TerrainTable currTable;
@@ -67,7 +69,8 @@ public class Editor extends Stage{
 		this.atlas = atlas;
 		this.skin = skin;
 		this.titlePos = new TableTuple(50, 450);
-		this.tablePos = new TableTuple(140, 300);
+		this.tablePos = new TableTuple(140, 440);
+		this.path = "SpriteFamily/";
 		initialise();
 	}
 	
@@ -168,7 +171,7 @@ public class Editor extends Stage{
 	
 	private void display(Table newTable, ToolbarSelection s) {
 
-		newTable.setPosition(tablePos.getX(), tablePos.getY());
+		
 		
 		Table newTitle = new Table();
 		Label title = null;
@@ -184,27 +187,9 @@ public class Editor extends Stage{
 		
 		newTitle.add(title);
 		newTitle.setPosition(titlePos.getX(), titlePos.getY());
-		//t.setPosition(0, 0);
-		
-		/*
-		Table mainTable = new Table();
-		String[] temp;
-		temp = new String[] {"Wall", "Ground", "Empty", "Fill ground", "Reset", "Exit"};
-		
-		for (final String s : temp) {
-			TextButton button = generateButton(s);
-			mainTable.row();
-			mainTable.add(button);	
-			button.addListener(new ClickListener(){
-				@Override
-		        public void clicked(InputEvent event, float x, float y) {
-					System.out.println("Clicked: " + s);
-		        }
-			});
-			
-		}
-		mainTable.setPosition(tablePos.getX(), tablePos.getY());
-		*/
+		newTable.setPosition(tablePos.getX(), tablePos.getY());
+		newTable.top();
+
 		super.addActor(new Image(new TextureRegion(new Texture(Gdx.files.internal("EditorScreen/midwall_background_side.png")))));
 		super.addActor(newTable);
 		super.addActor(newTitle);
@@ -315,15 +300,44 @@ public class Editor extends Stage{
 		return button;
 	}
 	
-	private Table generateTable(ToolbarSelection s) {
+	private Table generateTable(final ToolbarSelection s) {
 		Table newTable = new Table();
 		
+		/*
+		 * Make a custom image icon class later
+		 * Includes image and name
+		 */
+		
+		FileHandle[] files = Gdx.files.internal(path + s.toString().toLowerCase()).list();
+
+		int i = 0;
+		
+		for(FileHandle file: files) {
+
+			final Texture t = new Texture(file);
+
+			Image icon = new Image(new TextureRegion(t));
+			Label icon_name = new Label(file.name().split("\\.", 2)[0], new Label.LabelStyle(new BitmapFont(), Color.BLACK));
+			newTable.add(icon).size(40, 40);
+			newTable.add(icon_name).pad(10);
+			
+			icon.addListener(new ClickListener(){
+				@Override
+		        public void clicked(InputEvent event, float x, float y) {
+					related.setSelection(t, s);
+		        }
+			});
+			
+			if(i % 2 == 0)
+				newTable.row();
+			
+			i++;
+		}
 		
 		
 		
-		
-		
-		/*String[] temp;
+		/*
+		String[] temp;
 
 		switch(s) {
 		case TERRAIN:
