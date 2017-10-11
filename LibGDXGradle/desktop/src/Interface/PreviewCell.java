@@ -81,6 +81,7 @@ public class PreviewCell extends Stack {
 		this.clearChildren();
 		
 		// JAMES, use texture regions so you can preset the size
+		// Okay sorry man dont yell at me :c 
 		TextureRegion nxt = new TextureRegion(s, 40, 40);
 		Image n = new Image(nxt);
 		

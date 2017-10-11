@@ -54,10 +54,10 @@ public class Editor extends Stage{
 	//private CreatureTable currTable;
 	//private TerrainTable currTable;
 	
-	private String[] terrain_buttons;
-	private String[] object_buttons;
-	private String[] creature_buttons;
-	private String[] tab_buttons;
+	//private String[] terrain_buttons;
+	//private String[] object_buttons;
+	//private String[] creature_buttons;
+	//private String[] tab_buttons;
 	
 	/*
 	 * Dimensions: 280 x 480
@@ -166,9 +166,24 @@ public class Editor extends Stage{
 		super.addActor(titleTable);
 	}
 	
-	private void display(Table newTable) {
+	private void display(Table newTable, ToolbarSelection s) {
 
 		newTable.setPosition(tablePos.getX(), tablePos.getY());
+		
+		Table newTitle = new Table();
+		Label title = null;
+				
+		for(ToolbarSelection ts: ToolbarSelection.values()) {
+			if(s == ts) {
+				title = new Label(ts.toString(), 
+		        		new Label.LabelStyle(new BitmapFont(), Color.BLACK));
+				break;
+			}
+				
+		}
+		
+		newTitle.add(title);
+		newTitle.setPosition(titlePos.getX(), titlePos.getY());
 		//t.setPosition(0, 0);
 		
 		/*
@@ -192,6 +207,7 @@ public class Editor extends Stage{
 		*/
 		super.addActor(new Image(new TextureRegion(new Texture(Gdx.files.internal("EditorScreen/midwall_background_side.png")))));
 		super.addActor(newTable);
+		super.addActor(newTitle);
 	}
 	
 	/*
@@ -281,12 +297,12 @@ public class Editor extends Stage{
 		case TERRAIN:
 			if(terrainTable == null)
 				terrainTable = generateTable(s);
-			display(terrainTable);
+			display(terrainTable, s);
 			break;
 		case CREATURE:
 			if(creatureTable == null)
 				creatureTable = generateTable(s);
-			display(creatureTable);
+			display(creatureTable, s);
 			break;
 		default:
 			break;		
@@ -302,14 +318,15 @@ public class Editor extends Stage{
 	private Table generateTable(ToolbarSelection s) {
 		Table newTable = new Table();
 		
-		String[] temp;
-        Label title;
-
+		
+		
+		
+		
+		
+		/*String[] temp;
 
 		switch(s) {
 		case TERRAIN:
-			title = new Label("TERRAIN", 
-	        		new Label.LabelStyle(new BitmapFont(), Color.BLACK));
 			temp = new String[] {"Wall", "Ground", "Empty", "Fill ground"};
 			
 			for(final TerrainSelection select: TerrainSelection.values()) {
@@ -327,8 +344,6 @@ public class Editor extends Stage{
 
 			break;
 		case CREATURE:
-			title = new Label("CREATURE", 
-	        		new Label.LabelStyle(new BitmapFont(), Color.BLACK));
 			temp = new String[] {"Bat", "Skeleton", "Zombie", "Peon", "Roadman Shaq"};
 			
 			for(final CreatureSelection select: CreatureSelection.values()) {
@@ -347,6 +362,7 @@ public class Editor extends Stage{
 		default:
 			return null;
 		}
+		*/
 		return newTable;
 	}
 	
