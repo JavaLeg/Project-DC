@@ -38,9 +38,9 @@ import com.engine.desktop.EditorController;
 import Interface.Stages.Editor;
 //import Interface.Stages.GridPreview;
 import Interface.Stages.Preview;
-import Interface.Stages.PreviewViewport;
 import Interface.Stages.Toolbar;
-import Interface.Stages.ToolbarViewport;
+import Interface.Viewports.PreviewViewport;
+import Interface.Viewports.ToolbarViewport;
 import State.DynamicGame;
 import State.State;
 

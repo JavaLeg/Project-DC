@@ -19,6 +19,10 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
+import Interface.Stages.Selections.CreatureSelection;
+import Interface.Stages.Selections.TerrainSelection;
+import Interface.Stages.Selections.ToolbarSelection;
+
 /*
  * Stage for the editor UI (Tools on the left of the screen)
  */
@@ -44,7 +48,8 @@ public class Editor extends Stage{
 	//private <E> currTable;
 	private ToolbarSelection current;
 	
-	private Stage related;
+	//private Stage related;
+	private Preview related;
 	
 	//private CreatureTable currTable;
 	//private TerrainTable currTable;
@@ -264,14 +269,6 @@ public class Editor extends Stage{
 */
 
 	
-	public void setDependence(Stage s) {
-		this.related = s;
-	}
-	
-	public void setDependence(Preview s) {
-		this.related = s;
-	}
-	
 	public void update(ToolbarSelection s) {
 		if(current == s)
 			return;
@@ -308,27 +305,56 @@ public class Editor extends Stage{
 		String[] temp;
         Label title;
 
+
 		switch(s) {
 		case TERRAIN:
 			title = new Label("TERRAIN", 
 	        		new Label.LabelStyle(new BitmapFont(), Color.BLACK));
 			temp = new String[] {"Wall", "Ground", "Empty", "Fill ground"};
+			
+			for(final TerrainSelection select: TerrainSelection.values()) {
+				TextButton button = generateButton(select.toString().toLowerCase());
+				newTable.add(button);
+				
+				button.addListener(new ClickListener(){
+					@Override
+			        public void clicked(InputEvent event, float x, float y) {
+						related.setSelection(select);
+			        }
+				});
+				newTable.row();
+			}
+
 			break;
 		case CREATURE:
 			title = new Label("CREATURE", 
 	        		new Label.LabelStyle(new BitmapFont(), Color.BLACK));
 			temp = new String[] {"Bat", "Skeleton", "Zombie", "Peon", "Roadman Shaq"};
+			
+			for(final CreatureSelection select: CreatureSelection.values()) {
+				TextButton button = generateButton(select.toString().toLowerCase());
+				newTable.add(button);
+				
+				button.addListener(new ClickListener(){
+					@Override
+			        public void clicked(InputEvent event, float x, float y) {
+						related.setSelection(select);
+			        }
+				});
+				newTable.row();
+			}
 			break;
 		default:
 			return null;
 		}
-		newTable.add(title);
-		newTable.row();
-		for(String option : temp) {
-			newTable.add(generateButton(option));
-			newTable.row();
-		}
 		return newTable;
-		
+	}
+	
+	public void setDependence(Stage s) {
+		this.related = s;
+	}
+	
+	public void setDependence(Preview s) {
+		this.related = s;
 	}
 }

@@ -1,4 +1,4 @@
-package Interface.Stages;
+package Interface.Viewports;
 
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -6,22 +6,17 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Scaling;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
-/*
- * Required to subclass viewport as any updated bounds will be overwritten in
- * the parent FitViewport class
- */
-public class PreviewViewport extends Viewport{
-
+public class ToolbarViewport extends Viewport{
 	private Scaling scaling;
 
 	/** Creates a new viewport using a new {@link OrthographicCamera}. */
-	public PreviewViewport (float worldWidth, float worldHeight) {
+	public ToolbarViewport (float worldWidth, float worldHeight) {
 		this.scaling = Scaling.fit;
 		setWorldSize(worldWidth, worldHeight);
 		setCamera(new OrthographicCamera());
 	}
 
-	public PreviewViewport (float worldWidth, float worldHeight, Camera camera) {
+	public ToolbarViewport (float worldWidth, float worldHeight, Camera camera) {
 		this.scaling = Scaling.fit;
 		setWorldSize(worldWidth, worldHeight);
 		setCamera(camera);
@@ -35,11 +30,11 @@ public class PreviewViewport extends Viewport{
 
 		// Center.
 		// Ratio used is 7/20 for the split coordinate of the screen
-		//Double ratio = (double) (7/20);
+		// Height is at 440 px, ratio 11/12
+		
 		
 		//setScreenBounds((screenWidth - viewportWidth) / 2, (screenHeight - viewportHeight) / 2, viewportWidth, viewportHeight);
-		//setScreenBounds(0, 0, viewportWidth, viewportHeight);
-		setScreenBounds((screenWidth*7/40), (screenHeight - viewportHeight) / 2 - 40, viewportWidth, viewportHeight);
+		setScreenBounds(screenWidth*7/20, screenHeight*11/12, viewportWidth, viewportHeight);
 
 		apply(centerCamera);
 	}

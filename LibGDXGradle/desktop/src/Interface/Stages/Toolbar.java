@@ -18,6 +18,8 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
+import Interface.Stages.Selections.ToolbarSelection;
+
 public class Toolbar extends Stage{
 	private TextureAtlas atlas;
 	private Skin skin;

@@ -1,4 +1,4 @@
-package Interface.Stages;
+package Interface.Stages.Selections;
 
 public enum ToolbarSelection {
 	TERRAIN,

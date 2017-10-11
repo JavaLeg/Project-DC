@@ -6,6 +6,10 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Stack;
 
+import Interface.Stages.Selections.CreatureSelection;
+import Interface.Stages.Selections.EditorSelection;
+import Interface.Stages.Selections.TerrainSelection;
+
 
 /*
  * Name change from image stack as it seems more appropriate
@@ -17,8 +21,7 @@ public class PreviewCell extends Stack {
 	//private int row;
 	private Image terrain;
 	private Image object;
-	
-	private boolean object_exists;
+
 	
 	/*
 	 * Initialises to empty
@@ -27,12 +30,15 @@ public class PreviewCell extends Stack {
 		super();
 		
 		terrain = new Image(new Texture(Gdx.files.internal("EditorScreen/empty_grid.png")));
-		object_exists = false;
 		this.add(terrain);
+		
 		//this.status = status;
 		//this.row = row;
 		//this.column = column;
 	}
+	
+	
+	
 	
 	/*
 	public int getStatus() {
@@ -53,6 +59,25 @@ public class PreviewCell extends Stack {
 		if (this.status > 2) this.status = 0;
 	}
 	*/
+	public void placeTerrain(Image s) {
+		this.clearChildren();
+		
+		terrain = s;
+		this.add(terrain);
+		
+		if(object != null) {	
+			this.add(object);
+		}
+	}
+	
+	public void placeCreature(Image s) {
+		this.clearChildren();
+		
+		object = s;
+		
+		this.add(terrain);
+		this.add(object);
+	}
 	
 	/*
 	 * Changes the current block, there is a difference
