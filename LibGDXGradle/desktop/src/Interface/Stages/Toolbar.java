@@ -66,9 +66,11 @@ public class Toolbar extends Stage{
 		return button;
 	}
 	
+	/*
 	public void setDependence(Stage s) {
 		this.related = s;
 	}
+	*/
 	
 	public void setDependence(Editor s) {
 		this.related = s;

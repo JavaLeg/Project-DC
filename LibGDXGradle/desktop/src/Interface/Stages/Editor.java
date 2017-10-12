@@ -319,7 +319,9 @@ public class Editor extends Stage{
 		for(FileHandle file: files) {
 
 			final Texture t = new Texture(file);
-
+			
+			// related.setSelection(t, s);		// Set initial selection
+			
 			Image icon = new Image(new TextureRegion(t));
 			final String fileName = file.name().split("\\.", 2)[0];
 			Label icon_name = new Label(fileName, new Label.LabelStyle(new BitmapFont(), Color.BLACK));
@@ -334,8 +336,7 @@ public class Editor extends Stage{
 		        }
 			});
 			
-			if(i % 2 == 0)
-				newTable.row();
+			if(i % 2 == 0) newTable.row();
 			i++;
 		}
 		
@@ -385,9 +386,11 @@ public class Editor extends Stage{
 		return newTable;
 	}
 	
+	/*
 	public void setDependence(Stage s) {
 		this.related = s;
 	}
+	*/
 	
 	public void setDependence(Preview s) {
 		this.related = s;

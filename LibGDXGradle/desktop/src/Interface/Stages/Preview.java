@@ -18,10 +18,6 @@ import com.badlogic.gdx.scenes.scene2d.utils.SpriteDrawable;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
-
-import Interface.Stages.Selections.CreatureSelection;
-
-import Interface.Stages.Selections.TerrainSelection;
 import Interface.Stages.Selections.ToolbarSelection;
 import Interface.PreviewCell;
 
@@ -100,7 +96,10 @@ public class Preview extends Stage{
 		this.selectedLayer = ts;
 	}
 	
-
+	/*
+	 * Fills grid with currently selected texture
+	 */
+	
 	public void fillGrid() {
 		
 		if(selected_tr == null || selectedLayer != ToolbarSelection.TERRAIN) 

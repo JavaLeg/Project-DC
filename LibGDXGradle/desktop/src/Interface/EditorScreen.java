@@ -157,12 +157,13 @@ public class EditorScreen implements Screen {
 		// TODO Auto-generated method stub	
 	}
 
-	
+	/*
 	private void setDependencies(ArrayList<Stage> UI, HashMap<Stage, Stage> map) {
 		
 		for(Stage s: UI) {
 			((Stage) s).setDependence((Stage)map.get(s));
 		}
 	}
+	*/
 
 }

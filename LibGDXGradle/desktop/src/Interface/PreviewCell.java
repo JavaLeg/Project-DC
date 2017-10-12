@@ -6,9 +6,9 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Stack;
 
-import Interface.Stages.Selections.CreatureSelection;
+// import Interface.Stages.Selections.CreatureSelection;
 // import Interface.Stages.Selections.EditorSelection;
-import Interface.Stages.Selections.TerrainSelection;
+// import Interface.Stages.Selections.TerrainSelection;
 import Interface.Stages.Selections.ToolbarSelection;
 
 
@@ -38,6 +38,7 @@ public class PreviewCell extends Stack {
 		TextureRegion gnd = new TextureRegion(cur_texture);
 		terrain = new Image(gnd);
 		empty = terrain;
+		object = null;
 		this.add(terrain);
 		
 		//this.status = status;
@@ -68,27 +69,32 @@ public class PreviewCell extends Stack {
 	}
 	*/
 	
+	
 	public void setTexture(TextureRegion i, ToolbarSelection ts) {
-		this.clearChildren();
-		
 		/*
 		 * Only two cases we need to consider
 		 * Terrain: Placed with logical order
 		 * Other: Just place it damn man, just do it.
 		 */
+		if (i == null) return;			// If no current texture, don't do shit
+		
+		this.clearChildren();
+		
 		switch(ts) {
 		case TERRAIN:
 			terrain = new Image(i);
 			this.add(terrain);
 			
-			
-			if(object != null) {
+			if (object_exists == true) {
 				this.add(object);
 			}
+			break;
 		default:
+			object_exists = true;
 			object = new Image(i);
 			this.add(terrain);
 			this.add(object);
+			break;
 		}
 	}
 	
@@ -98,9 +104,14 @@ public class PreviewCell extends Stack {
 	 */
 	public void clear() {
 		this.clearChildren();
+		object_exists = false;
 		this.add(empty);
 	}
 	
+	
+	/*
+	 * UNUSED function
+	 */
 	public void placeTerrain(Texture s) {
 		this.clearChildren();
 		
@@ -116,6 +127,9 @@ public class PreviewCell extends Stack {
 		}
 	}
 	
+	/*
+	 * UNUSED function
+	 */
 	public void placeCreature(Texture s) {
 		
 		this.clearChildren();
@@ -131,7 +145,7 @@ public class PreviewCell extends Stack {
 		this.add(object);
 	}
 	
-	/*
+	/* UNUSED
 	 * Changes the current block, there is a difference
 	 * between a terrain object and an item/creature object
 	 * This allows for overlapping images
