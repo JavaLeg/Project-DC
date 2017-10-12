@@ -336,8 +336,10 @@ public class Editor extends Stage{
 		        }
 			});
 			
-			if(i % 2 == 0) newTable.row();
+			if (i % 2 == 1 && i != 0) newTable.row();
+			if (i > 20) break;					// Don't let it go over the edge
 			i++;
+			
 		}
 		
 		

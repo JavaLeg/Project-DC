@@ -26,6 +26,8 @@ public class Preview extends Stage{
 	private int colActors;
 	private Stage related;
 	
+	private boolean has_player = false;			// Is this the appropriate place
+	
 	private TableTuple tablePos;
 	private TextureRegion selected_tr;
 	
@@ -63,7 +65,18 @@ public class Preview extends Stage{
 				cell.addListener(new ClickListener(){
 					@Override
 			        public void clicked(InputEvent event, float x, float y) {
-						cell.setTexture(selected_tr, selectedLayer);
+						// Allow for only one player per map (multiplayer possibly later)
+						switch(selectedLayer) {
+						case PLAYER:
+							if (has_player == false) { 
+								has_player = true;
+								cell.setTexture(selected_tr, selectedLayer);
+							}
+							break;
+						default:
+							cell.setTexture(selected_tr, selectedLayer);
+							break;
+						}
 			        }
 				});
 				gridTable.add(cell).size(40, 40);	
@@ -92,6 +105,7 @@ public class Preview extends Stage{
 	}
 	
 	public void setSelection(Texture s, ToolbarSelection ts) {
+
 		this.selected_tr = new TextureRegion(s);
 		this.selectedLayer = ts;
 	}
@@ -116,6 +130,7 @@ public class Preview extends Stage{
 	}
 	
 	public void clearGrid() {		
+		has_player = false;
 		for(PreviewCell cell : cellList) {
 			cell.clear();
 		}

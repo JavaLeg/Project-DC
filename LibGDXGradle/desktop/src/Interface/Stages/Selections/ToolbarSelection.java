@@ -5,5 +5,5 @@ public enum ToolbarSelection {
 	CREATURE,
 	TREASURE,
 	WALLS,
-	MAP;
+	PLAYER;
 }
