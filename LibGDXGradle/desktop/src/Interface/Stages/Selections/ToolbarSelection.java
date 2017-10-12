@@ -5,5 +5,6 @@ public enum ToolbarSelection {
 	CREATURE,
 	TREASURE,
 	WALLS,
-	PLAYER;
+	PLAYER,
+	SAVE;
 }

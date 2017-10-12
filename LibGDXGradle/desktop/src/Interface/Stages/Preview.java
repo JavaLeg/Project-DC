@@ -66,17 +66,11 @@ public class Preview extends Stage{
 					@Override
 			        public void clicked(InputEvent event, float x, float y) {
 						// Allow for only one player per map (multiplayer possibly later)
-						switch(selectedLayer) {
-						case PLAYER:
-							if (has_player == false) { 
-								has_player = true;
-								cell.setTexture(selected_tr, selectedLayer);
-							}
-							break;
-						default:
-							cell.setTexture(selected_tr, selectedLayer);
-							break;
+						if (selectedLayer == ToolbarSelection.PLAYER) {
+							if (has_player == true) return;
+							has_player = true;
 						}
+						cell.setTexture(selected_tr, selectedLayer);
 			        }
 				});
 				gridTable.add(cell).size(40, 40);	
@@ -134,6 +128,30 @@ public class Preview extends Stage{
 		for(PreviewCell cell : cellList) {
 			cell.clear();
 		}
+	}
+
+	/*
+	 * Check the map is valid before saving (e.g, at least one player)
+	 * At least one tile, (check creatures on tile, etc. etc.)
+	 */
+	public boolean checkValidMap() {
+		// TODO Auto-generated method stub
+		boolean no_err = true;
+		
+		if (has_player == false) {
+			System.out.println("No player present, insert Player to fix");
+			no_err = false;
+		}
+		
+		for (PreviewCell cell: cellList) {
+			if (cell.isValid() == false) {
+				System.out.println("Invalid object on empty cell");
+				no_err = false;
+			}
+		}
+		
+		
+		return no_err;
 	}
 
 }

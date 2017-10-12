@@ -24,6 +24,8 @@ public class PreviewCell extends Stack {
 	private Image terrain;
 	private Image object;
 	private Image empty;
+	
+	private boolean terrain_exists;
 	private boolean object_exists;
 
 	
@@ -38,7 +40,10 @@ public class PreviewCell extends Stack {
 		TextureRegion gnd = new TextureRegion(cur_texture);
 		terrain = new Image(gnd);
 		empty = terrain;
-		object = null;
+		
+		terrain_exists = false;
+		object_exists = false;
+		
 		this.add(terrain);
 		
 		//this.status = status;
@@ -82,6 +87,7 @@ public class PreviewCell extends Stack {
 		
 		switch(ts) {
 		case TERRAIN:
+			terrain_exists = true;
 			terrain = new Image(i);
 			this.add(terrain);
 			
@@ -105,6 +111,7 @@ public class PreviewCell extends Stack {
 	public void clear() {
 		this.clearChildren();
 		object_exists = false;
+		terrain_exists = false;
 		this.add(empty);
 	}
 	
@@ -178,6 +185,13 @@ public class PreviewCell extends Stack {
 		this.add(terrain);
 	}
 	
+	/*
+	 * Checks if this grid is valid (can't have object on null cell)
+	 */
+	public boolean isValid() {
+		if (object_exists == true && terrain_exists == false) return false;
+		return true;
+	}
 	/*
 	public int getColumn() {
 		return this.column;

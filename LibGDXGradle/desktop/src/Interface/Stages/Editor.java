@@ -70,6 +70,7 @@ public class Editor extends Stage{
 		this.path = "SpriteFamily/";
 		this.tableMap = new HashMap<ToolbarSelection, Table>();
 		initialise();
+		update(ToolbarSelection.TERRAIN);
 	}
 	
 	/*
@@ -251,8 +252,18 @@ public class Editor extends Stage{
 
 	
 	public void update(ToolbarSelection s) {
-		if(current == s)
+		
+		if (s == ToolbarSelection.SAVE) {
+			System.out.println("Attempted saved");
+			if (related.checkValidMap() == true) {
+				System.out.println("Game successfully saved");
+			} else {
+				System.out.println("Failed to save game, errors above");
+			}
 			return;
+		}
+		
+		if(current == s) return;
 		
 		this.clear();
 		
@@ -272,6 +283,7 @@ public class Editor extends Stage{
 	}
 	
 	private Table generateTable(final ToolbarSelection s) {
+		
 		Table newTable = new Table();
 		
 		/*
