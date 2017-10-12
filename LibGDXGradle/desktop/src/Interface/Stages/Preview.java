@@ -31,7 +31,7 @@ public class Preview extends Stage{
 	CreatureSelection cr_select;
 	TerrainSelection t_select;
 	
-	private Image selectedImage;
+	private TextureRegion selected_tr;
 	
 	// Should rename it soon, Image Stack can hold more than one "layer" of object objects.
 	private ToolbarSelection selectedLayer;
@@ -65,7 +65,7 @@ public class Preview extends Stage{
 				cell.addListener(new ClickListener(){
 					@Override
 			        public void clicked(InputEvent event, float x, float y) {
-						cell.setImage(selectedImage, selectedLayer);
+						cell.setTexture(selected_tr, selectedLayer);
 			        }
 				});
 
@@ -105,7 +105,7 @@ public class Preview extends Stage{
 	}
 	
 	public void setSelection(Texture s, ToolbarSelection ts) {
-		this.selectedImage = new Image(new TextureRegion(s));
+		this.selected_tr = new TextureRegion(s);
 		this.selectedLayer = ts;
 	}
 }

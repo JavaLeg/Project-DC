@@ -68,21 +68,22 @@ public class PreviewCell extends Stack {
 	}
 	*/
 	
-	public void setImage(Image i, ToolbarSelection ts) {
+	public void setTexture(TextureRegion i, ToolbarSelection ts) {
 		this.clearChildren();
 		
 		switch(ts) {
 		
 		case TERRAIN:
-			terrain = i;
+			terrain = new Image(i);
 			this.add(terrain);
 			
 			if(object != null) {	
-				this.add(object);
+				this.addActorBefore(terrain, object);
+				System.out.println("Previous object: " + object.toString() + " should hold");
 			}
 			
 		case CREATURE:
-			object = i;
+			object = new Image(i);
 			this.add(terrain);
 			this.add(object);
 			
