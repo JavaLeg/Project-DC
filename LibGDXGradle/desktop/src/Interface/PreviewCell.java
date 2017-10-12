@@ -71,27 +71,34 @@ public class PreviewCell extends Stack {
 	public void setTexture(TextureRegion i, ToolbarSelection ts) {
 		this.clearChildren();
 		
+		/*
+		 * Only two cases we need to consider
+		 * Terrain: Placed with logical order
+		 * Other: Just place it damn man, just do it.
+		 */
 		switch(ts) {
-		
 		case TERRAIN:
 			terrain = new Image(i);
 			this.add(terrain);
 			
-			if(object != null) {	
-				this.addActorBefore(terrain, object);
-				System.out.println("Previous object: " + object.toString() + " should hold");
-			}
 			
-		case CREATURE:
+			if(object != null) {
+				this.add(object);
+			}
+		default:
 			object = new Image(i);
 			this.add(terrain);
 			this.add(object);
-			
-		default:
-			break;
 		}
-		
-		
+	}
+	
+	/*
+	 * Clear the cell
+	 * Keeps the empty texture 
+	 */
+	public void clear() {
+		this.clearChildren();
+		this.add(empty);
 	}
 	
 	public void placeTerrain(Texture s) {

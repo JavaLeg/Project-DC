@@ -25,6 +25,7 @@ public class Toolbar extends Stage{
 	private Skin skin;
 	private Editor related;
 	private TableTuple toolbarPos;
+	private final int PAD = 5;
 
 	/*
 	 * Dimensions: 280 x 40
@@ -33,7 +34,7 @@ public class Toolbar extends Stage{
 		super(v);
 		this.atlas = atlas;
 		this.skin = skin;
-		this.toolbarPos = new TableTuple(100, 20);
+		this.toolbarPos = new TableTuple(v.getScreenX()*3/4, 20);
 		initialise();
 	}
 	
@@ -41,23 +42,15 @@ public class Toolbar extends Stage{
 		Table mainTable = new Table();
 		int pad = 0;
 		
-		for(final ToolbarSelection s: ToolbarSelection.values()) {
-			TextButton button = generateButton(s.name());
-			mainTable.add(button).pad(5);	
-			pad += 5;
+		for(final ToolbarSelection selection: ToolbarSelection.values()) {
+			TextButton button = generateButton(selection.name());
+			mainTable.add(button).pad(PAD);	
+			pad += PAD;
 			button.addListener(new ClickListener(){
 				@Override
 		        public void clicked(InputEvent event, float x, float y) {
-					switch(s){
-					case CREATURE:
-						related.update(ToolbarSelection.CREATURE);
-						break;
-					case TERRAIN:
-						related.update(ToolbarSelection.TERRAIN);
-						break;
-					default:
-						break;
-					}
+					related.update(selection);
+
 		        }
 			});
 		}

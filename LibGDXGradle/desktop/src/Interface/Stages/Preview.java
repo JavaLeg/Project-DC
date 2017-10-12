@@ -1,9 +1,12 @@
 package Interface.Stages;
+import java.util.ArrayList;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.graphics.glutils.FileTextureData;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -26,12 +29,11 @@ public class Preview extends Stage{
 	private int rowActors;
 	private int colActors;
 	private Stage related;
+	
 	private TableTuple tablePos;
-	
-	CreatureSelection cr_select;
-	TerrainSelection t_select;
-	
 	private TextureRegion selected_tr;
+	
+	private ArrayList<PreviewCell> cellList;
 	
 	// Should rename it soon, Image Stack can hold more than one "layer" of object objects.
 	private ToolbarSelection selectedLayer;
@@ -44,6 +46,7 @@ public class Preview extends Stage{
 		super(v);
 		this.rowActors = viewWidth/cellWidth - 2;
 		this.colActors = viewHeight/cellHeight + 1;
+		this.cellList = new ArrayList<PreviewCell>();
 		initialise(cellWidth, cellHeight);
 		
 		// HashMap <EditorSelection, Image>
@@ -59,16 +62,14 @@ public class Preview extends Stage{
 				System.out.println("x: " + i + " y: " + j);
 								
 				final PreviewCell cell = new PreviewCell();
-				cell.setSize(40, 40);
-				cell.setWidth(40);
-				cell.setHeight(40);
+				cellList.add(cell);
+				
 				cell.addListener(new ClickListener(){
 					@Override
 			        public void clicked(InputEvent event, float x, float y) {
 						cell.setTexture(selected_tr, selectedLayer);
 			        }
 				});
-
 				gridTable.add(cell).size(40, 40);	
 			}
 			gridTable.row();
@@ -94,18 +95,31 @@ public class Preview extends Stage{
 		this.related = s;
 	}
 	
-	public void setSelection(TerrainSelection s) {
-		this.t_select = s;
-		this.cr_select = null;
-	}
-	
-	public void setSelection(CreatureSelection s) {
-		this.cr_select = s;
-		this.t_select = null;
-	}
-	
 	public void setSelection(Texture s, ToolbarSelection ts) {
 		this.selected_tr = new TextureRegion(s);
 		this.selectedLayer = ts;
 	}
+	
+
+	public void fillGrid() {
+		
+		if(selected_tr == null || selectedLayer != ToolbarSelection.TERRAIN) 
+			return;
+		
+		
+		Texture texture = selected_tr.getTexture();
+		String path = ((FileTextureData)texture.getTextureData()).getFileHandle().name();
+		System.out.println("Fill grid with : " + path);
+		
+		for(PreviewCell cell : cellList) {
+			cell.setTexture(selected_tr, selectedLayer);
+		}
+	}
+	
+	public void clearGrid() {		
+		for(PreviewCell cell : cellList) {
+			cell.clear();
+		}
+	}
+
 }

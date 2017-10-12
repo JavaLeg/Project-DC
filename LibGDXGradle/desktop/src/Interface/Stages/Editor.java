@@ -1,5 +1,6 @@
 package Interface.Stages;
 
+
 import java.util.HashMap;
 
 import com.badlogic.gdx.Gdx;
@@ -20,8 +21,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
-import Interface.Stages.Selections.CreatureSelection;
-import Interface.Stages.Selections.TerrainSelection;
 import Interface.Stages.Selections.ToolbarSelection;
 
 /*
@@ -33,10 +32,8 @@ public class Editor extends Stage{
 	private Skin skin;
 	private Table mainTable;
 	
-	// Terrain will be screen 0, creatures will be screen 1, objects will be screen 2
-	private Table terrainTable;
-	private Table creatureTable;
-	private Table objectTable;
+	// ArrayList of tables
+	private HashMap<ToolbarSelection, Table> tableMap;
 	
 	private TableTuple titlePos;
 	private TableTuple tablePos;
@@ -68,9 +65,10 @@ public class Editor extends Stage{
 		super(v);
 		this.atlas = atlas;
 		this.skin = skin;
-		this.titlePos = new TableTuple(50, 450);
-		this.tablePos = new TableTuple(140, 440);
+		this.titlePos = new TableTuple(50, 450);		
+		this.tablePos = new TableTuple(v.getScreenWidth()*7/40, v.getScreenHeight());
 		this.path = "SpriteFamily/";
+		this.tableMap = new HashMap<ToolbarSelection, Table>();
 		initialise();
 	}
 	
@@ -169,30 +167,12 @@ public class Editor extends Stage{
 		super.addActor(titleTable);
 	}
 	
-	private void display(Table newTable, ToolbarSelection s) {
-
-		
-		
-		Table newTitle = new Table();
-		Label title = null;
-				
-		for(ToolbarSelection ts: ToolbarSelection.values()) {
-			if(s == ts) {
-				title = new Label(ts.toString(), 
-		        		new Label.LabelStyle(new BitmapFont(), Color.BLACK));
-				break;
-			}
-				
-		}
-		
-		newTitle.add(title);
-		newTitle.setPosition(titlePos.getX(), titlePos.getY());
+	private void display(Table newTable) {
 		newTable.setPosition(tablePos.getX(), tablePos.getY());
 		newTable.top();
 
 		super.addActor(new Image(new TextureRegion(new Texture(Gdx.files.internal("EditorScreen/midwall_background_side.png")))));
 		super.addActor(newTable);
-		super.addActor(newTitle);
 	}
 	
 	/*
@@ -277,22 +257,13 @@ public class Editor extends Stage{
 		this.clear();
 		
 		// Check if table already exists
-		// If so, pass that table instead of generating
-		switch(s) {
-		case TERRAIN:
-			if(terrainTable == null)
-				terrainTable = generateTable(s);
-			display(terrainTable, s);
-			break;
-		case CREATURE:
-			if(creatureTable == null)
-				creatureTable = generateTable(s);
-			display(creatureTable, s);
-			break;
-		default:
-			break;		
+		// If so, pass that table to display fn instead of generating
+		
+		if(!tableMap.containsKey(s)) {
+			Table newTable = generateTable(s);
+			tableMap.put(s, newTable);
 		}
-
+		display(tableMap.get(s));
 	}
 	
 	private TextButton generateButton(String s) {
@@ -309,28 +280,62 @@ public class Editor extends Stage{
 		 */
 		
 		FileHandle[] files = Gdx.files.internal(path + s.toString().toLowerCase()).list();
+		
+		Label title = new Label(s.toString(), 
+        		new Label.LabelStyle(new BitmapFont(), Color.BLACK));
 
+		newTable.add(title);
+		newTable.row();
 		int i = 0;
+		
+		// Custom buttons should go here
+		// Hardcoded for now
+		switch(s) {
+		case TERRAIN:
+			TextButton fillButton = generateButton("Fill");
+			newTable.add(fillButton);
+			fillButton.addListener(new ClickListener(){
+				@Override
+		        public void clicked(InputEvent event, float x, float y) {
+					related.fillGrid();
+		        }
+			});
+			
+			TextButton clearButton = generateButton("Clear");
+			newTable.add(clearButton);
+			clearButton.addListener(new ClickListener(){
+				@Override
+		        public void clicked(InputEvent event, float x, float y) {
+					related.clearGrid();
+		        }
+			});
+			newTable.row();
+		default:
+			break;
+		}
+		
+		
 		
 		for(FileHandle file: files) {
 
 			final Texture t = new Texture(file);
 
 			Image icon = new Image(new TextureRegion(t));
-			Label icon_name = new Label(file.name().split("\\.", 2)[0], new Label.LabelStyle(new BitmapFont(), Color.BLACK));
+			final String fileName = file.name().split("\\.", 2)[0];
+			Label icon_name = new Label(fileName, new Label.LabelStyle(new BitmapFont(), Color.BLACK));
 			newTable.add(icon).size(40, 40);
-			newTable.add(icon_name).pad(10);
+			newTable.add(icon_name).pad(5);
 			
 			icon.addListener(new ClickListener(){
 				@Override
 		        public void clicked(InputEvent event, float x, float y) {
+					System.out.println("selected " + fileName);
 					related.setSelection(t, s);
 		        }
 			});
 			
 			if(i % 2 == 0)
 				newTable.row();
-			
 			i++;
 		}
 		
