@@ -15,10 +15,10 @@ import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.viewport.Viewport;
-import com.sun.prism.image.Coords;
 
 import Tileset.*;
 import Tileset.GameObject.ObjectType;
+import Interface.EditorModel;
 import Interface.Stages.Editor;
 import Interface.Stages.TableTuple;
 import Interface.Stages.Selections.ToolbarSelection;
@@ -100,10 +100,6 @@ public class State extends Stage implements Serializable {
 					@Override
 			        public void clicked(InputEvent event, float x, float y) {
 						// Allow for only one player per map (multiplayer possibly later)
-						if (selectedLayer == ToolbarSelection.PLAYER) {
-							if (has_player == true) return;
-							has_player = true;
-						}
 						setTileTexture(tile, selectedLayer);
 			        }
 				});
@@ -163,20 +159,25 @@ public class State extends Stage implements Serializable {
 		if (ts == null) return;
 		switch (ts){
 		case FLOOR:
-			Image temp = new Image(selected_tr);
-			tile.setFloor(temp);
+			tile.setFloor(selected_tr);
 			break;
 		case ENEMY:
-			// TODO:
+			if (tile.getObjectType() == ObjectType.PLAYER) this.has_player = false;			// Overwrite player
+			tile.setEnemy(selected_tr);
 			break;
 		case ITEM:
 			// TODO:
 			break;	
-		case WALL:
+		case WALLS:
 			// TODO:
+			if (tile.getObjectType() == ObjectType.PLAYER) this.has_player = false;			// Overwrite player
+			tile.setEnemy(selected_tr);														// TODO
 			break;
 		case PLAYER:
 			// TODO:
+			if (has_player == true) return;			// Don't add multiple players
+			has_player = true;
+			tile.setPlayer(selected_tr);
 			break;
 		case SAVE:
 			break;
@@ -201,8 +202,7 @@ public class State extends Stage implements Serializable {
 				System.out.println("Invalid object on empty tile");
 				no_err = false;
 			}
-		}
-		
+		}	
 		
 		return no_err;
 	}
@@ -215,14 +215,19 @@ public class State extends Stage implements Serializable {
 		return this.tileList.get(coord.getX()  + coord.getY() * colActors).getObject();
 	}
 	
+	/*
 	public void setObject(GameObject newObject, Coord coord) {
 		this.tileList.get(coord.getX()  + coord.getY() * colActors).setObject(newObject);
 	}
+	*/
 	
 	public void deleteObject(Coord coord) {
 		this.tileList.get(coord.getX()  + coord.getY() * colActors).deleteObject();
 	}
 	
+	/*
+	 * These are currently unnecessary but can be added later
+	 * 
 	public void moveObject(Coord from, Coord to) {
 		GameObject temp = getObject(from);
 		deleteObject(from);
@@ -235,7 +240,7 @@ public class State extends Stage implements Serializable {
 		setObject(fromObject, to);
 		setObject(toObject, from);
 	}
-	
+	*/
 	
 	public List<GameObject> getAllObjects() {
 		List<GameObject> ret = new LinkedList<GameObject>();
@@ -280,6 +285,9 @@ public class State extends Stage implements Serializable {
 	
 	// Moves player to different tile
 	// Returns false if player is already on that Tile
+	
+	/* CURRENTLY REDUNDANT but spawns errors
+	 * 
 	public void setPlayer(Coord to){
 		Player currPlayer = this.getPlayer();
 		this.deletePlayer();
@@ -290,7 +298,7 @@ public class State extends Stage implements Serializable {
 	public void movePlayer(Coord to){
 		this.setPlayer(to);
 	}
-	
+	*/
 	
 	
 	//************************//
@@ -337,5 +345,11 @@ public class State extends Stage implements Serializable {
 
 	public int getMapHeight() {
 		return rowActors;
+	}
+
+	public EditorModel getModel() {
+		EditorModel cur = new EditorModel(13, 11);
+		cur.convert(tileList);
+		return cur;
 	}
 }

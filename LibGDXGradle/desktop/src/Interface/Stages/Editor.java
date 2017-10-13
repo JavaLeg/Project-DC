@@ -101,10 +101,10 @@ public class Editor extends Stage implements Serializable {
 		
 		if (s == ToolbarSelection.SAVE) {
 			Json js = new Json();
-
+			
+			
 			EditorModel toSave = related.getModel();
 			saver.Save(toSave, "editor_model_test.txt");
-			
 			
 			/*
 			System.out.println(js.toJson(save));

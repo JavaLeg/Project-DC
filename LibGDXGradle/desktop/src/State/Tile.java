@@ -5,6 +5,7 @@ import java.io.Serializable;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.graphics.glutils.FileTextureData;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Stack;
 
@@ -18,8 +19,8 @@ public class Tile extends Stack implements Serializable {
 	private GameObject object;
 	private Image empty;
 	
-	private TextureRegion ter;
-	private TextureRegion obj;
+	private TextureRegion terrain_texture;
+	private TextureRegion object_texture;
 	
 	//************************//
 	//******* CREATORS *******//
@@ -38,14 +39,37 @@ public class Tile extends Stack implements Serializable {
 		this.add(floor);
 	}
 	
-	public void setFloor(Image i) {
+	public void setFloor(TextureRegion txt) {
 		this.clearChildren();
-		floor = i;
-		this.add(i);
+		terrain_texture = txt;
 		
-		if (this.object != null) {
+		Image floor_img = new Image(txt);
+		floor = floor_img;
+		this.add(floor);
+		
+		if (this.hasObject() == true) {
 			this.add(object);
 		}
+	}
+
+	public void setEnemy(TextureRegion txt) {
+		this.clearChildren();
+		
+		object_texture = txt;
+		GameObject obj_image = new GameObject(ObjectType.ENEMY, txt);
+		object = obj_image;
+		this.add(floor);
+		this.add(obj_image);
+	}
+	
+	public void setPlayer(TextureRegion txt) {
+		this.clearChildren();
+		
+		object_texture = txt;
+		GameObject obj_image = new GameObject(ObjectType.PLAYER, txt);
+		object = obj_image;
+		this.add(floor);
+		this.add(obj_image);
 	}
 	
 	public void deleteFloor() {
@@ -65,7 +89,7 @@ public class Tile extends Stack implements Serializable {
 	public void clear() {
 		this.clearChildren();
 		this.object = null;
-		this.floor = null;
+		this.floor = empty;
 		this.add(empty);
 	}
 	
@@ -98,17 +122,36 @@ public class Tile extends Stack implements Serializable {
 		return this.object;
 	}
 	
-	public void setObject(GameObject i) {
-		this.clearChildren();
-		object = i;
-		this.add(floor);
-		this.add(i);
-	}
-	
 	// Deletes object if exists, returns false if does not exist or invalid type
 	public void deleteObject() {
 		this.object = null;
 		this.clearChildren();
 		this.add(floor);
 	}
+	
+	public ObjectType getObjectType() {
+		if (object != null) return object.getType();
+		return null;
+	}
+	
+	/*
+	 * Returns the path to the texture in String format
+	 */
+	
+	public String getTerrainPath() {
+		if (terrain_texture != null) {
+			String k = ((FileTextureData)terrain_texture.getTexture().getTextureData()).getFileHandle().path();
+			return k;
+		}
+		return null;
+	}
+	
+	public String getObjectPath() {
+		if (object_texture != null) {
+			String k = ((FileTextureData)object_texture.getTexture().getTextureData()).getFileHandle().path();
+			return k;
+		}
+		return null;
+	}
+
 }

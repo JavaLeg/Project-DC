@@ -60,6 +60,8 @@ public class EditorScreen implements Screen {
 		Viewport preview_viewport = new PreviewViewport(APP_WIDTH, APP_HEIGHT, preview_camera);
 		Viewport toolbar_viewport = new ToolbarViewport(APP_WIDTH, APP_HEIGHT, toolbar_camera);
 		
+		UI = new ArrayList<Stage>();
+		
 		Editor editorStage;
 		try {
 			editorStage = new Editor(editor_viewport, atlas, skin);
@@ -69,13 +71,12 @@ public class EditorScreen implements Screen {
 		}
 		State previewStage = new State(preview_viewport, 520, 480, 40, 40);
 		Toolbar toolbarStage = new Toolbar(toolbar_viewport, atlas, skin);
-
-		UI.add(previewStage);
-		UI.add(toolbarStage);
 		
 		try {
 			editorStage = new Editor(editor_viewport, atlas, skin);
 			UI.add(editorStage);
+			UI.add(previewStage);
+			UI.add(toolbarStage);
 //			map.put(toolbarStage, editorStage);
 //			map.put(previewStage, editorStage);
 //			map.put(editorStage, previewStage);
