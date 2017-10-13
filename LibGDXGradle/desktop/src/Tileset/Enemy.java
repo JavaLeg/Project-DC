@@ -1,5 +1,7 @@
 package Tileset;
 
+import com.badlogic.gdx.graphics.Texture;
+
 import State.Coordinates;
 import State.MoveBehaviour;
 import State.State;
@@ -10,8 +12,8 @@ public class Enemy extends DynamicObject {
 	private MoveBehaviour moveBehaviour;
 	
 	
-	public Enemy(int width, int height, Coordinates position, double hp, double damage, double moveRate, MoveBehaviour b) {
-		super(ObjectType.ENEMY, width, height, position, hp, damage);
+	public Enemy(int width, int height, Coordinates position, Texture texture, double hp, double damage, double moveRate, MoveBehaviour b) {
+		super(ObjectType.ENEMY, width, height, position, texture, hp, damage);
 		this.moveRate = moveRate;
 		this.sinceLastMove = 0;
 		this.moveBehaviour = b;
