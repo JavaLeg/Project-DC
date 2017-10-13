@@ -5,13 +5,23 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
-import Tileset.*;
-import Tileset.EnemyFactory.EnemyType;
-import Tileset.GameObject.ObjectType;
-import Tileset.PlayerFactory.PlayerType;
-import Tileset.TerrainFactory.TerrainType;
+import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.graphics.glutils.FileTextureData;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.utils.viewport.Viewport;
 
-public class State implements Serializable{
+import Tileset.*;
+import Tileset.GameObject.ObjectType;
+import Interface.Stages.Editor;
+import Interface.Stages.TableTuple;
+import Interface.Stages.Selections.ToolbarSelection;
+
+public class State extends Stage implements Serializable {
 	
 	private static final long serialVersionUID = 1L;
 	private static final int DEFAULT_MAP_WIDTH = 50; // 50 tiles 
@@ -19,11 +29,25 @@ public class State implements Serializable{
 	
 	// Coords of player
 	private Coordinates playerCoord;
+
+	private int rowActors;
+	private int colActors;
+	private Stage related;
+
+	private boolean has_player = false;			// Is this the appropriate place
 	
-	private List<List<Tile>> map;
+	private TableTuple tablePos;
+	private TextureRegion selected_tr;
+	
+	private ArrayList<Tile> tileList;
+	
+	// Should rename it soon, Image Stack can hold more than one "layer" of object objects.
+	private ToolbarSelection selectedLayer;
+	
+	// private List<List<Tile>> map;
 	// The outer index is x, the inner index is y
-	private int mapWidth;
-	private int mapHeight;
+	// private int mapWidth;
+	// private int mapHeight;
 	
 	
 	//************************//
@@ -31,45 +55,133 @@ public class State implements Serializable{
 	//************************//
 	
 	// default create an empty State
-	public State(){
+	public State(Viewport v, int viewWidth, int viewHeight, int tileWidth, int tileHeight){
+		super(v);
+		this.rowActors = viewWidth/tileWidth - 2;
+		this.colActors = viewHeight/tileHeight + 1;
+		this.tileList = new ArrayList<Tile>();
+		initialise(tileWidth, tileHeight);
+		
 		// Default player position is outside the map -1,-1
 		this.playerCoord = new Coordinates();
 		
-		this.map = new ArrayList<List<Tile>>();
+		// this.map = new ArrayList<List<Tile>>();
 		
-		for(int i = 0; i < DEFAULT_MAP_WIDTH; i++) {
-			this.map.add(new ArrayList<Tile>());
-			for(int j = 0; j < DEFAULT_MAP_HEIGHT; j++) {
-				Coordinates tempCoord = new Coordinates(i,j);
-				this.map.get(i).add(new Tile(tempCoord));
+		// for(int i = 0; i < DEFAULT_MAP_WIDTH; i++) {
+		// 	this.map.add(new ArrayList<Tile>());
+		// 	for(int j = 0; j < DEFAULT_MAP_HEIGHT; j++) {
+		// 		Coordinates tempCoord = new Coordinates(i,j);
+		// 		this.map.get(i).add(new Tile(tempCoord));
+		// 	}
+		// }
+		
+		// this.mapWidth = DEFAULT_MAP_WIDTH;
+		// this.mapHeight = DEFAULT_MAP_HEIGHT;
+	}
+
+	//************************//
+	//***** INITIALISE *******//
+	//************************//
+
+	private void initialise(int tileWidth, int tileHeight) {
+		Table gridTable = new Table();
+		//ImageStack[] tiles = new ImageStack[rowActors * colActors];
+		
+		for(int i = 0; i < rowActors; i++) {
+			for(int j = 0; j < colActors; j++) {
+				System.out.println("x: " + i + " y: " + j);
+								
+				final Tile tile = new Tile();
+				tileList.add(tile);
+				
+				tile.addListener(new ClickListener(){
+					@Override
+			        public void clicked(InputEvent event, float x, float y) {
+						// Allow for only one player per map (multiplayer possibly later)
+						if (selectedLayer == ToolbarSelection.PLAYER) {
+							if (has_player == true) return;
+							has_player = true;
+						}
+						
+//						tile.setTexture(selected_tr, selectedLayer);
+			        }
+				});
+				gridTable.add(tile).size(40, 40);	
+			}
+			gridTable.row();
+		}
+		//gridTable.setPosition(tablePos.getX(), tablePos.getY());
+		gridTable.top();
+		gridTable.setFillParent(true);
+		super.addActor(gridTable);
+	}
+
+	/*
+	private ImageStack ImageStack(TextureRegion textureRegion) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	*/
+
+	public void setDependence(Stage s) {
+		this.related = s;
+	}
+	
+	public void setDependence(Editor s) {
+		this.related = s;
+	}
+	
+	public void setSelection(Texture s, ToolbarSelection ts) {
+
+		this.selected_tr = new TextureRegion(s);
+		this.selectedLayer = ts;
+	}
+
+	public void fillGrid() {
+		
+		if(selected_tr == null || selectedLayer != ToolbarSelection.TERRAIN) 
+			return;
+		
+		
+		Texture texture = selected_tr.getTexture();
+		String path = ((FileTextureData)texture.getTextureData()).getFileHandle().name();
+		System.out.println("Fill grid with : " + path);
+		
+		for(Tile tile : tileList) {
+			tile.setTexture(selected_tr, selectedLayer);
+		}
+	}
+	
+	public void clearGrid() {		
+		has_player = false;
+		for(Tile tile : tileList) {
+			tile.clear();
+		}
+	}
+
+	/*
+	 * Check the map is valid before saving (e.g, at least one player)
+	 * At least one tile, (check creatures on tile, etc. etc.)
+	 */
+	public boolean checkValidMap() {
+		// TODO Auto-generated method stub
+		boolean no_err = true;
+		
+		if (has_player == false) {
+			System.out.println("No player present, insert Player to fix");
+			no_err = false;
+		}
+		
+		for (Tile tile: tileList) {
+			if (tile.isValid() == false) {
+				System.out.println("Invalid object on empty tile");
+				no_err = false;
 			}
 		}
 		
-		this.mapWidth = DEFAULT_MAP_WIDTH;
-		this.mapHeight = DEFAULT_MAP_HEIGHT;
+		
+		return no_err;
 	}
-	
-	
-	// Create empty state of x width and y height
-	public State(int width, int height){
-		// Default player position is outside the map -1,-1
-		this.playerCoord = new Coordinates();
-		
-		this.map = new ArrayList<List<Tile>>();
-		
-		for(int i = 0; i < width; i++) {
-			this.map.add(new ArrayList<Tile>());
-			for(int j = 0; j < height; j++) {
-				Coordinates tempCoord = new Coordinates(i,j);
-				this.map.get(i).add(new Tile(tempCoord));
-			}
-		}
-		
-		this.mapWidth = width;
-		this.mapHeight = height;
-	}
-	
-	
 	
 	//************************//
 	//******* GENERAL ********//

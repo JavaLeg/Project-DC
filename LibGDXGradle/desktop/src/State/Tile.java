@@ -2,16 +2,30 @@ package State;
 
 import java.io.Serializable;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import com.badlogic.gdx.scenes.scene2d.ui.Stack;
+
 import Tileset.*;
-import Tileset.EnemyFactory.EnemyType;
 import Tileset.GameObject.ObjectType;
 
-public class Tile implements Serializable{
+import Interface.Stages.Selections.ToolbarSelection;
+
+public class Tile extends Stack implements Serializable{
 	
 	private static final long serialVersionUID = 1L;
 	private Coordinates coord;
+	// private GameObject object;
+
+	private Texture currTexture;
+	private Image terrain;
 	private GameObject object;
-	
+	private Image empty;
+
+	private boolean terrain_exists;
+	private boolean object_exists;
 	
 	//************************//
 	//******* CREATORS *******//
@@ -19,13 +33,39 @@ public class Tile implements Serializable{
 	
 	// Default Create a Tile
 	public Tile(){
-		this.object = null;
+		super();
+		Texture cur_texture = new Texture(Gdx.files.internal("EditorScreen/empty_grid.png"));
+		//TextureRegion gnd = new TextureRegion(cur_texture, 40, 40);
+		// Changed, we can lock grid size. Done in the loop in preview
+		TextureRegion gnd = new TextureRegion(cur_texture);
+		terrain = new Image(gnd);
+		empty = terrain;
+		
+		terrain_exists = false;
+		object_exists = false;
+		
+		this.add(terrain);
+
+		// this.object = null;
 		this.coord = new Coordinates();
 	}
 	
 	// Create a Tile given x and y coords as Coordinates object
 	public Tile(Coordinates coord){
+		super();
+		Texture cur_texture = new Texture(Gdx.files.internal("EditorScreen/empty_grid.png"));
+		//TextureRegion gnd = new TextureRegion(cur_texture, 40, 40);
+		// Changed, we can lock grid size. Done in the loop in preview
+		TextureRegion gnd = new TextureRegion(cur_texture);
+		terrain = new Image(gnd);
+		empty = terrain;
+		
+		terrain_exists = false;
+		object_exists = false;
+		
+		this.add(terrain);
 		this.object = null;
+		// Can't this.coord = coord?
 		this.coord = new Coordinates();
 		this.coord.setX(coord.getX());
 		this.coord.setY(coord.getY());
@@ -48,6 +88,77 @@ public class Tile implements Serializable{
 		this.coord.setY(coord.getY());
 	}
 	
+
+	/*
+	public int getStatus() {
+		return this.status;
+	}
+	
+	/*
+	 * Holds the new block type
+	 * Possible unnecessary
+	
+	public void setStatus(int start) {
+		this.status = start;
+	}
+	
+	// Increments the status (UNUSED)
+	public void changeStatus() {
+		this.status++;
+		if (this.status > 2) this.status = 0;
+	}
+	*/
+	
+	
+	public void setTextureTerrain(Image i) {
+		if (i == null) return;			// If no current texture, don't do shit
+		
+		this.clearChildren();
+
+		terrain_exists = true;
+		terrain = i;
+		this.add(i);
+		
+		if (object_exists == true) {
+			this.add(object);
+		}
+	}
+
+	public void setTextureObject(GameObject i) {
+		object_exists = true;
+		object = i;
+		this.add(terrain);
+		this.add(i);
+	}
+
+	
+	/*
+	 * Clear the cell
+	 * Keeps the empty texture 
+	 */
+	public void clear() {
+		this.clearChildren();
+		this.add(empty);
+		object_exists = false;
+		terrain_exists = false;
+	}
+	
+	/*
+	 * When setting all to ground / empty
+	 */
+	public void setToTerrain(Image terrain) {
+		this.clearChildren();
+		this.add(terrain);
+		object_exists = false;
+	}
+	
+	/*
+	 * Checks if this grid is valid (can't have object on null cell)
+	 */
+	public boolean isValid() {
+		if (object_exists == true && terrain_exists == false) return false;
+		return true;
+	}
 	
 	
 	//************************//
@@ -63,7 +174,6 @@ public class Tile implements Serializable{
 	public boolean hasObject() {
 		return this.object != null;
 	}
-
 	
 	// Gets object, can return null
 	public GameObject getObject() {
