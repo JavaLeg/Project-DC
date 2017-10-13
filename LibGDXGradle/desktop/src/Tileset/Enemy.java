@@ -1,68 +1,53 @@
 package Tileset;
 
-import State.MoveBehaviour;
+import com.badlogic.gdx.graphics.Texture;
+
 import State.Coordinates;
+import State.MoveBehaviour;
 import State.State;
 
-public class Enemy extends GameObject {
-	private double hp;
-	// Other enemy fields
-	private int moveRate;
-	private int sinceLastMove;
+public class Enemy extends DynamicObject {
+	private double moveRate;
+	private double sinceLastMove;
 	private MoveBehaviour moveBehaviour;
 	
-	public Enemy(double hp, int moveRate, Coordinates position) {
-		super(position);
-		this.setHp(hp);
+	
+	public Enemy(int width, int height, Coordinates position, Texture texture, double hp, double damage, double moveRate, MoveBehaviour b) {
+		super(ObjectType.ENEMY, width, height, position, texture, hp, damage);
 		this.moveRate = moveRate;
-	}
-	
-	public Enemy(double hp, int height, int width, Coordinates position) {
-		super(height, width, position);
-		this.setHp(hp);
-		this.moveBehaviour = null;
-	}
-
-	public double getHp() {
-		return hp;
-	}
-
-	public void setHp(double hp) {
-		this.hp = hp;
-	}
-	
-	public void damage(double hp) {
-		this.hp -= hp;
+		this.sinceLastMove = 0;
+		this.moveBehaviour = b;
 	}
 	
 	public void setBehaviour(MoveBehaviour b) {
 		moveBehaviour = b;
 	}
 	
+	public void removeBehaviour() {
+		moveBehaviour = null;
+	}
 	
+	// Can use to stun enemy
+	public void setLastMove(double time) {
+		this.sinceLastMove = time;
+	}
 	
 	public void step(State s) {
-		super.step(s);
-		
-		// handle movement behaviour
+		// handle movement behavior
 		if (sinceLastMove == moveRate) {
 			// move one step
 			if (moveBehaviour != null) {
-				
-				
-				
+				Coordinates next = null;
+				next = moveBehaviour.nextStep(s, this.getCoord());
+				if (s.findPlayer() == next) {
+					s.getPlayer().damage(this.getDamage());
+				} else {
+					this.setCoord(next);
+				}
+				this.setLastMove(0);
 			}
-			
-			
 		} else {
 			sinceLastMove++;
 		}
-		
-		
-		
 	}
-	
-	/*
-	 public void nextMove();
-	 */
 }

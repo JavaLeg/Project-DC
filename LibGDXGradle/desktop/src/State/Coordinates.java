@@ -1,6 +1,12 @@
 package State;
 
-public class Coordinates {
+import java.io.Serializable;
+
+public class Coordinates implements Serializable{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	int x;
 	int y;
 	
@@ -26,6 +32,7 @@ public class Coordinates {
 	public void setY(int y) {
 		this.y = y;
 	}
+
 	
 	@Override
 	public Coordinates clone() {
@@ -46,4 +53,5 @@ public class Coordinates {
 		return (this.x == this.y && c.x == c.y);
 	}
 		
+
 }

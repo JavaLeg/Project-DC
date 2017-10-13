@@ -1,21 +1,29 @@
 package State;
 
+import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
 import Tileset.*;
+import Tileset.EnemyFactory.EnemyType;
 import Tileset.GameObject.ObjectType;
+import Tileset.PlayerFactory.PlayerType;
+import Tileset.TerrainFactory.TerrainType;
 
-public class State {
+public class State implements Serializable{
+	
+	private static final long serialVersionUID = 1L;
 	private static final int DEFAULT_MAP_WIDTH = 50; // 50 tiles 
 	private static final int DEFAULT_MAP_HEIGHT = 50;
 	
 	// Coords of player
 	private Coordinates playerCoord;
 	
-	// Matrix of Tiles
-	private Tile[][] map;
-	// The first index is x, the second index is y
+	private List<List<Tile>> map;
+	// The outer index is x, the inner index is y
+	private int mapWidth;
+	private int mapHeight;
 	
 	
 	//************************//
@@ -27,17 +35,18 @@ public class State {
 		// Default player position is outside the map -1,-1
 		this.playerCoord = new Coordinates();
 		
-		this.map = new Tile[DEFAULT_MAP_WIDTH][DEFAULT_MAP_HEIGHT];
+		this.map = new ArrayList<List<Tile>>();
 		
-		// Initialize Tile objects 
-		Coordinates tempCoord = new Coordinates();
-		for(int i = 0; i <  DEFAULT_MAP_WIDTH; i++){
-			for(int j = 0; j < DEFAULT_MAP_HEIGHT; j++){
-				tempCoord.setX(i);
-				tempCoord.setY(j);
-				map[i][j] = new Tile(tempCoord); 
+		for(int i = 0; i < DEFAULT_MAP_WIDTH; i++) {
+			this.map.add(new ArrayList<Tile>());
+			for(int j = 0; j < DEFAULT_MAP_HEIGHT; j++) {
+				Coordinates tempCoord = new Coordinates(i,j);
+				this.map.get(i).add(new Tile(tempCoord));
 			}
 		}
+		
+		this.mapWidth = DEFAULT_MAP_WIDTH;
+		this.mapHeight = DEFAULT_MAP_HEIGHT;
 	}
 	
 	
@@ -46,17 +55,18 @@ public class State {
 		// Default player position is outside the map -1,-1
 		this.playerCoord = new Coordinates();
 		
-		this.map = new Tile[width][height];
+		this.map = new ArrayList<List<Tile>>();
 		
-		// Initialise Tile objects 
-		Coordinates tempCoord = new Coordinates();
-		for(int i = 0; i <  width; i++){
-			for(int j = 0; j < height; j++){
-				tempCoord.setX(i);
-				tempCoord.setY(j);
-				map[i][j] = new Tile(tempCoord); 
+		for(int i = 0; i < width; i++) {
+			this.map.add(new ArrayList<Tile>());
+			for(int j = 0; j < height; j++) {
+				Coordinates tempCoord = new Coordinates(i,j);
+				this.map.get(i).add(new Tile(tempCoord));
 			}
 		}
+		
+		this.mapWidth = width;
+		this.mapHeight = height;
 	}
 	
 	
@@ -65,49 +75,73 @@ public class State {
 	//******* GENERAL ********//
 	//************************//
 	
-	public GameObject getObject(ObjectType type, Coordinates coord) {
-		return this.map[coord.getX()][coord.getY()].getObject(type);
+	// Example: state.createEnemy(EnemyType.SLIME, coord);
+	public void createEnemy(EnemyType type, Coordinates coord) {
+		EnemyFactory factory = new EnemyFactory();
+		Enemy object = factory.getEnemy(type, coord);
+		setObject(object, coord);
 	}
 	
-	public boolean setObject(GameObject newObject, Coordinates coord) {
-		return this.map[coord.getX()][coord.getY()].setObject(newObject);
+	public void createPlayer(PlayerType type, Coordinates coord) {
+		PlayerFactory factory = new PlayerFactory();
+		Player object = factory.getPlayer(type, coord);
+		setObject(object, coord);
 	}
 	
-	public boolean deleteObject(ObjectType type, Coordinates coord) {
-		return this.map[coord.getX()][coord.getY()].deleteObject(type);
+	public void createTerrain(TerrainType type, Coordinates coord) {
+		TerrainFactory factory = new TerrainFactory();
+		Terrain object = factory.getTerrain(type, coord);
+		setObject(object, coord);
 	}
 	
-	public boolean moveObject(ObjectType type, Coordinates from, Coordinates to) {
-		// From tile does not have object
-		if (!this.map[from.getX()][from.getY()].hasObject(type)) {
-			return false;
-		}
-		// To Tile already has object
-		if (this.map[to.getX()][to.getY()].hasObject(type)) {
-			return false;
-		} 
-		// Do the move
-		GameObject temp = this.map[from.getX()][from.getY()].getObject(type);
-		this.map[from.getX()][from.getY()].deleteObject(type);
-		this.map[to.getX()][to.getY()].setObject(temp);
-		return true;
+	public GameObject getObject(Coordinates coord) {
+		return this.map.get(coord.getX()).get(coord.getY()).getObject();
+	}
+	
+	public void setObject(GameObject newObject, Coordinates coord) {
+		this.map.get(coord.getX()).get(coord.getY()).setObject(newObject);
+	}
+	
+	public void deleteObject(Coordinates coord) {
+		this.map.get(coord.getX()).get(coord.getY()).deleteObject();
+	}
+	
+	public void moveObject(Coordinates from, Coordinates to) {
+		GameObject temp = getObject(from);
+		deleteObject(from);
+		setObject(temp, to);
+	}
+	
+	public void swapObject(Coordinates from, Coordinates to) {
+		GameObject fromObject = getObject(from);
+		GameObject toObject = getObject(to);
+		setObject(fromObject, to);
+		setObject(toObject, from);
 	}
 	
 	
 	public List<GameObject> getAllObjects() {
 		List<GameObject> ret = new LinkedList<GameObject>();
-		for (Tile[] ta : map) {
+		for (List<Tile> ta : map) {
 			for (Tile t : ta) {		
-				for (ObjectType type : ObjectType.values()) {
-					GameObject toAdd = getObject(type, t.getCoord());
-					if (toAdd != null) {
-						ret.add(toAdd);
-					}
-				}	
+				ret.add(t.getObject());
 			}
 		}
 		return ret;
 	}
+	
+	public List<DynamicObject> getAllDynamicObjects() {
+		List<DynamicObject> ret = new LinkedList<DynamicObject>();
+		for (List<Tile> ta : map) {
+			for (Tile t : ta) {		
+				if(t.getObject().isDynamic()) {
+					ret.add((DynamicObject) t.getObject());
+				}
+			}	
+		}
+		return ret;
+	}
+	
 	
 	//************************//
 	//******* PLAYER *********//
@@ -120,42 +154,44 @@ public class State {
 	
 	// Get player object
 	public Player getPlayer(){
-		return (Player) this.map[playerCoord.getX()][playerCoord.getY()].getObject(ObjectType.PLAYER);
+		return (Player) getObject(playerCoord);
 	}
 	
 	// Remove player from current coords and set player coords to -1,-1
 	// Returns false if player is already deleted/not on the map
-	public boolean deletePlayer(){
-		// Not on map
-		if (this.playerCoord.getX() ==  -1 && this.playerCoord.getY() == -1){
-			return false;
-		}
-		// Try to delete, return false if fail
-		if(!this.map[this.playerCoord.getX()][this.playerCoord.getY()].deleteObject(ObjectType.PLAYER)) {
-			return false;
-		}
-		
+	public void deletePlayer(){
+		deleteObject(playerCoord);
 		this.playerCoord.setX(-1);
 		this.playerCoord.setY(-1);
-		return true;
 	}
 	
 	// Moves player to different tile
 	// Returns false if player is already on that Tile
-	public boolean setPlayer(Coordinates to){
-		// Already there
-		if(this.playerCoord.getX() == to.getX() && this.playerCoord.getY() == to.getY()){
-			return false;
-		}
-		
+	public void setPlayer(Coordinates to){
 		Player currPlayer = this.getPlayer();
 		this.deletePlayer();
-		return this.map[to.getX()][to.getY()].setObject(currPlayer);
+		setObject(currPlayer, to);
 	}
 	
 	// Same as setPlayer, redundant 
-	public boolean movePlayer(Coordinates to){
-		return this.setPlayer(to);
+	public void movePlayer(Coordinates to){
+		this.setPlayer(to);
+	}
+	
+	
+	
+	//************************//
+	//******* TERRAIN ********//
+	//************************//
+	
+	public boolean isBlocked(Coordinates pos) {
+		return !((Terrain) this.map.get(pos.getX()).get(pos.getY()).getObject()).isPassable();
+	}
+	
+	public boolean isBlocked(Coordinates pos, ObjectType type) {
+		if (type == null) return isBlocked(pos);
+		return (!((Terrain) this.map.get(pos.getX()).get(pos.getY()).getObject()).isPassable()
+				&& (this.map.get(pos.getX()).get(pos.getY()).hasObject()));
 	}
 	
 	
@@ -164,45 +200,116 @@ public class State {
 	//******** TILES *********//
 	//************************//
 	
-	// Swaps the contents of two Tiles
-	public void swapTiles(Coordinates from, Coordinates to) {
-		Tile tempTile = new Tile();
-		tempTile = this.map[from.getX()][from.getY()];
-		this.map[from.getX()][from.getY()] = this.map[to.getX()][to.getY()];
-		this.map[to.getX()][to.getY()] = tempTile;
+	public Tile getTile(Coordinates coord) {
+		return this.map.get(coord.getX()).get(coord.getY()); 
 	}
+
+	public void clearTile(Coordinates coord) {
+		deleteObject(coord);
+	}
+	
+	public int getMapWidth() {
+		return mapWidth;
+	}
+
+	public int getMapHeight() {
+		return mapHeight;
+	}
+	
+	public void createRow(int idx) {
+		// Create the row at the top
+		this.mapHeight++;
+		for(int i = 0; i < this.mapWidth; i++) {
+			Coordinates tempCoord = new Coordinates(i, this.mapHeight);
+			this.map.get(i).add(new Tile(tempCoord));
+		}
 		
-	/*
+		// Shift objects up
+		for (int j = this.mapHeight-1; j > idx; j--) {
+			for(int k = 0; k < this.mapWidth; k++) {
+				Coordinates toCoord = new Coordinates(k, j);
+				Coordinates fromCoord = new Coordinates(k,j-1);
+				moveObject(fromCoord, toCoord);
+				getObject(toCoord).setCoord(toCoord);
+			}
+		}
+	}
 	
-	// Use ArrayList of ArrayLists instead of 2D array to implement:
+	public void createRows(int idx, int n) {
+		for (int i = 0; i < n; i++) {
+			createRow(idx);
+		}
+	}
 	
-	public void createRow() {
+	public void deleteRow(int idx) {
+		// Shift objects down
+		for (int i = idx; i < this.mapHeight-1; i++) {
+			for(int j = 0; j < this.mapWidth; j++) {
+				Coordinates toCoord = new Coordinates(j,i);
+				Coordinates fromCoord = new Coordinates(j,i+1);
+				moveObject(fromCoord, toCoord);
+				getObject(toCoord).setCoord(toCoord);
+			}
+		}
 		
+		// Delete row
+		for(int k = 0; k < this.mapWidth; k++) {
+			this.map.get(k).remove(this.mapHeight);
+		}
+		this.mapHeight--;
 	}
 	
-	public void createColoumn() {
+	public void deleteRows(int idx, int n) {
+		for(int i = 0; i < n; i++) {
+			deleteRow(idx);
+		}
+	}
+	
+	public void createColoumn(int idx) {
+		// Create coloumn on right
+		this.map.add(new ArrayList<Tile>());
+		this.mapWidth++;
+		for(int i = 0; i < this.mapHeight; i++) {
+			Coordinates tempCoord = new Coordinates(this.mapWidth, i);
+			this.map.get(this.mapWidth).add(new Tile(tempCoord));
+		}
 		
+		// Shift objects right
+		for(int j = this.mapWidth-1; j > idx; j--) {
+			for(int k = 0; k < this.mapHeight; k++) {
+				Coordinates toCoord = new Coordinates(j,k);
+				Coordinates fromCoord = new Coordinates(j-1,k);
+				moveObject(fromCoord, toCoord);
+				getObject(toCoord).setCoord(toCoord);
+			}
+		}
 	}
 	
-	public void deleteRow() {
+	public void createColoumns(int idx, int n) {
+		for(int i = 0; i < n; i++) {
+			createColoumn(idx);
+		}
+	}
+	
+	public void deleteColoumn(int idx) {
+		// Shift objects left
+		for (int i = idx; i < this.mapWidth-1; i++) {
+			for(int j = 0; j < this.mapHeight; j++) {
+				Coordinates toCoord = new Coordinates(i,j);
+				Coordinates fromCoord = new Coordinates(i+1,j);
+				moveObject(fromCoord, toCoord);
+				getObject(toCoord).setCoord(toCoord);
+			}
+		}
 		
+		// Delete Coloumn on right
+		this.map.remove(this.mapWidth);
+		this.mapWidth--;
 	}
 	
-	public void deleteColoumn() {
-		
+	public void deleteColoumns(int idx, int n) {
+		for(int i = 0; i < n; i++) {
+			deleteColoumn(idx);
+		}
 	}
-	*/
-	
-	// Terrain helper
-	
-	public boolean isBlocked(Coordinates pos) {
-		return !((Terrain) this.map[pos.getX()][pos.getY()].getObject(ObjectType.TERRAIN)).checkPassable();
-	}
-	
-	public boolean isBlocked(Coordinates pos, ObjectType type) {
-		if (type == null) return isBlocked(pos);
-		return (!((Terrain) this.map[pos.getX()][pos.getY()].getObject(ObjectType.TERRAIN)).checkPassable()
-				&& (this.map[pos.getX()][pos.getY()].getObject(type) != null));
-	}
-	
 }

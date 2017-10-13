@@ -2,106 +2,70 @@ package Tileset;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 
 import State.Coordinates;
-import State.State;
 
-public class GameObject {
+// Game object is in charge of: image/sprite, ObjectType, Coordinates
+public class GameObject extends Image {
 	public static enum ObjectType {
-		PLAYER, ENEMY, TRAP, ITEM, TERRAIN
+		PLAYER, ENEMY, TERRAIN;
 	}
 	
-	ObjectType type;
-	private Image image;
-	private Sprite sprite;
-	private int height;
-	private int width;
+	private ObjectType type;
 	private Coordinates position;
-	
-	
-	public GameObject() {
-		this.height = 16;
-		this.width = 16;
-		this.position = new Coordinates(0,0);
+	private Sprite sprite;
+	// height and width are in Actor
+
+	// TODO: WE MAY NOT NEED POSITION
+	public GameObject(ObjectType type, int width, int height, Coordinates position, Texture texture) {
+		super(texture);
+		this.type = type;
+		this.setSize(width,height);
+		this.position = position;
+		// initial position on screen 0,0 is bottom left
+//		this.setPosition(x, y);
 	}
 	
-	
-	public GameObject(Coordinates position) {
-		this.height = 16;
-		this.width = 16;
-		this.position = position;
+	@Override
+	public void draw(Batch batch, float parentAlpha) {
+		sprite.draw(batch);
 	}
-	
-	public GameObject(int height, int width, Coordinates position) {
-		this.height = height;
-		this.width = width;
-		this.position = position;
+
+	public boolean isDynamic() {
+		if(type == ObjectType.PLAYER || type == ObjectType.ENEMY) {
+			return true;
+		} else {
+			return false;
+		}
 	}
 	
 	public ObjectType getType() {
 		return this.type; 
 	}
 	
-
-	// use the whole image
-	public void setImage(String imageName) {
-		Texture tilemap = new Texture(Gdx.files.internal(imageName));
-		Image image = new Image(tilemap);
-		this.image = image;
-	}
-	
-	// use a subsection via texture region at a given position? TESTING NEEDED
-	public void setImage(String imageName, int x, int y, int width, int height) {
-		Texture tilemap = new Texture(Gdx.files.internal(imageName));
-		TextureRegion region = new TextureRegion(tilemap, x, y, width, height);
-		Image image = new Image(region);
-		this.image = image;
-	}
-		
-	public void setSprite(String imageName, int x, int y, int width, int height) {
-		Texture texture = new Texture(Gdx.files.internal(imageName));
-		this.sprite = new Sprite(texture, x, y, width, height);
-	}
-
-	public int getHeight() {
-		return height;
-	}
-	
-	public int getWidth() {
-		return width;
-	}
-	
-	public Image getImage() {
-		return image;
-	}
-	
-	public Sprite getSprite() {
-		return sprite;
-	}	
-	
 	public Coordinates getCoord() {
 		return position;
 	}
 	
-	
-	
-	
-	// Dynamic Game Components
-	//
-	
-	public void create(State s) {
-		
+	public void setCoord(Coordinates coord) {
+		position = coord;
 	}
 	
-	public void step(State s) {
-		
+	// use the whole image
+	public static Texture getTexture(String imageName) {
+//		this.sprite = new Sprite(new Texture(Gdx.files.internal(imageName)));
+		return new Texture(Gdx.files.internal(imageName));
 	}
 	
-	public void destroy(State s) {
-		
+	// use a subsection via texture region at a given position? TESTING NEEDED
+	public static TextureRegion getTexture(String imageName, int x, int y, float f, float g) {
+		Texture tilemap = new Texture(Gdx.files.internal(imageName));
+//		this.sprite = new Sprite(new TextureRegion(tilemap, x, y, (int)f, (int)g));
+		return new TextureRegion(tilemap, x, y, (int)f, (int)g);
 	}
-	
 }

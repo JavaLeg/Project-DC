@@ -1,5 +1,6 @@
 package Tileset;
 
+import State.Coordinates;
 import Tileset.EnemySubclass.*;
 
 public class EnemyFactory {
@@ -8,10 +9,11 @@ public class EnemyFactory {
 		SLIME//, SKELETON, ZOMBIE, WOLF
 	}
 	
-	public Enemy getEnemy(EnemyType type) {
+	public Enemy getEnemy(EnemyType type, Coordinates coord) {
 		switch(type) {
 		case SLIME:
-			return new EnemySlime();
+			return new EnemySlime(coord);
+
 		/*case SKELETON:
 		case ZOMBIE:
 		case WOLF:*/

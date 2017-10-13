@@ -1,5 +1,6 @@
 package State;
 
+import Tileset.DynamicObject;
 import Tileset.GameObject;
 
 //temporary class for Game, 
@@ -25,8 +26,8 @@ public class DynamicGame {
 		
 		// get all gameworld objects
 		// iterate upon these objects running their step() 
-		for (GameObject g : activeState.getAllObjects()) {
-			g.step(activeState);
+		for (DynamicObject o : activeState.getAllDynamicObjects()) {
+			o.step(activeState);
 		}
 		
 		// Conflict Resolution

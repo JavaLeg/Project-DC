@@ -1,27 +1,23 @@
 package Tileset;
 
-public class Terrain extends GameObject {
-	/*
-	public static enum Elevation {
-		LEVEL, UPPER, LOWER, UPRAMP, DOWNRAMP
-	}
-	*/
+import com.badlogic.gdx.graphics.Texture;
 
+import State.Coordinates;
+
+public class Terrain extends GameObject {
 	protected boolean passable;
-	// protected Elevation level;
 	
-	public boolean checkPassable() {
+	
+	public Terrain(int width, int height, Coordinates position, Texture texture, boolean passable) {
+		super(ObjectType.TERRAIN, width, height, position, texture);
+		this.passable = passable;
+	}
+	
+	public boolean isPassable() {
 		return passable;
 	}
 	
 	public void setPassable(boolean passable) {
 		this.passable = passable;
 	}
-	
-	/*
-	public boolean checkWalkable(Elevation currentLevel) {
-		if (this.level == currentLevel) return true;
-		// TO DO: able to go up/down if UPRAMP/DOWNRAMP
-	}
-	*/
 }
