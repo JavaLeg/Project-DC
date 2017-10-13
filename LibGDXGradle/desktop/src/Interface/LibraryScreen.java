@@ -90,15 +90,15 @@ public class LibraryScreen implements Screen{
                 		
                 		System.out.println("Loaded " + fileLabel.getText().toString());
     					((Game)Gdx.app.getApplicationListener()).setScreen(es);
+    					es.loadModel(fileHandle.Load(fileLabel.getText().toString()));
     					
     				} catch (IOException e) {
     					System.out.println("Error: could not load file " + fileLabel.getText().toString());
     					e.printStackTrace();
-    				} 
-//                	catch (ClassNotFoundException e) {
-//    					System.out.println("Error: could not find file " + fileLabel.getText().toString());
-//						e.printStackTrace();
-//					}
+    				} catch (ClassNotFoundException e) {
+    					System.out.println("Error: could not find file " + fileLabel.getText().toString());
+						e.printStackTrace();
+					}
                 }
         	});
         	

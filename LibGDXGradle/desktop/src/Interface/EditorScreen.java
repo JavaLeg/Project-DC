@@ -40,8 +40,7 @@ public class EditorScreen implements Screen {
 	
     public EditorScreen(Game game) throws IOException {
     	this.game = game;
-//    	this.controller = new EditorController();
-    	this.model = new EditorModel();
+//    	this.model = new EditorModel();
     }
     
 	// Show only operates once, after it will render
@@ -61,37 +60,41 @@ public class EditorScreen implements Screen {
 		Viewport preview_viewport = new PreviewViewport(APP_WIDTH, APP_HEIGHT, preview_camera);
 		Viewport toolbar_viewport = new ToolbarViewport(APP_WIDTH, APP_HEIGHT, toolbar_camera);
 		
-		Editor editorStage = new Editor(editor_viewport, atlas, skin);
+		Editor editorStage;
+		try {
+			editorStage = new Editor(editor_viewport, atlas, skin);
+		} catch (IOException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
 		State previewStage = new State(preview_viewport, 520, 480, 40, 40);
 		Toolbar toolbarStage = new Toolbar(toolbar_viewport, atlas, skin);
-				
-		UI = new ArrayList<Stage>();
-		UI.add(editorStage);
+
 		UI.add(previewStage);
 		UI.add(toolbarStage);
 		
-		
-		//Hash map for stage dependencies
-		HashMap<Stage, Stage> map = new HashMap<Stage, Stage>();
-		
-		/* 
-		 * Key depends on Value
-		 * Note: Can extend to hashMap of arrays if necessary
-		 */
-		map.put(toolbarStage, editorStage);
-		map.put(previewStage, editorStage);
-		map.put(editorStage, previewStage);
-		
-		// For dealing with unique processes between stages
-		//setDependencies(UI, map);
-		
-		// Manually set for now
-		editorStage.setDependence(previewStage);
-		previewStage.setDependence(editorStage);
-		toolbarStage.setDependence(editorStage);
-		
-		InputMultiplexer multiplexer = new InputMultiplexer(editorStage, previewStage, toolbarStage);
-		Gdx.input.setInputProcessor(multiplexer);
+		try {
+			editorStage = new Editor(editor_viewport, atlas, skin);
+			UI.add(editorStage);
+//			map.put(toolbarStage, editorStage);
+//			map.put(previewStage, editorStage);
+//			map.put(editorStage, previewStage);
+			// previewStage.setDependence(editorStage);
+			toolbarStage.setDependence(editorStage);
+			editorStage.setDependence(previewStage);
+
+			
+			InputMultiplexer multiplexer = new InputMultiplexer(editorStage, previewStage, toolbarStage);
+			Gdx.input.setInputProcessor(multiplexer);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	public void loadModel(EditorModel m) {
+		System.out.println("Loading model...");
+		model = m;
 	}
 	
 	@Override

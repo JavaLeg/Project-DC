@@ -1,5 +1,6 @@
 package Interface.Stages;
 
+import java.io.IOException;
 import java.util.HashMap;
 
 import com.badlogic.gdx.Gdx;
@@ -16,6 +17,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.utils.Json;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
 import Interface.Stages.Selections.ToolbarSelection;
@@ -45,11 +47,16 @@ public class Toolbar extends Stage{
 		for(final ToolbarSelection selection: ToolbarSelection.values()) {
 			TextButton button = generateButton(selection.name());
 			mainTable.add(button).pad(PAD);	
-			pad += PAD;
+			pad += PAD;			
 			button.addListener(new ClickListener(){
 				@Override
 		        public void clicked(InputEvent event, float x, float y) {
-					related.update(selection);
+					try {
+						related.update(selection);
+					} catch (IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
 
 		        }
 			});

@@ -18,6 +18,9 @@ public class Tile extends Stack implements Serializable {
 	private GameObject object;
 	private Image empty;
 	
+	private TextureRegion ter;
+	private TextureRegion obj;
+	
 	//************************//
 	//******* CREATORS *******//
 	//************************//
