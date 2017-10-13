@@ -8,16 +8,20 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.io.Serializable;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+
+import Interface.EditorModel;
+import Interface.Stages.Preview;
 
 
 /*
  * Save System (Can work for game state + game object models)
  */
 
-public class SaveSys {
+public class SaveSys{
 	private String dirPath;
 	
 	/*
@@ -44,7 +48,7 @@ public class SaveSys {
 	/*
 	 * Object -> byte[]
 	 */
-    public void Save(State s, String fileName) throws IOException{
+    public void Save(EditorModel s, String fileName) throws IOException{
     	FileOutputStream fos = new FileOutputStream(new File(dirPath + "/" + fileName));
     	ByteArrayOutputStream out = new ByteArrayOutputStream();
         ObjectOutputStream os = new ObjectOutputStream(out);
@@ -55,12 +59,12 @@ public class SaveSys {
 	/*
 	 * byte[] -> Object
 	 */
-    public State Load(String fileName) throws IOException, ClassNotFoundException {
+    public EditorModel Load(String fileName) throws IOException, ClassNotFoundException {
     	Path path = Paths.get(dirPath + "/" + fileName); 	
     	byte[] data = Files.readAllBytes(path);
         ByteArrayInputStream in = new ByteArrayInputStream(data);
         ObjectInputStream is = new ObjectInputStream(in);
-        return (State)is.readObject();
+        return (EditorModel)is.readObject();
     }
     
     public File[] getLibrary(){

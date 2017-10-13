@@ -1,4 +1,5 @@
 package Interface.Stages;
+import java.io.Serializable;
 import java.util.ArrayList;
 
 import com.badlogic.gdx.Gdx;
@@ -19,6 +20,7 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
 import Interface.Stages.Selections.ToolbarSelection;
+import Interface.EditorModel;
 import Interface.PreviewCell;
 
 public class Preview extends Stage{
@@ -51,13 +53,17 @@ public class Preview extends Stage{
 		// map(selection) passed to the preview cell
 	}
 	
+	public Preview() {
+		
+	}
+	
 	private void initialise(int cellWidth, int cellHeight) {
 		Table gridTable = new Table();
 		//ImageStack[] cells = new ImageStack[rowActors * colActors];
 		
 		for(int i = 0; i < rowActors; i++) {
 			for(int j = 0; j < colActors; j++) {
-				System.out.println("x: " + i + " y: " + j);
+				//System.out.println("x: " + i + " y: " + j);
 								
 				final PreviewCell cell = new PreviewCell();
 				cellList.add(cell);
@@ -120,7 +126,9 @@ public class Preview extends Stage{
 		
 		for(PreviewCell cell : cellList) {
 			cell.setTexture(selected_tr, selectedLayer);
+			// cell.clearTerrainVar();
 		}
+		
 	}
 	
 	public void clearGrid() {		
@@ -153,5 +161,12 @@ public class Preview extends Stage{
 		
 		return no_err;
 	}
-
+	
+	public EditorModel getModel() {
+		EditorModel cur = new EditorModel(13, 11);
+		cur.convert(cellList);
+		return cur;
+	}
+	
+	
 }

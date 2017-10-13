@@ -1,8 +1,11 @@
 package Interface;
 
+import java.io.Serializable;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.graphics.glutils.FileTextureData;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Stack;
 
@@ -20,14 +23,15 @@ public class PreviewCell extends Stack {
 	//private int status;		// 0 for empty, 1 for ground, 2 for wall, 3, 4, 5, etc.
 	//private int column;
 	//private int row;
-	private Texture currTexture;
 	private Image terrain;
 	private Image object;
 	private Image empty;
 	
+	private TextureRegion ter;
+	private TextureRegion obj;
+	
 	private boolean terrain_exists;
 	private boolean object_exists;
-
 	
 	/*
 	 * Initialises to empty
@@ -51,31 +55,9 @@ public class PreviewCell extends Stack {
 		//this.column = column;
 	}
 	
-	
-	
-	
-	/*
-	public int getStatus() {
-		return this.status;
-	}
-	
-	/*
-	 * Holds the new block type
-	 * Possible unnecessary
-	
-	public void setStatus(int start) {
-		this.status = start;
-	}
-	
-	// Increments the status (UNUSED)
-	public void changeStatus() {
-		this.status++;
-		if (this.status > 2) this.status = 0;
-	}
-	*/
-	
-	
+		
 	public void setTexture(TextureRegion i, ToolbarSelection ts) {
+		
 		/*
 		 * Only two cases we need to consider
 		 * Terrain: Placed with logical order
@@ -87,6 +69,7 @@ public class PreviewCell extends Stack {
 		
 		switch(ts) {
 		case TERRAIN:
+			ter = i;
 			terrain_exists = true;
 			terrain = new Image(i);
 			this.add(terrain);
@@ -96,6 +79,7 @@ public class PreviewCell extends Stack {
 			}
 			break;
 		default:
+			obj = i;
 			object_exists = true;
 			object = new Image(i);
 			this.add(terrain);
@@ -108,73 +92,19 @@ public class PreviewCell extends Stack {
 	 * Clear the cell
 	 * Keeps the empty texture 
 	 */
+	
+	@Override
 	public void clear() {
 		this.clearChildren();
 		object_exists = false;
 		terrain_exists = false;
+		obj = null;
+		ter = null;
+		terrain = empty;
 		this.add(empty);
 	}
 	
-	
-	/*
-	 * UNUSED function
-	 */
-	public void placeTerrain(Texture s) {
-		this.clearChildren();
 		
-		// JAMES, use texture regions so you can preset the size
-		TextureRegion nxt = new TextureRegion(s, 0, 0, 40, 40);
-		Image n = new Image(nxt);
-	
-		terrain = n;
-		this.add(terrain);
-		
-		if(object != null) {	
-			this.add(object);
-		}
-	}
-	
-	/*
-	 * UNUSED function
-	 */
-	public void placeCreature(Texture s) {
-		
-		this.clearChildren();
-		
-		// JAMES, use texture regions so you can preset the size
-		// Okay sorry man dont yell at me :c 
-		TextureRegion nxt = new TextureRegion(s, 40, 40);
-		Image n = new Image(nxt);
-		
-		object = n;
-		
-		this.add(terrain);
-		this.add(object);
-	}
-	
-	/* UNUSED
-	 * Changes the current block, there is a difference
-	 * between a terrain object and an item/creature object
-	 * This allows for overlapping images
-	 * @param object_type: true if object is not terrain
-	 */
-	public void changeImage(Texture nxt_text, boolean object_type) {
-		
-		TextureRegion nxt = new TextureRegion(nxt_text, 100, 100);
-		this.clearChildren();
-		if (object_type == true) {
-			object = new Image(nxt);
-			object_exists = true;
-		} else {
-			terrain = new Image(nxt);
-		}
-		
-		this.add(terrain);
-		if (object_exists == true) {
-			this.add(object);
-		}
-	}
-	
 	/*
 	 * When setting all to ground / empty
 	 */
@@ -192,14 +122,24 @@ public class PreviewCell extends Stack {
 		if (object_exists == true && terrain_exists == false) return false;
 		return true;
 	}
-	/*
-	public int getColumn() {
-		return this.column;
+	
+	public void clearTerrainVar() {
+		terrain = empty;
 	}
 	
-	public int getRow() {
-		return this.row;
+	public String getTerrainPath() {
+		if (ter != null) {
+			String k = ((FileTextureData)ter.getTexture().getTextureData()).getFileHandle().path();
+			return k;
+		}
+		return null;
 	}
-	*/
 	
+	public String getObjectPath() {
+		if (obj != null) {
+			String k = ((FileTextureData)obj.getTexture().getTextureData()).getFileHandle().path();
+			return k;
+		}
+		return null;
+	}
 }
