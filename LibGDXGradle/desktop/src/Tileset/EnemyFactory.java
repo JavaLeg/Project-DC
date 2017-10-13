@@ -1,6 +1,8 @@
 package Tileset;
 
-import State.Coordinates;
+import com.badlogic.gdx.graphics.Texture;
+
+import State.Coord;
 import Tileset.EnemySubclass.*;
 
 public class EnemyFactory {
@@ -9,10 +11,11 @@ public class EnemyFactory {
 		SLIME//, SKELETON, ZOMBIE, WOLF
 	}
 	
-	public Enemy getEnemy(EnemyType type, Coordinates coord) {
+	public Enemy getEnemy(EnemyType type, Coord coord, Texture texture) {
 		switch(type) {
 		case SLIME:
-			return new EnemySlime(coord);
+			return new EnemySlime(coord, texture);
+
 		/*case SKELETON:
 		case ZOMBIE:
 		case WOLF:*/

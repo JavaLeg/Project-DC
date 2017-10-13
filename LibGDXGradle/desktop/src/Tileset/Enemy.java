@@ -2,9 +2,9 @@ package Tileset;
 
 import com.badlogic.gdx.graphics.Texture;
 
-import State.Coordinates;
-import State.MoveBehaviour;
+import State.Coord;
 import State.State;
+import Tileset.Behaviour.MoveBehaviour;
 
 public class Enemy extends DynamicObject {
 	private double moveRate;
@@ -12,8 +12,8 @@ public class Enemy extends DynamicObject {
 	private MoveBehaviour moveBehaviour;
 	
 	
-	public Enemy(int width, int height, Coordinates position, Texture texture, double hp, double damage, double moveRate, MoveBehaviour b) {
-		super(ObjectType.ENEMY, width, height, position, texture, hp, damage);
+	public Enemy(Coord position, double hp, double damage, double moveRate, MoveBehaviour b, Texture texture) {
+		super(ObjectType.ENEMY, position,  hp, damage, texture);
 		this.moveRate = moveRate;
 		this.sinceLastMove = 0;
 		this.moveBehaviour = b;
@@ -33,13 +33,14 @@ public class Enemy extends DynamicObject {
 	}
 	
 	public void step(State s) {
+		super.step(s);
 		// handle movement behavior
 		if (sinceLastMove == moveRate) {
 			// move one step
 			if (moveBehaviour != null) {
-				Coordinates next = null;
+				Coord next = null;
 				next = moveBehaviour.nextStep(s, this.getCoord());
-				if (s.findPlayer() == next) {
+				if (s.findPlayer().equals(next)) {
 					s.getPlayer().damage(this.getDamage());
 				} else {
 					this.setCoord(next);

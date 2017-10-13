@@ -1,6 +1,8 @@
 package Tileset;
 
-import State.Coordinates;
+import com.badlogic.gdx.graphics.Texture;
+
+import State.Coord;
 import Tileset.TerrainSubclass.*;
 
 public class TerrainFactory {
@@ -8,10 +10,10 @@ public class TerrainFactory {
 		WALL//, WATER, MOUNTAIN, TREE
 	}
 	
-	public Terrain getTerrain(TerrainType type, Coordinates coord) {
+	public Terrain getTerrain(TerrainType type, Coord coord, Texture texture) {
 		switch(type) {
 		case WALL:
-			return new TerrainWall(coord);
+			return new TerrainWall(coord, texture);
 		/*case SKELETON:
 		case ZOMBIE:
 		case WOLF:*/

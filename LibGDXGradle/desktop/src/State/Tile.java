@@ -9,7 +9,7 @@ import Tileset.GameObject.ObjectType;
 public class Tile implements Serializable{
 	
 	private static final long serialVersionUID = 1L;
-	private Coordinates coord;
+	private Coord coord;
 	private GameObject object;
 	
 	
@@ -20,13 +20,13 @@ public class Tile implements Serializable{
 	// Default Create a Tile
 	public Tile(){
 		this.object = null;
-		this.coord = new Coordinates();
+		this.coord = new Coord();
 	}
 	
 	// Create a Tile given x and y coords as Coordinates object
-	public Tile(Coordinates coord){
+	public Tile(Coord coord){
 		this.object = null;
-		this.coord = new Coordinates();
+		this.coord = new Coord();
 		this.coord.setX(coord.getX());
 		this.coord.setY(coord.getY());
 	}
@@ -38,12 +38,12 @@ public class Tile implements Serializable{
 	//************************//
 	
 	// Get Tile coords as Coordinates object
-	public Coordinates getCoord(){
+	public Coord getCoord(){
 		return this.coord;
 	}
 	
 	// Set Tile coords given Coordinate object
-	public void setCoord(Coordinates coord){
+	public void setCoord(Coord coord){
 		this.coord.setX(coord.getX());
 		this.coord.setY(coord.getY());
 	}
