@@ -1,13 +1,15 @@
 package Tileset;
 
-import State.Coordinates;
+import com.badlogic.gdx.graphics.Texture;
+
+import State.Coord;
 
 public class Terrain extends GameObject {
 	protected boolean passable;
 	
 	
-	public Terrain(int width, int height, Coordinates position, boolean passable) {
-		super(ObjectType.TERRAIN, width, height, position);
+	public Terrain( Coord position,  boolean passable, Texture texture) {
+		super(ObjectType.TERRAIN,  position, texture);
 		this.passable = passable;
 	}
 	
