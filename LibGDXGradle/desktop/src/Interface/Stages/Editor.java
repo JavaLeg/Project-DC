@@ -21,6 +21,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Stack;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Json;
 import com.badlogic.gdx.utils.JsonWriter.OutputType;
@@ -28,7 +29,6 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 import com.engine.desktop.SaveSys;
 
 import Interface.EditorModel;
-import Interface.ImageID;
 import Interface.Stages.Selections.ToolbarSelection;
 
 import State.State;
@@ -36,22 +36,18 @@ import State.State;
 /*
  * Stage for the editor UI (Tools on the left of the screen)
  */
-public class Editor extends Stage implements Serializable {
+public class Editor extends Stage{
 	
 	private Skin skin;
-	
-	// ArrayList of tables
 	private HashMap<ToolbarSelection, Table> tableMap;
 	
 	private TableTuple titlePos;
 	private TableTuple tablePos;
-	
-	//private TerrainTable t;
-	//private CreatureTable c;
+
 	
 	private HashMap<Enum<?>, Class<?>> classMap;
 	
-	//private <E> currTable;
+
 	private ToolbarSelection current;
 	
 	//private Stage related;
@@ -61,23 +57,24 @@ public class Editor extends Stage implements Serializable {
 		
 	/*
 	 * Dimensions: 280 x 480
+	 * Stage takes in a viewport and a skin
 	 */
-	public Editor(Viewport v, TextureAtlas atlas, Skin skin) throws IOException {
+	public Editor(Viewport v, Skin skin) throws IOException {
 		super(v);
-		// this.atlas = atlas;
 		this.skin = skin;
 		this.titlePos = new TableTuple(50, 450);		
 		this.tablePos = new TableTuple(v.getScreenWidth()*7/40, v.getScreenHeight());
 		this.path = "SpriteFamily/";
 		this.tableMap = new HashMap<ToolbarSelection, Table>();
 		this.saver = new SaveSys();
-		//this.
 		initialise();
 		update(ToolbarSelection.FLOOR);
 	}
 	
+	/*
+	 * Initialise stage contents (Tables, Titles, Background etc...)
+	 */
 	private void initialise() {
-		
 		Table titleTable = new Table();	
         Label HUDlabel = new Label("Editor Mode", 
         		new Label.LabelStyle(new BitmapFont(), Color.CYAN));
@@ -89,6 +86,9 @@ public class Editor extends Stage implements Serializable {
 		super.addActor(titleTable);
 	}
 	
+	/*
+	 * Display a table on the stage
+	 */
 	private void display(Table newTable) {
 		newTable.setPosition(tablePos.getX(), tablePos.getY());
 		newTable.top();
@@ -97,33 +97,17 @@ public class Editor extends Stage implements Serializable {
 		super.addActor(newTable);
 	}
 
+	
+	/*
+	 * Updates the stage according to toolbar selection
+	 */
 	public void update(ToolbarSelection s) throws IOException {
-		
-		if (s == ToolbarSelection.SAVE) {
-			Json js = new Json();
-			
-			
-			EditorModel toSave = related.getModel();
-			saver.Save(toSave, "editor_model_test.txt");
-			
-			/*
-			System.out.println(js.toJson(save));
-			if (related.checkValidMap() == true) {
-				System.out.println("Game successfully saved");
-			} else {
-				System.out.println("Failed to save game, errors above");
-			}
-			return;
-			*/
-		}
-		
+				
 		if(current == s) return;
-		
 		this.clear();
 		
 		// Check if table already exists
-		// If so, pass that table to display fn instead of generating
-		
+		// If so, pass that table to display of instead of generating
 		if(!tableMap.containsKey(s)) {
 			Table newTable = generateTable(s);
 			tableMap.put(s, newTable);
@@ -136,6 +120,24 @@ public class Editor extends Stage implements Serializable {
 		return button;
 	}
 	
+	/*
+	 * Private method for saving
+	 * Takes in custom save filename
+	 * Spaces replaced with underscore and .txt appended
+	 * 
+	 */
+	private void saveMap(String s) throws IOException {
+		s = s.replaceAll(" ","_");
+		EditorModel toSave = related.getModel();
+		s += ".txt";
+		saver.Save(toSave, s);
+		System.out.println("Saved as file: " + s);
+	}
+	
+	/*
+	 * Generates a table according to the structure of SpriteFamily/* directory
+	 * Early returns (Like in case SAVE) can be made for custom tables
+	 */
 	private Table generateTable(final ToolbarSelection s) {
 		
 		Table newTable = new Table();
@@ -155,7 +157,7 @@ public class Editor extends Stage implements Serializable {
 		int i = 0;
 		
 		// Custom buttons should go here
-		// Hardcoded for now
+		// Hard-coded for now
 		switch(s) {
 		case FLOOR:
 			TextButton fillButton = generateButton("Fill");
@@ -176,6 +178,25 @@ public class Editor extends Stage implements Serializable {
 		        }
 			});
 			newTable.row();
+			break;
+		case SAVE:
+			final TextField textField = new TextField("", skin);
+			textField.setMessageText("Save as...*.txt");
+			newTable.add(textField);			
+			TextButton saveButton = generateButton("Save");
+			newTable.add(saveButton);
+			saveButton.addListener(new ClickListener(){
+				@Override
+		        public void clicked(InputEvent event, float x, float y) {
+					try {
+						saveMap(textField.getText());
+					} catch (IOException e) {
+						System.out.println("Cannot save map");
+						e.printStackTrace();
+					}
+		        }
+			});
+			return newTable;
 		default:
 			break;
 		}
@@ -184,13 +205,12 @@ public class Editor extends Stage implements Serializable {
 		
 		for(FileHandle file: files) {
 
-			final Texture t = new Texture(file);
-			
-			// related.setSelection(t, s);		// Set initial selection
-			
-			Image icon = new Image(new TextureRegion(t));
 			final String fileName = file.name().split("\\.", 2)[0];
+			final Texture t = new Texture(file);			
+			Image icon = new Image(new TextureRegion(t));
 			Label icon_name = new Label(fileName, new Label.LabelStyle(new BitmapFont(), Color.BLACK));
+			
+			
 			newTable.add(icon).size(40, 40);
 			newTable.add(icon_name).pad(5);
 			
@@ -203,7 +223,9 @@ public class Editor extends Stage implements Serializable {
 			});
 			
 			if (i % 2 == 1 && i != 0) newTable.row();
-			if (i > 20) break;					// Don't let it go over the edge
+			
+			// Don't let it go over the edge
+			if (i > 20) break;					
 			i++;
 			
 		}

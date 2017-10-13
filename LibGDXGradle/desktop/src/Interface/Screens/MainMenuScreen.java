@@ -1,4 +1,4 @@
-package Interface;
+package Interface.Screens;
 
 import java.io.IOException;
 

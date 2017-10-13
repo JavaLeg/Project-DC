@@ -1,4 +1,4 @@
-package Interface;
+package Interface.Screens;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
@@ -10,6 +10,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
+import Interface.GameInputProcessor;
 import State.DynamicGame;
 import State.RunGame;
 import State.State;

@@ -32,7 +32,7 @@ public class Toolbar extends Stage{
 	/*
 	 * Dimensions: 280 x 40
 	 */
-	public Toolbar(Viewport v, TextureAtlas atlas, Skin skin) {
+	public Toolbar(Viewport v, Skin skin) {
 		super(v);
 		this.atlas = atlas;
 		this.skin = skin;

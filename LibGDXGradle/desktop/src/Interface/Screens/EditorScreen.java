@@ -1,4 +1,4 @@
-package Interface;
+package Interface.Screens;
 
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 
@@ -19,6 +19,7 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
+import Interface.EditorModel;
 import Interface.Stages.Editor;
 //import Interface.Stages.GridPreview;
 import Interface.Stages.Toolbar;
@@ -64,16 +65,16 @@ public class EditorScreen implements Screen {
 		
 		Editor editorStage;
 		try {
-			editorStage = new Editor(editor_viewport, atlas, skin);
+			editorStage = new Editor(editor_viewport, skin);
 		} catch (IOException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
 		State previewStage = new State(preview_viewport, 520, 480, 40, 40);
-		Toolbar toolbarStage = new Toolbar(toolbar_viewport, atlas, skin);
+		Toolbar toolbarStage = new Toolbar(toolbar_viewport, skin);
 		
 		try {
-			editorStage = new Editor(editor_viewport, atlas, skin);
+			editorStage = new Editor(editor_viewport, skin);
 			UI.add(editorStage);
 			UI.add(previewStage);
 			UI.add(toolbarStage);
