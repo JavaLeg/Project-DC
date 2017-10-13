@@ -104,8 +104,7 @@ public class State extends Stage implements Serializable {
 							if (has_player == true) return;
 							has_player = true;
 						}
-						
-//						tile.setTexture(selected_tr, selectedLayer);
+						setTileTexture(tile, selectedLayer);
 			        }
 				});
 				gridTable.add(tile).size(40, 40);
@@ -141,7 +140,7 @@ public class State extends Stage implements Serializable {
 
 	public void fillGrid() {
 		
-		if(selected_tr == null || selectedLayer != ToolbarSelection.TERRAIN) 
+		if(selected_tr == null || selectedLayer != ToolbarSelection.FLOOR) 
 			return;
 		
 		Texture texture = selected_tr.getTexture();
@@ -149,7 +148,7 @@ public class State extends Stage implements Serializable {
 		System.out.println("Fill grid with : " + path);
 		
 		for(Tile tile : tileList) {
-			tile.setTexture(selected_tr, selectedLayer);
+			setTileTexture(tile, selectedLayer);
 		}
 	}
 	
@@ -157,6 +156,30 @@ public class State extends Stage implements Serializable {
 		has_player = false;
 		for(Tile tile : tileList) {
 			tile.clear();
+		}
+	}
+	
+	private void setTileTexture(Tile tile, ToolbarSelection ts) {
+		if (ts == null) return;
+		switch (ts){
+		case FLOOR:
+			Image temp = new Image(selected_tr);
+			tile.setFloor(temp);
+			break;
+		case ENEMY:
+			// TODO:
+			break;
+		case ITEM:
+			// TODO:
+			break;	
+		case WALL:
+			// TODO:
+			break;
+		case PLAYER:
+			// TODO:
+			break;
+		case SAVE:
+			break;
 		}
 	}
 
@@ -187,16 +210,17 @@ public class State extends Stage implements Serializable {
 	//************************//
 	//******* GENERAL ********//
 	//************************//
+	
 	public GameObject getObject(Coord coord) {
-		return this.map.get(coord.getX()).get(coord.getY()).getObject();
+		return this.tileList.get(coord.getX()  + coord.getY() * colActors).getObject();
 	}
 	
 	public void setObject(GameObject newObject, Coord coord) {
-		this.tileList.get(coord.getX()).get(coord.getY()).setObject(newObject);
+		this.tileList.get(coord.getX()  + coord.getY() * colActors).setObject(newObject);
 	}
 	
 	public void deleteObject(Coord coord) {
-		this.tileList.get(coord.getX()).get(coord.getY()).deleteObject();
+		this.tileList.get(coord.getX()  + coord.getY() * colActors).deleteObject();
 	}
 	
 	public void moveObject(Coord from, Coord to) {
@@ -215,22 +239,18 @@ public class State extends Stage implements Serializable {
 	
 	public List<GameObject> getAllObjects() {
 		List<GameObject> ret = new LinkedList<GameObject>();
-		for (List<Tile> ta : tileList) {
-			for (Tile t : ta) {		
-				ret.add(t.getObject());
-			}
+		for (Tile ta : tileList) {	
+			ret.add(ta.getObject());
 		}
 		return ret;
 	}
 	
 	public List<DynamicObject> getAllDynamicObjects() {
 		List<DynamicObject> ret = new LinkedList<DynamicObject>();
-		for (List<Tile> ta : tileList) {
-			for (Tile t : ta) {		
-				if(t.getObject().isDynamic()) {
-					ret.add((DynamicObject) t.getObject());
-				}
-			}	
+		for (Tile ta : tileList) {
+			if(ta.getObject().isDynamic()) {
+				ret.add((DynamicObject) ta.getObject());
+			}
 		}
 		return ret;
 	}
@@ -277,25 +297,25 @@ public class State extends Stage implements Serializable {
 	//******* TERRAIN ********//
 	//************************//
 	
-	private List<Coord> l = Arrays.asList(new Coord(1,2), new Coord(2,1), new Coord(0,3), new Coord(4,1), 
-			new Coord(4,2), new Coord(4,3), new Coord(4,4), new Coord(5,4), new Coord(6,2), new Coord(6,6), new Coord(3,3));
+//	private List<Coord> l = Arrays.asList(new Coord(1,2), new Coord(2,1), new Coord(0,3), new Coord(4,1), 
+//			new Coord(4,2), new Coord(4,3), new Coord(4,4), new Coord(5,4), new Coord(6,2), new Coord(6,6), new Coord(3,3));
 	
-	public boolean isBlocked(Coord pos) {
-		if (l.contains(pos)) return true;
-		if (true) return false; // TEMPORARY BYPASS
-		return !((Terrain) this.tileList.get(pos.getX()).get(pos.getY()).getObject()).isPassable();
-	}
-	
-	
-	
-	public boolean isBlocked(Coord pos, ObjectType type) {
-		if (l.contains(pos)) return true;
-		if (true) return false; // TEMPORARY BYPASS
-		if ( this.tileList.get(pos.getX()).get(pos.getY()).getObject()  == null) return false;
-		if (type == null) return isBlocked(pos);
-		return (!((Terrain) this.tileList.get(pos.getX()).get(pos.getY()).getObject()).isPassable()
-				&& (this.tileList.get(pos.getX()).get(pos.getY()).hasObject()));
-	}
+//	public boolean isBlocked(Coord pos) {
+//		if (l.contains(pos)) return true;
+//		if (true) return false; // TEMPORARY BYPASS
+//		return !((Wall) this.tileList.get(pos.getX()  + pos.getY() * colActors).getObject()).isPassable();
+//	}
+//	
+//	
+//	
+//	public boolean isBlocked(Coord pos, ObjectType type) {
+//		if (l.contains(pos)) return true;
+//		if (true) return false; // TEMPORARY BYPASS
+//		if ( this.tileList.get(pos.getX()  + pos.getY() * colActors).getObject()  == null) return false;
+//		if (type == null) return isBlocked(pos);
+//		return (!((Wall) this.tileList.get(pos.getX()  + pos.getY() * colActors).getObject()).isPassable()
+//				&& (this.tileList.get(pos.getX()  + pos.getY() * colActors).hasObject()));
+//	}
 	
 	
 	
@@ -304,7 +324,7 @@ public class State extends Stage implements Serializable {
 	//************************//
 	
 	public Tile getTile(Coord coord) {
-		return this.tileList.get(coord.getX()).get(coord.getY()); 
+		return this.tileList.get(coord.getX()  + coord.getY() * colActors); 
 	}
 
 	public void clearTile(Coord coord) {
@@ -312,107 +332,10 @@ public class State extends Stage implements Serializable {
 	}
 	
 	public int getMapWidth() {
-		return mapWidth;
+		return colActors;
 	}
 
 	public int getMapHeight() {
-		return mapHeight;
-	}
-	
-	public void createRow(int idx) {
-		// Create the row at the top
-		this.mapHeight++;
-		for(int i = 0; i < this.mapWidth; i++) {
-			Coord tempCoord = new Coord(i, this.mapHeight);
-			this.tileList.get(i).add(new Tile(tempCoord));
-		}
-		
-		// Shift objects up
-		for (int j = this.mapHeight-1; j > idx; j--) {
-			for(int k = 0; k < this.mapWidth; k++) {
-				Coord toCoord = new Coord(k, j);
-				Coord fromCoord = new Coord(k,j-1);
-				moveObject(fromCoord, toCoord);
-				getObject(toCoord).setCoord(toCoord);
-			}
-		}
-	}
-	
-	public void createRows(int idx, int n) {
-		for (int i = 0; i < n; i++) {
-			createRow(idx);
-		}
-	}
-	
-	public void deleteRow(int idx) {
-		// Shift objects down
-		for (int i = idx; i < this.mapHeight-1; i++) {
-			for(int j = 0; j < this.mapWidth; j++) {
-				Coord toCoord = new Coord(j,i);
-				Coord fromCoord = new Coord(j,i+1);
-				moveObject(fromCoord, toCoord);
-				getObject(toCoord).setCoord(toCoord);
-			}
-		}
-		
-		// Delete row
-		for(int k = 0; k < this.mapWidth; k++) {
-			this.tileList.get(k).remove(this.mapHeight);
-		}
-		this.mapHeight--;
-	}
-	
-	public void deleteRows(int idx, int n) {
-		for(int i = 0; i < n; i++) {
-			deleteRow(idx);
-		}
-	}
-	
-	public void createColoumn(int idx) {
-		// Create coloumn on right
-		this.tileList.add(new ArrayList<Tile>());
-		this.mapWidth++;
-		for(int i = 0; i < this.mapHeight; i++) {
-			Coord tempCoord = new Coord(this.mapWidth, i);
-			this.map.get(this.mapWidth).add(new Tile(tempCoord));
-		}
-		
-		// Shift objects right
-		for(int j = this.mapWidth-1; j > idx; j--) {
-			for(int k = 0; k < this.mapHeight; k++) {
-				Coord toCoord = new Coord(j,k);
-				Coord fromCoord = new Coord(j-1,k);
-				moveObject(fromCoord, toCoord);
-				getObject(toCoord).setCoord(toCoord);
-			}
-		}
-	}
-	
-	public void createColoumns(int idx, int n) {
-		for(int i = 0; i < n; i++) {
-			createColoumn(idx);
-		}
-	}
-	
-	public void deleteColoumn(int idx) {
-		// Shift objects left
-		for (int i = idx; i < this.mapWidth-1; i++) {
-			for(int j = 0; j < this.mapHeight; j++) {
-				Coord toCoord = new Coord(i,j);
-				Coord fromCoord = new Coord(i+1,j);
-				moveObject(fromCoord, toCoord);
-				getObject(toCoord).setCoord(toCoord);
-			}
-		}
-		
-		// Delete Coloumn on right
-		this.map.remove(this.mapWidth);
-		this.mapWidth--;
-	}
-	
-	public void deleteColoumns(int idx, int n) {
-		for(int i = 0; i < n; i++) {
-			deleteColoumn(idx);
-		}
+		return rowActors;
 	}
 }

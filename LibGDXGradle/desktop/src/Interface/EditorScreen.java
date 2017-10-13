@@ -1,10 +1,6 @@
 package Interface;
 
-import com.badlogic.gdx.scenes.scene2d.ui.Image;
-import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -15,39 +11,24 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Camera;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
-import com.badlogic.gdx.scenes.scene2d.InputEvent;
-import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
-import com.badlogic.gdx.scenes.scene2d.utils.SpriteDrawable;
-import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.FitViewport;
-import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
-import com.engine.desktop.DCGame;
-import com.engine.desktop.EditorController;
 
 import Interface.Stages.Editor;
 //import Interface.Stages.GridPreview;
-import Interface.Stages.Preview;
 import Interface.Stages.Toolbar;
 import Interface.Viewports.PreviewViewport;
 import Interface.Viewports.ToolbarViewport;
-import State.DynamicGame;
 import State.State;
 
 
 public class EditorScreen implements Screen {
 	
-	protected EditorController controller;
 	protected EditorModel model;
 	protected ArrayList<Stage> UI;
 	
@@ -59,7 +40,7 @@ public class EditorScreen implements Screen {
 	
     public EditorScreen(Game game) throws IOException {
     	this.game = game;
-    	this.controller = new EditorController();
+//    	this.controller = new EditorController();
     	this.model = new EditorModel();
     }
     
@@ -81,7 +62,7 @@ public class EditorScreen implements Screen {
 		Viewport toolbar_viewport = new ToolbarViewport(APP_WIDTH, APP_HEIGHT, toolbar_camera);
 		
 		Editor editorStage = new Editor(editor_viewport, atlas, skin);
-		Preview previewStage = new Preview(preview_viewport, 520, 480, 40, 40);
+		State previewStage = new State(preview_viewport, 520, 480, 40, 40);
 		Toolbar toolbarStage = new Toolbar(toolbar_viewport, atlas, skin);
 				
 		UI = new ArrayList<Stage>();

@@ -1,10 +1,10 @@
 package Interface.Stages.Selections;
 
 public enum ToolbarSelection {
-	TERRAIN,
-	CREATURE,
-	TREASURE,
-	WALLS,
+	FLOOR,
+	ENEMY,
+	ITEM,
+	WALL,
 	PLAYER,
 	SAVE;
 }

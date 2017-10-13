@@ -22,6 +22,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
 import Interface.Stages.Selections.ToolbarSelection;
+import State.State;
 
 /*
  * Stage for the editor UI (Tools on the left of the screen)
@@ -47,7 +48,7 @@ public class Editor extends Stage{
 	private ToolbarSelection current;
 	
 	//private Stage related;
-	private Preview related;
+	private State related;
 	private String path;
 	
 	//private CreatureTable currTable;
@@ -70,7 +71,7 @@ public class Editor extends Stage{
 		this.path = "SpriteFamily/";
 		this.tableMap = new HashMap<ToolbarSelection, Table>();
 		initialise();
-		update(ToolbarSelection.TERRAIN);
+		update(ToolbarSelection.FLOOR);
 	}
 	
 	/*
@@ -303,7 +304,7 @@ public class Editor extends Stage{
 		// Custom buttons should go here
 		// Hardcoded for now
 		switch(s) {
-		case TERRAIN:
+		case FLOOR:
 			TextButton fillButton = generateButton("Fill");
 			newTable.add(fillButton);
 			fillButton.addListener(new ClickListener(){
@@ -406,7 +407,7 @@ public class Editor extends Stage{
 	}
 	*/
 	
-	public void setDependence(Preview s) {
+	public void setDependence(State s) {
 		this.related = s;
 	}
 }

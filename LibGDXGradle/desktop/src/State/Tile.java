@@ -11,21 +11,12 @@ import com.badlogic.gdx.scenes.scene2d.ui.Stack;
 import Tileset.*;
 import Tileset.GameObject.ObjectType;
 
-import Interface.Stages.Selections.ToolbarSelection;
-
-public class Tile extends Stack implements Serializable{
+public class Tile extends Stack implements Serializable {
 	
 	private static final long serialVersionUID = 1L;
-	// private GameObject object;
-
-	private Texture currTexture;
-	private Image terrain;
-	private Coord coord;
+	private Image floor;
 	private GameObject object;
 	private Image empty;
-
-	private boolean terrain_exists;
-	private boolean object_exists;
 	
 	//************************//
 	//******* CREATORS *******//
@@ -38,100 +29,31 @@ public class Tile extends Stack implements Serializable{
 		//TextureRegion gnd = new TextureRegion(cur_texture, 40, 40);
 		// Changed, we can lock grid size. Done in the loop in preview
 		TextureRegion gnd = new TextureRegion(cur_texture);
-		terrain = new Image(gnd);
-		empty = terrain;
+		floor = new Image(gnd);
+		empty = floor;
 		
-		terrain_exists = false;
-		object_exists = false;
-		
-		this.add(terrain);
-
-		// this.object = null;
-		this.coord = new Coord();
+		this.add(floor);
 	}
 	
-	// Create a Tile given x and y coords as Coordinates object
-	public Tile(Coord coord){
-		super();
-		Texture cur_texture = new Texture(Gdx.files.internal("EditorScreen/empty_grid.png"));
-		//TextureRegion gnd = new TextureRegion(cur_texture, 40, 40);
-		// Changed, we can lock grid size. Done in the loop in preview
-		TextureRegion gnd = new TextureRegion(cur_texture);
-		terrain = new Image(gnd);
-		empty = terrain;
-		
-		terrain_exists = false;
-		object_exists = false;
-		
-		this.add(terrain);
-		this.object = null;
-		// Can't this.coord = coord?
-		this.coord = new Coord();
-
-		this.coord.setX(coord.getX());
-		this.coord.setY(coord.getY());
-	}
-	
-	
-	
-	//************************//
-	//****** COORDINATES *****//
-	//************************//
-	
-	// Get Tile coords as Coordinates object
-	public Coord getCoord(){
-		return this.coord;
-	}
-	
-	// Set Tile coords given Coordinate object
-	public void setCoord(Coord coord){
-		this.coord.setX(coord.getX());
-		this.coord.setY(coord.getY());
-	}
-	
-
-	/*
-	public int getStatus() {
-		return this.status;
-	}
-	
-	/*
-	 * Holds the new block type
-	 * Possible unnecessary
-	
-	public void setStatus(int start) {
-		this.status = start;
-	}
-	
-	// Increments the status (UNUSED)
-	public void changeStatus() {
-		this.status++;
-		if (this.status > 2) this.status = 0;
-	}
-	*/
-	
-	
-	public void setTextureTerrain(Image i) {
-		if (i == null) return;			// If no current texture, don't do shit
-		
+	public void setFloor(Image i) {
 		this.clearChildren();
-
-		terrain_exists = true;
-		terrain = i;
+		floor = i;
 		this.add(i);
 		
-		if (object_exists == true) {
+		if (this.object != null) {
 			this.add(object);
 		}
 	}
-
-	public void setTextureObject(GameObject i) {
-		object_exists = true;
-		object = i;
-		this.add(terrain);
-		this.add(i);
+	
+	public void deleteFloor() {
+		this.floor = null;
+		this.clearChildren();
+		this.add(object);
 	}
-
+	
+	public boolean hasFloor (){
+		return this.floor != null;
+	}
 	
 	/*
 	 * Clear the cell
@@ -139,25 +61,17 @@ public class Tile extends Stack implements Serializable{
 	 */
 	public void clear() {
 		this.clearChildren();
+		this.object = null;
+		this.floor = null;
 		this.add(empty);
-		object_exists = false;
-		terrain_exists = false;
 	}
 	
-	/*
-	 * When setting all to ground / empty
-	 */
-	public void setToTerrain(Image terrain) {
-		this.clearChildren();
-		this.add(terrain);
-		object_exists = false;
-	}
 	
 	/*
 	 * Checks if this grid is valid (can't have object on null cell)
 	 */
 	public boolean isValid() {
-		if (object_exists == true && terrain_exists == false) return false;
+		if (object != null && floor == null) return false;
 		return true;
 	}
 	
@@ -181,14 +95,17 @@ public class Tile extends Stack implements Serializable{
 		return this.object;
 	}
 	
-	// Set object if empty, returns false if already has object
-	public void setObject(GameObject newObject) {
-		this.object = newObject;
-		newObject.setCoord(this.coord);
+	public void setObject(GameObject i) {
+		this.clearChildren();
+		object = i;
+		this.add(floor);
+		this.add(i);
 	}
 	
 	// Deletes object if exists, returns false if does not exist or invalid type
 	public void deleteObject() {
 		this.object = null;
+		this.clearChildren();
+		this.add(floor);
 	}
 }

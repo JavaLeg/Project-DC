@@ -25,9 +25,10 @@ public class MovePathToPoint extends MoveBehaviour {
 		
 		
 		List<Coord> path = findRoute(s, currentPos, s.findPlayer());
-		if (path == null || path.size() == 0 || s.isBlocked(path.get(0), type)) {
-			return path.get(0);
-		} 
+//		TODO: oscar!
+//		if (path == null || path.size() == 0 || s.isBlocked(path.get(0), type)) {
+//			return path.get(0);
+//		} 
 		 
 		// non path behaviour
 		if (focus) {
