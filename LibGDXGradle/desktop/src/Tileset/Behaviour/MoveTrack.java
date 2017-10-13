@@ -25,15 +25,11 @@ public class MoveTrack extends MoveBehaviour {
 		boolean blocked = false;
 		if (ongoingPath.isEmpty()) {
 			ongoingPath = findRoute(s, currentPos, s.findPlayer());
-			if (ongoingPath == null || ongoingPath.size() == 0 || s.isBlocked(ongoingPath.get(0), type)) {
-				blocked = true;
-			} else {
-				return ongoingPath.get(0);
+			if (!(ongoingPath == null || ongoingPath.size() == 0 || s.isBlocked(ongoingPath.get(0), type))) {
+				return ongoingPath.remove(0);
 			}
 		} else {
-			if (s.isBlocked(ongoingPath.get(0), type)) {
-				blocked = true;
-			} else {
+			if (!s.isBlocked(ongoingPath.get(0), type)) {
 				return ongoingPath.remove(0);
 			}
 		}
