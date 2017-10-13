@@ -21,19 +21,17 @@ public class MovePathToPoint extends MoveBehaviour {
 	
 	@Override
 	public Coord nextStep(State s, Coord currentPos) {
-		// TODO Auto-generated method stub
-		
-		
+
 		List<Coord> path = findRoute(s, currentPos, s.findPlayer());
 		if (path == null || path.size() == 0 || s.isBlocked(path.get(0), type)) {
-			return path.get(0);
-		} 
-		 
-		// non path behaviour
-		if (focus) {
-			return currentPos;
+			// non path behaviour
+			if (focus) {
+				return currentPos;
+			} else {
+				return new MoveRandom(type).nextStep(s, currentPos);
+			}
 		} else {
-			return new MoveRandom(type).nextStep(s, currentPos);
+			return path.get(0);
 		}		
 	}
 	

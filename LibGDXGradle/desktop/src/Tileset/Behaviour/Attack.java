@@ -21,7 +21,7 @@ public class Attack {
 	public void applyAttack(State s) {
 		// grabs valid objects from State and damages all
 		
-		// STUB UNTIL STATE UPDATED
+		// TODO STUB UNTIL STATE UPDATED
 		
 	}
 	
