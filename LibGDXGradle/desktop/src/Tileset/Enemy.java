@@ -7,12 +7,13 @@ import State.State;
 import Tileset.Behaviour.MoveBehaviour;
 
 public class Enemy extends DynamicObject {
-	private double moveRate;
-	private double sinceLastMove;
+	
+	private int moveRate;
+	private int sinceLastMove;
 	private MoveBehaviour moveBehaviour;
 	
 	
-	public Enemy(Coord position, double hp, double damage, double moveRate, MoveBehaviour b, Texture texture) {
+	public Enemy(Coord position, double hp, double damage, int moveRate, MoveBehaviour b, Texture texture) {
 		super(ObjectType.ENEMY, position,  hp, damage, texture);
 		this.moveRate = moveRate;
 		this.sinceLastMove = 0;
@@ -28,7 +29,7 @@ public class Enemy extends DynamicObject {
 	}
 	
 	// Can use to stun enemy
-	public void setLastMove(double time) {
+	public void setLastMove(int time) {
 		this.sinceLastMove = time;
 	}
 	
@@ -41,7 +42,7 @@ public class Enemy extends DynamicObject {
 				Coord next = null;
 				next = moveBehaviour.nextStep(s, this.getCoord());
 				if (s.findPlayer().equals(next)) {
-					s.getPlayer().damage(this.getDamage());
+					s.getPlayer().damage(this.getContactDamage()); // contact damage
 				} else {
 					this.setCoord(next);
 				}
@@ -50,5 +51,8 @@ public class Enemy extends DynamicObject {
 		} else {
 			sinceLastMove++;
 		}
+		
+		
+		
 	}
 }

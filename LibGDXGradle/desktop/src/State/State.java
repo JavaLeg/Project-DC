@@ -9,10 +9,7 @@ import java.util.List;
 import com.badlogic.gdx.graphics.Texture;
 
 import Tileset.*;
-import Tileset.EnemyFactory.EnemyType;
 import Tileset.GameObject.ObjectType;
-import Tileset.PlayerFactory.PlayerType;
-import Tileset.TerrainFactory.TerrainType;
 
 public class State implements Serializable{
 	
@@ -79,23 +76,23 @@ public class State implements Serializable{
 	//************************//
 	
 	// Example: state.createEnemy(EnemyType.SLIME, coord);
-	public void createEnemy(EnemyType type, Coord coord, Texture texture) {
-		EnemyFactory factory = new EnemyFactory();
-		Enemy object = factory.getEnemy(type, coord, texture);
-		setObject(object, coord);
-	}
+	//public void createEnemy(EnemyType type, Coord coord, Texture texture) {
+	//	EnemyFactory factory = new EnemyFactory();
+	//	Enemy object = factory.getEnemy(type, coord, texture);
+	//	setObject(object, coord);
+	//}
 	
-	public void createPlayer(PlayerType type, Coord coord, Texture texture) {
-		PlayerFactory factory = new PlayerFactory();
-		Player object = factory.getPlayer(type, coord, texture);
-		setObject(object, coord);
-	}
+	//public void createPlayer(PlayerType type, Coord coord, Texture texture) {
+	//	PlayerFactory factory = new PlayerFactory();
+	//	Player object = factory.getPlayer(type, coord, texture);
+	//	setObject(object, coord);
+	//}
 	
-	public void createTerrain(TerrainType type, Coord coord, Texture texture) {
-		TerrainFactory factory = new TerrainFactory();
-		Terrain object = factory.getTerrain(type, coord, texture);
-		setObject(object, coord);
-	}
+	//public void createTerrain(TerrainType type, Coord coord, Texture texture) {
+	//	TerrainFactory factory = new TerrainFactory();
+	//	Terrain object = factory.getTerrain(type, coord, texture);
+	//	setObject(object, coord);
+	//}
 	
 	public GameObject getObject(Coord coord) {
 		return this.map.get(coord.getX()).get(coord.getY()).getObject();
@@ -206,6 +203,8 @@ public class State implements Serializable{
 		return (!((Terrain) this.map.get(pos.getX()).get(pos.getY()).getObject()).isPassable()
 				&& (this.map.get(pos.getX()).get(pos.getY()).hasObject()));
 	}
+	
+	
 	
 	
 	

@@ -22,7 +22,7 @@ public class DynamicGame {
 	}
 	
 	public void step() {
-		// execute each game step (for any realtime enemies)
+		// execute each game step (for any realtime objects)
 		
 		// get all gameworld objects
 		// iterate upon these objects running their step() 
@@ -31,12 +31,6 @@ public class DynamicGame {
 		}
 		
 		// Conflict Resolution
-		
-		
-		steps++;
-		if (steps >= 30) {
-			steps = 0;
-		}
 	}
 	
 	public State getState() {

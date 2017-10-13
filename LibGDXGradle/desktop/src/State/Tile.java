@@ -3,7 +3,6 @@ package State;
 import java.io.Serializable;
 
 import Tileset.*;
-import Tileset.EnemyFactory.EnemyType;
 import Tileset.GameObject.ObjectType;
 
 public class Tile implements Serializable{
