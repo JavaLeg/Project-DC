@@ -5,7 +5,6 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 
 import State.Coordinates;
@@ -22,10 +21,9 @@ public class GameObject extends Image {
 	// height and width are in Actor
 
 	// TODO: WE MAY NOT NEED POSITION
-	public GameObject(ObjectType type, int width, int height, Coordinates position, Texture texture) {
+	public GameObject(ObjectType type, Coordinates position, Texture texture) {
 		super(texture);
 		this.type = type;
-		this.setSize(width,height);
 		this.position = position;
 		// initial position on screen 0,0 is bottom left
 //		this.setPosition(x, y);
@@ -61,11 +59,5 @@ public class GameObject extends Image {
 //		this.sprite = new Sprite(new Texture(Gdx.files.internal(imageName)));
 		return new Texture(Gdx.files.internal(imageName));
 	}
-	
-	// use a subsection via texture region at a given position? TESTING NEEDED
-	public static TextureRegion getTexture(String imageName, int x, int y, float f, float g) {
-		Texture tilemap = new Texture(Gdx.files.internal(imageName));
-//		this.sprite = new Sprite(new TextureRegion(tilemap, x, y, (int)f, (int)g));
-		return new TextureRegion(tilemap, x, y, (int)f, (int)g);
-	}
+
 }

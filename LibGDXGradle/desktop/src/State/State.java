@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
+import com.badlogic.gdx.graphics.Texture;
+
 import Tileset.*;
 import Tileset.EnemyFactory.EnemyType;
 import Tileset.GameObject.ObjectType;
@@ -76,21 +78,21 @@ public class State implements Serializable{
 	//************************//
 	
 	// Example: state.createEnemy(EnemyType.SLIME, coord);
-	public void createEnemy(EnemyType type, Coordinates coord) {
+	public void createEnemy(EnemyType type, Coordinates coord, Texture texture) {
 		EnemyFactory factory = new EnemyFactory();
-		Enemy object = factory.getEnemy(type, coord);
+		Enemy object = factory.getEnemy(type, coord, texture);
 		setObject(object, coord);
 	}
 	
-	public void createPlayer(PlayerType type, Coordinates coord) {
+	public void createPlayer(PlayerType type, Coordinates coord, Texture texture) {
 		PlayerFactory factory = new PlayerFactory();
-		Player object = factory.getPlayer(type, coord);
+		Player object = factory.getPlayer(type, coord, texture);
 		setObject(object, coord);
 	}
 	
-	public void createTerrain(TerrainType type, Coordinates coord) {
+	public void createTerrain(TerrainType type, Coordinates coord, Texture texture) {
 		TerrainFactory factory = new TerrainFactory();
-		Terrain object = factory.getTerrain(type, coord);
+		Terrain object = factory.getTerrain(type, coord, texture);
 		setObject(object, coord);
 	}
 	

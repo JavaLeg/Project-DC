@@ -17,8 +17,8 @@ public class DynamicObject extends GameObject {
 	private double damage; // how much damage entity deals
 	
 	
-	public DynamicObject(ObjectType type, int width, int height, Coordinates position, Texture texture, double hp, double damage) {
-		super(type, width, height, position, texture);
+	public DynamicObject(ObjectType type, Coordinates position, double hp, double damage, Texture texture) {
+		super(type, position, texture);
 		this.hp = hp;
 		this.damage = damage;
 	}

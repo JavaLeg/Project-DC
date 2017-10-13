@@ -1,6 +1,9 @@
 package Tileset;
 
 import Tileset.PlayerSubclass.*;
+
+import com.badlogic.gdx.graphics.Texture;
+
 import State.Coordinates;
 
 public class PlayerFactory {
@@ -8,10 +11,10 @@ public class PlayerFactory {
 		WARRIOR//, ARCHER, TANK, ROGUE
 	}
 	
-	public Player getPlayer(PlayerType type, Coordinates coord) {
+	public Player getPlayer(PlayerType type, Coordinates coord, Texture texture) {
 		switch(type) {
 		case WARRIOR:
-			return new PlayerWarrior(coord);
+			return new PlayerWarrior(coord, texture);
 		/*case SKELETON:
 		case ZOMBIE:
 		case WOLF:*/

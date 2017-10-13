@@ -12,8 +12,8 @@ public class Enemy extends DynamicObject {
 	private MoveBehaviour moveBehaviour;
 	
 	
-	public Enemy(int width, int height, Coordinates position, Texture texture, double hp, double damage, double moveRate, MoveBehaviour b) {
-		super(ObjectType.ENEMY, width, height, position, texture, hp, damage);
+	public Enemy(Coordinates position, double hp, double damage, double moveRate, MoveBehaviour b, Texture texture) {
+		super(ObjectType.ENEMY, position,  hp, damage, texture);
 		this.moveRate = moveRate;
 		this.sinceLastMove = 0;
 		this.moveBehaviour = b;
