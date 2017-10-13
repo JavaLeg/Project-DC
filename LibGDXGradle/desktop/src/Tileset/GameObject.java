@@ -7,7 +7,7 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 
-import State.Coordinates;
+import State.Coord;
 
 // Game object is in charge of: image/sprite, ObjectType, Coordinates
 public class GameObject extends Image {
@@ -16,12 +16,12 @@ public class GameObject extends Image {
 	}
 	
 	private ObjectType type;
-	private Coordinates position;
+	private Coord position;
 	private Sprite sprite;
 	// height and width are in Actor
 
 	// TODO: WE MAY NOT NEED POSITION
-	public GameObject(ObjectType type, Coordinates position, Texture texture) {
+	public GameObject(ObjectType type, Coord position, Texture texture) {
 		super(texture);
 		this.type = type;
 		this.position = position;
@@ -46,11 +46,11 @@ public class GameObject extends Image {
 		return this.type; 
 	}
 	
-	public Coordinates getCoord() {
+	public Coord getCoord() {
 		return position;
 	}
 	
-	public void setCoord(Coordinates coord) {
+	public void setCoord(Coord coord) {
 		position = coord;
 	}
 	

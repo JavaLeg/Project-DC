@@ -1,8 +1,10 @@
-package State;
+package Tileset.Behaviour;
 
 import java.util.List;
 import java.util.Random;
 
+import State.Coord;
+import State.State;
 import Tileset.GameObject.ObjectType;
 
 public class MoveRandom extends MoveBehaviour {
@@ -15,8 +17,8 @@ public class MoveRandom extends MoveBehaviour {
 	
 	
 	@Override
-	public Coordinates nextStep(State s, Coordinates currentPos) {
-		List<Coordinates> options = this.getAdjacent(currentPos, s, type);
+	public Coord nextStep(State s, Coord currentPos) {
+		List<Coord> options = this.getAdjacent(currentPos, s, type);
 		if (options.size() == 0) {
 			return currentPos;
 		}

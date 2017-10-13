@@ -1,6 +1,6 @@
 package com.engine.desktop;
 
-import State.Coordinates;
+import State.Coord;
 import State.State;
 import Tileset.GameObject;
 import Tileset.GameObject.ObjectType;
@@ -10,7 +10,7 @@ import java.util.ArrayList;
 
 import com.badlogic.gdx.maps.tiled.TiledMap;
 
-import State.Coordinates;
+import State.Coord;
 import State.State;
 import State.Tile;
 
@@ -18,7 +18,7 @@ public class EditorController {
 	private State state;
 	private GameObject obj;
 	private SaveSys saveHandle;
-	private Coordinates coord;
+	private Coord coord;
 
 	
 	/*
@@ -28,7 +28,7 @@ public class EditorController {
 
 		this.state = new State();
 		this.saveHandle = new SaveSys();
-		this.coord = new Coordinates();
+		this.coord = new Coord();
 	}
 		
 	/*

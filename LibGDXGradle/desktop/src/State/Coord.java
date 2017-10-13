@@ -2,7 +2,7 @@ package State;
 
 import java.io.Serializable;
 
-public class Coordinates implements Serializable{
+public class Coord implements Serializable{
 	/**
 	 * 
 	 */
@@ -10,12 +10,12 @@ public class Coordinates implements Serializable{
 	int x;
 	int y;
 	
-	public Coordinates() {
+	public Coord() {
 		this.x = -1;
 		this.y = -1;
 	}
 	
-	public Coordinates(int x, int y) {
+	public Coord(int x, int y) {
 		this.x = x;
 		this.y = y;
 	}
@@ -35,8 +35,8 @@ public class Coordinates implements Serializable{
 
 	
 	@Override
-	public Coordinates clone() {
-		return new Coordinates(x, y);
+	public Coord clone() {
+		return new Coord(x, y);
 	}
 	
 	
@@ -48,9 +48,14 @@ public class Coordinates implements Serializable{
 	@Override
 	public boolean equals(Object arg) {
 		if (arg == null) return false;
-		if (arg.getClass() != Coordinates.class) return false;
-		Coordinates c = (Coordinates) arg;
-		return (this.x == this.y && c.x == c.y);
+		if (arg.getClass() != Coord.class) return false;
+		Coord c = (Coord) arg;
+		return (this.x == c.x && this.y == c.y);
+	}
+	
+	@Override 
+	public String toString() {
+		return "(" + x + "," + y + ")";
 	}
 		
 

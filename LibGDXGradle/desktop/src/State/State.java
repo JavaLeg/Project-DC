@@ -2,6 +2,7 @@ package State;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -20,7 +21,7 @@ public class State implements Serializable{
 	private static final int DEFAULT_MAP_HEIGHT = 50;
 	
 	// Coords of player
-	private Coordinates playerCoord;
+	private Coord playerCoord;
 	
 	private List<List<Tile>> map;
 	// The outer index is x, the inner index is y
@@ -35,14 +36,14 @@ public class State implements Serializable{
 	// default create an empty State
 	public State(){
 		// Default player position is outside the map -1,-1
-		this.playerCoord = new Coordinates();
+		this.playerCoord = new Coord();
 		
 		this.map = new ArrayList<List<Tile>>();
 		
 		for(int i = 0; i < DEFAULT_MAP_WIDTH; i++) {
 			this.map.add(new ArrayList<Tile>());
 			for(int j = 0; j < DEFAULT_MAP_HEIGHT; j++) {
-				Coordinates tempCoord = new Coordinates(i,j);
+				Coord tempCoord = new Coord(i,j);
 				this.map.get(i).add(new Tile(tempCoord));
 			}
 		}
@@ -55,14 +56,14 @@ public class State implements Serializable{
 	// Create empty state of x width and y height
 	public State(int width, int height){
 		// Default player position is outside the map -1,-1
-		this.playerCoord = new Coordinates();
+		this.playerCoord = new Coord();
 		
 		this.map = new ArrayList<List<Tile>>();
 		
 		for(int i = 0; i < width; i++) {
 			this.map.add(new ArrayList<Tile>());
 			for(int j = 0; j < height; j++) {
-				Coordinates tempCoord = new Coordinates(i,j);
+				Coord tempCoord = new Coord(i,j);
 				this.map.get(i).add(new Tile(tempCoord));
 			}
 		}
@@ -78,43 +79,43 @@ public class State implements Serializable{
 	//************************//
 	
 	// Example: state.createEnemy(EnemyType.SLIME, coord);
-	public void createEnemy(EnemyType type, Coordinates coord, Texture texture) {
+	public void createEnemy(EnemyType type, Coord coord, Texture texture) {
 		EnemyFactory factory = new EnemyFactory();
 		Enemy object = factory.getEnemy(type, coord, texture);
 		setObject(object, coord);
 	}
 	
-	public void createPlayer(PlayerType type, Coordinates coord, Texture texture) {
+	public void createPlayer(PlayerType type, Coord coord, Texture texture) {
 		PlayerFactory factory = new PlayerFactory();
 		Player object = factory.getPlayer(type, coord, texture);
 		setObject(object, coord);
 	}
 	
-	public void createTerrain(TerrainType type, Coordinates coord, Texture texture) {
+	public void createTerrain(TerrainType type, Coord coord, Texture texture) {
 		TerrainFactory factory = new TerrainFactory();
 		Terrain object = factory.getTerrain(type, coord, texture);
 		setObject(object, coord);
 	}
 	
-	public GameObject getObject(Coordinates coord) {
+	public GameObject getObject(Coord coord) {
 		return this.map.get(coord.getX()).get(coord.getY()).getObject();
 	}
 	
-	public void setObject(GameObject newObject, Coordinates coord) {
+	public void setObject(GameObject newObject, Coord coord) {
 		this.map.get(coord.getX()).get(coord.getY()).setObject(newObject);
 	}
 	
-	public void deleteObject(Coordinates coord) {
+	public void deleteObject(Coord coord) {
 		this.map.get(coord.getX()).get(coord.getY()).deleteObject();
 	}
 	
-	public void moveObject(Coordinates from, Coordinates to) {
+	public void moveObject(Coord from, Coord to) {
 		GameObject temp = getObject(from);
 		deleteObject(from);
 		setObject(temp, to);
 	}
 	
-	public void swapObject(Coordinates from, Coordinates to) {
+	public void swapObject(Coord from, Coord to) {
 		GameObject fromObject = getObject(from);
 		GameObject toObject = getObject(to);
 		setObject(fromObject, to);
@@ -150,7 +151,7 @@ public class State implements Serializable{
 	//************************//
 	
 	// Return coord of player
-	public Coordinates findPlayer(){
+	public Coord findPlayer(){
 		return this.playerCoord;
 	}
 	
@@ -169,14 +170,14 @@ public class State implements Serializable{
 	
 	// Moves player to different tile
 	// Returns false if player is already on that Tile
-	public void setPlayer(Coordinates to){
+	public void setPlayer(Coord to){
 		Player currPlayer = this.getPlayer();
 		this.deletePlayer();
 		setObject(currPlayer, to);
 	}
 	
 	// Same as setPlayer, redundant 
-	public void movePlayer(Coordinates to){
+	public void movePlayer(Coord to){
 		this.setPlayer(to);
 	}
 	
@@ -186,11 +187,21 @@ public class State implements Serializable{
 	//******* TERRAIN ********//
 	//************************//
 	
-	public boolean isBlocked(Coordinates pos) {
+	private List<Coord> l = Arrays.asList(new Coord(1,2), new Coord(2,1), new Coord(0,3), new Coord(4,1), 
+			new Coord(4,2), new Coord(4,3), new Coord(4,4), new Coord(5,4), new Coord(6,2), new Coord(6,6), new Coord(3,3));
+	
+	public boolean isBlocked(Coord pos) {
+		if (l.contains(pos)) return true;
+		if (true) return false; // TEMPORARY BYPASS
 		return !((Terrain) this.map.get(pos.getX()).get(pos.getY()).getObject()).isPassable();
 	}
 	
-	public boolean isBlocked(Coordinates pos, ObjectType type) {
+	
+	
+	public boolean isBlocked(Coord pos, ObjectType type) {
+		if (l.contains(pos)) return true;
+		if (true) return false; // TEMPORARY BYPASS
+		if ( this.map.get(pos.getX()).get(pos.getY()).getObject()  == null) return false;
 		if (type == null) return isBlocked(pos);
 		return (!((Terrain) this.map.get(pos.getX()).get(pos.getY()).getObject()).isPassable()
 				&& (this.map.get(pos.getX()).get(pos.getY()).hasObject()));
@@ -202,11 +213,11 @@ public class State implements Serializable{
 	//******** TILES *********//
 	//************************//
 	
-	public Tile getTile(Coordinates coord) {
+	public Tile getTile(Coord coord) {
 		return this.map.get(coord.getX()).get(coord.getY()); 
 	}
 
-	public void clearTile(Coordinates coord) {
+	public void clearTile(Coord coord) {
 		deleteObject(coord);
 	}
 	
@@ -222,15 +233,15 @@ public class State implements Serializable{
 		// Create the row at the top
 		this.mapHeight++;
 		for(int i = 0; i < this.mapWidth; i++) {
-			Coordinates tempCoord = new Coordinates(i, this.mapHeight);
+			Coord tempCoord = new Coord(i, this.mapHeight);
 			this.map.get(i).add(new Tile(tempCoord));
 		}
 		
 		// Shift objects up
 		for (int j = this.mapHeight-1; j > idx; j--) {
 			for(int k = 0; k < this.mapWidth; k++) {
-				Coordinates toCoord = new Coordinates(k, j);
-				Coordinates fromCoord = new Coordinates(k,j-1);
+				Coord toCoord = new Coord(k, j);
+				Coord fromCoord = new Coord(k,j-1);
 				moveObject(fromCoord, toCoord);
 				getObject(toCoord).setCoord(toCoord);
 			}
@@ -247,8 +258,8 @@ public class State implements Serializable{
 		// Shift objects down
 		for (int i = idx; i < this.mapHeight-1; i++) {
 			for(int j = 0; j < this.mapWidth; j++) {
-				Coordinates toCoord = new Coordinates(j,i);
-				Coordinates fromCoord = new Coordinates(j,i+1);
+				Coord toCoord = new Coord(j,i);
+				Coord fromCoord = new Coord(j,i+1);
 				moveObject(fromCoord, toCoord);
 				getObject(toCoord).setCoord(toCoord);
 			}
@@ -272,15 +283,15 @@ public class State implements Serializable{
 		this.map.add(new ArrayList<Tile>());
 		this.mapWidth++;
 		for(int i = 0; i < this.mapHeight; i++) {
-			Coordinates tempCoord = new Coordinates(this.mapWidth, i);
+			Coord tempCoord = new Coord(this.mapWidth, i);
 			this.map.get(this.mapWidth).add(new Tile(tempCoord));
 		}
 		
 		// Shift objects right
 		for(int j = this.mapWidth-1; j > idx; j--) {
 			for(int k = 0; k < this.mapHeight; k++) {
-				Coordinates toCoord = new Coordinates(j,k);
-				Coordinates fromCoord = new Coordinates(j-1,k);
+				Coord toCoord = new Coord(j,k);
+				Coord fromCoord = new Coord(j-1,k);
 				moveObject(fromCoord, toCoord);
 				getObject(toCoord).setCoord(toCoord);
 			}
@@ -297,8 +308,8 @@ public class State implements Serializable{
 		// Shift objects left
 		for (int i = idx; i < this.mapWidth-1; i++) {
 			for(int j = 0; j < this.mapHeight; j++) {
-				Coordinates toCoord = new Coordinates(i,j);
-				Coordinates fromCoord = new Coordinates(i+1,j);
+				Coord toCoord = new Coord(i,j);
+				Coord fromCoord = new Coord(i+1,j);
 				moveObject(fromCoord, toCoord);
 				getObject(toCoord).setCoord(toCoord);
 			}

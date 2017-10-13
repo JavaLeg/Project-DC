@@ -2,7 +2,7 @@ package Tileset;
 
 import com.badlogic.gdx.graphics.Texture;
 
-import State.Coordinates;
+import State.Coord;
 import State.State;
 
 // DynamicObject is in charge of: hp
@@ -17,7 +17,7 @@ public class DynamicObject extends GameObject {
 	private double damage; // how much damage entity deals
 	
 	
-	public DynamicObject(ObjectType type, Coordinates position, double hp, double damage, Texture texture) {
+	public DynamicObject(ObjectType type, Coord position, double hp, double damage, Texture texture) {
 		super(type, position, texture);
 		this.hp = hp;
 		this.damage = damage;
@@ -54,8 +54,6 @@ public class DynamicObject extends GameObject {
 	}
 	
 	public void step(State activeState) {
-		// Does nothing here
-		// Implemented in Enemy and Trap
-		// Ignored by player
+		// potential ongoing effects
 	}
 }
