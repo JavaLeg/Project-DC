@@ -26,4 +26,24 @@ public class Coordinates {
 	public void setY(int y) {
 		this.y = y;
 	}
+	
+	@Override
+	public Coordinates clone() {
+		return new Coordinates(x, y);
+	}
+	
+	
+	@Override
+	public int hashCode(){
+		return 17 * x + 8179 * y;
+	}
+	
+	@Override
+	public boolean equals(Object arg) {
+		if (arg == null) return false;
+		if (arg.getClass() != Coordinates.class) return false;
+		Coordinates c = (Coordinates) arg;
+		return (this.x == this.y && c.x == c.y);
+	}
+		
 }

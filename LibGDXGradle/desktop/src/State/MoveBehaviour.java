@@ -1,7 +1,9 @@
 package State;
 
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.PriorityQueue;
 
 import Tileset.GameObject.ObjectType;
 
@@ -44,17 +46,64 @@ public class MoveBehaviour {
 	}
 	
 	
-	// Astar search finding shortest 
-	public List<Coordinates> findRoute(State s, Coordinates to, Coordinates from) {
-		List<Coordinates> path = new LinkedList<Coordinates>();
-		class searchState {
+	// Astar search finding shortest path from one location to other
+	//		Does not take into account active objects, only whether terrain is passable
+	public List<Coordinates> findRoute(State s, Coordinates src, Coordinates dst) {
+		// SEARCH STATE
+		class SearchState implements Comparable<SearchState> {
+			Coordinates c;
+			int f;
+			double h;
 			
+			public SearchState(Coordinates c, int f, double h) {
+				this.c = c;
+				this.f = f;
+				this.h = h;
+			}
+
+			@Override
+			public int compareTo(SearchState s) {
+				return (int)((this.f + this.h) - (s.f + s.h));
+			}	
+			
+			public SearchState next(Coordinates to, Coordinates goal) {
+				return new SearchState(to.clone(), f + 1, heuristic(to, goal));
+			}
 		}
 		
+		// ALGORITHM
+		HashMap<Coordinates, Coordinates> pred = new HashMap<Coordinates, Coordinates>();
+		HashMap<Coordinates, Boolean> seen = new HashMap<Coordinates, Boolean>();
+		PriorityQueue<SearchState> searchQueue = new PriorityQueue<SearchState>();
+		searchQueue.add( new SearchState(src, 0, heuristic(src, dst)));
 		
-		
-		
-		return path;
+		while (!searchQueue.isEmpty()) {
+			
+			SearchState curr = searchQueue.poll();
+			if (curr.c.equals(dst)) {
+				// found path, extract from predecessor array
+				List<Coordinates> path = new LinkedList<Coordinates>();
+				for (Coordinates c = curr.c; !c.equals(src); c = pred.get(c)) {
+					path.add(0, c);
+				}
+				path.add(src);
+				return path;
+			}
+			
+			seen.put(curr.c, true);
+			
+			for (Coordinates conn : getAdjacent(curr.c, s, null)) {
+				if (seen.get(curr) != null) {
+					continue;
+				}
+				SearchState newState  = curr.next(conn, dst);
+				searchQueue.add(newState);
+				pred.put(conn, curr.c);
+			}		
+		}
+
+		// Queue is empty, means no path
+		return null;
 	}
 	
 	
