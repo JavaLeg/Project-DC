@@ -20,6 +20,7 @@ public class Player extends DynamicObject {
 	
 	@Override
 	public void step(State s) {
+		super.step(s);
 		
 		
 		

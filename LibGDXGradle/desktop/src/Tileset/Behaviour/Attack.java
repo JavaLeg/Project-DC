@@ -12,6 +12,7 @@ public class Attack {
 	private List<ObjectType> targets;
 	
 	
+	// likely takes in some sort of id or animaton
 	public Attack(List<Coord> hitbox, int damage, List<ObjectType> targets) {
 		this.hitbox = hitbox;
 		this.damage = damage;

@@ -13,6 +13,10 @@ public class DynamicObject extends GameObject {
 		PLAYER, ENEMY
 	} 
 	
+	public static enum mode {
+		MOVE, ATTACK, DISABLED;
+	}
+	
 	private double hp;
 	private double contactDamage; // how much damage entity deals
 	

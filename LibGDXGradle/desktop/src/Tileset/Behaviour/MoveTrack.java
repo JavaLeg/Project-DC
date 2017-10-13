@@ -22,7 +22,6 @@ public class MoveTrack extends MoveBehaviour {
 	
 	@Override
 	public Coord nextStep(State s, Coord currentPos) {
-		boolean blocked = false;
 		if (ongoingPath.isEmpty()) {
 			ongoingPath = findRoute(s, currentPos, s.findPlayer());
 			if (!(ongoingPath == null || ongoingPath.size() == 0 || s.isBlocked(ongoingPath.get(0), type))) {
