@@ -4,7 +4,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
@@ -24,9 +23,9 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 
 import Interface.EditorModel;
 import Interface.Stages.Editor;
-//import Interface.Stages.GridPreview;
 import Interface.Stages.Toolbar;
 import Interface.Viewports.CameraTestMain;
+import Interface.Viewports.PreviewProcessor;
 import Interface.Viewports.PreviewViewport;
 import Interface.Viewports.ToolbarViewport;
 import State.State;
@@ -93,6 +92,9 @@ public class EditorScreen implements Screen {
 			editorStage.setDependence(previewStage);
 			
 			CameraTestMain camTest = new CameraTestMain();
+			
+			
+			
 			// ESC key to return to main menu
 			InputProcessor backProcessor = new InputAdapter() {
 	            @Override
@@ -107,9 +109,12 @@ public class EditorScreen implements Screen {
 	                return false;
 	            }
 	        };
+	        
+	        
+			PreviewProcessor pp = new PreviewProcessor(preview_camera);
 
 			
-			InputMultiplexer multiplexer = new InputMultiplexer(editorStage, previewStage, toolbarStage, backProcessor);
+			InputMultiplexer multiplexer = new InputMultiplexer(editorStage, previewStage, toolbarStage, backProcessor, pp);
 			Gdx.input.setInputProcessor(multiplexer);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block

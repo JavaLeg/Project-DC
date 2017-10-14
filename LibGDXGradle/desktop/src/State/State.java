@@ -23,7 +23,7 @@ import Interface.Stages.Editor;
 import Interface.Stages.TableTuple;
 import Interface.Stages.Selections.ToolbarSelection;
 
-public class State extends Stage implements InputProcessor{
+public class State extends Stage{
 	
 	private static final long serialVersionUID = 1L;
 	private static final int DEFAULT_MAP_WIDTH = 50; // 50 tiles 
@@ -411,8 +411,11 @@ public class State extends Stage implements InputProcessor{
 	 * Movement involves left click followed by dragging motion
 	 * Degree of movement by variable intensity
 	 */
+	/*
 	private int dragX, dragY;
 	private float intensity = 150f;
+	
+	
 	
 	@Override
 	public boolean touchDown(int screenX, int screenY, int pointer, int button) {
@@ -433,4 +436,5 @@ public class State extends Stage implements InputProcessor{
 	    this.getCamera().update();
 	    return true;
 	}
+	*/
 }
