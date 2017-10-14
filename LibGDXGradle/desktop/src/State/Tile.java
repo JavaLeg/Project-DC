@@ -52,6 +52,20 @@ public class Tile extends Stack implements Serializable {
 		}
 	}
 
+	
+	// Can't we just have this instead???????
+	public void setObject(TextureRegion txt, ObjectType t) {
+		this.clearChildren();
+		
+		object_texture = txt;
+		GameObject obj_image = new GameObject(t, txt);
+		object = obj_image;
+		this.add(floor);
+		this.add(obj_image);
+	}
+	
+	
+	
 	public void setEnemy(TextureRegion txt) {
 		this.clearChildren();
 		

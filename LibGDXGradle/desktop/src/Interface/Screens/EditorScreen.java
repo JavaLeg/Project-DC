@@ -8,7 +8,10 @@ import java.util.HashMap;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input.Keys;
+import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.InputMultiplexer;
+import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.GL20;
@@ -30,7 +33,6 @@ import State.State;
 
 public class EditorScreen implements Screen {
 	
-	protected EditorModel model;
 	protected ArrayList<Stage> UI;
 	
     private SpriteBatch batch;
@@ -38,10 +40,12 @@ public class EditorScreen implements Screen {
         
     private int APP_WIDTH = Gdx.graphics.getWidth();
     private int APP_HEIGHT = Gdx.graphics.getHeight();
+    
+    // Quick reference
+    State previewStage;
 	
     public EditorScreen(Game game) throws IOException {
     	this.game = game;
-//    	this.model = new EditorModel();
     }
     
 	// Show only operates once, after it will render
@@ -70,7 +74,7 @@ public class EditorScreen implements Screen {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
-		State previewStage = new State(preview_viewport, 520, 480, 40, 40);
+		previewStage = new State(preview_viewport, 520, 480, 40, 40);
 		Toolbar toolbarStage = new Toolbar(toolbar_viewport, skin);
 		
 		try {
@@ -81,12 +85,28 @@ public class EditorScreen implements Screen {
 //			map.put(toolbarStage, editorStage);
 //			map.put(previewStage, editorStage);
 //			map.put(editorStage, previewStage);
-			// previewStage.setDependence(editorStage);
+//			previewStage.setDependence(editorStage);
 			toolbarStage.setDependence(editorStage);
 			editorStage.setDependence(previewStage);
+			
+			
+			// ESC key to return to main menu
+			InputProcessor backProcessor = new InputAdapter() {
+	            @Override
+	            public boolean keyDown(int keycode) {
+
+	                if ((keycode == Keys.ESCAPE) || (keycode == Keys.BACK)) {
+	                	for(Stage s : UI) {
+	                		s.dispose();
+	                	}
+	                	((Game)Gdx.app.getApplicationListener()).setScreen(new MainMenuScreen(game));
+	                }
+	                return false;
+	            }
+	        };
 
 			
-			InputMultiplexer multiplexer = new InputMultiplexer(editorStage, previewStage, toolbarStage);
+			InputMultiplexer multiplexer = new InputMultiplexer(editorStage, previewStage, toolbarStage, backProcessor);
 			Gdx.input.setInputProcessor(multiplexer);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
@@ -95,8 +115,9 @@ public class EditorScreen implements Screen {
 	}
 	
 	public void loadModel(EditorModel m) {
-		System.out.println("Loading model...");
-		model = m;
+		System.out.println("Loaded model.");	
+		//show();
+		previewStage.restoreModel(m);
 	}
 	
 	@Override
@@ -142,14 +163,4 @@ public class EditorScreen implements Screen {
         batch.dispose();
 		// TODO Auto-generated method stub	
 	}
-
-	/*
-	private void setDependencies(ArrayList<Stage> UI, HashMap<Stage, Stage> map) {
-		
-		for(Stage s: UI) {
-			((Stage) s).setDependence((Stage)map.get(s));
-		}
-	}
-	*/
-
 }

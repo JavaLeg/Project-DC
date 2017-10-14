@@ -20,6 +20,7 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
 import Interface.Stages.Selections.ToolbarSelection;
+import State.Tile;
 import Interface.EditorModel;
 import Interface.PreviewCell;
 
@@ -33,7 +34,7 @@ public class Preview extends Stage{
 	private TableTuple tablePos;
 	private TextureRegion selected_tr;
 	
-	private ArrayList<PreviewCell> cellList;
+	private ArrayList<Tile> cellList;
 	
 	// Should rename it soon, Image Stack can hold more than one "layer" of object objects.
 	private ToolbarSelection selectedLayer;
@@ -46,7 +47,7 @@ public class Preview extends Stage{
 		super(v);
 		this.rowActors = viewWidth/cellWidth - 2;
 		this.colActors = viewHeight/cellHeight + 1;
-		this.cellList = new ArrayList<PreviewCell>();
+		this.cellList = new ArrayList<Tile>();
 		initialise(cellWidth, cellHeight);
 		
 		// HashMap <EditorSelection, Image>
@@ -63,7 +64,7 @@ public class Preview extends Stage{
 		
 		for(int i = 0; i < rowActors; i++) {
 			for(int j = 0; j < colActors; j++) {
-				//System.out.println("x: " + i + " y: " + j);
+				System.out.println("x: " + i + " y: " + j);
 								
 				final PreviewCell cell = new PreviewCell();
 				cellList.add(cell);

@@ -36,7 +36,6 @@ public class LibraryScreen implements Screen{
     private OrthographicCamera camera;
     private TextureAtlas atlas;
     protected Skin skin;
-    private String dirPath;
     private DCGame game;
     private SaveSys fileHandle;
     
@@ -86,12 +85,15 @@ public class LibraryScreen implements Screen{
                 @Override
                 public void clicked(InputEvent event, float x, float y) {
                 	try {
-                		EditorScreen es = new EditorScreen(game);
-//                		es.getController().loadMap(fileLabel.getText().toString());
+                		stage.dispose();
                 		
-                		System.out.println("Loaded " + fileLabel.getText().toString());
-    					((Game)Gdx.app.getApplicationListener()).setScreen(es);
-    					es.loadModel(fileHandle.Load(fileLabel.getText().toString()));
+                		// LOADER
+                		EditorScreen es = new EditorScreen(game);                		
+                		System.out.println("Loading " + fileLabel.getText().toString() + "...");
+                		((Game)Gdx.app.getApplicationListener()).setScreen(es);
+                		es.loadModel(fileHandle.Load(fileLabel.getText().toString()));
+    					
+    					
     					
     				} catch (IOException e) {
     					System.out.println("Error: could not load file " + fileLabel.getText().toString());
@@ -150,8 +152,8 @@ public class LibraryScreen implements Screen{
 
 	@Override
 	public void dispose() {
-		// TODO Auto-generated method stub
-		
+		skin.dispose();
+		atlas.dispose();
 	}
 
 }

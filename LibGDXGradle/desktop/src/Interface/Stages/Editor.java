@@ -71,6 +71,10 @@ public class Editor extends Stage{
 		update(ToolbarSelection.FLOOR);
 	}
 	
+	
+	
+	// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ DISPLAYS ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+	
 	/*
 	 * Initialise stage contents (Tables, Titles, Background etc...)
 	 */
@@ -98,41 +102,20 @@ public class Editor extends Stage{
 	}
 
 	
-	/*
-	 * Updates the stage according to toolbar selection
-	 */
-	public void update(ToolbarSelection s) throws IOException {
-				
-		if(current == s) return;
-		this.clear();
-		
-		// Check if table already exists
-		// If so, pass that table to display of instead of generating
-		if(!tableMap.containsKey(s)) {
-			Table newTable = generateTable(s);
-			tableMap.put(s, newTable);
-		}
-		display(tableMap.get(s));
-	}
+	
+	
+	
+	
+	
+	
+	
+	// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ GENERATION ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 	
 	private TextButton generateButton(String s) {
 		TextButton button = new TextButton(s, skin);
 		return button;
 	}
 	
-	/*
-	 * Private method for saving
-	 * Takes in custom save filename
-	 * Spaces replaced with underscore and .txt appended
-	 * 
-	 */
-	private void saveMap(String s) throws IOException {
-		s = s.replaceAll(" ","_");
-		EditorModel toSave = related.getModel();
-		s += ".txt";
-		saver.Save(toSave, s);
-		System.out.println("Saved as file: " + s);
-	}
 	
 	/*
 	 * Generates a table according to the structure of SpriteFamily/* directory
@@ -179,6 +162,7 @@ public class Editor extends Stage{
 			});
 			newTable.row();
 			break;
+			
 		case SAVE:
 			final TextField textField = new TextField("", skin);
 			textField.setMessageText("Save as...*.txt");
@@ -200,8 +184,6 @@ public class Editor extends Stage{
 		default:
 			break;
 		}
-		
-		
 		
 		for(FileHandle file: files) {
 
@@ -231,6 +213,58 @@ public class Editor extends Stage{
 		}
 		return newTable;
 	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ INTERNALS ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+	
+	/*
+	 * Updates the stage according to toolbar selection
+	 */
+	public void update(ToolbarSelection s) throws IOException {
+				
+		if(current == s) return;
+		this.clear();
+		
+		// Check if table already exists
+		// If so, pass that table to display of instead of generating
+		if(!tableMap.containsKey(s)) {
+			Table newTable = generateTable(s);
+			tableMap.put(s, newTable);
+		}
+		display(tableMap.get(s));
+	}
+	
+	
+	/*
+	 * Private method for saving
+	 * Takes in custom save filename
+	 * Spaces replaced with underscore and .txt appended
+	 * 
+	 */
+	private void saveMap(String s) throws IOException {
+		
+		if(s.isEmpty()) {
+			System.out.println("Blank Save String!");
+			System.out.println("Not saved.");
+			return;
+		}
+		
+		s = s.replaceAll(" ","_");
+		EditorModel toSave = related.getModel();
+		s += ".txt";
+		saver.Save(toSave, s);
+		System.out.println("Saved as file: " + s);
+	}
+	
+	
 	
 	/*
 	public void setDependence(Stage s) {

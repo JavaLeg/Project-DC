@@ -62,7 +62,7 @@ public class SaveSys{
     	Path path = Paths.get(dirPath + "/" + fileName); 	
     	byte[] data = Files.readAllBytes(path);
         ByteArrayInputStream in = new ByteArrayInputStream(data);
-        ObjectInputStream is = new ObjectInputStream(in);
+        ObjectInputStream is = new ObjectInputStream(in);        
         return (EditorModel)is.readObject();
     }
     

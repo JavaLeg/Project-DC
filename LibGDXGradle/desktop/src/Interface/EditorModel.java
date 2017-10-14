@@ -6,28 +6,43 @@ import java.util.ArrayList;
 import State.Tile;
 
 public class EditorModel implements Serializable {
-	/**
-	 * 
-	 */
+	private int row;
+	private int col;
 	private static final long serialVersionUID = 1125293377219154163L;
-	private int rows;
-	private int cols;
-	private String[][] terrain_paths;
-	private String[][] object_paths;
+	private TileTuple[][] modelPaths;
 	
-	public EditorModel(int col, int row) {
-		rows = row;
-		cols = col;
-		terrain_paths = new String[col][row];
-		object_paths = new String[col][row];
+	public EditorModel(int row, int col) {
+		this.row = row;
+		this.col = col;
+		modelPaths = new TileTuple[row][col];
 	}
 	
-	public void convert(ArrayList<Tile> copy) {
-		for(int i = 0; i < cols*rows ; i++) {
-			int offset = i % 11;
-			int y_offset = i/11;
-			terrain_paths[y_offset][offset] = copy.get(i).getTerrainPath();
-			object_paths[y_offset][offset] = copy.get(i).getObjectPath();
+	public void setTile(TileTuple t, int row, int col) {
+		this.modelPaths[row][col] = t;
+	}
+	
+	public TileTuple[][] getmodelPaths(){
+		return modelPaths;
+	}
+	
+	/*
+	 * For debugging purposes
+	 * 1 - floor
+	 * 2 - object
+	 */
+	public void display(int layer) {
+		for(int i = 0; i < row; i++) {
+			System.out.print("Row: " + i + " ");
+			
+			for(int j = 0; j < col; j++) {
+				if(layer == 1) {
+					System.out.print(modelPaths[i][j].getFloor());
+				}else if(layer == 2) {
+					System.out.print(modelPaths[i][j].getObject());
+				}
+				
+			}
+			System.out.println(" ");
 		}
 	}
 }

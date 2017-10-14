@@ -7,6 +7,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.FileTextureData;
@@ -19,6 +20,7 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 import Tileset.*;
 import Tileset.GameObject.ObjectType;
 import Interface.EditorModel;
+import Interface.TileTuple;
 import Interface.Stages.Editor;
 import Interface.Stages.TableTuple;
 import Interface.Stages.Selections.ToolbarSelection;
@@ -91,7 +93,7 @@ public class State extends Stage implements Serializable {
 		
 		for(int i = 0; i < rowActors; i++) {
 			for(int j = 0; j < colActors; j++) {
-				System.out.println("x: " + i + " y: " + j);
+				//System.out.println("x: " + i + " y: " + j);
 								
 				final Tile tile = new Tile();
 				tileList.add(tile);
@@ -348,8 +350,60 @@ public class State extends Stage implements Serializable {
 	}
 
 	public EditorModel getModel() {
-		EditorModel cur = new EditorModel(13, 11);
-		cur.convert(tileList);
-		return cur;
+		EditorModel model = new EditorModel(rowActors, colActors);
+		
+		// Conversion should not take place inside the object
+		for(int i = 0; i < tileList.size(); i++) {
+			int row_val = i/colActors;
+			int col_val = i % colActors;
+			
+			Tile tile = tileList.get(i);
+
+			TileTuple t = new TileTuple(tile.getObjectPath(), tile.getTerrainPath());
+
+			
+			model.setTile(t, row_val, col_val);
+		}
+		return model;
+	}
+	
+
+	/*
+	 * Regenerate the textures from string paths
+	 * Place back onto grid via direct calls instead of click listeners
+	 */
+	public void restoreModel(EditorModel m) {
+		TileTuple[][] map = m.getmodelPaths();
+		
+		for(int i = 0; i < rowActors; i++) {
+			for(int j = 0; j < colActors; j++) {
+				int index = colActors*i + j;
+				
+				TileTuple t_tuple = map[i][j];
+				Tile tile = tileList.get(index);
+
+				// Set terrain
+				if(t_tuple.getFloor() != null)
+					tile.setFloor(new TextureRegion(new Texture(Gdx.files.internal(t_tuple.getFloor()))));
+				
+				
+				// Set object
+				if(t_tuple.getObject() != null)
+					tile.setObject(new TextureRegion(new Texture(Gdx.files.internal(t_tuple.getObject()))), getType(t_tuple.getObject()));
+			}
+		}
+	}
+	
+	/*
+	 * String splitting
+	 */
+	private ObjectType getType(String path) {
+		String[] parts = path.split("/");
+		
+		for(ObjectType t : ObjectType.values()) {
+			if(t.toString().toLowerCase().equals(parts[1]))
+					return t;
+		}
+		return null;
 	}
 }

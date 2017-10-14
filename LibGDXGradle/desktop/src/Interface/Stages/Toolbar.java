@@ -23,7 +23,6 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 import Interface.Stages.Selections.ToolbarSelection;
 
 public class Toolbar extends Stage{
-	private TextureAtlas atlas;
 	private Skin skin;
 	private Editor related;
 	private TableTuple toolbarPos;
@@ -34,7 +33,6 @@ public class Toolbar extends Stage{
 	 */
 	public Toolbar(Viewport v, Skin skin) {
 		super(v);
-		this.atlas = atlas;
 		this.skin = skin;
 		this.toolbarPos = new TableTuple(v.getScreenX()*3/4, 20);
 		initialise();
