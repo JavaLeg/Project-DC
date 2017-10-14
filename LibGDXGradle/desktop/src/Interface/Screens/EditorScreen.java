@@ -26,6 +26,7 @@ import Interface.EditorModel;
 import Interface.Stages.Editor;
 //import Interface.Stages.GridPreview;
 import Interface.Stages.Toolbar;
+import Interface.Viewports.CameraTestMain;
 import Interface.Viewports.PreviewViewport;
 import Interface.Viewports.ToolbarViewport;
 import State.State;
@@ -67,13 +68,15 @@ public class EditorScreen implements Screen {
 		
 		UI = new ArrayList<Stage>();
 		
+
 		Editor editorStage;
 		try {
 			editorStage = new Editor(editor_viewport, skin);
 		} catch (IOException e1) {
-			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
+		
+		
 		previewStage = new State(preview_viewport, 520, 480, 40, 40);
 		Toolbar toolbarStage = new Toolbar(toolbar_viewport, skin);
 		
@@ -89,7 +92,7 @@ public class EditorScreen implements Screen {
 			toolbarStage.setDependence(editorStage);
 			editorStage.setDependence(previewStage);
 			
-			
+			CameraTestMain camTest = new CameraTestMain();
 			// ESC key to return to main menu
 			InputProcessor backProcessor = new InputAdapter() {
 	            @Override

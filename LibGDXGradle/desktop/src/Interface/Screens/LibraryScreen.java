@@ -11,10 +11,13 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
@@ -22,6 +25,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.viewport.FitViewport;
+import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.engine.desktop.DCGame;
 //import com.engine.desktop.EditorController;
@@ -39,8 +43,8 @@ public class LibraryScreen implements Screen{
     private DCGame game;
     private SaveSys fileHandle;
     
-    private static final int WORLD_WIDTH  = 250;
-    private static final int WORLD_HEIGHT = 250;
+    private static final int WORLD_WIDTH  = 800;
+    private static final int WORLD_HEIGHT = 480;
 
     public LibraryScreen(Game game) throws IOException {
     	this.game = (DCGame) game;
@@ -54,11 +58,12 @@ public class LibraryScreen implements Screen{
         skin = new Skin(Gdx.files.internal("uiskin.json"), atlas);
 
         camera = new OrthographicCamera();
-        viewport = new FitViewport(WORLD_HEIGHT, WORLD_WIDTH, camera);
-        viewport.apply();
+        //viewport = new FitViewport(WORLD_HEIGHT, WORLD_WIDTH, camera);
+        viewport = new ScreenViewport();
+        //viewport.apply();
 
-        camera.position.set(camera.viewportWidth / 2, camera.viewportHeight / 2, 0);
-        camera.update();
+        //camera.position.set(camera.viewportWidth / 2, camera.viewportHeight / 2, 0);
+        //camera.update();
 
         stage = new Stage(viewport);  
         
@@ -66,10 +71,17 @@ public class LibraryScreen implements Screen{
         Table mainTable = new Table();
         //Set table to fill stage
         mainTable.setFillParent(true);
+        
+        BitmapFont titleFont = new BitmapFont();
+        titleFont.getData().setScale(4, 4);
+        
+        BitmapFont itemFont = new BitmapFont();
+        itemFont.getData().setScale(2, 2);
+        
         //Set alignment of contents in the table.
         
         Label title = new Label("Library", 
-        		new Label.LabelStyle(new BitmapFont(), Color.CYAN));
+        		new Label.LabelStyle(titleFont, Color.WHITE));
         
         mainTable.top();
         mainTable.add(title);
@@ -79,7 +91,7 @@ public class LibraryScreen implements Screen{
         File[] list = fileHandle.getLibrary();
         
         for (File f : list) {
-        	final Label fileLabel = new Label(f.getName(), new LabelStyle(new BitmapFont(), Color.WHITE));
+        	final Label fileLabel = new Label(f.getName(), new LabelStyle(itemFont, Color.WHITE));
         	//final TextButton fileLabel = new TextButton(f.getName(), skin);
         	fileLabel.addListener(new ClickListener(){
                 @Override
@@ -108,7 +120,7 @@ public class LibraryScreen implements Screen{
         	mainTable.row();
         	mainTable.add(fileLabel);
         }
-        	
+        stage.addActor(new Image(new TextureRegion(new Texture(Gdx.files.internal("LibScreen/bg2.jpg")))));
         stage.addActor(mainTable);
 		//Stage should control input:
         Gdx.input.setInputProcessor(stage);
