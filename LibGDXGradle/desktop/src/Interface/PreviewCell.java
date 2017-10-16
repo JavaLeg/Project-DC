@@ -49,10 +49,6 @@ public class PreviewCell extends Stack {
 		object_exists = false;
 		
 		this.add(terrain);
-		
-		//this.status = status;
-		//this.row = row;
-		//this.column = column;
 	}
 	
 		
