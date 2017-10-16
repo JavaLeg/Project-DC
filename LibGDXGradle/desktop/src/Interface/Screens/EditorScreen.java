@@ -34,7 +34,7 @@ import State.State;
 
 public class EditorScreen implements Screen {
 	
-	protected ArrayList<Stage> UI;
+    protected ArrayList<Stage> UI;
 	
     private SpriteBatch batch;
     private Game game;
@@ -85,10 +85,6 @@ public class EditorScreen implements Screen {
 			UI.add(editorStage);
 			UI.add(previewStage);
 			UI.add(toolbarStage);
-//			map.put(toolbarStage, editorStage);
-//			map.put(previewStage, editorStage);
-//			map.put(editorStage, previewStage);
-//			previewStage.setDependence(editorStage);
 			toolbarStage.setDependence(editorStage);
 			editorStage.setDependence(previewStage);
 			
