@@ -2,16 +2,25 @@ package State;
 
 import java.io.Serializable;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.graphics.glutils.FileTextureData;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import com.badlogic.gdx.scenes.scene2d.ui.Stack;
+
 import Tileset.*;
-import Tileset.EnemyFactory.EnemyType;
 import Tileset.GameObject.ObjectType;
 
-public class Tile implements Serializable{
+public class Tile extends Stack implements Serializable {
 	
 	private static final long serialVersionUID = 1L;
-	private Coord coord;
+	private Image floor;
 	private GameObject object;
+	private Image empty;
 	
+	private TextureRegion terrain_texture;
+	private TextureRegion object_texture;
 	
 	//************************//
 	//******* CREATORS *******//
@@ -19,35 +28,93 @@ public class Tile implements Serializable{
 	
 	// Default Create a Tile
 	public Tile(){
+		super();
+		Texture cur_texture = new Texture(Gdx.files.internal("EditorScreen/empty_grid.png"));
+		//TextureRegion gnd = new TextureRegion(cur_texture, 40, 40);
+		// Changed, we can lock grid size. Done in the loop in preview
+		TextureRegion gnd = new TextureRegion(cur_texture);
+		floor = new Image(gnd);
+		empty = floor;
+		
+		this.add(floor);
+	}
+	
+	public void setFloor(TextureRegion txt) {
+		this.clearChildren();
+		terrain_texture = txt;
+		
+		Image floor_img = new Image(txt);
+		floor = floor_img;
+		this.add(floor);
+		
+		if (this.hasObject() == true) {
+			this.add(object);
+		}
+	}
+
+	
+	// Can't we just have this instead???????
+	public void setObject(TextureRegion txt, ObjectType t) {
+		this.clearChildren();
+		
+		object_texture = txt;
+		GameObject obj_image = new GameObject(t, txt);
+		object = obj_image;
+		this.add(floor);
+		this.add(obj_image);
+	}
+	
+	
+	
+	public void setEnemy(TextureRegion txt) {
+		this.clearChildren();
+		
+		object_texture = txt;
+		GameObject obj_image = new GameObject(ObjectType.ENEMY, txt);
+		object = obj_image;
+		this.add(floor);
+		this.add(obj_image);
+	}
+	
+	public void setPlayer(TextureRegion txt) {
+		this.clearChildren();
+		
+		object_texture = txt;
+		GameObject obj_image = new GameObject(ObjectType.PLAYER, txt);
+		object = obj_image;
+		this.add(floor);
+		this.add(obj_image);
+	}
+	
+	public void deleteFloor() {
+		this.floor = null;
+		this.clearChildren();
+		this.add(object);
+	}
+	
+	public boolean hasFloor (){
+		return this.floor != null;
+	}
+	
+	/*
+	 * Clear the cell
+	 * Keeps the empty texture 
+	 */
+	public void clear() {
+		this.clearChildren();
 		this.object = null;
-		this.coord = new Coord();
-	}
-	
-	// Create a Tile given x and y coords as Coordinates object
-	public Tile(Coord coord){
-		this.object = null;
-		this.coord = new Coord();
-		this.coord.setX(coord.getX());
-		this.coord.setY(coord.getY());
+		this.floor = empty;
+		this.add(empty);
 	}
 	
 	
-	
-	//************************//
-	//****** COORDINATES *****//
-	//************************//
-	
-	// Get Tile coords as Coordinates object
-	public Coord getCoord(){
-		return this.coord;
+	/*
+	 * Checks if this grid is valid (can't have object on null cell)
+	 */
+	public boolean isValid() {
+		if (object != null && floor == null) return false;
+		return true;
 	}
-	
-	// Set Tile coords given Coordinate object
-	public void setCoord(Coord coord){
-		this.coord.setX(coord.getX());
-		this.coord.setY(coord.getY());
-	}
-	
 	
 	
 	//************************//
@@ -63,21 +130,42 @@ public class Tile implements Serializable{
 	public boolean hasObject() {
 		return this.object != null;
 	}
-
 	
 	// Gets object, can return null
 	public GameObject getObject() {
 		return this.object;
 	}
 	
-	// Set object if empty, returns false if already has object
-	public void setObject(GameObject newObject) {
-		this.object = newObject;
-		newObject.setCoord(this.coord);
-	}
-	
 	// Deletes object if exists, returns false if does not exist or invalid type
 	public void deleteObject() {
 		this.object = null;
+		this.clearChildren();
+		this.add(floor);
 	}
+	
+	public ObjectType getObjectType() {
+		if (object != null) return object.getType();
+		return null;
+	}
+	
+	/*
+	 * Returns the path to the texture in String format
+	 */
+	
+	public String getTerrainPath() {
+		if (terrain_texture != null) {
+			String k = ((FileTextureData)terrain_texture.getTexture().getTextureData()).getFileHandle().path();
+			return k;
+		}
+		return null;
+	}
+	
+	public String getObjectPath() {
+		if (object_texture != null) {
+			String k = ((FileTextureData)object_texture.getTexture().getTextureData()).getFileHandle().path();
+			return k;
+		}
+		return null;
+	}
+
 }

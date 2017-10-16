@@ -29,11 +29,23 @@ public class GameObject extends Image {
 //		this.setPosition(x, y);
 	}
 	
+	/* 
+	 * Needs to handle TextureRegions
+	 */
+	public GameObject(ObjectType type, TextureRegion texture) {
+		super(texture);
+		this.type = type;
+		// initial position on screen 0,0 is bottom left
+//		this.setPosition(x, y);
+	}
+	
+	/*
 	@Override
 	public void draw(Batch batch, float parentAlpha) {
 		sprite.draw(batch);
 	}
-
+	*/
+	
 	public boolean isDynamic() {
 		if(type == ObjectType.PLAYER || type == ObjectType.ENEMY) {
 			return true;
