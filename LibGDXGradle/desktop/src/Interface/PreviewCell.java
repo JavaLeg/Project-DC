@@ -9,9 +9,6 @@ import com.badlogic.gdx.graphics.glutils.FileTextureData;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Stack;
 
-// import Interface.Stages.Selections.CreatureSelection;
-// import Interface.Stages.Selections.EditorSelection;
-// import Interface.Stages.Selections.TerrainSelection;
 import Interface.Stages.Selections.ToolbarSelection;
 
 
@@ -19,10 +16,6 @@ import Interface.Stages.Selections.ToolbarSelection;
  * Name change from image stack as it seems more appropriate
  */
 public class PreviewCell extends Stack {
-	
-	//private int status;		// 0 for empty, 1 for ground, 2 for wall, 3, 4, 5, etc.
-	//private int column;
-	//private int row;
 	private Image terrain;
 	private Image object;
 	private Image empty;
