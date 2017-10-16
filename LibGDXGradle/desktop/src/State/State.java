@@ -167,6 +167,8 @@ public class State extends Stage{
 			break;
 		case ITEM:
 			// TODO:
+			if (tile.getObjectType() == ObjectType.ITEM) this.has_player = false;
+			tile.setObject(selected_tr, ObjectType.ITEM);
 			break;	
 		case WALLS:
 			// TODO:
