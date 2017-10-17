@@ -5,6 +5,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
 import State.Coord;
 import State.State;
@@ -32,7 +33,7 @@ public class DynamicObject extends GameObject {
 	
 	
 	public DynamicObject(ObjectType type, Coord position, double hp, double damage, Texture texture) {
-		super(type, position, texture);
+		super(type, position, new TextureRegion(texture));
 		this.hp = hp;
 		this.contactDamage = damage;
 		this.iFrames = 0;

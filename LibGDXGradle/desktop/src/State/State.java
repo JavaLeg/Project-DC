@@ -11,6 +11,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.FileTextureData;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.viewport.Viewport;
@@ -38,9 +39,8 @@ public class State extends Stage{
 	private Stage related;
 
 	private boolean has_player = false;			// Is this the appropriate place
-	
-	private TableTuple tablePos;
 	private TextureRegion selected_tr;
+	private GameObject cur_object;
 	
 	private ArrayList<Tile> tileList;
 	
@@ -113,13 +113,14 @@ public class State extends Stage{
 		gridTable.setFillParent(true);
 		super.addActor(gridTable);
 	}
-
-	/*
-	private ImageStack ImageStack(TextureRegion textureRegion) {
-		// TODO Auto-generated method stub
-		return null;
+	
+	/* 
+	 * Called by Editor.java when attempting to edit an enemy
+	 * or player attribute
+	 */
+	public void isEditable() {
+		System.out.println(selectedLayer);
 	}
-	*/
 
 	public void setDependence(Stage s) {
 		this.related = s;
@@ -129,12 +130,13 @@ public class State extends Stage{
 		this.related = s;
 	}
 	
-	public void setSelection(Texture s, ToolbarSelection ts) {
-
-		this.selected_tr = new TextureRegion(s);
-		this.selectedLayer = ts;
+	public void setSelection(Texture t, ToolbarSelection s, GameObject icon) {
+		// TODO Auto-generated method stub
+		selected_tr = new TextureRegion(t);
+		selectedLayer = s;
+		if (s != ToolbarSelection.FLOOR) cur_object = icon;
 	}
-
+	
 	public void fillGrid() {
 		
 		if(selected_tr == null || selectedLayer != ToolbarSelection.FLOOR) 
@@ -145,7 +147,8 @@ public class State extends Stage{
 		System.out.println("Fill grid with : " + path);
 		
 		for(Tile tile : tileList) {
-			setTileTexture(tile, selectedLayer);
+			// setTileTexture(tile, selectedLayer);
+			setTileTexture(tile, ToolbarSelection.FLOOR);
 		}
 	}
 	
@@ -156,6 +159,9 @@ public class State extends Stage{
 		}
 	}
 	
+	/*
+	 * Setting the tile texture, if it's an object we pass that instead
+	 */
 	private void setTileTexture(Tile tile, ToolbarSelection ts) {
 		if (ts == null) return;
 		switch (ts){
@@ -164,23 +170,20 @@ public class State extends Stage{
 			break;
 		case ENEMY:
 			if (tile.getObjectType() == ObjectType.PLAYER) this.has_player = false;			// Overwrite player
-			tile.setEnemy(selected_tr);
+			tile.setObject(cur_object);
 			break;
 		case ITEM:
-			// TODO:
 			if (tile.getObjectType() == ObjectType.ITEM) this.has_player = false;
-			tile.setObject(selected_tr, ObjectType.ITEM);
+			tile.setObject(cur_object);
 			break;	
-		case WALLS:
-			// TODO:
+		case WALL:
 			if (tile.getObjectType() == ObjectType.PLAYER) this.has_player = false;			// Overwrite player
-			tile.setEnemy(selected_tr);														// TODO
+			tile.setObject(cur_object);														// TODO
 			break;
 		case PLAYER:
-			// TODO:
 			if (has_player == true) return;			// Don't add multiple players
 			has_player = true;
-			tile.setPlayer(selected_tr);
+			tile.setObject(cur_object);
 			break;
 		case SAVE:
 			break;
@@ -372,10 +375,8 @@ public class State extends Stage{
 			int col_val = i % colActors;
 			
 			Tile tile = tileList.get(i);
-
-			TileTuple t = new TileTuple(tile.getObjectPath(), tile.getTerrainPath());
-
-			
+			ObjectType ID = tile.getObjectType();
+			TileTuple t = new TileTuple(tile.getObjectPath(), tile.getTerrainPath(), ID);
 			model.setTile(t, row_val, col_val);
 		}
 		return model;
@@ -402,8 +403,11 @@ public class State extends Stage{
 				
 				
 				// Set object
-				if(t_tuple.getObject() != null)
-					tile.setObject(new TextureRegion(new Texture(Gdx.files.internal(t_tuple.getObject()))), getType(t_tuple.getObject()));
+				if(t_tuple.getObject() != null) {
+					TextureRegion cur_texture = new TextureRegion(new Texture(Gdx.files.internal(t_tuple.getObject())));
+					GameObject new_obj = new GameObject(t_tuple.getID(), cur_texture);
+					tile.setObject(new_obj);
+				}
 			}
 		}
 	}

@@ -12,6 +12,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.graphics.glutils.FileTextureData;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -30,8 +31,9 @@ import com.engine.desktop.SaveSys;
 
 import Interface.EditorModel;
 import Interface.Stages.Selections.ToolbarSelection;
-
 import State.State;
+import Tileset.GameObject;
+import Tileset.GameObject.ObjectType;
 
 /*
  * Stage for the editor UI (Tools on the left of the screen)
@@ -181,6 +183,9 @@ public class Editor extends Stage{
 		        }
 			});
 			return newTable;
+		case EDIT:
+			related.isEditable();
+			break;
 		default:
 			break;
 		}
@@ -188,16 +193,41 @@ public class Editor extends Stage{
 		for(FileHandle file: files) {
 
 			String fileName = file.name().split("\\.", 2)[0];
-			final Texture t = new Texture(file);			
-			Image icon = new Image(new TextureRegion(t));
+			final Texture t = new Texture(file);	
 			
-			if (s == ToolbarSelection.ENEMY) {
-				fileName = "Health: 1\nDamage: 1\nSpeed: 1";
-			} else if (s == ToolbarSelection.PLAYER) { 
-				fileName = "Health: 1\nDamage: 1\nSpeed: 1";
+			ObjectType cur = null;
+			switch (s) {
+			case ENEMY:
+				cur = ObjectType.ENEMY;
+				break;
+			case PLAYER:
+				cur = ObjectType.PLAYER;
+				break;
+			case WALL:
+				cur = ObjectType.WALL;
+				break;
+			case ITEM:
+				cur = ObjectType.ITEM;
+				break;
+			case FLOOR:
+				cur = ObjectType.FLOOR;
+				break;
+			default:
+				break;
 			}
-			Label icon_name = new Label(fileName, new Label.LabelStyle(new BitmapFont(), Color.BLACK));
 			
+			final GameObject obj = new GameObject(cur, new TextureRegion(t));
+			final Image icon = new Image(new TextureRegion(t));
+/*			if (cur != null) {
+				icon = new GameObject(cur, new TextureRegion(t));
+			} else {
+				icon = new Image(new TextureRegion(t));
+			}*/
+			
+			if (s == ToolbarSelection.ENEMY || s == ToolbarSelection.PLAYER) {
+				fileName = "Health: 1\nDamage: 1\nSpeed: 1";
+			} 
+			Label icon_name = new Label(fileName, new Label.LabelStyle(new BitmapFont(), Color.BLACK));
 			
 			newTable.add(icon).size(40, 40);
 			newTable.add(icon_name).pad(5);
@@ -205,8 +235,7 @@ public class Editor extends Stage{
 			icon.addListener(new ClickListener(){
 				@Override
 		        public void clicked(InputEvent event, float x, float y) {
-					// System.out.println("selected " + fileName);
-					related.setSelection(t, s);
+					related.setSelection(t, s, obj);
 		        }
 			});
 			
@@ -237,7 +266,7 @@ public class Editor extends Stage{
 	 */
 	public void update(ToolbarSelection s) throws IOException {
 				
-		if(current == s) return;
+		if(current == s && s != ToolbarSelection.EDIT) return;
 		this.clear();
 		
 		// Check if table already exists

@@ -4,7 +4,8 @@ public enum ToolbarSelection {
 	FLOOR,
 	ENEMY,
 	ITEM,
-	WALLS,
+	WALL,
 	PLAYER,
-	SAVE;
+	SAVE,
+	EDIT;
 }
