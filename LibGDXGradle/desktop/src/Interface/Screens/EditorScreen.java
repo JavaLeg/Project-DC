@@ -20,6 +20,7 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
+import com.engine.desktop.DCGame;
 
 import Interface.EditorModel;
 import Interface.Stages.Editor;
@@ -36,7 +37,7 @@ public class EditorScreen implements Screen {
     protected ArrayList<Stage> UI;
 	
     private SpriteBatch batch;
-    private Game game;
+    private DCGame game;
         
     private int APP_WIDTH = Gdx.graphics.getWidth();
     private int APP_HEIGHT = Gdx.graphics.getHeight();
@@ -44,7 +45,7 @@ public class EditorScreen implements Screen {
     // Quick reference
     State previewStage = null;
 	
-    public EditorScreen(Game game) throws IOException {
+    public EditorScreen(DCGame game) throws IOException {
     	this.game = game;
     }
     

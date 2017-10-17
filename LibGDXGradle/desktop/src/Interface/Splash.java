@@ -9,6 +9,7 @@ import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.utils.TimeUtils;
+import com.engine.desktop.DCGame;
 
 import Interface.Screens.MainMenuScreen;
 import externals.GifDecoder;
@@ -20,9 +21,9 @@ public class Splash implements Screen{
 	private AssetManager assetManager;
 	private float elapsed;
 	private float startTime;
-	private Game g;
+	private DCGame g;
 	
-	public Splash(Game g) {
+	public Splash(DCGame g) {
 		this.g = g;
 		assetManager = new AssetManager();
 	}

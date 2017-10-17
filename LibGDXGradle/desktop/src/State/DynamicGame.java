@@ -62,25 +62,27 @@ public class DynamicGame {
 	// false means action can not be made and no changes are made to the state
 	
 	public boolean makeAction(Action a) {
-		//Coord curr = activeState.findPlayer();
+		Coord curr = activeState.findPlayer();
+		assert(curr !=  null);
+		assert(curr.getX() != null);
 		switch (a) {
 		case ATTACK:
 			System.out.print("USER INPUT: ATTACK\n");
 			break;
 		case MOVE_DOWN:
-			//activeState.movePlayer(new Coord(curr.getX(), curr.getY() + 1));
+			activeState.movePlayer(new Coord(curr.getX(), curr.getY() + 1));
 			System.out.print("USER INPUT: DOWN\n");
 			break;
 		case MOVE_LEFT:
-			//activeState.movePlayer(new Coord(curr.getX() - 1, curr.getY()));
+			activeState.movePlayer(new Coord(curr.getX() - 1, curr.getY()));
 			System.out.print("USER INPUT: LEFT\n");
 			break;
 		case MOVE_RIGHT:
-			//activeState.movePlayer(new Coord(curr.getX() + 1, curr.getY()));
+			activeState.movePlayer(new Coord(curr.getX() + 1, curr.getY()));
 			System.out.print("USER INPUT: RIGHT\n");
 			break;
 		case MOVE_UP:
-			//activeState.movePlayer(new Coord(curr.getX(), curr.getY() - 1));
+			activeState.movePlayer(new Coord(curr.getX(), curr.getY() - 1));
 			System.out.print("USER INPUT: UP\n");
 			break;
 		default:

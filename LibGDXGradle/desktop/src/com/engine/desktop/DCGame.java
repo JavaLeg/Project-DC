@@ -11,7 +11,7 @@ public class DCGame extends Game{
 
 	public SpriteBatch batch;
 	public BitmapFont font;
-	private Game game;
+	private DCGame game;
 	
 	public DCGame() {
 		game = this;
