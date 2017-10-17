@@ -23,6 +23,7 @@ public class DynamicObject extends GameObject {
 	
 	
 	private double hp;
+	private double maxHp;
 	private double contactDamage; // how much damage entity deals
 	
 	private int iFrames;
@@ -34,6 +35,7 @@ public class DynamicObject extends GameObject {
 	public DynamicObject(ObjectType type, Coord position, double hp, double damage, Texture texture) {
 		super(type, position, texture);
 		this.hp = hp;
+		this.maxHp = hp;
 		this.contactDamage = damage;
 		this.iFrames = 0;
 		statuses = new HashMap<Status, Integer>();
