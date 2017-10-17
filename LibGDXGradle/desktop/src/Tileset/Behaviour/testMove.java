@@ -19,9 +19,9 @@ public class testMove {
 		//}
 		//Gson gson = new Gson();
 		
-		//String jsonInString = "{'x': 1, 'y': 2}";
+		String jsonInString = "{'x': 1, 'y': 2}";
 		//Coord staff = gson.fromJson(jsonInString, Coord.class);
 		
-		
+		//JsonReader j;
 	}
 }
