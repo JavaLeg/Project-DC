@@ -22,6 +22,12 @@ public class DynamicObject extends GameObject {
 		POISON, STUN, SLOW
 	}
 	
+	public static enum ActionState {
+		MOVE, // standard state, can move and switch to ATTACK state
+		ATTACK, // state when attacking, does not move
+		DISABLED // disables all actions and stepping
+	}
+	
 	
 	private double hp;
 	private double maxHp;
@@ -31,7 +37,7 @@ public class DynamicObject extends GameObject {
 	private static int iFramesMax = 15; // one second
 	
 	private HashMap<Status, Integer> statuses;
-	
+	private ActionState state;
 	
 	public DynamicObject(ObjectType type, Coord position, double hp, double damage, Texture texture) {
 		super(type, position, new TextureRegion(texture));
@@ -84,8 +90,7 @@ public class DynamicObject extends GameObject {
 	
 	public void step(State s) {
 		// potential ongoing effects
-		
-		
+
 		
 		// statuses
 		for (Status stat : Status.values()) {
@@ -124,8 +129,16 @@ public class DynamicObject extends GameObject {
 		}
 	}
 	
+	public void setActionState(ActionState s) {
+		state = s;
+	}
+	
+	public ActionState getActionState() {
+		return state;
+	}
+	
 	public boolean canChangePosition() {
 		// test state here
-		return true;
+		return state == ActionState.MOVE;
 	}
 }

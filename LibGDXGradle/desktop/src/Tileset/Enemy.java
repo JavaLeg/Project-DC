@@ -23,13 +23,15 @@ public class Enemy extends DynamicObject {
 	//
 	
 	
-	public Enemy(Coord position, double hp, double damage, int moveRate, MoveBehaviour b, Texture texture) {
+	public Enemy(Coord position, double hp, double damage, int moveRate, MoveBehaviour b, Attack attack, Texture texture) {
 		super(ObjectType.ENEMY, position,  hp, damage, texture);
 		this.moveRate = moveRate;
 		this.sinceLastMove = 0;
-		this.attackRate = 60;
+		this.attackRate = attack.getAttackSpeed();
+		this.attackTime = attack.getAttackSpeed();
 		this.sinceLastAttack = 0;
 		this.moveBehaviour = b;
+		this.attack = attack;
 	}
 	
 	public void setBehaviour(MoveBehaviour b) {
@@ -66,7 +68,7 @@ public class Enemy extends DynamicObject {
 		
 		// attack behaviour
 		if (sinceLastAttack >= attackRate && attack != null) {
-			attack.applyAttack(s, getCoord());
+			//attack.applyAttack(s, getCoord());
 		} else {
 			sinceLastAttack++;
 		}

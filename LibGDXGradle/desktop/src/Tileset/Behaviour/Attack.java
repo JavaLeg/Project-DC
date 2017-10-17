@@ -13,17 +13,22 @@ public class Attack {
 	private int damage;
 	private List<Coord> hitbox;
 	private List<ObjectType> targets;
+	private int speed;
+	private int cooldown;
 	
 	
 	// likely takes in some sort of id or animaton as well
 	// does not clone lists
-	public Attack(List<Coord> hitbox, int damage, List<ObjectType> targets) {
+	public Attack(List<Coord> hitbox, int damage, List<ObjectType> targets, int speed, int cooldown) {
 		this.hitbox = hitbox;
 		this.damage = damage;
 		this.targets = targets;
+		this.speed = speed;
+		this.cooldown = cooldown;
 	}
 	
-	public void applyAttack(State s, Coord origin) {
+	
+	public void applyAttack(State s, Coord origin, Direction facing) {
 		// grabs valid objects from State and damages all
 		for (Coord c : applyHitBox(origin)) {
 			DynamicObject g = s.getDynamicObject(c);
@@ -33,6 +38,7 @@ public class Attack {
 		}
 		
 	}
+
 	
 	public List<Coord> applyHitBox(Coord origin) {
 		List<Coord> hits = new LinkedList<Coord>();
@@ -40,6 +46,14 @@ public class Attack {
 			hits.add(new Coord(c.getX() + origin.getX(), c.getY() + origin.getY()));
 		}
 		return hits;
+	}
+	
+	public int getAttackSpeed() {
+		return speed;
+	}
+	
+	public int getAttackCooldown() {
+		return cooldown;
 	}
 	
 }
