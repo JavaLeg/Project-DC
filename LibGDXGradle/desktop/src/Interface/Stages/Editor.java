@@ -32,6 +32,8 @@ import Interface.EditorModel;
 import Interface.Stages.Selections.ToolbarSelection;
 
 import State.State;
+import Tileset.GameObject;
+import Tileset.GameObject.ObjectType;
 
 /*
  * Stage for the editor UI (Tools on the left of the screen)
@@ -181,17 +183,49 @@ public class Editor extends Stage{
 		        }
 			});
 			return newTable;
+		case EDIT:
+			related.isEditable();
+			break;
 		default:
 			break;
 		}
 		
 		for(FileHandle file: files) {
 
-			final String fileName = file.name().split("\\.", 2)[0];
-			final Texture t = new Texture(file);			
-			Image icon = new Image(new TextureRegion(t));
-			Label icon_name = new Label(fileName, new Label.LabelStyle(new BitmapFont(), Color.BLACK));
+			String fileName = file.name().split("\\.", 2)[0];
+			final Texture t = new Texture(file);	
 			
+			ObjectType cur = null;
+			switch (s) {
+			case ENEMY:
+				cur = ObjectType.ENEMY;
+				break;
+			case PLAYER:
+				cur = ObjectType.PLAYER;
+				break;
+			case WALL:
+				cur = ObjectType.WALL;
+				break;
+			case ITEM:
+				cur = ObjectType.ITEM;
+				break;
+			default:
+				break;
+			}
+			
+			final GameObject icon = new GameObject(cur, new TextureRegion(t));
+/*			if (cur != null) {
+				icon = new GameObject(cur, new TextureRegion(t));
+			} else {
+				icon = new Image(new TextureRegion(t));
+			}*/
+			
+			if (s == ToolbarSelection.ENEMY) {
+				fileName = "Health: 1\nDamage: 1\nSpeed: 1";
+			} else if (s == ToolbarSelection.PLAYER) { 
+				fileName = "Health: 1\nDamage: 1\nSpeed: 1";
+			}
+			Label icon_name = new Label(fileName, new Label.LabelStyle(new BitmapFont(), Color.BLACK));
 			
 			newTable.add(icon).size(40, 40);
 			newTable.add(icon_name).pad(5);
@@ -199,15 +233,16 @@ public class Editor extends Stage{
 			icon.addListener(new ClickListener(){
 				@Override
 		        public void clicked(InputEvent event, float x, float y) {
-					System.out.println("selected " + fileName);
-					related.setSelection(t, s);
+					// System.out.println("selected " + fileName);
+					related.setSelection(t, s, icon);
 		        }
 			});
 			
 			if (i % 2 == 1 && i != 0) newTable.row();
 			
 			// Don't let it go over the edge
-			if (i > 20) break;					
+			if (i > 20 && s == ToolbarSelection.FLOOR) break;
+			if (i > 14 && s == ToolbarSelection.ENEMY) break;
 			i++;
 			
 		}
@@ -230,7 +265,7 @@ public class Editor extends Stage{
 	 */
 	public void update(ToolbarSelection s) throws IOException {
 				
-		if(current == s) return;
+		if(current == s && s != ToolbarSelection.EDIT) return;
 		this.clear();
 		
 		// Check if table already exists

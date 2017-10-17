@@ -1,13 +1,12 @@
 package State;
 
-import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.FileTextureData;
@@ -25,7 +24,7 @@ import Interface.Stages.Editor;
 import Interface.Stages.TableTuple;
 import Interface.Stages.Selections.ToolbarSelection;
 
-public class State extends Stage implements Serializable {
+public class State extends Stage{
 	
 	private static final long serialVersionUID = 1L;
 	private static final int DEFAULT_MAP_WIDTH = 50; // 50 tiles 
@@ -39,9 +38,8 @@ public class State extends Stage implements Serializable {
 	private Stage related;
 
 	private boolean has_player = false;			// Is this the appropriate place
-	
-	private TableTuple tablePos;
-	private TextureRegion selected_tr;
+	private Texture selected_tr;
+	private GameObject cur_object;
 	
 	private ArrayList<Tile> tileList;
 	
@@ -62,7 +60,7 @@ public class State extends Stage implements Serializable {
 	public State(Viewport v, int viewWidth, int viewHeight, int tileWidth, int tileHeight){
 		super(v);
 		this.rowActors = viewWidth/tileWidth - 2;
-		this.colActors = viewHeight/tileHeight + 1;
+		this.colActors = viewHeight/tileHeight;
 		this.tileList = new ArrayList<Tile>();
 		initialise(tileWidth, tileHeight);
 		
@@ -121,6 +119,14 @@ public class State extends Stage implements Serializable {
 		return null;
 	}
 	*/
+	
+	/* 
+	 * Called by Editor.java when attempting to edit an enemy
+	 * or player attribute
+	 */
+	public void isEditable() {
+		System.out.println(selectedLayer);
+	}
 
 	public void setDependence(Stage s) {
 		this.related = s;
@@ -130,18 +136,30 @@ public class State extends Stage implements Serializable {
 		this.related = s;
 	}
 	
-	public void setSelection(Texture s, ToolbarSelection ts) {
+/*	public void setSelection(Image s, ToolbarSelection ts) {
 
-		this.selected_tr = new TextureRegion(s);
+		//if (ts == ToolbarSelection.EDIT) {
+		//	System.out.println(selectedLayer);
+		//}
+		System.out.println("Layer = " + selectedLayer);
+		this.selected_tr = t;
 		this.selectedLayer = ts;
+	}*/
+	
+	public void setSelection(Texture t, ToolbarSelection s, GameObject icon) {
+		// TODO Auto-generated method stub
+		selected_tr = t;
+		selectedLayer = s;
+		cur_object = icon;
+		
 	}
-
+	
 	public void fillGrid() {
 		
 		if(selected_tr == null || selectedLayer != ToolbarSelection.FLOOR) 
 			return;
 		
-		Texture texture = selected_tr.getTexture();
+		Texture texture = selected_tr;
 		String path = ((FileTextureData)texture.getTextureData()).getFileHandle().name();
 		System.out.println("Fill grid with : " + path);
 		
@@ -169,8 +187,10 @@ public class State extends Stage implements Serializable {
 			break;
 		case ITEM:
 			// TODO:
+			if (tile.getObjectType() == ObjectType.ITEM) this.has_player = false;
+			tile.setObject(selected_tr, ObjectType.ITEM);
 			break;	
-		case WALLS:
+		case WALL:
 			// TODO:
 			if (tile.getObjectType() == ObjectType.PLAYER) this.has_player = false;			// Overwrite player
 			tile.setEnemy(selected_tr);														// TODO
@@ -406,4 +426,37 @@ public class State extends Stage implements Serializable {
 		}
 		return null;
 	}
+	
+	
+	// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ FOR CAMERA MOVEMENT ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+	/*
+	 * Movement involves left click followed by dragging motion
+	 * Degree of movement by variable intensity
+	 */
+	/*
+	private int dragX, dragY;
+	private float intensity = 150f;
+	
+	
+	
+	@Override
+	public boolean touchDown(int screenX, int screenY, int pointer, int button) {
+		dragX = screenX;
+		dragY = screenY;
+		return true;
+	}
+
+
+	@Override
+	public boolean touchDragged(int screenX, int screenY, int pointer) {
+	    float dX = (float)(dragX - screenX)/(float)Gdx.graphics.getWidth();
+	    float dY = (float)(screenY - dragY)/(float)Gdx.graphics.getHeight();
+	    dragX = screenX;
+	    dragY = screenY;
+	    
+	    this.getCamera().position.add(dX * intensity, dY * intensity, 0f);
+	    this.getCamera().update();
+	    return true;
+	}
+	*/
 }
