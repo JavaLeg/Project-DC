@@ -87,6 +87,8 @@ public class EditorScreen implements Screen {
 			toolbarStage.setDependence(editorStage);
 			editorStage.setDependence(previewStage);
 			
+			CameraTestMain camTest = new CameraTestMain();
+
 			// ESC key to return to main menu
 			InputProcessor backProcessor = new InputAdapter() {
 	            @Override
