@@ -182,7 +182,7 @@ public class State extends Stage{
 			has_player = true;
 			tile.setPlayer(selected_tr);
 			break;
-		case SAVE:
+		default:
 			break;
 		}
 	}
