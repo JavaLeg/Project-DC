@@ -28,6 +28,14 @@ public class GameObject extends Image implements Cloneable {
 		this.cur_texture = texture;
 	}
 	
+	public GameObject(ObjectType item, Coord position, TextureRegion texture) {
+		// TODO Auto-generated constructor stub
+		super(texture);
+		this.type = type;
+		this.position = position;
+		this.cur_texture = texture;
+	}
+
 	public GameObject clone() throws CloneNotSupportedException {
 		return (GameObject)super.clone();
 	}
