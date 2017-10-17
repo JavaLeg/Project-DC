@@ -28,7 +28,7 @@ public class DynamicObject extends GameObject {
 	private double contactDamage; // how much damage entity deals
 	
 	private int iFrames;
-	private static int iFramesMax = 30; // one second
+	private static int iFramesMax = 15; // one second
 	
 	private HashMap<Status, Integer> statuses;
 	
@@ -58,6 +58,9 @@ public class DynamicObject extends GameObject {
 	
 	public void heal(double hp) {
 		this.hp += hp;
+		if (this.hp > maxHp) {
+			this.hp = maxHp;
+		}
 	}
 	
 	
@@ -81,6 +84,36 @@ public class DynamicObject extends GameObject {
 	
 	public void step(State s) {
 		// potential ongoing effects
+		
+		
+		
+		// statuses
+		for (Status stat : Status.values()) {
+			Integer stepsLeft = statuses.get(stat);
+			if (stat != null) {
+				
+				// handle effects
+				switch(stat) {
+				case POISON:
+					break;
+				case SLOW:
+					break;
+				case STUN:
+					break;
+				default:
+					break;
+				}
+				
+				// handle time left
+				stepsLeft--;
+				if (stepsLeft == 0) {
+					statuses.remove(stat);
+				} else {
+					statuses.put(stat, stepsLeft);
+				}
+			}
+		}
+		
 		
 		// general management
 		if (getHp() < 0) {

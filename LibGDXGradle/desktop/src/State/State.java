@@ -224,6 +224,14 @@ public class State extends Stage{
 		return this.tileList.get(coord.getX()  + coord.getY() * colActors).getObject();
 	}
 	
+	public DynamicObject getDynamicObject(Coord coord) {
+		GameObject g = getObject(coord);
+		if (g.isDynamic()) {
+			return (DynamicObject) g;
+		} else {
+			return null;
+		}
+	}
 
 	
 	/*
@@ -243,6 +251,7 @@ public class State extends Stage{
 		GameObject toMove = getObject(from);
 		deleteObject(from);
 		getTile(to).setObject(toMove);
+		toMove.setCoord(to);
 	}
 	
 	

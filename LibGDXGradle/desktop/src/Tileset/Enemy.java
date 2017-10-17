@@ -66,7 +66,7 @@ public class Enemy extends DynamicObject {
 		
 		// attack behaviour
 		if (sinceLastAttack >= attackRate && attack != null) {
-			attack.applyAttack(s);
+			attack.applyAttack(s, getCoord());
 		} else {
 			sinceLastAttack++;
 		}
