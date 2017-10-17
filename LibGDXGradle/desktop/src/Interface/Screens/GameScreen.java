@@ -63,6 +63,8 @@ public class GameScreen implements Screen {
         // If window resize (update TODO)
         previewStage.act();
         previewStage.draw();
+        
+        
 	}
 
 	@Override
