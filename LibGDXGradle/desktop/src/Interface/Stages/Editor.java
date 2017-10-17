@@ -52,6 +52,9 @@ public class Editor extends Stage{
 	private State related;
 	private String path;
 	private SaveSys saver;
+	
+	private Table default_tab;
+	private Table custom_tab;
 		
 	/*
 	 * Dimensions: 280 x 480
@@ -151,31 +154,16 @@ public class Editor extends Stage{
 		tf.setMessageText(s);
 		return tf;
 	}
+	
+
+	private Table generateCustomTable(final ToolbarSelection s) {
 		
-	/*
-	 * Generates a table according to the structure of SpriteFamily/* directory
-	 * Early returns (Like in case SAVE) can be made for custom tables
-	 */
-	private Table generateTable(final ToolbarSelection s) {
+		
+		FileHandle[] files = Gdx.files.internal(path + s.toString().toLowerCase() + "_custom").list();
 		
 		final Table newTable = new Table();
+		custom_tab = newTable;
 		
-		/*
-		 * Make a custom image icon class later
-		 * Includes image and name
-		 */
-		FileHandle[] files = Gdx.files.internal(path + s.toString().toLowerCase()).list();
-		
-		Label title = new Label(s.toString(), 
-        		new Label.LabelStyle(new BitmapFont(), Color.BLACK));
-
-		newTable.add(title);
-		newTable.row();
-		int i = 0;
-		
-		// If editor tab contains other stuff
-		// Hard coded for now
-
 		TextButton editButton = null;
 		TextButton customButton = null;
 		
@@ -210,13 +198,19 @@ public class Editor extends Stage{
 //				});
 //			}
 
-			customButton = generateButton("Custom");
+			customButton = generateButton("default");
 			newTable.add(customButton);
 			customButton.addListener(new ClickListener(){
 				@Override
 		        public void clicked(InputEvent event, float x, float y) {
-					System.out.println("CLICKED!");
-					newTable.setVisible(false);
+					//newTable.setVisible(false);
+					//default_tab.setVisible(true);
+					try {
+						update(s);
+					} catch (IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
 		        }
 			});
 			break;
@@ -226,30 +220,97 @@ public class Editor extends Stage{
 			editButton.addListener(new ClickListener(){
 				@Override
 		        public void clicked(InputEvent event, float x, float y) {
-					System.out.println("CLICKED!");
 					related.newEdit(selectedObject, skin);
 		        }
 			});
 			
-//			if(t == TableType.DEFAULT) {
-//				customButton = generateButton("Custom");
-//				newTable.add(customButton);
-//				customButton.addListener(new ClickListener(){
-//					@Override
-//			        public void clicked(InputEvent event, float x, float y) {
-//						generateTable(s, TableType.CUSTOM);
-//			        }
-//				});
-//			}else {
-//				customButton = generateButton("DEFAULT");
-//				newTable.add(customButton);
-//				customButton.addListener(new ClickListener(){
-//					@Override
-//			        public void clicked(InputEvent event, float x, float y) {
-//						generateTable(s, TableType.DEFAULT);
-//			        }
-//				});
-//			}
+			customButton = generateButton("default");
+			newTable.add(customButton);
+			customButton.addListener(new ClickListener(){
+				@Override
+		        public void clicked(InputEvent event, float x, float y) {
+					//newTable.setVisible(false);
+					//default_tab.setVisible(true);
+					try {
+						update(s);
+					} catch (IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+		        }
+			});
+			break;
+		default:
+			break;
+		}
+		
+		return newTable;
+	}
+	
+	/*
+	 * Generates a table according to the structure of SpriteFamily/* directory
+	 * Early returns (Like in case SAVE) can be made for custom tables
+	 */
+	private Table generateTable(final ToolbarSelection s) {
+		
+		final Table newTable = new Table();
+		default_tab = newTable;
+		/*
+		 * Make a custom image icon class later
+		 * Includes image and name
+		 */
+		FileHandle[] files = Gdx.files.internal(path + s.toString().toLowerCase()).list();
+		
+		Label title = new Label(s.toString(), 
+        		new Label.LabelStyle(new BitmapFont(), Color.BLACK));
+
+		newTable.add(title);
+		newTable.row();
+		int i = 0;
+		
+		// If editor tab contains other stuff
+		// Hard coded for now
+
+		TextButton editButton = null;
+		TextButton customButton = null;
+		
+		switch(s) {
+		case PLAYER:
+			editButton = generateButton("Edit");
+			newTable.add(editButton);
+			editButton.addListener(new ClickListener(){
+				@Override
+		        public void clicked(InputEvent event, float x, float y) {
+					related.newEdit(selectedObject, skin);
+		        }
+			});
+
+			customButton = generateButton("Custom");
+			newTable.add(customButton);
+			customButton.addListener(new ClickListener(){
+				@Override
+		        public void clicked(InputEvent event, float x, float y) {
+					updateCustom(s);
+		        }
+			});
+			break;
+		case ENEMY:
+			editButton = generateButton("Edit");
+			newTable.add(editButton);
+			editButton.addListener(new ClickListener(){
+				@Override
+		        public void clicked(InputEvent event, float x, float y) {
+					related.newEdit(selectedObject, skin);
+		        }
+			});
+			customButton = generateButton("Custom");
+			newTable.add(customButton);
+			customButton.addListener(new ClickListener(){
+				@Override
+		        public void clicked(InputEvent event, float x, float y) {
+					updateCustom(s);
+		        }
+			});
 			break;
 		case FLOOR:
 			TextButton fillButton = generateButton("Fill");
@@ -396,6 +457,10 @@ public class Editor extends Stage{
 			tableMap.put(s, newTable);
 		}
 		display(tableMap.get(s));
+	}
+	
+	private void updateCustom(ToolbarSelection s) {
+		display(generateCustomTable(s));
 	}
 	
 	
