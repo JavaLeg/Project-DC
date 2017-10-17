@@ -28,6 +28,9 @@ public class GameObject extends Image implements Cloneable {
 		this.cur_texture = texture;
 	}
 	
+	/*
+	 * Oscar's game object initialisation using co-ordinates
+	 */
 	public GameObject(ObjectType item, Coord position, TextureRegion texture) {
 		// TODO Auto-generated constructor stub
 		super(texture);

@@ -4,8 +4,8 @@ import com.badlogic.gdx.Game;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
+import Interface.Splash;
 import Interface.Screens.MainMenuScreen;
-import Interface.Screens.Splash;
 
 public class DCGame extends Game{
 

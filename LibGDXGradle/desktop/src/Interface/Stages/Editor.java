@@ -167,7 +167,7 @@ public class Editor extends Stage{
 			
 		case SAVE:
 			final TextField textField = new TextField("", skin);
-			textField.setMessageText("Save as...*.txt");
+			textField.setMessageText("Save as...");
 			newTable.add(textField);			
 			TextButton saveButton = generateButton("Save");
 			newTable.add(saveButton);

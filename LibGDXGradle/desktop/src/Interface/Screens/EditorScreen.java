@@ -42,7 +42,7 @@ public class EditorScreen implements Screen {
     private int APP_HEIGHT = Gdx.graphics.getHeight();
     
     // Quick reference
-    State previewStage;
+    State previewStage = null;
 	
     public EditorScreen(Game game) throws IOException {
     	this.game = game;
@@ -57,7 +57,6 @@ public class EditorScreen implements Screen {
 		
 		Camera editor_camera = new OrthographicCamera();
 		Camera preview_camera = new OrthographicCamera();
-		
 		Camera toolbar_camera = new OrthographicCamera();
 		
 		// Every viewport initializes with (0, 0) at bottom left of the stage
@@ -76,7 +75,7 @@ public class EditorScreen implements Screen {
 		}
 		
 		
-		previewStage = new State(preview_viewport, 520, 480, 40, 40);
+		previewStage = new State(preview_viewport);
 		Toolbar toolbarStage = new Toolbar(toolbar_viewport, skin);
 		
 		try {
@@ -88,6 +87,7 @@ public class EditorScreen implements Screen {
 			editorStage.setDependence(previewStage);
 			
 			CameraTestMain camTest = new CameraTestMain();
+
 			// ESC key to return to main menu
 			InputProcessor backProcessor = new InputAdapter() {
 	            @Override
@@ -117,7 +117,6 @@ public class EditorScreen implements Screen {
 	
 	public void loadModel(EditorModel m) {
 		System.out.println("Loaded model.");	
-		//show();
 		previewStage.restoreModel(m);
 	}
 	

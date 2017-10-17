@@ -17,14 +17,17 @@ public class RunGame {
 	}
 	
 	public void run() {	
+		System.out.print("Setting up Runnable Threads\n");
 		final Runnable stepThread = new Runnable() {
             public void run() { activeGame.step(); }
         };
 		executor = new ScheduledThreadPoolExecutor(1);
+		
 		executor.scheduleAtFixedRate(stepThread, 0, 1000/stepRate, TimeUnit.MILLISECONDS);
 	}
 	
 	public void stop() {
+		System.out.print("Shutting down\n");
 		executor.shutdown();
 	}
 }

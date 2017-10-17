@@ -18,7 +18,10 @@ public class TileTuple implements Serializable{
 		this.setFloor(floor);
 		this.ID = cur;
 	}
-
+	
+	/*
+	 * Allows reassembly of objects using their types
+	 */
 	public ObjectType getID() {
 		return this.ID;
 	}
