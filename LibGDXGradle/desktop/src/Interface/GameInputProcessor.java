@@ -12,62 +12,84 @@ import State.DynamicGame;
 // Handles direct user input and updates model
 public class GameInputProcessor implements InputProcessor {
 	private DynamicGame activeGame;
+	private Action queuedAction;
+	private final int actionSpeed = 5;
+	private int sinceLastAction;
+	
 	
 	public GameInputProcessor(DynamicGame g) {
 		this.activeGame = g;
+		sinceLastAction = 0;
 	}
 	
 	
 	@Override
-	public boolean keyDown(int keycode) {
-		
-		// May be continuous, change to key up or inbuilt timer
-		
+	public boolean keyDown(int keycode) {		
 		//SUPPORTS:
-		// 	Move: WSAD, Attack: J
-		//  Move: Arrow Keys, Attack: Z
+		// 	Move: WSAD, Attack/Special: J
+		//  Move: Arrow Keys, Attack/Special: Z
+		
+		Action toMake = null;
 		
 		switch (keycode) {
 		
 		// PLAYER MOVEMENT
 		case Keys.LEFT:
 		case Keys.A:
-			activeGame.makeAction(Action.MOVE_LEFT);
+			toMake = Action.MOVE_LEFT;
 			break;
 		case Keys.RIGHT:
 		case Keys.D:	
-			activeGame.makeAction(Action.MOVE_RIGHT);
+			toMake = Action.MOVE_RIGHT;
 			break;
 		case Keys.UP:
 		case Keys.W:
-			activeGame.makeAction(Action.MOVE_UP);
+			toMake = Action.MOVE_UP;
 			break;
 		case Keys.DOWN:
 		case Keys.S:
-			activeGame.makeAction(Action.MOVE_DOWN);
+			toMake = Action.MOVE_DOWN;
 			break;
 			
 		// PLAYER SPECIAL/ATTACK
 		case Keys.Z:
 		case Keys.J:
-			activeGame.makeAction(Action.ATTACK);
+			toMake = Action.ATTACK;
 			break;
 		
 		case Keys.X:
 		case Keys.K:
-			activeGame.makeAction(Action.SPECIAL);
+			toMake = Action.SPECIAL;
 			break;
 			
 		default:
 			// nothing 
+		}		
+		
+		if (toMake != null) {
+			if (sinceLastAction > 0) {
+				queuedAction = toMake;
+			} else {
+				sinceLastAction = actionSpeed;
+				activeGame.makeAction(toMake);
+			}
 		}
+		
 		return false;
 	}
 
 	
 	
 	public void step() {
-		
+		if (sinceLastAction > 0) {
+			sinceLastAction--;
+		} else {
+			if (queuedAction != null) {
+				sinceLastAction = actionSpeed;
+				activeGame.makeAction(queuedAction);
+				queuedAction = null;
+			}
+		}
 	}
 	
 	
@@ -113,6 +135,11 @@ public class GameInputProcessor implements InputProcessor {
 	public boolean scrolled(int amount) {
 		// TODO Auto-generated method stub
 		return false;
+	}
+	
+	@Override
+	public String toString() {
+		return "USER INPUT PROCESSOR";
 	}
 
 }

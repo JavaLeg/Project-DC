@@ -20,17 +20,18 @@ public class MoveTrack extends MoveBehaviour {
 	}
 	
 	
+	// TODO: uncomment when Blocked implemented
 	@Override
 	public Coord nextStep(State s, Coord currentPos) {
 		if (ongoingPath.isEmpty()) {
 			ongoingPath = findRoute(s, currentPos, s.findPlayer());
-			if (!(ongoingPath == null || ongoingPath.size() == 0 || s.isBlocked(ongoingPath.get(0), type))) {
-				return ongoingPath.remove(0);
-			}
+			//if (!(ongoingPath == null || ongoingPath.size() == 0 || s.isBlocked(ongoingPath.get(0), type))) {
+			//	return ongoingPath.remove(0);
+			//}
 		} else {
-			if (!s.isBlocked(ongoingPath.get(0), type)) {
-				return ongoingPath.remove(0);
-			}
+			//if (!s.isBlocked(ongoingPath.get(0), type)) {
+			//	return ongoingPath.remove(0);
+			//}
 		}
 		
 		if (stayedStill >= 3) {

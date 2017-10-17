@@ -58,9 +58,10 @@ public class GameScreen implements Screen {
         	stage_left = new Stage(viewport_left);        
         	Gdx.input.setInputProcessor(stage_left);
 	
-        	DynamicGame g = new DynamicGame();
+        DynamicGame g = new DynamicGame();
 
 		GameInputProcessor inputProcessor = new GameInputProcessor(g);
+		g.initialise(new State(viewport_right, 5, 5, 5, 5), inputProcessor);
 		Gdx.input.setInputProcessor(inputProcessor);
         
 		gameThread = new RunGame(g, 30);
