@@ -51,40 +51,21 @@ public class Tile extends Stack implements Serializable {
 			this.add(object);
 		}
 	}
-
 	
-	// Can't we just have this instead???????
-	public void setObject(TextureRegion txt, ObjectType t) {
+	/*
+	 * The general object setter for ITEMS, WALLS, PLAYERS AND ENEMIES
+	 */
+	public void setObject(GameObject new_object) {
 		this.clearChildren();
-		
-		object_texture = txt;
-		GameObject obj_image = new GameObject(t, txt);
-		object = obj_image;
+		object_texture = new_object.getTexture();
+		try {
+			object = new_object.clone();
+		} catch (CloneNotSupportedException e) {
+			e.printStackTrace();
+		}
 		this.add(floor);
-		this.add(obj_image);
-	}
-	
-	
-	
-	public void setEnemy(TextureRegion txt) {
-		this.clearChildren();
-		
-		object_texture = txt;
-		GameObject obj_image = new GameObject(ObjectType.ENEMY, txt);
-		object = obj_image;
-		this.add(floor);
-		this.add(obj_image);
-	}
-	
-	public void setPlayer(TextureRegion txt) {
-		this.clearChildren();
-		
-		object_texture = txt;
-		GameObject obj_image = new GameObject(ObjectType.PLAYER, txt);
-		object = obj_image;
-		this.add(floor);
-		this.add(obj_image);
-	}
+		this.add(object);
+	}	
 	
 	public void deleteFloor() {
 		this.floor = null;

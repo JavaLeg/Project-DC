@@ -10,33 +10,41 @@ import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import State.Coord;
 
 // Game object is in charge of: image/sprite, ObjectType, Coordinates
-public class GameObject extends Image {
+public class GameObject extends Image implements Cloneable {
 	public static enum ObjectType {
-		PLAYER, ENEMY, TERRAIN;
+		PLAYER, ENEMY, WALL, ITEM, FLOOR;
 	}
 	
 	private ObjectType type;
 	private Coord position;
-	private Sprite sprite;
+	private TextureRegion cur_texture;
 	// height and width are in Actor
-
-	// TODO: WE MAY NOT NEED POSITION
-	public GameObject(ObjectType type, Coord position, Texture texture) {
-		super(texture);
-		this.type = type;
-		this.position = position;
-		// initial position on screen 0,0 is bottom left
-//		this.setPosition(x, y);
-	}
-	
 	/* 
 	 * Needs to handle TextureRegions
 	 */
 	public GameObject(ObjectType type, TextureRegion texture) {
 		super(texture);
 		this.type = type;
-		// initial position on screen 0,0 is bottom left
-//		this.setPosition(x, y);
+		this.cur_texture = texture;
+	}
+	
+	/*
+	 * Oscar's game object initialisation using co-ordinates
+	 */
+	public GameObject(ObjectType item, Coord position, TextureRegion texture) {
+		// TODO Auto-generated constructor stub
+		super(texture);
+		this.type = type;
+		this.position = position;
+		this.cur_texture = texture;
+	}
+
+	public GameObject clone() throws CloneNotSupportedException {
+		return (GameObject)super.clone();
+	}
+	
+	public TextureRegion getTexture() {
+		return this.cur_texture;
 	}
 	
 	/*
