@@ -24,12 +24,8 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 import Interface.EditorModel;
 import Interface.Stages.Editor;
 import Interface.Stages.Toolbar;
-<<<<<<< HEAD
 import Interface.Viewports.CameraTestMain;
 import Interface.Viewports.PreviewProcessor;
-=======
-//import Interface.Viewports.CameraTestMain;
->>>>>>> refs/remotes/origin/master
 import Interface.Viewports.PreviewViewport;
 import Interface.Viewports.ToolbarViewport;
 import State.State;
