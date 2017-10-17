@@ -320,14 +320,7 @@ public class State extends Stage{
 	//************************//
 	//******* TERRAIN ********//
 	//************************//
-	
-//	private List<Coord> l = Arrays.asList(new Coord(1,2), new Coord(2,1), new Coord(0,3), new Coord(4,1), 
-//			new Coord(4,2), new Coord(4,3), new Coord(4,4), new Coord(5,4), new Coord(6,2), new Coord(6,6), new Coord(3,3));
-	
-	
-	
-	// TODO: Whether a location is blocked
-	
+
 	public boolean hasWall(Coord pos) {
 		GameObject g = getTile(pos).getObject();
 		return (g != null) && (g.getType() == ObjectType.WALL);
@@ -337,7 +330,6 @@ public class State extends Stage{
 		return getTile(pos).hasObject();
 	}
 	
-
 	
 	
 	//************************//
