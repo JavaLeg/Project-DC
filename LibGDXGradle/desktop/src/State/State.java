@@ -6,13 +6,15 @@ import java.util.List;
 
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.FileTextureData;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
@@ -41,6 +43,7 @@ public class State extends Stage{
 	private boolean has_player = false;			// Is this the appropriate place
 	private TextureRegion selected_tr;
 	private GameObject cur_object;
+	private DynamicObject cur_d_object;
 	
 	private ArrayList<Tile> tileList;
 	
@@ -130,11 +133,24 @@ public class State extends Stage{
 		this.related = s;
 	}
 	
-	public void setSelection(Texture t, ToolbarSelection s, GameObject icon) {
+	/*
+	 * GameObject selection
+	 */
+	public void setSelection(Texture t, ToolbarSelection s, GameObject obj) {
 		// TODO Auto-generated method stub
 		selected_tr = new TextureRegion(t);
 		selectedLayer = s;
-		if (s != ToolbarSelection.FLOOR) cur_object = icon;
+		if (s != ToolbarSelection.FLOOR) cur_object = obj;
+	}
+	
+	/*
+	 * DynamicObject Selection
+	 */
+	public void setSelection(Texture t, ToolbarSelection s, DynamicObject obj) {
+		// TODO Auto-generated method stub
+		selected_tr = new TextureRegion(t);
+		selectedLayer = s;
+		if (s != ToolbarSelection.FLOOR) cur_d_object = obj;
 	}
 	
 	public void fillGrid() {
@@ -170,7 +186,7 @@ public class State extends Stage{
 			break;
 		case ENEMY:
 			if (tile.getObjectType() == ObjectType.PLAYER) this.has_player = false;			// Overwrite player
-			tile.setObject(cur_object);
+			tile.setObject(cur_d_object);
 			break;
 		case ITEM:
 			if (tile.getObjectType() == ObjectType.ITEM) this.has_player = false;
@@ -183,7 +199,7 @@ public class State extends Stage{
 		case PLAYER:
 			if (has_player == true) return;			// Don't add multiple players
 			has_player = true;
-			tile.setObject(cur_object);
+			tile.setObject(cur_d_object);
 			break;
 		default:
 			break;
@@ -428,5 +444,49 @@ public class State extends Stage{
 	public TableTuple getDim() {
 		TableTuple t = new TableTuple(rowActors, colActors);
 		return t;
+	}
+	
+	/*
+	 * Creates a new table pop up
+	 * Displays all attributes
+	 */
+	public void newEdit(DynamicObject obj, Skin skin) {
+		Table editTable = new Table();
+		Double hp = obj.getHp();
+		Double dmg = obj.getContactDamage();
+		String name = obj.getName();
+		
+		editTable.add(new Image(obj.getTexture()));
+		editTable.row();
+		
+		editTable.add(generateTextField("Name - " + name, skin));
+		editTable.row();
+		
+		editTable.add(generateTextField("HP - " + Double.toString(hp), skin));
+		editTable.row();
+		
+		editTable.add(generateTextField("DMG - " + Double.toString(dmg), skin));
+		editTable.row();
+		
+		TextButton saveButton = generateButton("Save", skin);
+		saveButton.addListener(new ClickListener(){
+			@Override
+	        public void clicked(InputEvent event, float x, float y) {
+				
+	        }
+		});
+		
+		
+	}
+	
+	private TextButton generateButton(String s, Skin skin) {
+		TextButton button = new TextButton(s, skin);
+		return button;
+	}
+	
+	private TextField generateTextField(String s, Skin skin) {
+		TextField tf = new TextField("", skin);
+		tf.setMessageText(s);
+		return tf;
 	}
 }

@@ -2,6 +2,7 @@ package Interface.Stages;
 
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 
 import com.badlogic.gdx.Gdx;
@@ -25,6 +26,7 @@ import com.engine.desktop.SaveSys;
 import Interface.EditorModel;
 import Interface.Stages.Selections.ToolbarSelection;
 import State.State;
+import Tileset.DynamicObject;
 import Tileset.GameObject;
 import Tileset.GameObject.ObjectType;
 
@@ -41,8 +43,9 @@ public class Editor extends Stage{
 
 	
 	private HashMap<Enum<?>, Class<?>> classMap;
+	private HashMap<ToolbarSelection, String[]> customButtonMap;
 	
-
+	private DynamicObject selectedObject;
 	private ToolbarSelection current;
 	
 	//private Stage related;
@@ -61,9 +64,41 @@ public class Editor extends Stage{
 		this.tablePos = new TableTuple(v.getScreenWidth()*7/40, v.getScreenHeight());
 		this.path = "SpriteFamily/";
 		this.tableMap = new HashMap<ToolbarSelection, Table>();
+		this.customButtonMap = new HashMap<ToolbarSelection, String[]>();
 		this.saver = new SaveSys();
+		//formatButtons();
 		initialise();
 		update(ToolbarSelection.FLOOR);
+	}
+	
+	private void formatButtons() {
+		
+		String[] playerList = {"Edit"};
+		String[] mapList = {"Save", "Refresh", "Clear"};
+		String[] enemyList = {"Edit"};
+		String[] itemList = {"Edit"};
+		
+		customButtonMap.put(ToolbarSelection.PLAYER, playerList);
+		customButtonMap.put(ToolbarSelection.MAP, mapList);
+		customButtonMap.put(ToolbarSelection.ENEMY, enemyList);
+		customButtonMap.put(ToolbarSelection.ITEM, itemList);
+		
+		/*
+		HashMap<String, TextButton> stringMap = new HashMap<String, TextButton>();
+		
+		TextButton saveButton = generateButton("Save Map");		
+		saveButton.addListener(new ClickListener(){
+			@Override
+	        public void clicked(InputEvent event, float x, float y) {
+				try {
+					saveMap(textField.getText());
+				} catch (IOException e) {
+					System.out.println("Cannot save map");
+					e.printStackTrace();
+				}
+	        }
+		});
+		*/
 	}
 	
 	
@@ -111,20 +146,24 @@ public class Editor extends Stage{
 		return button;
 	}
 	
-	
+	private TextField generateTextField(String s) {
+		TextField tf = new TextField("", skin);
+		tf.setMessageText(s);
+		return tf;
+	}
+		
 	/*
 	 * Generates a table according to the structure of SpriteFamily/* directory
 	 * Early returns (Like in case SAVE) can be made for custom tables
 	 */
 	private Table generateTable(final ToolbarSelection s) {
 		
-		Table newTable = new Table();
+		final Table newTable = new Table();
 		
 		/*
 		 * Make a custom image icon class later
 		 * Includes image and name
 		 */
-		
 		FileHandle[] files = Gdx.files.internal(path + s.toString().toLowerCase()).list();
 		
 		Label title = new Label(s.toString(), 
@@ -134,9 +173,84 @@ public class Editor extends Stage{
 		newTable.row();
 		int i = 0;
 		
-		// Custom buttons should go here
-		// Hard-coded for now
+		// If editor tab contains other stuff
+		// Hard coded for now
+
+		TextButton editButton = null;
+		TextButton customButton = null;
+		
 		switch(s) {
+		case PLAYER:
+			editButton = generateButton("Edit");
+			newTable.add(editButton);
+			editButton.addListener(new ClickListener(){
+				@Override
+		        public void clicked(InputEvent event, float x, float y) {
+					related.newEdit(selectedObject, skin);
+		        }
+			});
+			
+//			if(t == TableType.DEFAULT) {
+//				customButton = generateButton("Custom");
+//				newTable.add(customButton);
+//				customButton.addListener(new ClickListener(){
+//					@Override
+//			        public void clicked(InputEvent event, float x, float y) {
+//						generateTable(s, TableType.CUSTOM);
+//			        }
+//				});
+//			}else {
+//				customButton = generateButton("DEFAULT");
+//				newTable.add(customButton);
+//				customButton.addListener(new ClickListener(){
+//					@Override
+//			        public void clicked(InputEvent event, float x, float y) {
+//						generateTable(s, TableType.DEFAULT);
+//			        }
+//				});
+//			}
+
+			customButton = generateButton("Custom");
+			newTable.add(customButton);
+			customButton.addListener(new ClickListener(){
+				@Override
+		        public void clicked(InputEvent event, float x, float y) {
+					System.out.println("CLICKED!");
+					newTable.setVisible(false);
+		        }
+			});
+			break;
+		case ENEMY:
+			editButton = generateButton("Edit");
+			newTable.add(editButton);
+			editButton.addListener(new ClickListener(){
+				@Override
+		        public void clicked(InputEvent event, float x, float y) {
+					System.out.println("CLICKED!");
+					related.newEdit(selectedObject, skin);
+		        }
+			});
+			
+//			if(t == TableType.DEFAULT) {
+//				customButton = generateButton("Custom");
+//				newTable.add(customButton);
+//				customButton.addListener(new ClickListener(){
+//					@Override
+//			        public void clicked(InputEvent event, float x, float y) {
+//						generateTable(s, TableType.CUSTOM);
+//			        }
+//				});
+//			}else {
+//				customButton = generateButton("DEFAULT");
+//				newTable.add(customButton);
+//				customButton.addListener(new ClickListener(){
+//					@Override
+//			        public void clicked(InputEvent event, float x, float y) {
+//						generateTable(s, TableType.DEFAULT);
+//			        }
+//				});
+//			}
+			break;
 		case FLOOR:
 			TextButton fillButton = generateButton("Fill");
 			newTable.add(fillButton);
@@ -144,15 +258,6 @@ public class Editor extends Stage{
 				@Override
 		        public void clicked(InputEvent event, float x, float y) {
 					related.fillGrid();
-		        }
-			});
-			
-			TextButton clearButton = generateButton("Clear");
-			newTable.add(clearButton);
-			clearButton.addListener(new ClickListener(){
-				@Override
-		        public void clicked(InputEvent event, float x, float y) {
-					related.clearGrid();
 		        }
 			});
 			newTable.row();
@@ -167,14 +272,11 @@ public class Editor extends Stage{
 			newTable.add(map_info);
 			newTable.row();
 
-			final TextField rowField = new TextField("", skin);
-			final TextField colField = new TextField("", skin);
-			
 			TableTuple dim = related.getDim();
 			
-			rowField.setMessageText(Integer.toString(dim.getX()));
-			colField.setMessageText(Integer.toString(dim.getY()));
-			
+			final TextField rowField = generateTextField(Integer.toString(dim.getX()));
+			final TextField colField = generateTextField(Integer.toString(dim.getY()));
+
 			newTable.add(rowField).size(40, 30);
 			newTable.add(colField).size(40, 30);
 			newTable.row();
@@ -202,64 +304,61 @@ public class Editor extends Stage{
 		        }
 			});
 			newTable.add(refreshButton);
+			newTable.row();
 			
+			TextButton clearButton = generateButton("Clear");
+			newTable.add(clearButton);
+			clearButton.addListener(new ClickListener(){
+				@Override
+		        public void clicked(InputEvent event, float x, float y) {
+					related.clearGrid();
+		        }
+			});
 			return newTable;
-		case EDIT:
-			related.isEditable();
-			break;
 		default:
 			break;
 		}
 		
+		
+		
+		// DEFAULT TABLE CONTINUES
+		newTable.row();
+		
 		for(FileHandle file: files) {
 
 			String fileName = file.name().split("\\.", 2)[0];
-			final Texture t = new Texture(file);	
+			final Texture texture = new Texture(file);	
 			
-			ObjectType cur = null;
-			switch (s) {
-			case ENEMY:
-				cur = ObjectType.ENEMY;
-				break;
-			case PLAYER:
-				cur = ObjectType.PLAYER;
-				break;
-			case WALL:
-				cur = ObjectType.WALL;
-				break;
-			case ITEM:
-				cur = ObjectType.ITEM;
-				break;
-			case FLOOR:
-				cur = ObjectType.FLOOR;
-				break;
-			default:
-				break;
-			}
-			
-			final GameObject obj = new GameObject(cur, new TextureRegion(t));
-			final Image icon = new Image(new TextureRegion(t));
-/*			if (cur != null) {
-				icon = new GameObject(cur, new TextureRegion(t));
-			} else {
-				icon = new Image(new TextureRegion(t));
-			}*/
-			
-			if (s == ToolbarSelection.ENEMY || s == ToolbarSelection.PLAYER) {
+			// This can be done directly without switch lol
+			final ObjectType cur = ObjectType.valueOf(s.toString());
+						
+			if(cur == ObjectType.ENEMY || cur == ObjectType.PLAYER)
 				fileName = "Health: 1\nDamage: 1\nSpeed: 1";
-			} 
+
+			final Image icon = new Image(new TextureRegion(texture));
 			Label icon_name = new Label(fileName, new Label.LabelStyle(new BitmapFont(), Color.BLACK));
 			
 			newTable.add(icon).size(40, 40);
 			newTable.add(icon_name).pad(5);
 			
-			icon.addListener(new ClickListener(){
-				@Override
-		        public void clicked(InputEvent event, float x, float y) {
-					related.setSelection(t, s, obj);
-		        }
-			});
-			
+			if(cur == ObjectType.ENEMY || cur == ObjectType.PLAYER) {
+				icon.addListener(new ClickListener(){
+					@Override
+			        public void clicked(InputEvent event, float x, float y) {
+						DynamicObject d_obj = new DynamicObject(cur, 0, 0, texture);
+						selectedObject = d_obj;
+						related.setSelection(texture, s, d_obj);
+			        }
+				});
+			}else {
+				icon.addListener(new ClickListener(){
+					@Override
+			        public void clicked(InputEvent event, float x, float y) {
+						GameObject obj = new GameObject(cur, new TextureRegion(texture));
+						related.setSelection(texture, s, obj);
+			        }
+				});
+			}
 			if (i % 2 == 1 && i != 0) newTable.row();
 			
 			// Don't let it go over the edge
@@ -287,7 +386,7 @@ public class Editor extends Stage{
 	 */
 	public void update(ToolbarSelection s) throws IOException {
 				
-		if(current == s && s != ToolbarSelection.EDIT) return;
+		if(current == s) return;
 		this.clear();
 		
 		// Check if table already exists

@@ -18,6 +18,7 @@ public class GameObject extends Image implements Cloneable {
 	private ObjectType type;
 	private Coord position;
 	private TextureRegion cur_texture;
+	private String name;
 	// height and width are in Actor
 	/* 
 	 * Needs to handle TextureRegions
@@ -79,5 +80,12 @@ public class GameObject extends Image implements Cloneable {
 //		this.sprite = new Sprite(new Texture(Gdx.files.internal(imageName)));
 		return new Texture(Gdx.files.internal(imageName));
 	}
+	
+	public String getName() {
+		return name;
+	}
 
+	public void setName(String s) {
+		this.name = s;
+	}
 }

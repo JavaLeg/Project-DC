@@ -40,6 +40,14 @@ public class DynamicObject extends GameObject {
 		statuses = new HashMap<Status, Integer>();
 	}
 	
+	public DynamicObject(ObjectType type, double hp, double damage, Texture texture) {
+		super(type, new TextureRegion(texture));
+		this.hp = hp;
+		this.contactDamage = damage;
+		this.iFrames = 0;
+		statuses = new HashMap<Status, Integer>();
+	}
+	
 	public double getHp() {
 		return hp;
 	}

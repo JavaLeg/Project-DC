@@ -6,8 +6,6 @@ public enum ToolbarSelection {
 	ENEMY,
 	ITEM,
 	PLAYER,
-	MAP,
-	EDIT; 
-	
+	MAP;	
 }
 

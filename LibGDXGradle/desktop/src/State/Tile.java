@@ -17,6 +17,7 @@ public class Tile extends Stack implements Serializable {
 	private static final long serialVersionUID = 1L;
 	private Image floor;
 	private GameObject object;
+	private GameObject d_object;
 	private Image empty;
 	
 	private TextureRegion terrain_texture;
@@ -65,7 +66,22 @@ public class Tile extends Stack implements Serializable {
 		}
 		this.add(floor);
 		this.add(object);
-	}	
+	}
+	
+	/*
+	 * Object setter for dynamic objects (player, enemy)
+	 * Only 1 GameObject should be allowed at once
+	 */
+	public void setDynamicObject(DynamicObject new_d_object) {
+		this.clearChildren();
+		try {
+			d_object = new_d_object.clone();
+		} catch (CloneNotSupportedException e) {
+			e.printStackTrace();
+		}
+		this.add(floor);
+		this.add(d_object);
+	}
 	
 	public void deleteFloor() {
 		this.floor = null;
