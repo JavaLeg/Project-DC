@@ -1,5 +1,8 @@
 package State;
 
+import com.badlogic.gdx.InputProcessor;
+
+import Interface.GameInputProcessor;
 import Tileset.DynamicObject;
 import Tileset.GameObject;
 
@@ -10,15 +13,17 @@ import Tileset.GameObject;
 public class DynamicGame {
 	private int steps;
 	private State activeState;
+	private GameInputProcessor input;
 	
 	public DynamicGame() {
 		steps = 0;
 	}
 	
 	// GENERAL FUNCTIONALITY
-	public void initialise(State startState) {
+	public void initialise(State startState, GameInputProcessor input) {
 		// take in a new GameState, and execute any other preamble
 		this.activeState = startState;
+		this.input = input;
 	}
 	
 	public void step() {
@@ -29,6 +34,8 @@ public class DynamicGame {
 		for (DynamicObject o : activeState.getAllDynamicObjects()) {
 			o.step(activeState);
 		}
+		
+		input.step();
 		
 		// Conflict Resolution
 	}

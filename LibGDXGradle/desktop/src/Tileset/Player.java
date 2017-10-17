@@ -7,9 +7,7 @@ import State.State;
 import Tileset.Behaviour.Attack;
 
 public class Player extends DynamicObject {
-	public static enum PlayerMode {
-		MOVE, ATTACK, DISABLED;
-	}
+	
 	//private static Attack lightAttack = new Attack()
 	
 	

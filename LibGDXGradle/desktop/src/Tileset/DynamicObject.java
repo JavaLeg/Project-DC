@@ -1,5 +1,9 @@
 package Tileset;
 
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+
 import com.badlogic.gdx.graphics.Texture;
 
 import State.Coord;
@@ -13,9 +17,10 @@ public class DynamicObject extends GameObject {
 		PLAYER, ENEMY
 	} 
 	
-	public static enum mode {
-		MOVE, ATTACK, DISABLED;
+	public static enum Status {
+		POISON, STUN, SLOW
 	}
+	
 	
 	private double hp;
 	private double contactDamage; // how much damage entity deals
@@ -23,12 +28,15 @@ public class DynamicObject extends GameObject {
 	private int iFrames;
 	private static int iFramesMax = 30; // one second
 	
+	private HashMap<Status, Integer> statuses;
+	
 	
 	public DynamicObject(ObjectType type, Coord position, double hp, double damage, Texture texture) {
 		super(type, position, texture);
 		this.hp = hp;
 		this.contactDamage = damage;
 		this.iFrames = 0;
+		statuses = new HashMap<Status, Integer>();
 	}
 	
 	public double getHp() {
@@ -59,6 +67,10 @@ public class DynamicObject extends GameObject {
 	}
 
 	
+	public boolean hasStatus(Status s) {
+		return statuses.get(s) != null;
+	}
+	
 	public void destroy(State s) {
 		// animation!!!
 		s.getTile(this.getCoord()).deleteObject();
@@ -67,7 +79,6 @@ public class DynamicObject extends GameObject {
 	public void step(State s) {
 		// potential ongoing effects
 		
-		
 		// general management
 		if (getHp() < 0) {
 			destroy(s);
@@ -75,5 +86,10 @@ public class DynamicObject extends GameObject {
 		if (iFrames > 0) {
 			iFrames--;
 		}
+	}
+	
+	public boolean canChangePosition() {
+		// test state here
+		return true;
 	}
 }

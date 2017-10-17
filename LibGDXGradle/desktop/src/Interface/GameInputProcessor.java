@@ -52,6 +52,11 @@ public class GameInputProcessor implements InputProcessor {
 		case Keys.J:
 			activeGame.makeAction(Action.ATTACK);
 			break;
+		
+		case Keys.X:
+		case Keys.K:
+			activeGame.makeAction(Action.SPECIAL);
+			break;
 			
 		default:
 			// nothing 
@@ -59,6 +64,15 @@ public class GameInputProcessor implements InputProcessor {
 		return false;
 	}
 
+	
+	
+	public void step() {
+		
+	}
+	
+	
+	
+	
 	@Override
 	public boolean keyUp(int keycode) {
 		// TODO Auto-generated method stub

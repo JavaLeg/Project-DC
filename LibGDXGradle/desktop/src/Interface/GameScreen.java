@@ -63,8 +63,9 @@ public class GameScreen implements Screen {
 		
         
         DynamicGame g = new DynamicGame();
-		g.initialise(new State()); // input player created state here
+		
 		GameInputProcessor inputProcessor = new GameInputProcessor(g);
+		g.initialise(new State(), inputProcessor); // input player created state here
 		Gdx.input.setInputProcessor(inputProcessor);
         
 		gameThread = new RunGame(g, 30);

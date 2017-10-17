@@ -17,6 +17,7 @@ public class Enemy extends DynamicObject {
 	// Change to HASHMAP<Attack, int> 
 	private int attackRate;
 	private int sinceLastAttack;
+	private int attackTime;
 	private Attack attack; 
 
 	//
@@ -26,6 +27,8 @@ public class Enemy extends DynamicObject {
 		super(ObjectType.ENEMY, position,  hp, damage, texture);
 		this.moveRate = moveRate;
 		this.sinceLastMove = 0;
+		this.attackRate = 60;
+		this.sinceLastAttack = 0;
 		this.moveBehaviour = b;
 	}
 	
@@ -65,7 +68,7 @@ public class Enemy extends DynamicObject {
 		if (sinceLastAttack >= attackRate && attack != null) {
 			attack.applyAttack(s);
 		} else {
-			
+			sinceLastAttack++;
 		}
 	}
 }
