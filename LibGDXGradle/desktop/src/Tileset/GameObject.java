@@ -10,9 +10,9 @@ import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import State.Coord;
 
 // Game object is in charge of: image/sprite, ObjectType, Coordinates
-public class GameObject extends Image {
+public class GameObject extends Image implements Cloneable {
 	public static enum ObjectType {
-		PLAYER, ENEMY, WALL, ITEM;
+		PLAYER, ENEMY, WALL, ITEM, FLOOR;
 	}
 	
 	private ObjectType type;
@@ -26,6 +26,10 @@ public class GameObject extends Image {
 		super(texture);
 		this.type = type;
 		this.cur_texture = texture;
+	}
+	
+	public GameObject clone() throws CloneNotSupportedException {
+		return (GameObject)super.clone();
 	}
 	
 	public TextureRegion getTexture() {

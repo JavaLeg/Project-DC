@@ -38,7 +38,7 @@ public class State extends Stage{
 	private Stage related;
 
 	private boolean has_player = false;			// Is this the appropriate place
-	private Texture selected_tr;
+	private TextureRegion selected_tr;
 	private GameObject cur_object;
 	
 	private ArrayList<Tile> tileList;
@@ -136,7 +136,7 @@ public class State extends Stage{
 		this.related = s;
 	}
 	
-/*	public void setSelection(Image s, ToolbarSelection ts) {
+/*	public void setSelection(Texture t, ToolbarSelection ts) {
 
 		//if (ts == ToolbarSelection.EDIT) {
 		//	System.out.println(selectedLayer);
@@ -148,10 +148,9 @@ public class State extends Stage{
 	
 	public void setSelection(Texture t, ToolbarSelection s, GameObject icon) {
 		// TODO Auto-generated method stub
-		selected_tr = t;
+		selected_tr = new TextureRegion(t);
 		selectedLayer = s;
-		cur_object = icon;
-		
+		if (s != ToolbarSelection.FLOOR) cur_object = icon;
 	}
 	
 	public void fillGrid() {
@@ -159,12 +158,13 @@ public class State extends Stage{
 		if(selected_tr == null || selectedLayer != ToolbarSelection.FLOOR) 
 			return;
 		
-		Texture texture = selected_tr;
+		Texture texture = selected_tr.getTexture();
 		String path = ((FileTextureData)texture.getTextureData()).getFileHandle().name();
 		System.out.println("Fill grid with : " + path);
 		
 		for(Tile tile : tileList) {
-			setTileTexture(tile, selectedLayer);
+			// setTileTexture(tile, selectedLayer);
+			setTileTexture(tile, ToolbarSelection.FLOOR);
 		}
 	}
 	
@@ -183,23 +183,23 @@ public class State extends Stage{
 			break;
 		case ENEMY:
 			if (tile.getObjectType() == ObjectType.PLAYER) this.has_player = false;			// Overwrite player
-			tile.setEnemy(selected_tr);
+			tile.setObject(cur_object);
 			break;
 		case ITEM:
 			// TODO:
 			if (tile.getObjectType() == ObjectType.ITEM) this.has_player = false;
-			tile.setObject(selected_tr, ObjectType.ITEM);
+			tile.setObject(cur_object);
 			break;	
 		case WALL:
 			// TODO:
 			if (tile.getObjectType() == ObjectType.PLAYER) this.has_player = false;			// Overwrite player
-			tile.setEnemy(selected_tr);														// TODO
+			tile.setObject(cur_object);														// TODO
 			break;
 		case PLAYER:
 			// TODO:
 			if (has_player == true) return;			// Don't add multiple players
 			has_player = true;
-			tile.setPlayer(selected_tr);
+			tile.setObject(cur_object);
 			break;
 		case SAVE:
 			break;
@@ -378,10 +378,11 @@ public class State extends Stage{
 			int col_val = i % colActors;
 			
 			Tile tile = tileList.get(i);
-
-			TileTuple t = new TileTuple(tile.getObjectPath(), tile.getTerrainPath());
-
 			
+			ObjectType ID = tile.getObjectType();
+
+			TileTuple t = new TileTuple(tile.getObjectPath(), tile.getTerrainPath(), ID);
+
 			model.setTile(t, row_val, col_val);
 		}
 		return model;
@@ -408,8 +409,11 @@ public class State extends Stage{
 				
 				
 				// Set object
-				if(t_tuple.getObject() != null)
-					tile.setObject(new TextureRegion(new Texture(Gdx.files.internal(t_tuple.getObject()))), getType(t_tuple.getObject()));
+				if(t_tuple.getObject() != null) {
+					TextureRegion cur_texture = new TextureRegion(new Texture(Gdx.files.internal(t_tuple.getObject())));
+					GameObject new_obj = new GameObject(t_tuple.getID(), cur_texture);
+					tile.setObject(new_obj);
+				}
 			}
 		}
 	}

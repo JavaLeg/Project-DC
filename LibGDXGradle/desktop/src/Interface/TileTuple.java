@@ -2,6 +2,8 @@ package Interface;
 
 import java.io.Serializable;
 
+import Tileset.GameObject.ObjectType;
+
 public class TileTuple implements Serializable{
 	/**
 	 * 
@@ -9,12 +11,18 @@ public class TileTuple implements Serializable{
 	private static final long serialVersionUID = -7131326769212761462L;
 	private String object;
 	private String floor;
+	public ObjectType ID;
 	
-	public TileTuple(String object, String floor){
+	public TileTuple(String object, String floor, ObjectType cur){
 		this.setObject(object);
 		this.setFloor(floor);
+		this.ID = cur;
 	}
 
+	public ObjectType getID() {
+		return this.ID;
+	}
+	
 	public String getFloor() {
 		return floor;
 	}
