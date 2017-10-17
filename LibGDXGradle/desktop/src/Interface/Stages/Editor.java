@@ -187,9 +187,15 @@ public class Editor extends Stage{
 		
 		for(FileHandle file: files) {
 
-			final String fileName = file.name().split("\\.", 2)[0];
+			String fileName = file.name().split("\\.", 2)[0];
 			final Texture t = new Texture(file);			
 			Image icon = new Image(new TextureRegion(t));
+			
+			if (s == ToolbarSelection.ENEMY) {
+				fileName = "Health: 1\nDamage: 1\nSpeed: 1";
+			} else if (s == ToolbarSelection.PLAYER) { 
+				fileName = "Health: 1\nDamage: 1\nSpeed: 1";
+			}
 			Label icon_name = new Label(fileName, new Label.LabelStyle(new BitmapFont(), Color.BLACK));
 			
 			
@@ -199,7 +205,7 @@ public class Editor extends Stage{
 			icon.addListener(new ClickListener(){
 				@Override
 		        public void clicked(InputEvent event, float x, float y) {
-					System.out.println("selected " + fileName);
+					// System.out.println("selected " + fileName);
 					related.setSelection(t, s);
 		        }
 			});
@@ -207,7 +213,8 @@ public class Editor extends Stage{
 			if (i % 2 == 1 && i != 0) newTable.row();
 			
 			// Don't let it go over the edge
-			if (i > 20) break;					
+			if (i > 20 && s == ToolbarSelection.FLOOR) break;
+			if (i > 14 && s == ToolbarSelection.ENEMY) break;
 			i++;
 			
 		}
