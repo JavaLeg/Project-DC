@@ -64,7 +64,9 @@ public class DynamicGame {
 	public boolean makeAction(Action a) {
 		Coord curr = activeState.findPlayer();
 		assert(curr !=  null);
-		assert(curr.getX() != null);
+		assert(curr.getX() != -1);
+		assert(curr.getY() != -1);
+		
 		switch (a) {
 		case ATTACK:
 			System.out.print("USER INPUT: ATTACK\n");

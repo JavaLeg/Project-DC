@@ -2,7 +2,7 @@ package State;
 
 import java.io.Serializable;
 
-public class Coord implements Serializable{
+public class Coord implements Serializable {
 	/**
 	 * 
 	 */

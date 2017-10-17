@@ -306,7 +306,8 @@ public class State extends Stage{
 	
 	// Same as setPlayer, redundant 
 	public void movePlayer(Coord to){
-		playerCoord = to.clone(); // TODO: all that is necessary?
+		System.out.println("Moving\n");
+		playerCoord = to; // TODO: all that is necessary?
 	}
 	
 	
