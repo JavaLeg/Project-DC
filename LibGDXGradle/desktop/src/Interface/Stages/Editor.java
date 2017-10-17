@@ -10,11 +10,6 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-<<<<<<< HEAD
-import com.badlogic.gdx.graphics.glutils.FileTextureData;
-import com.badlogic.gdx.scenes.scene2d.Actor;
-=======
->>>>>>> refs/remotes/origin/MapTab
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;

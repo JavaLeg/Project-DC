@@ -2,11 +2,12 @@ package Interface.Stages.Selections;
 
 public enum ToolbarSelection {
 	FLOOR,
+	WALL,
 	ENEMY,
 	ITEM,
-	WALLS,
 	PLAYER,
 	MAP,
-	EDIT;
+	EDIT; 
+	
 }
 
