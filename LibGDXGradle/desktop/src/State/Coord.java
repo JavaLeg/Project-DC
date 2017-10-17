@@ -57,6 +57,4 @@ public class Coord implements Serializable{
 	public String toString() {
 		return "(" + x + "," + y + ")";
 	}
-		
-
 }

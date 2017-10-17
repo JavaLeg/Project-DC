@@ -224,6 +224,8 @@ public class State extends Stage{
 		return this.tileList.get(coord.getX()  + coord.getY() * colActors).getObject();
 	}
 	
+
+	
 	/*
 	public void setObject(GameObject newObject, Coord coord) {
 		this.tileList.get(coord.getX()  + coord.getY() * colActors).setObject(newObject);
@@ -235,14 +237,16 @@ public class State extends Stage{
 	}
 	
 	/*
-	 * TODO: implement movement of dynamic objects
-	 * 
+	 * Moves object, will overrite any object moving too
+	 */ 
 	public void moveObject(Coord from, Coord to) {
-		GameObject temp = getObject(from);
+		GameObject toMove = getObject(from);
 		deleteObject(from);
-		setObject(temp, to);
+		getTile(to).setObject(toMove);
 	}
 	
+	
+	/*
 	public void swapObject(Coord from, Coord to) {
 		GameObject fromObject = getObject(from);
 		GameObject toObject = getObject(to);
@@ -290,9 +294,7 @@ public class State extends Stage{
 	public void deletePlayer(){
 		deleteObject(playerCoord);
 		// change to null
-		
-		this.playerCoord.setX(-1);
-		this.playerCoord.setY(-1);
+		playerCoord = null;
 	}
 	
 	// Moves player to different tile
@@ -309,6 +311,9 @@ public class State extends Stage{
 	
 	// Same as setPlayer, redundant 
 	public void movePlayer(Coord to){
+		
+		
+		
 		playerCoord = to.clone(); // TODO: all that is necessary?
 	}
 	
@@ -325,25 +330,16 @@ public class State extends Stage{
 	
 	// TODO: Whether a location is blocked
 	
-//	public boolean isBlocked(Coord pos) {
-//		if (l.contains(pos)) return true;
-//		if (true) return false; // TEMPORARY BYPASS
-//		return !((Wall) this.tileList.get(pos.getX()  + pos.getY() * colActors).getObject()).isPassable();
-//	}
-//	
-//	
-//	
-//	public boolean isBlocked(Coord pos, ObjectType type) {
-//		if (l.contains(pos)) return true;
-//		if (true) return false; // TEMPORARY BYPASS
-//		if ( this.tileList.get(pos.getX()  + pos.getY() * colActors).getObject()  == null) return false;
-//		if (type == null) return isBlocked(pos);
-//		return (!((Wall) this.tileList.get(pos.getX()  + pos.getY() * colActors).getObject()).isPassable()
-//				&& (this.tileList.get(pos.getX()  + pos.getY() * colActors).hasObject()));
-//	}
+	public boolean hasWall(Coord pos) {
+		GameObject g = getTile(pos).getObject();
+		return (g != null) && (g.getType() == ObjectType.WALL);
+	}
 	
+	public boolean isBlocked(Coord pos) {
+		return getTile(pos).hasObject();
+	}
 	
-	
+
 	
 	
 	//************************//
