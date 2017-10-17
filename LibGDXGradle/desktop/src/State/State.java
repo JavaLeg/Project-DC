@@ -57,12 +57,12 @@ public class State extends Stage{
 	//************************//
 	
 	// default create an empty State
-	public State(Viewport v, int viewWidth, int viewHeight, int tileWidth, int tileHeight){
+	public State(Viewport v){
 		super(v);
-		this.rowActors = viewWidth/tileWidth - 2;
-		this.colActors = viewHeight/tileHeight;
+		this.rowActors = DEFAULT_MAP_HEIGHT;
+		this.colActors = DEFAULT_MAP_WIDTH;
 		this.tileList = new ArrayList<Tile>();
-		initialise(tileWidth, tileHeight);
+		initialise();
 		
 		// Default player position is outside the map -1,-1
 		this.playerCoord = new Coord();
@@ -85,7 +85,7 @@ public class State extends Stage{
 	//***** INITIALISE *******//
 	//************************//
 
-	private void initialise(int tileWidth, int tileHeight) {
+	private void initialise() {
 		Table gridTable = new Table();
 		//ImageStack[] tiles = new ImageStack[rowActors * colActors];
 		

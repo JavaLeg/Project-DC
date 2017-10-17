@@ -1,4 +1,4 @@
-package Interface.Screens;
+package Interface;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
@@ -10,6 +10,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.utils.TimeUtils;
 
+import Interface.Screens.MainMenuScreen;
 import externals.GifDecoder;
 
 public class Splash implements Screen{
