@@ -2,12 +2,18 @@ package Interface.Screens;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 
 import org.omg.PortableServer.POAManagerPackage.State;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.InputAdapter;
+import com.badlogic.gdx.InputMultiplexer;
+import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.Input.Keys;
+import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -31,23 +37,31 @@ import com.engine.desktop.DCGame;
 //import com.engine.desktop.EditorController;
 import com.engine.desktop.SaveSys;
 
+import Interface.Stages.Selections.LibrarySelection;
+import Interface.Stages.Selections.ToolbarSelection;
 import State.*;
 
 public class LibraryScreen implements Screen{
 	
-    protected Stage stage;
-    private Viewport viewport;
-    private OrthographicCamera camera;
     private TextureAtlas atlas;
     protected Skin skin;
-    private DCGame game;
+    private Game game;
     private SaveSys fileHandle;
+    
+    private Viewport viewport;
+    private Camera camera;
+    private Stage mainStage;
+    
+    
+    private LibrarySelection selection;
+    private String selected_map;
+    //private ArrayList<Stage> UI;
     
     private static final int WORLD_WIDTH  = 800;
     private static final int WORLD_HEIGHT = 480;
 
     public LibraryScreen(Game game) throws IOException {
-    	this.game = (DCGame) game;
+    	this.game = game;
     	this.fileHandle = new SaveSys();
     }
     
@@ -58,20 +72,62 @@ public class LibraryScreen implements Screen{
         skin = new Skin(Gdx.files.internal("uiskin.json"), atlas);
 
         camera = new OrthographicCamera();
-        //viewport = new FitViewport(WORLD_HEIGHT, WORLD_WIDTH, camera);
         viewport = new ScreenViewport();
-        //viewport.apply();
-
-        //camera.position.set(camera.viewportWidth / 2, camera.viewportHeight / 2, 0);
-        //camera.update();
-
-        stage = new Stage(viewport);  
+        mainStage = new Stage(viewport);
         
+        //Camera sideCamera = new OrthographicCamera();
+        //Viewport sideViewport = new ScreenViewport();
+        //Stage sideStage = new Stage(sideViewport);
+ 
         //Create Table
         Table mainTable = new Table();
-        //Set table to fill stage
-        mainTable.setFillParent(true);
+        Table sideTable = new Table();
         
+        
+        // SIDE TABLE
+        // Edit / Run functionality
+		for(final LibrarySelection selection: LibrarySelection.values()) {
+			TextButton button = generateButton(selection.name());
+			sideTable.add(button);
+			button.addListener(new ClickListener(){
+				@Override
+		        public void clicked(InputEvent event, float x, float y) {
+					Screen s = null;
+						try {
+							switch(selection) {
+							case EDIT:
+								s = new EditorScreen(game);
+								System.out.println("Loading in editor " + selected_map + "...");
+								((Game)Gdx.app.getApplicationListener()).setScreen(s);
+								((EditorScreen) s).loadModel(fileHandle.Load(selected_map + ".txt"));
+								break;
+							case RUN:
+								s = new GameScreen(game);
+								System.out.println("Loading in editor " + selected_map + "...");
+								((Game)Gdx.app.getApplicationListener()).setScreen(s);
+								((GameScreen) s).loadModel(fileHandle.Load(selected_map + ".txt"));
+								break;
+							default:
+								break;	
+							}
+						} catch (IOException e) {
+							System.out.println("Cannot load map");
+							e.printStackTrace();
+						} catch (ClassNotFoundException e) {
+							System.out.println("No EditorModel class!");
+							e.printStackTrace();
+						}
+		        }
+			});
+		}
+        
+        //Set table to fill stage
+        sideTable.setFillParent(true);
+        mainTable.setFillParent(true);
+       
+        
+        // Main Table
+        // FONTS
         BitmapFont titleFont = new BitmapFont();
         titleFont.getData().setScale(4, 4);
         
@@ -79,7 +135,6 @@ public class LibraryScreen implements Screen{
         itemFont.getData().setScale(2, 2);
         
         //Set alignment of contents in the table.
-        
         Label title = new Label("Library", 
         		new Label.LabelStyle(titleFont, Color.WHITE));
         
@@ -90,40 +145,41 @@ public class LibraryScreen implements Screen{
         
         File[] list = fileHandle.getLibrary();
         
-        for (File f : list) {
-        	final Label fileLabel = new Label(f.getName(), new LabelStyle(itemFont, Color.WHITE));
-        	//final TextButton fileLabel = new TextButton(f.getName(), skin);
+        for (final File f : list) {
+        	final String fileName = f.getName().split("\\.", 2)[0];
+        	final Label fileLabel = new Label(fileName, new LabelStyle(itemFont, Color.WHITE));
         	fileLabel.addListener(new ClickListener(){
                 @Override
                 public void clicked(InputEvent event, float x, float y) {
-                	try {
-                		stage.dispose();
-                		
-                		// LOADER
-                		EditorScreen es = new EditorScreen(game);                		
-                		System.out.println("Loading " + fileLabel.getText().toString() + "...");
-                		((Game)Gdx.app.getApplicationListener()).setScreen(es);
-                		es.loadModel(fileHandle.Load(fileLabel.getText().toString()));
-    					
-    					
-    					
-    				} catch (IOException e) {
-    					System.out.println("Error: could not load file " + fileLabel.getText().toString());
-    					e.printStackTrace();
-    				} catch (ClassNotFoundException e) {
-    					System.out.println("Error: could not find file " + fileLabel.getText().toString());
-						e.printStackTrace();
-					}
+                	selected_map =  fileName;     
+                	System.out.println("Selected map - " + selected_map);
                 }
-        	});
-        	
+        	});	
         	mainTable.row();
         	mainTable.add(fileLabel);
         }
-        stage.addActor(new Image(new TextureRegion(new Texture(Gdx.files.internal("LibScreen/bg2.jpg")))));
-        stage.addActor(mainTable);
+        mainStage.addActor(new Image(new TextureRegion(new Texture(Gdx.files.internal("LibScreen/bg2.jpg")))));
+        mainStage.addActor(mainTable);
+        mainStage.addActor(sideTable);
+        
+        
+        
+		// ESC key to return to main menu
+		InputProcessor backProcessor = new InputAdapter() {
+            @Override
+            public boolean keyDown(int keycode) {
+
+                if ((keycode == Keys.ESCAPE) || (keycode == Keys.BACK)) {
+                	mainStage.dispose();
+                	((Game)Gdx.app.getApplicationListener()).setScreen(new MainMenuScreen(game));
+                }
+                return false;
+            }
+        };
+        
 		//Stage should control input:
-        Gdx.input.setInputProcessor(stage);
+		InputMultiplexer multiplexer = new InputMultiplexer(mainStage, backProcessor);
+		Gdx.input.setInputProcessor(multiplexer);
 				
 	}
 
@@ -132,8 +188,8 @@ public class LibraryScreen implements Screen{
         Gdx.gl.glClearColor(.1f, .12f, .16f, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
-        stage.act();
-        stage.draw();
+        mainStage.act();
+        mainStage.draw();
 	}
 
 	@Override
@@ -166,6 +222,11 @@ public class LibraryScreen implements Screen{
 	public void dispose() {
 		skin.dispose();
 		atlas.dispose();
+	}
+	
+	private TextButton generateButton(String s) {
+		TextButton button = new TextButton(s, skin);
+		return button;
 	}
 
 }

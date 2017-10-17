@@ -1,18 +1,16 @@
 package State;
 
-import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.FileTextureData;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
-import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.viewport.Viewport;
@@ -26,7 +24,7 @@ import Interface.Stages.TableTuple;
 import Interface.Stages.Selections.ToolbarSelection;
 
 
-public class State extends Stage implements Serializable {
+public class State extends Stage{
 	
 	private static final long serialVersionUID = 1L;
 	private static final int DEFAULT_MAP_WIDTH = 50; // 50 tiles 
@@ -60,12 +58,12 @@ public class State extends Stage implements Serializable {
 	//************************//
 	
 	// default create an empty State
-	public State(Viewport v, int viewWidth, int viewHeight, int tileWidth, int tileHeight){
+	public State(Viewport v){
 		super(v);
-		this.rowActors = viewWidth/tileWidth - 2;
-		this.colActors = viewHeight/tileHeight + 1;
+		this.rowActors = DEFAULT_MAP_HEIGHT;
+		this.colActors = DEFAULT_MAP_WIDTH;
 		this.tileList = new ArrayList<Tile>();
-		initialise(tileWidth, tileHeight);
+		initialise();
 		
 		// assumes no player initially
 		this.playerCoord = null;
@@ -88,7 +86,7 @@ public class State extends Stage implements Serializable {
 	//***** INITIALISE *******//
 	//************************//
 
-	private void initialise(int tileWidth, int tileHeight) {
+	private void initialise() {
 		Table gridTable = new Table();
 		//ImageStack[] tiles = new ImageStack[rowActors * colActors];
 		
@@ -170,6 +168,8 @@ public class State extends Stage implements Serializable {
 			break;
 		case ITEM:
 			// TODO:
+			if (tile.getObjectType() == ObjectType.ITEM) this.has_player = false;
+			tile.setObject(selected_tr, ObjectType.ITEM);
 			break;	
 		case WALLS:
 			// TODO:
@@ -420,4 +420,37 @@ public class State extends Stage implements Serializable {
 		}
 		return null;
 	}
+	
+	
+	// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ FOR CAMERA MOVEMENT ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+	/*
+	 * Movement involves left click followed by dragging motion
+	 * Degree of movement by variable intensity
+	 */
+	/*
+	private int dragX, dragY;
+	private float intensity = 150f;
+	
+	
+	
+	@Override
+	public boolean touchDown(int screenX, int screenY, int pointer, int button) {
+		dragX = screenX;
+		dragY = screenY;
+		return true;
+	}
+
+
+	@Override
+	public boolean touchDragged(int screenX, int screenY, int pointer) {
+	    float dX = (float)(dragX - screenX)/(float)Gdx.graphics.getWidth();
+	    float dY = (float)(screenY - dragY)/(float)Gdx.graphics.getHeight();
+	    dragX = screenX;
+	    dragY = screenY;
+	    
+	    this.getCamera().position.add(dX * intensity, dY * intensity, 0f);
+	    this.getCamera().update();
+	    return true;
+	}
+	*/
 }

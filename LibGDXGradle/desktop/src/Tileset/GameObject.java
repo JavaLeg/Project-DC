@@ -12,7 +12,7 @@ import State.Coord;
 // Game object is in charge of: image/sprite, ObjectType, Coordinates
 public class GameObject extends Image {
 	public static enum ObjectType {
-		PLAYER, ENEMY, TERRAIN;
+		PLAYER, ENEMY, TERRAIN, ITEM;
 	}
 	
 	private ObjectType type;
