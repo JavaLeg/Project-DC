@@ -21,12 +21,12 @@ import State.RunGame;
 import State.State;
 
 public class GameScreen implements Screen {
-    
+
     private OrthographicCamera camera;	
 	private RunGame gameThread;
 	private Game game;
 	private State previewStage;
-    
+
     
 	public GameScreen(Game g) {
 		this.game = g;
@@ -49,47 +49,40 @@ public class GameScreen implements Screen {
 		//g.initialise(new State()); // input player created state here
 		//GameInputProcessor inputProcessor = new GameInputProcessor(g);
 		//Gdx.input.setInputProcessor(inputProcessor);
-        
 		//gameThread = new RunGame(g, 30);
 		//gameThread.run();
-		
-        
+
 	}
 
 	@Override
 	public void render(float delta) {
 		Gdx.gl.glClearColor(1, 1, 1, 1);
-        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+        	Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
         // Draw both stage right and stage left
         // If window resize (update TODO)
         previewStage.act();
         previewStage.draw();
-		
 	}
 
 	@Override
 	public void resize(int width, int height) {
-		// TODO Auto-generated method stub
-		
+		// TODO Auto-generated method stub	
 	}
 
 	@Override
 	public void pause() {
 		// TODO Auto-generated method stub
-		
 	}
 
 	@Override
 	public void resume() {
 		// TODO Auto-generated method stub
-		
 	}
 
 	@Override
 	public void hide() {
 		// TODO Auto-generated method stub
-		
 	}
 
 	@Override
@@ -103,5 +96,4 @@ public class GameScreen implements Screen {
 		//show();
 		previewStage.restoreModel(m);
 	}
-
 }

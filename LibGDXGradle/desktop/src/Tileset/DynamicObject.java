@@ -1,5 +1,9 @@
 package Tileset;
 
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+
 import com.badlogic.gdx.graphics.Texture;
 
 import State.Coord;
@@ -13,14 +17,26 @@ public class DynamicObject extends GameObject {
 		PLAYER, ENEMY
 	} 
 	
+	public static enum Status {
+		POISON, STUN, SLOW
+	}
+	
+	
 	private double hp;
-	private double damage; // how much damage entity deals
+	private double contactDamage; // how much damage entity deals
+	
+	private int iFrames;
+	private static int iFramesMax = 30; // one second
+	
+	private HashMap<Status, Integer> statuses;
 	
 	
 	public DynamicObject(ObjectType type, Coord position, double hp, double damage, Texture texture) {
 		super(type, position, texture);
 		this.hp = hp;
-		this.damage = damage;
+		this.contactDamage = damage;
+		this.iFrames = 0;
+		statuses = new HashMap<Status, Integer>();
 	}
 	
 	public double getHp() {
@@ -32,7 +48,9 @@ public class DynamicObject extends GameObject {
 	}
 	
 	public void damage(double hp) {
+		if (iFrames > 0) return;
 		this.hp -= hp;
+		iFrames = iFramesMax;
 	}
 	
 	public void heal(double hp) {
@@ -40,20 +58,38 @@ public class DynamicObject extends GameObject {
 	}
 	
 	
-	public double getDamage() {
-		return damage;
+	public double getContactDamage() {
+		return contactDamage;
 	}
 
-	public void setDamage(double damage) {
-		this.damage = damage;
+	public void setContactDamage(double damage) {
+		this.contactDamage = damage;
 	}
 
 	
+	public boolean hasStatus(Status s) {
+		return statuses.get(s) != null;
+	}
+	
 	public void destroy(State s) {
+		// animation!!!
 		s.getTile(this.getCoord()).deleteObject();
 	}
 	
-	public void step(State activeState) {
+	public void step(State s) {
 		// potential ongoing effects
+		
+		// general management
+		if (getHp() < 0) {
+			destroy(s);
+		}
+		if (iFrames > 0) {
+			iFrames--;
+		}
+	}
+	
+	public boolean canChangePosition() {
+		// test state here
+		return true;
 	}
 }

@@ -23,6 +23,7 @@ import Interface.Stages.Editor;
 import Interface.Stages.TableTuple;
 import Interface.Stages.Selections.ToolbarSelection;
 
+
 public class State extends Stage{
 	
 	private static final long serialVersionUID = 1L;
@@ -64,8 +65,8 @@ public class State extends Stage{
 		this.tileList = new ArrayList<Tile>();
 		initialise();
 		
-		// Default player position is outside the map -1,-1
-		this.playerCoord = new Coord();
+		// assumes no player initially
+		this.playerCoord = null;
 		
 		// this.map = new ArrayList<List<Tile>>();
 		
@@ -191,7 +192,6 @@ public class State extends Stage{
 	 * At least one tile, (check creatures on tile, etc. etc.)
 	 */
 	public boolean checkValidMap() {
-		// TODO Auto-generated method stub
 		boolean no_err = true;
 		
 		if (has_player == false) {
@@ -212,6 +212,10 @@ public class State extends Stage{
 	//************************//
 	//******* GENERAL ********//
 	//************************//
+
+	
+	// TODO: get object from coord that is dynamic if able
+	
 	
 	public GameObject getObject(Coord coord) {
 		return this.tileList.get(coord.getX()  + coord.getY() * colActors).getObject();
@@ -228,7 +232,7 @@ public class State extends Stage{
 	}
 	
 	/*
-	 * These are currently unnecessary but can be added later
+	 * TODO: implement movement of dynamic objects
 	 * 
 	public void moveObject(Coord from, Coord to) {
 		GameObject temp = getObject(from);
@@ -274,6 +278,7 @@ public class State extends Stage{
 	
 	// Get player object
 	public Player getPlayer(){
+		if (playerCoord == null) return null;
 		return (Player) getObject(playerCoord);
 	}
 	
@@ -281,6 +286,8 @@ public class State extends Stage{
 	// Returns false if player is already deleted/not on the map
 	public void deletePlayer(){
 		deleteObject(playerCoord);
+		// change to null
+		
 		this.playerCoord.setX(-1);
 		this.playerCoord.setY(-1);
 	}
@@ -295,12 +302,13 @@ public class State extends Stage{
 		this.deletePlayer();
 		setObject(currPlayer, to);
 	}
+	*/
 	
 	// Same as setPlayer, redundant 
 	public void movePlayer(Coord to){
-		this.setPlayer(to);
+		playerCoord = to.clone(); // TODO: all that is necessary?
 	}
-	*/
+	
 	
 	
 	//************************//
@@ -309,6 +317,10 @@ public class State extends Stage{
 	
 //	private List<Coord> l = Arrays.asList(new Coord(1,2), new Coord(2,1), new Coord(0,3), new Coord(4,1), 
 //			new Coord(4,2), new Coord(4,3), new Coord(4,4), new Coord(5,4), new Coord(6,2), new Coord(6,6), new Coord(3,3));
+	
+	
+	
+	// TODO: Whether a location is blocked
 	
 //	public boolean isBlocked(Coord pos) {
 //		if (l.contains(pos)) return true;
@@ -326,6 +338,8 @@ public class State extends Stage{
 //		return (!((Wall) this.tileList.get(pos.getX()  + pos.getY() * colActors).getObject()).isPassable()
 //				&& (this.tileList.get(pos.getX()  + pos.getY() * colActors).hasObject()));
 //	}
+	
+	
 	
 	
 	

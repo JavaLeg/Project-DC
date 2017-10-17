@@ -24,8 +24,12 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 import Interface.EditorModel;
 import Interface.Stages.Editor;
 import Interface.Stages.Toolbar;
+<<<<<<< HEAD
 import Interface.Viewports.CameraTestMain;
 import Interface.Viewports.PreviewProcessor;
+=======
+//import Interface.Viewports.CameraTestMain;
+>>>>>>> refs/remotes/origin/master
 import Interface.Viewports.PreviewViewport;
 import Interface.Viewports.ToolbarViewport;
 import State.State;
@@ -33,7 +37,7 @@ import State.State;
 
 public class EditorScreen implements Screen {
 	
-	protected ArrayList<Stage> UI;
+    protected ArrayList<Stage> UI;
 	
     private SpriteBatch batch;
     private Game game;
@@ -83,16 +87,8 @@ public class EditorScreen implements Screen {
 			UI.add(editorStage);
 			UI.add(previewStage);
 			UI.add(toolbarStage);
-//			map.put(toolbarStage, editorStage);
-//			map.put(previewStage, editorStage);
-//			map.put(editorStage, previewStage);
-//			previewStage.setDependence(editorStage);
 			toolbarStage.setDependence(editorStage);
 			editorStage.setDependence(previewStage);
-			
-			//CameraTestMain camTest = new CameraTestMain();
-			
-			
 			
 			// ESC key to return to main menu
 			InputProcessor backProcessor = new InputAdapter() {

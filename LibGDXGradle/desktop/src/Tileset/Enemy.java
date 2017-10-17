@@ -4,18 +4,31 @@ import com.badlogic.gdx.graphics.Texture;
 
 import State.Coord;
 import State.State;
+import Tileset.Behaviour.Attack;
 import Tileset.Behaviour.MoveBehaviour;
 
 public class Enemy extends DynamicObject {
-	private double moveRate;
-	private double sinceLastMove;
+	
+	private int moveRate;
+	private int sinceLastMove;
 	private MoveBehaviour moveBehaviour;
 	
+	// currently only supports one type of attack
+	// Change to HASHMAP<Attack, int> 
+	private int attackRate;
+	private int sinceLastAttack;
+	private int attackTime;
+	private Attack attack; 
+
+	//
 	
-	public Enemy(Coord position, double hp, double damage, double moveRate, MoveBehaviour b, Texture texture) {
+	
+	public Enemy(Coord position, double hp, double damage, int moveRate, MoveBehaviour b, Texture texture) {
 		super(ObjectType.ENEMY, position,  hp, damage, texture);
 		this.moveRate = moveRate;
 		this.sinceLastMove = 0;
+		this.attackRate = 60;
+		this.sinceLastAttack = 0;
 		this.moveBehaviour = b;
 	}
 	
@@ -28,27 +41,34 @@ public class Enemy extends DynamicObject {
 	}
 	
 	// Can use to stun enemy
-	public void setLastMove(double time) {
+	public void setLastMove(int time) {
 		this.sinceLastMove = time;
 	}
 	
 	public void step(State s) {
 		super.step(s);
-		// handle movement behavior
-		if (sinceLastMove == moveRate) {
+		
+		// movement behavior
+		if (sinceLastMove >= moveRate && moveBehaviour != null) {
 			// move one step
-			if (moveBehaviour != null) {
-				Coord next = null;
-				next = moveBehaviour.nextStep(s, this.getCoord());
-				if (s.findPlayer().equals(next)) {
-					s.getPlayer().damage(this.getDamage());
-				} else {
-					this.setCoord(next);
-				}
-				this.setLastMove(0);
+			Coord next = null;
+			next = moveBehaviour.nextStep(s, this.getCoord());
+			if (s.findPlayer().equals(next)) {
+				s.getPlayer().damage(this.getContactDamage()); // contact damage
+			} else {
+				this.setCoord(next);
 			}
+			this.setLastMove(0);
 		} else {
 			sinceLastMove++;
+		}
+		
+		
+		// attack behaviour
+		if (sinceLastAttack >= attackRate && attack != null) {
+			attack.applyAttack(s);
+		} else {
+			sinceLastAttack++;
 		}
 	}
 }
