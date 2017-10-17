@@ -2,7 +2,6 @@ package Interface.Stages;
 
 
 import java.io.IOException;
-import java.io.Serializable;
 import java.util.HashMap;
 
 import com.badlogic.gdx.Gdx;
@@ -10,21 +9,16 @@ import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.badlogic.gdx.scenes.scene2d.ui.Stack;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
-import com.badlogic.gdx.utils.Json;
-import com.badlogic.gdx.utils.JsonWriter.OutputType;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.engine.desktop.SaveSys;
 
@@ -163,10 +157,28 @@ public class Editor extends Stage{
 			newTable.row();
 			break;
 			
-		case SAVE:
+		case MAP:
 			final TextField textField = new TextField("", skin);
 			textField.setMessageText("Save as...");
-			newTable.add(textField);			
+			
+			// Map Title
+	        Label map_info = new Label("Map size", new Label.LabelStyle(new BitmapFont(), Color.BLACK));
+			newTable.add(map_info);
+			newTable.row();
+
+			final TextField rowField = new TextField("", skin);
+			final TextField colField = new TextField("", skin);
+			
+			TableTuple dim = related.getDim();
+			
+			rowField.setMessageText(Integer.toString(dim.getX()));
+			colField.setMessageText(Integer.toString(dim.getY()));
+			
+			newTable.add(rowField).size(40, 30);
+			newTable.add(colField).size(40, 30);
+			newTable.row();
+			
+			newTable.add(textField).size(80, 30);			
 			TextButton saveButton = generateButton("Save");
 			newTable.add(saveButton);
 			saveButton.addListener(new ClickListener(){
@@ -180,6 +192,16 @@ public class Editor extends Stage{
 					}
 		        }
 			});
+			newTable.row();
+			TextButton refreshButton = generateButton("Refresh");
+			refreshButton.addListener(new ClickListener(){
+				@Override
+		        public void clicked(InputEvent event, float x, float y) {
+					System.out.println("Reload State");
+		        }
+			});
+			newTable.add(refreshButton);
+			
 			return newTable;
 		default:
 			break;

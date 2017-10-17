@@ -6,5 +6,5 @@ public enum ToolbarSelection {
 	ITEM,
 	WALLS,
 	PLAYER,
-	SAVE;
+	MAP;
 }
