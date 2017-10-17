@@ -18,21 +18,21 @@ public class MovePathToPoint extends MoveBehaviour {
 	
 	
 	
-	
+	// TODO: uncomment when Blocked implemented
 	@Override
 	public Coord nextStep(State s, Coord currentPos) {
-
 		List<Coord> path = findRoute(s, currentPos, s.findPlayer());
-		if (path == null || path.size() == 0 || s.isBlocked(path.get(0), type)) {
+		return null;
+		//if (path == null || path.size() == 0 || s.isBlocked(path.get(0), type)) {
 			// non path behaviour
-			if (focus) {
-				return currentPos;
-			} else {
-				return new MoveRandom(type).nextStep(s, currentPos);
-			}
-		} else {
-			return path.get(0);
-		}		
+		//	if (focus) {
+		//		return currentPos;
+		//	} else {
+		//		return new MoveRandom(type).nextStep(s, currentPos);
+		//	}
+		//} else {
+		//	return path.get(0);
+		//}		
 	}
 	
 }

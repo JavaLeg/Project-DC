@@ -36,14 +36,15 @@ public class MoveBehaviour {
 	// gets adjacent coordinates restricted by walls
 	public List<Coord> getAdjacent(Coord c, State s, ObjectType type) {
 		List<Coord> adj = new LinkedList<Coord>();
-		if (!s.isBlocked(new Coord(c.getX() + 1, c.getY()), type))
-			adj.add(new Coord(c.getX() + 1, c.getY()));
-		if (!s.isBlocked(new Coord(c.getX() - 1, c.getY()), type))
-			adj.add(new Coord(c.getX() - 1, c.getY()));
-		if (!s.isBlocked(new Coord(c.getX(), c.getY() + 1), type))
-			adj.add(new Coord(c.getX(), c.getY() + 1));
-		if (!s.isBlocked(new Coord(c.getX(), c.getY() - 1), type))
-			adj.add(new Coord(c.getX(), c.getY() - 1));
+//		TODO: Oscar!
+//		if (!s.isBlocked(new Coord(c.getX() + 1, c.getY()), type))
+//			adj.add(new Coord(c.getX() + 1, c.getY()));
+//		if (!s.isBlocked(new Coord(c.getX() - 1, c.getY()), type))
+//			adj.add(new Coord(c.getX() - 1, c.getY()));
+//		if (!s.isBlocked(new Coord(c.getX(), c.getY() + 1), type))
+//			adj.add(new Coord(c.getX(), c.getY() + 1));
+//		if (!s.isBlocked(new Coord(c.getX(), c.getY() - 1), type))
+//			adj.add(new Coord(c.getX(), c.getY() - 1));
 		return adj;
 	}
 	
