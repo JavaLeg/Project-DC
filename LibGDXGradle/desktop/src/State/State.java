@@ -185,7 +185,7 @@ public class State extends Stage{
 			has_player = true;
 			tile.setObject(cur_object);
 			break;
-		case SAVE:
+		default:
 			break;
 		}
 	}
@@ -425,36 +425,8 @@ public class State extends Stage{
 		return null;
 	}
 	
-	
-	// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ FOR CAMERA MOVEMENT ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-	/*
-	 * Movement involves left click followed by dragging motion
-	 * Degree of movement by variable intensity
-	 */
-	/*
-	private int dragX, dragY;
-	private float intensity = 150f;
-	
-	
-	
-	@Override
-	public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-		dragX = screenX;
-		dragY = screenY;
-		return true;
+	public TableTuple getDim() {
+		TableTuple t = new TableTuple(rowActors, colActors);
+		return t;
 	}
-
-
-	@Override
-	public boolean touchDragged(int screenX, int screenY, int pointer) {
-	    float dX = (float)(dragX - screenX)/(float)Gdx.graphics.getWidth();
-	    float dY = (float)(screenY - dragY)/(float)Gdx.graphics.getHeight();
-	    dragX = screenX;
-	    dragY = screenY;
-	    
-	    this.getCamera().position.add(dX * intensity, dY * intensity, 0f);
-	    this.getCamera().update();
-	    return true;
-	}
-	*/
 }
