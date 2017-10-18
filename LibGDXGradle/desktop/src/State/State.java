@@ -22,6 +22,7 @@ import Tileset.*;
 import Tileset.GameObject.ObjectType;
 import Interface.EditorModel;
 import Interface.TileTuple;
+import Interface.Stages.TableTuple;
 import Interface.Stages.Selections.ToolbarSelection;
 
 
@@ -158,7 +159,7 @@ public class State extends Stage{
 			if (tile.getObjectType() == ObjectType.PLAYER) {
 				this.player = null; 
 			}
-			this.enemyList.add((Enemy) cur_d_object);
+			//this.enemyList.add((Enemy) cur_d_object);
 			break;
 		case ITEM:
 			cur_object.setCoord(tile.getCoord());
@@ -167,7 +168,7 @@ public class State extends Stage{
 			if (tile.getObjectType() == ObjectType.PLAYER) {
 				this.player = null; 
 			}
-			this.itemList.add((Item) cur_object);
+		//	this.itemList.add((Item) cur_object);
 			break;
 		case WALL:
 			cur_object.setCoord(tile.getCoord());
@@ -176,7 +177,7 @@ public class State extends Stage{
 			if (tile.getObjectType() == ObjectType.PLAYER) {
 				this.player = null; 
 			}
-			this.wallList.add((Wall) cur_object);
+			//this.wallList.add((Wall) cur_object);
 			break;
 		case PLAYER:
 			// If player already exists, move it
@@ -244,12 +245,12 @@ public class State extends Stage{
 		
 		if(newObject.getType() == ObjectType.PLAYER) {
 			this.player = (Player) newObject;
-		} else if (newObject.getType() == ObjectType.ENEMY) {
+	/*	} else if (newObject.getType() == ObjectType.ENEMY) {
 			this.enemyList.add((Enemy) newObject);
 		} else if (newObject.getType() == ObjectType.WALL) {
 			this.wallList.add((Wall) newObject);
 		} else if (newObject.getType() == ObjectType.ITEM) {
-			this.wallList.add((Wall) newObject);
+			this.wallList.add((Wall) newObject); */
 		}
 		
 		newObject.setCoord(coord);;
@@ -418,6 +419,11 @@ public class State extends Stage{
 				}
 			}
 		}
+	}
+
+	public TableTuple getDim() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 	
 	
