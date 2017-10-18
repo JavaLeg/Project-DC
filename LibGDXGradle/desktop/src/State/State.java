@@ -5,8 +5,6 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.lwjgl.Sys;
-
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
@@ -150,7 +148,7 @@ public class State extends Stage{
 	 */
 	private void setTileTexture(Tile tile, ToolbarSelection ts) {
 		// If tile already has an object, remove it and return
-		if(tile.hasObject()) {
+		if(tile.hasObject() && ts != ToolbarSelection.FLOOR) {
 			this.deleteObject(tile.getCoord());
 			return;
 		}
