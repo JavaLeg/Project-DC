@@ -18,7 +18,8 @@ public class Tile extends Stack implements Serializable {
 	private final Coord coordinates; 
 	
 	private Image floor;
-	private GameObject object;
+	private GameObject object; // can only have object or d_object
+	private DynamicObject d_object;
 	private Image empty;
 	
 	private TextureRegion floor_texture;
@@ -41,7 +42,7 @@ public class Tile extends Stack implements Serializable {
 		this.add(floor);
 	}
 	
-
+	
 	/*
 	 * Clear the cell
 	 * Keeps the empty texture 
@@ -49,6 +50,7 @@ public class Tile extends Stack implements Serializable {
 	public void clear() {
 		this.clearChildren();
 		this.object = null;
+		this.d_object = null;
 		this.floor = null;
 		this.add(empty);
 	}
@@ -58,7 +60,7 @@ public class Tile extends Stack implements Serializable {
 	 * Checks if this grid is valid (can't have object on null cell)
 	 */
 	public boolean isValid() {
-		if (object != null && floor == null) return false;
+		if ((object != null || d_object != null) && floor == null) return false;
 		return true;
 	}
 	
@@ -113,12 +115,23 @@ public class Tile extends Stack implements Serializable {
 	//*************************//
 	
 	public boolean hasObject() {
-		return this.object != null;
+		if(this.object != null || this.d_object != null) {
+			return true;
+		}
+		return false;
 	}
 	
 	
-	// Overwrites current object if any
+	
+	// Setters overwrite current object if any
+	/*
+	 * The general object setter for ITEMS, WALLS, PLAYERS AND ENEMIES
+	 */
 	public void setObject(GameObject new_object) {
+		if(this.d_object != null) {
+			this.d_object = null;
+		}
+		
 		this.clearChildren();
 		object_texture = new_object.getTexture();
 		try {
@@ -135,20 +148,57 @@ public class Tile extends Stack implements Serializable {
 	}	
 	
 	
+	/*
+	 * Object setter for dynamic objects (player, enemy)
+	 * Only 1 GameObject should be allowed at once
+	 */
+	public void setDynamicObject(DynamicObject new_d_object) {
+		if(this.object != null) {
+			this.object = null;
+		}
+		
+		this.clearChildren();
+		object_texture = new_d_object.getTexture();
+		try {
+			d_object = (DynamicObject) new_d_object.clone();
+		} catch (CloneNotSupportedException e) {
+			e.printStackTrace();
+		}
+		if(this.hasFloor()) {
+			this.add(floor);
+		} else {
+			this.add(empty);
+		}
+		this.add(d_object);
+	}
+	
+	
 	public ObjectType getObjectType() {
-		if(this.object == null) return null;
-		return this.object.getType();
+		if(this.object != null) {
+			return this.object.getType();
+		}
+		if(this.d_object != null) {
+			return this.d_object.getType();
+		}
+		return null;
 	}
 		
 	
 	// Gets object, can return null
 	public GameObject getObject() {
-		return this.object;
+		if(this.object != null) {
+			return this.object;
+		}
+		if(this.d_object != null) {
+			return (GameObject) this.d_object;
+		}
+		return null;
 	}
 	
 	
 	public void deleteObject() {
 		this.object = null;
+		this.d_object = null;
 		this.clearChildren();
 		if (this.hasFloor()) {
 			this.add(floor);

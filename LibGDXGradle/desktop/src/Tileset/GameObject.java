@@ -15,6 +15,7 @@ public class GameObject extends Image implements Cloneable {
 	private Coord position;
 	private TextureRegion cur_texture;
 	private boolean passable;
+	private String name;
 	// height and width are in Actor
 	
 	
@@ -86,5 +87,12 @@ public class GameObject extends Image implements Cloneable {
 	public void setPassable(boolean passable) {
 		this.passable = passable;
 	}
+	
+	public String getName() {
+		return name;
+	}
 
+	public void setName(String s) {
+		this.name = s;
+	}
 }
