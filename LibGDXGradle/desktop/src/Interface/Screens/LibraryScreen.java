@@ -99,13 +99,13 @@ public class LibraryScreen implements Screen{
 								s = new EditorScreen(game);
 								System.out.println("Loading in editor " + selected_map + "...");
 								((Game)Gdx.app.getApplicationListener()).setScreen(s);
-								((EditorScreen) s).loadModel(fileHandle.Load(selected_map + ".txt"));
+								((EditorScreen) s).loadModel(fileHandle.Load(selected_map));
 								break;
 							case RUN:
 								s = new GameScreen(game);
 								System.out.println("Loading in editor " + selected_map + "...");
 								((Game)Gdx.app.getApplicationListener()).setScreen(s);
-								((GameScreen) s).loadModel(fileHandle.Load(selected_map + ".txt"));
+								((GameScreen) s).loadModel(fileHandle.Load(selected_map));
 								break;
 							default:
 								break;	

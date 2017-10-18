@@ -10,7 +10,11 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.FileTextureData;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
@@ -18,6 +22,7 @@ import Tileset.*;
 import Tileset.GameObject.ObjectType;
 import Interface.EditorModel;
 import Interface.TileTuple;
+import Interface.Stages.TableTuple;
 import Interface.Stages.Selections.ToolbarSelection;
 
 
@@ -33,27 +38,33 @@ public class State extends Stage{
 	private GameObject cur_object;
 	
 	// Should be a Player Object
-	private GameObject player;
+	private DynamicObject player;
+	private GameObject cur_d_object;
+	//private DynamicObject cur_d_object;
 	private ToolbarSelection selectedToolBar;
 	
 	private Coord playerCoord;
-	
 	private ArrayList<Tile> tileList;
+
+	private ArrayList<Enemy> enemyList;
+	private ArrayList<Item> itemList;
+	private ArrayList<Wall> wallList;
 	
 	//************************//
 	//****** CONSTRUCTOR *****//
 	//************************//
 	
-	// default create an empty State
 	public State(Viewport v){
 		super(v);
 		this.rowActors = DEFAULT_MAP_HEIGHT;
 		this.colActors = DEFAULT_MAP_WIDTH;
 		this.tileList = new ArrayList<Tile>();
-		// assumes no player initially
-		this.playerCoord = null;
+		this.enemyList = new ArrayList<Enemy>();
+		this.wallList = new ArrayList<Wall>();
+		this.itemList = new ArrayList<Item>();
 		this.player = null;
 		initialise();
+		
 	}
 
 	private void initialise() {
@@ -85,7 +96,26 @@ public class State extends Stage{
 	//************************//
 	//******** EDITOR ********//
 	//************************//
-		
+	/*
+	 * GameObject selection
+	 */
+	public void setSelection(Texture t, ToolbarSelection s, GameObject obj) {
+		selected_tr = new TextureRegion(t);
+		selectedToolBar = s;
+		if (s != ToolbarSelection.FLOOR) cur_object = obj;
+	}
+	
+	/*
+	 * DynamicObject Selection
+	 */
+	public void setSelection(Texture t, ToolbarSelection s, DynamicObject obj) {
+		selected_tr = new TextureRegion(t);
+		selectedToolBar = s;
+		if (s != ToolbarSelection.FLOOR) cur_d_object = obj;
+	}
+	
+	
+
 	// Fill grid with selected floor
 	public void fillGrid() {
 		if(selected_tr == null || selectedToolBar != ToolbarSelection.FLOOR) 
@@ -102,17 +132,14 @@ public class State extends Stage{
 	
 	
 	public void clearGrid() {		
-		this.playerCoord = null;
+		this.player = null;
 		for(Tile tile : tileList) {
 			tile.clear();
 		}
-	}
-
-
-	public void setSelection(Texture t, ToolbarSelection s, GameObject icon) {
-		selected_tr = new TextureRegion(t);
-		selectedToolBar = s;
-		if (s != ToolbarSelection.FLOOR) cur_object = icon;
+		this.tileList.clear();
+		this.enemyList.clear();
+		this.wallList.clear();
+		this.itemList.clear();
 	}
 	
 	
@@ -126,22 +153,38 @@ public class State extends Stage{
 			tile.setFloor(selected_tr);
 			break;
 		case ENEMY:
+			cur_d_object.setCoord(tile.getCoord());
+			// Overwrite player if same tile as player
+			if (tile.getObjectType() == ObjectType.PLAYER) {
+				this.player = null; 
+			}
+			tile.setObject(cur_d_object);
+			//this.enemyList.add((Enemy) cur_d_object);
+			break;
 		case ITEM:
+			cur_object.setCoord(tile.getCoord());
+			// Overwrite player if same tile as player
+			if (tile.getObjectType() == ObjectType.PLAYER) {
+				this.player = null; 
+			}
+			tile.setObject(cur_object);
+		//	this.itemList.add((Item) cur_object);
+			break;
 		case WALL:
 			cur_object.setCoord(tile.getCoord());
 			// Overwrite player if same tile as player
 			if (tile.getObjectType() == ObjectType.PLAYER) {
 				this.playerCoord = null; 
-				player = null;
+				this.player = null; 
 			}
 			tile.setObject(cur_object);
 			break;
 		case PLAYER:
-			// If player already exists, move it
-			if (player != null) this.deletePlayer();
-			cur_object.setCoord(tile.getCoord());
-			tile.setObject(cur_object);
-			player = (Player) cur_object;
+			if (this.player != null) this.deletePlayer();
+			cur_d_object.setCoord(tile.getCoord());
+			tile.setObject(cur_d_object);
+			player = (DynamicObject) cur_d_object;
+
 			break;
 		default:
 			// SAVE, EDIT
@@ -196,21 +239,29 @@ public class State extends Stage{
 		 *  
 		 * 
 		if(this.tileList.get(coord.getX()  + coord.getY() * colActors).getObjectType() == ObjectType.PLAYER) {
-			this.playerCoord = null;
+			this.player = null;
 		}
 		
-		// Setting player?
 		if(newObject.getType() == ObjectType.PLAYER) {
-			this.playerCoord = coord;
+			this.player = (Player) newObject;
+		} else if (newObject.getType() == ObjectType.ENEMY) {
+			this.enemyList.add((Enemy) newObject);
+		} else if (newObject.getType() == ObjectType.WALL) {
+			this.wallList.add((Wall) newObject);
+		} else if (newObject.getType() == ObjectType.ITEM) {
+			this.wallList.add((Wall) newObject); 
 		}
 		*/
+		
 		newObject.setCoord(coord);
 		this.tileList.get(coord.getX() * rowActors + coord.getY()).setObject(newObject);
 	}
 	
 	public void deleteObject(Coord coord) {
+
 		Tile cur_tile = tileList.get(coord.getX() * rowActors  + coord.getY());
 		cur_tile.deleteObject();
+
 	}
 	
 	public void moveObject(Coord from, Coord to) {
@@ -253,31 +304,29 @@ public class State extends Stage{
 	//************************//
 	
 	public boolean hasPlayer() {
-		return this.playerCoord != null;
+		return this.player != null;
 	}
 	
 	
 	// Return coord of player
 	public Coord findPlayer(){
-		return player.getCoord();
+		return this.player.getCoord();
 	}
 	
 	// Get player object
-	public GameObject getPlayer(){
-		if (player == null) return null;
-		return player;
+
+	public DynamicObject getPlayer(){
+		return this.player;
 	}
 	
 	
-	public void deletePlayer(){
+	public void deletePlayer() {
 		if (player == null) return;
 		this.deleteObject(player.getCoord());
 	}
 	
 	
 	public void movePlayer(Coord to) {
-		// Player temp = this.getPlayer();
-		System.out.println(to);
 		if (player == null) return;				// Only move existent players
 		this.deletePlayer();
 		this.setObject(player, to);
@@ -366,8 +415,11 @@ public class State extends Stage{
 					TextureRegion cur_texture = new TextureRegion(new Texture(Gdx.files.internal(t_tuple.getObject())));
 					GameObject new_obj = new GameObject(type, cur_texture);
 					
-					new_obj.setCoord(tile_pos);
-					if (type == ObjectType.PLAYER) player = new_obj;				// Need to reassemble player object, may need changes
+					if (type == ObjectType.PLAYER) {
+						player = new Player(tile_pos, 1, 1, new Texture(Gdx.files.internal(t_tuple.getObject())));
+					} else {			
+						new_obj.setCoord(tile_pos);
+					}
 					tile.setObject(new_obj);
 				}
 			}
@@ -380,6 +432,10 @@ public class State extends Stage{
 	public boolean isValid(Coord next) {
 		// TODO Auto-generated method stub
 		return (next.getX() >= 0 && next.getX() < colActors) && (next.getY() >= 0 && next.getY() < rowActors);
+	}
+		
+	public TableTuple getDim() {
+		return new TableTuple(rowActors, colActors);
 	}
 	
 	
@@ -394,6 +450,7 @@ public class State extends Stage{
 		}
 		return null;
 	}
+<<<<<<< HEAD
 	*/
 	
 	// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ FOR CAMERA MOVEMENT ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -412,19 +469,12 @@ public class State extends Stage{
 		dragX = screenX;
 		dragY = screenY;
 		return true;
-	}
-
-
-	@Override
-	public boolean touchDragged(int screenX, int screenY, int pointer) {
-	    float dX = (float)(dragX - screenX)/(float)Gdx.graphics.getWidth();
-	    float dY = (float)(screenY - dragY)/(float)Gdx.graphics.getHeight();
-	    dragX = screenX;
-	    dragY = screenY;
-	    
-	    this.getCamera().position.add(dX * intensity, dY * intensity, 0f);
-	    this.getCamera().update();
-	    return true;
+=======
+	
+	public TableTuple getDim() {
+		TableTuple t = new TableTuple(rowActors, colActors);
+		return t;
+>>>>>>> branch 'EditorAttributes' of https://github.com/JavaLeg/Project-DC
 	}
 	*/
 }
