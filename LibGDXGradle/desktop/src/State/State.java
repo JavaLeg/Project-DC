@@ -154,25 +154,20 @@ public class State extends Stage{
 			break;
 		case ENEMY:
 			cur_d_object.setCoord(tile.getCoord());
-			// Overwrite player if same tile as player
 			if (tile.getObjectType() == ObjectType.PLAYER) {
 				this.player = null; 
 			}
 			tile.setObject(cur_d_object);
-			//this.enemyList.add((Enemy) cur_d_object);
 			break;
 		case ITEM:
 			cur_object.setCoord(tile.getCoord());
-			// Overwrite player if same tile as player
 			if (tile.getObjectType() == ObjectType.PLAYER) {
 				this.player = null; 
 			}
 			tile.setObject(cur_object);
-		//	this.itemList.add((Item) cur_object);
 			break;
 		case WALL:
 			cur_object.setCoord(tile.getCoord());
-			// Overwrite player if same tile as player
 			if (tile.getObjectType() == ObjectType.PLAYER) {
 				this.playerCoord = null; 
 				this.player = null; 
@@ -184,7 +179,6 @@ public class State extends Stage{
 			cur_d_object.setCoord(tile.getCoord());
 			tile.setObject(cur_d_object);
 			player = (DynamicObject) cur_d_object;
-
 			break;
 		default:
 			// SAVE, EDIT
