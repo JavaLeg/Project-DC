@@ -445,48 +445,4 @@ public class State extends Stage{
 		TableTuple t = new TableTuple(rowActors, colActors);
 		return t;
 	}
-	
-	/*
-	 * Creates a new table pop up
-	 * Displays all attributes
-	 */
-	public void newEdit(DynamicObject obj, Skin skin) {
-		Table editTable = new Table();
-		Double hp = obj.getHp();
-		Double dmg = obj.getContactDamage();
-		String name = obj.getName();
-		
-		editTable.add(new Image(obj.getTexture()));
-		editTable.row();
-		
-		editTable.add(generateTextField("Name - " + name, skin));
-		editTable.row();
-		
-		editTable.add(generateTextField("HP - " + Double.toString(hp), skin));
-		editTable.row();
-		
-		editTable.add(generateTextField("DMG - " + Double.toString(dmg), skin));
-		editTable.row();
-		
-		TextButton saveButton = generateButton("Save", skin);
-		saveButton.addListener(new ClickListener(){
-			@Override
-	        public void clicked(InputEvent event, float x, float y) {
-				
-	        }
-		});
-		
-		
-	}
-	
-	private TextButton generateButton(String s, Skin skin) {
-		TextButton button = new TextButton(s, skin);
-		return button;
-	}
-	
-	private TextField generateTextField(String s, Skin skin) {
-		TextField tf = new TextField("", skin);
-		tf.setMessageText(s);
-		return tf;
-	}
 }

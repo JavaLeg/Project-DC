@@ -24,6 +24,7 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 import com.engine.desktop.SaveSys;
 
 import Interface.EditorModel;
+import Interface.ObjectModel;
 import Interface.Stages.Selections.ToolbarSelection;
 import State.State;
 import Tileset.DynamicObject;
@@ -52,9 +53,6 @@ public class Editor extends Stage{
 	private State related;
 	private String path;
 	private SaveSys saver;
-	
-	private Table default_tab;
-	private Table custom_tab;
 		
 	/*
 	 * Dimensions: 280 x 480
@@ -156,13 +154,12 @@ public class Editor extends Stage{
 	}
 	
 
-	private Table generateCustomTable(final ToolbarSelection s) {
+	private Table generateCustomTable(final ToolbarSelection s) throws ClassNotFoundException, IOException {
 		
-		
-		FileHandle[] files = Gdx.files.internal(path + s.toString().toLowerCase() + "_custom").list();
+		String quick_path = path + s.toString().toLowerCase() + "_custom/";
+		FileHandle[] files = Gdx.files.internal(quick_path).list();
 		
 		final Table newTable = new Table();
-		custom_tab = newTable;
 		
 		TextButton editButton = null;
 		TextButton customButton = null;
@@ -174,30 +171,17 @@ public class Editor extends Stage{
 			editButton.addListener(new ClickListener(){
 				@Override
 		        public void clicked(InputEvent event, float x, float y) {
-					related.newEdit(selectedObject, skin);
+					
+					if(selectedObject == null) {
+						System.out.println("No object selected!");
+						return;
+					}
+
+					System.out.println("Editing - " + selectedObject);
+					newEdit(selectedObject, skin);
 		        }
 			});
 			
-//			if(t == TableType.DEFAULT) {
-//				customButton = generateButton("Custom");
-//				newTable.add(customButton);
-//				customButton.addListener(new ClickListener(){
-//					@Override
-//			        public void clicked(InputEvent event, float x, float y) {
-//						generateTable(s, TableType.CUSTOM);
-//			        }
-//				});
-//			}else {
-//				customButton = generateButton("DEFAULT");
-//				newTable.add(customButton);
-//				customButton.addListener(new ClickListener(){
-//					@Override
-//			        public void clicked(InputEvent event, float x, float y) {
-//						generateTable(s, TableType.DEFAULT);
-//			        }
-//				});
-//			}
-
 			customButton = generateButton("default");
 			newTable.add(customButton);
 			customButton.addListener(new ClickListener(){
@@ -220,7 +204,14 @@ public class Editor extends Stage{
 			editButton.addListener(new ClickListener(){
 				@Override
 		        public void clicked(InputEvent event, float x, float y) {
-					related.newEdit(selectedObject, skin);
+					
+					if(selectedObject == null) {
+						System.out.println("No object selected!");
+						return;
+					}
+					
+					System.out.println("Editing - " + selectedObject);
+					newEdit(selectedObject, skin);
 		        }
 			});
 			
@@ -243,7 +234,54 @@ public class Editor extends Stage{
 		default:
 			break;
 		}
+		newTable.row();
 		
+		
+		/*
+		 * Load all saved objects into custom table
+		 * And revive attributes
+		 */
+		int i = 0;
+		for(FileHandle file: files) {
+			ObjectModel model = saver.LoadObj(file.name(), quick_path);
+			
+			System.out.println(model.getPath());
+
+			final Texture texture = new Texture(Gdx.files.internal(model.getPath()));
+			final ObjectType cur = ObjectType.valueOf(s.toString());
+			Image icon = new Image(new TextureRegion(texture));
+
+			DynamicObject object = new DynamicObject(ObjectType.valueOf(s.toString()), model.getHp(), model.getDmg(), texture);
+			object.setName(model.getName());
+			
+			String labels = "Name: " + object.getName() + "\n" + 
+							"Health: " + object.getHp() + "\n" +
+							"Damage: " + object.getContactDamage() + "\n";
+			
+
+
+			Label icon_name = new Label(labels, new Label.LabelStyle(new BitmapFont(), Color.BLACK));
+			
+			newTable.add(icon).size(40, 40);
+			newTable.add(icon_name).pad(5);
+			
+
+			icon.addListener(new ClickListener(){
+				@Override
+			    public void clicked(InputEvent event, float x, float y) {
+					DynamicObject d_obj = new DynamicObject(cur, 0, 0, texture);
+					selectedObject = d_obj;
+					related.setSelection(texture, s, d_obj);
+			    }
+			});
+			
+			if (i % 2 == 1 && i != 0) newTable.row();
+			
+			// Don't let it go over the edge
+			if (i > 20 && s == ToolbarSelection.FLOOR) break;
+			if (i > 14 && s == ToolbarSelection.ENEMY) break;
+			i++;		
+		}	
 		return newTable;
 	}
 	
@@ -254,7 +292,6 @@ public class Editor extends Stage{
 	private Table generateTable(final ToolbarSelection s) {
 		
 		final Table newTable = new Table();
-		default_tab = newTable;
 		/*
 		 * Make a custom image icon class later
 		 * Includes image and name
@@ -281,7 +318,14 @@ public class Editor extends Stage{
 			editButton.addListener(new ClickListener(){
 				@Override
 		        public void clicked(InputEvent event, float x, float y) {
-					related.newEdit(selectedObject, skin);
+					
+					if(selectedObject == null) {
+						System.out.println("No object selected!");
+						return;
+					}
+					
+					System.out.println("Editing - " + selectedObject);
+					newEdit(selectedObject, skin);
 		        }
 			});
 
@@ -300,7 +344,14 @@ public class Editor extends Stage{
 			editButton.addListener(new ClickListener(){
 				@Override
 		        public void clicked(InputEvent event, float x, float y) {
-					related.newEdit(selectedObject, skin);
+					
+					if(selectedObject == null) {
+						System.out.println("No object selected!");
+						return;
+					}
+					
+					System.out.println("Editing - " + selectedObject);
+					newEdit(selectedObject, skin);
 		        }
 			});
 			customButton = generateButton("Custom");
@@ -389,8 +440,6 @@ public class Editor extends Stage{
 
 			String fileName = file.name().split("\\.", 2)[0];
 			final Texture texture = new Texture(file);	
-			
-			// This can be done directly without switch lol
 			final ObjectType cur = ObjectType.valueOf(s.toString());
 						
 			if(cur == ObjectType.ENEMY || cur == ObjectType.PLAYER)
@@ -431,7 +480,59 @@ public class Editor extends Stage{
 		return newTable;
 	}
 	
-	
+	/*
+	 * Creates a new table pop up
+	 * Displays all attributes
+	 */
+	public void newEdit(DynamicObject obj, Skin skin) {
+		Table editTable = new Table();
+		Double hp = obj.getHp();
+		Double dmg = obj.getContactDamage();
+		String name = obj.getName();
+		TextureRegion tr = obj.getTexture();
+		
+		editTable.add(new Image(tr));
+		editTable.row();
+		
+		final TextField nameField = generateTextField("Name - " + name);
+		TextField hpField = generateTextField("HP - " + Double.toString(hp));
+		TextField dmgField = generateTextField("DMG - " + Double.toString(dmg));
+		
+		editTable.add(nameField);
+		editTable.row();
+		
+		editTable.add(hpField);
+		editTable.row();
+		
+		editTable.add(dmgField);
+		editTable.row();
+		
+		TextButton saveButton = generateButton("Save");
+		editTable.add(saveButton);
+		editTable.row();
+		saveButton.addListener(new ClickListener(){
+			@Override
+	        public void clicked(InputEvent event, float x, float y) {
+				saveObj(nameField.getText(), selectedObject);
+	        }
+		});
+		
+		TextButton closeButton = generateButton("Close");
+		editTable.add(closeButton);
+		editTable.row();
+		closeButton.addListener(new ClickListener(){
+			@Override
+	        public void clicked(InputEvent event, float x, float y) {
+				try {
+					update(current);
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+	        }
+		});
+		display(editTable);
+	}
 	
 	
 	
@@ -446,8 +547,9 @@ public class Editor extends Stage{
 	 * Updates the stage according to toolbar selection
 	 */
 	public void update(ToolbarSelection s) throws IOException {
-				
-		if(current == s) return;
+		
+		// Set current selection for return
+		current = s;
 		this.clear();
 		
 		// Check if table already exists
@@ -459,8 +561,20 @@ public class Editor extends Stage{
 		display(tableMap.get(s));
 	}
 	
+	/*
+	 * Updates stage according to edit/custom buttons
+	 */
 	private void updateCustom(ToolbarSelection s) {
-		display(generateCustomTable(s));
+		this.clear();
+		try {
+			display(generateCustomTable(s));
+		} catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 	
 	
@@ -480,18 +594,33 @@ public class Editor extends Stage{
 		
 		s = s.replaceAll(" ","_");
 		EditorModel toSave = related.getModel();
-		s += ".txt";
+		//s += ".txt";
 		saver.Save(toSave, s);
 		System.out.println("Saved as file: " + s);
 	}
 	
-	
-	
 	/*
-	public void setDependence(Stage s) {
-		this.related = s;
+	 * Saving Dynamic objects (Custom objects)
+	 */
+	private void saveObj(String s, DynamicObject obj){
+		
+		if(s.isEmpty()) {
+			System.out.println("Blank Save String!");
+			System.out.println("Not saved.");
+			return;
+		}
+		ObjectModel model = obj.getModel();
+		s = s.replaceAll(" ","_");
+		
+		try {
+			saver.Save(model, s);
+			System.out.println("Object - " + obj + " saved!");
+		} catch (IOException e) {
+			System.out.println("I/O Error. Cannot save object");
+			e.printStackTrace();
+		}
+
 	}
-	*/
 	
 	public void setDependence(State s) {
 		this.related = s;
