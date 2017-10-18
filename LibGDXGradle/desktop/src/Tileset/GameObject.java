@@ -1,16 +1,12 @@
 package Tileset;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.Batch;
-import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 
 import State.Coord;
 
-// Game object is in charge of: image/sprite, ObjectType, Coordinates
 public class GameObject extends Image implements Cloneable {
+	
 	public static enum ObjectType {
 		PLAYER, ENEMY, WALL, ITEM, FLOOR;
 	}
@@ -18,34 +14,38 @@ public class GameObject extends Image implements Cloneable {
 	private ObjectType type;
 	private Coord position;
 	private TextureRegion cur_texture;
+	private boolean passable;
 	// height and width are in Actor
-	/* 
-	 * Needs to handle TextureRegions
-	 */
+	
+	
 	public GameObject(ObjectType type, TextureRegion texture) {
 		super(texture);
 		this.type = type;
+		this.position = null;
 		this.cur_texture = texture;
 	}
+	
 	
 	/*
 	 * Oscar's game object initialisation using co-ordinates
 	 */
-	public GameObject(ObjectType item, Coord position, TextureRegion texture) {
-		// TODO Auto-generated constructor stub
+	public GameObject(ObjectType type, Coord position, TextureRegion texture) {
 		super(texture);
 		this.type = type;
 		this.position = position;
 		this.cur_texture = texture;
 	}
 
+	
 	public GameObject clone() throws CloneNotSupportedException {
 		return (GameObject)super.clone();
 	}
 	
+	
 	public TextureRegion getTexture() {
 		return this.cur_texture;
 	}
+	
 	
 	/*
 	@Override
@@ -53,6 +53,7 @@ public class GameObject extends Image implements Cloneable {
 		sprite.draw(batch);
 	}
 	*/
+	
 	
 	public boolean isDynamic() {
 		if(type == ObjectType.PLAYER || type == ObjectType.ENEMY) {
@@ -62,22 +63,28 @@ public class GameObject extends Image implements Cloneable {
 		}
 	}
 	
+	
 	public ObjectType getType() {
 		return this.type; 
 	}
+	
 	
 	public Coord getCoord() {
 		return position;
 	}
 	
+	
 	public void setCoord(Coord coord) {
 		position = coord;
 	}
 	
-	// use the whole image
-	public static Texture getTexture(String imageName) {
-//		this.sprite = new Sprite(new Texture(Gdx.files.internal(imageName)));
-		return new Texture(Gdx.files.internal(imageName));
+
+	public boolean isPassable() {
+		return passable;
+	}
+
+	public void setPassable(boolean passable) {
+		this.passable = passable;
 	}
 
 }
