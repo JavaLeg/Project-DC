@@ -96,14 +96,7 @@ public class State extends Stage{
 	//************************//
 	//******** EDITOR ********//
 	//************************//
-	/*
-	 * GameObject selection
-	 */
-	public void setSelection(Texture t, ToolbarSelection s, GameObject obj) {
-		selected_tr = new TextureRegion(t);
-		selectedToolBar = s;
-		if (s != ToolbarSelection.FLOOR) cur_object = obj;
-	}
+	
 	
 	/*
 	 * DynamicObject Selection
@@ -115,7 +108,16 @@ public class State extends Stage{
 	}
 	
 	
-
+	/*
+	 * GameObject selection
+	 */
+	public void setSelection(Texture t, ToolbarSelection s, GameObject obj) {
+		selected_tr = new TextureRegion(t);
+		selectedToolBar = s;
+		if (s != ToolbarSelection.FLOOR) cur_object = obj;
+	}
+	
+	
 	// Fill grid with selected floor
 	public void fillGrid() {
 		if(selected_tr == null || selectedToolBar != ToolbarSelection.FLOOR) 
@@ -159,7 +161,6 @@ public class State extends Stage{
 			if (tile.getObjectType() == ObjectType.PLAYER) {
 				this.player = null; 
 			}
-			//this.enemyList.add((Enemy) cur_d_object);
 			break;
 		case ITEM:
 			cur_object.setCoord(tile.getCoord());
@@ -168,7 +169,6 @@ public class State extends Stage{
 			if (tile.getObjectType() == ObjectType.PLAYER) {
 				this.player = null; 
 			}
-		//	this.itemList.add((Item) cur_object);
 			break;
 		case WALL:
 			cur_object.setCoord(tile.getCoord());
@@ -177,7 +177,6 @@ public class State extends Stage{
 			if (tile.getObjectType() == ObjectType.PLAYER) {
 				this.player = null; 
 			}
-			//this.wallList.add((Wall) cur_object);
 			break;
 		case PLAYER:
 			// If player already exists, move it
@@ -186,7 +185,6 @@ public class State extends Stage{
 			}
 			cur_d_object.setCoord(tile.getCoord());
 			tile.setObject(cur_d_object);
-			this.player = (Player) cur_d_object;
 			break;
 		default:
 			// SAVE, EDIT
@@ -240,17 +238,17 @@ public class State extends Stage{
 	public void setObject(GameObject newObject, Coord coord) {
 		// Overwriting player?
 		if(this.tileList.get(coord.getX()  + coord.getY() * colActors).getObjectType() == ObjectType.PLAYER) {
-			this.player = null;
+			this.deletePlayer();
 		}
 		
 		if(newObject.getType() == ObjectType.PLAYER) {
 			this.player = (Player) newObject;
-	/*	} else if (newObject.getType() == ObjectType.ENEMY) {
+		} else if (newObject.getType() == ObjectType.ENEMY) {
 			this.enemyList.add((Enemy) newObject);
 		} else if (newObject.getType() == ObjectType.WALL) {
 			this.wallList.add((Wall) newObject);
 		} else if (newObject.getType() == ObjectType.ITEM) {
-			this.wallList.add((Wall) newObject); */
+			this.itemList.add((Item) newObject); 
 		}
 		
 		newObject.setCoord(coord);;
