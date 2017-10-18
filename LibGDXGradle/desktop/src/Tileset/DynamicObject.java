@@ -6,13 +6,14 @@ import java.util.List;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.graphics.glutils.FileTextureData;
 
+import Interface.ObjectModel;
 import State.Coord;
 import State.State;
 
-
-public class DynamicObject extends GameObject {
-
+public class DynamicObject extends GameObject implements Cloneable{
+	
 	public static enum DynamicObjectType {
 		PLAYER, ENEMY
 	} 
@@ -34,6 +35,15 @@ public class DynamicObject extends GameObject {
 	
 	public DynamicObject(ObjectType type, Coord position, double hp, double damage, Texture texture) {
 		super(type, position, new TextureRegion(texture));
+		this.maxHp = hp;
+		this.curHp = hp;
+		this.contactDamage = damage;
+		this.iFrames = 0;
+		statuses = new HashMap<Status, Integer>();
+	}
+	
+	public DynamicObject(ObjectType type, double hp, double damage, Texture texture) {
+		super(type, new TextureRegion(texture));
 		this.maxHp = hp;
 		this.curHp = hp;
 		this.contactDamage = damage;
@@ -108,5 +118,20 @@ public class DynamicObject extends GameObject {
 	public boolean canChangePosition() {
 		// test state here
 		return true;
+	}
+	
+	/*
+	 * Used only for dynamic objects (EDITOR SIDE)
+	 */
+	public ObjectModel getModel() {
+		Texture texture = super.getTexture().getTexture();
+		String texturePath = ((FileTextureData)texture.getTextureData()).getFileHandle().path();
+		DynamicObjectType type = DynamicObjectType.valueOf(super.getType().toString());
+		ObjectModel model = new ObjectModel(curHp, contactDamage, texturePath, super.getName(), type);
+		return model;
+	}
+	
+	public DynamicObject clone() throws CloneNotSupportedException {
+		return (DynamicObject)super.clone();
 	}
 }
