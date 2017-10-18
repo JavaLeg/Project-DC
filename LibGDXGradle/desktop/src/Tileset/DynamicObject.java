@@ -13,7 +13,7 @@ import State.Coord;
 import State.State;
 
 // DynamicObject is in charge of: hp
-public class DynamicObject extends GameObject {
+public class DynamicObject extends GameObject implements Cloneable{
 	// Dynamic types are: Enemy, Player, Trap
 	// Not dynamic types are: Terrain, Item
 	public static enum DynamicObjectType {
@@ -113,5 +113,9 @@ public class DynamicObject extends GameObject {
 		DynamicObjectType type = DynamicObjectType.valueOf(super.getType().toString());
 		ObjectModel model = new ObjectModel(hp, contactDamage, texturePath, super.getName(), type);
 		return model;
+	}
+	
+	public DynamicObject clone() throws CloneNotSupportedException {
+		return (DynamicObject)super.clone();
 	}
 }

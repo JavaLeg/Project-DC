@@ -438,7 +438,7 @@ public class Editor extends Stage{
 		
 		for(FileHandle file: files) {
 
-			String fileName = file.name().split("\\.", 2)[0];
+			String fileName = file.name();
 			final Texture texture = new Texture(file);	
 			final ObjectType cur = ObjectType.valueOf(s.toString());
 						
@@ -495,8 +495,8 @@ public class Editor extends Stage{
 		editTable.row();
 		
 		final TextField nameField = generateTextField("Name - " + name);
-		TextField hpField = generateTextField("HP - " + Double.toString(hp));
-		TextField dmgField = generateTextField("DMG - " + Double.toString(dmg));
+		final TextField hpField = generateTextField("HP - " + Double.toString(hp));
+		final TextField dmgField = generateTextField("DMG - " + Double.toString(dmg));
 		
 		editTable.add(nameField);
 		editTable.row();
@@ -510,10 +510,52 @@ public class Editor extends Stage{
 		TextButton saveButton = generateButton("Save");
 		editTable.add(saveButton);
 		editTable.row();
+		
+		
+		// If save gets clicked, clone it with new attributes
+		// before saving
 		saveButton.addListener(new ClickListener(){
 			@Override
 	        public void clicked(InputEvent event, float x, float y) {
-				saveObj(nameField.getText(), selectedObject);
+				try {
+					DynamicObject clone = selectedObject.clone();
+					
+					
+					// Sanitation check
+					boolean check = true;
+					
+					if(nameField.getText().isEmpty()) {
+						System.out.println("Invalid name field!");
+						check = false;
+					}
+					
+					if(!hpField.getText().matches("[0-9]+")) {
+						System.out.println("Invalid HP value!");
+						check = false;
+					}
+					
+					if(!dmgField.getText().matches("[0-9]+")) {
+						System.out.println("Invalid Damage value!");
+						check = false;
+					}
+					
+					if(!check)
+						return;
+					
+					
+					String s = nameField.getText().replaceAll(" ","_");
+					
+					clone.setName(s);
+					clone.setHp(Double.valueOf(hpField.getText()));
+					clone.setContactDamage(Double.valueOf(dmgField.getText()));
+
+					saveObj(clone);
+				} catch (CloneNotSupportedException e) {
+					System.out.println("Not cloneable");
+					e.printStackTrace();
+				}
+				
+
 	        }
 		});
 		
@@ -594,7 +636,6 @@ public class Editor extends Stage{
 		
 		s = s.replaceAll(" ","_");
 		EditorModel toSave = related.getModel();
-		//s += ".txt";
 		saver.Save(toSave, s);
 		System.out.println("Saved as file: " + s);
 	}
@@ -602,18 +643,12 @@ public class Editor extends Stage{
 	/*
 	 * Saving Dynamic objects (Custom objects)
 	 */
-	private void saveObj(String s, DynamicObject obj){
+	private void saveObj(DynamicObject obj){
 		
-		if(s.isEmpty()) {
-			System.out.println("Blank Save String!");
-			System.out.println("Not saved.");
-			return;
-		}
 		ObjectModel model = obj.getModel();
-		s = s.replaceAll(" ","_");
 		
 		try {
-			saver.Save(model, s);
+			saver.Save(model, model.getName());
 			System.out.println("Object - " + obj + " saved!");
 		} catch (IOException e) {
 			System.out.println("I/O Error. Cannot save object");
