@@ -35,6 +35,9 @@ public class State extends Stage{
 	
 	private ArrayList<Tile> tileList;
 	
+	private Player player;
+	private ArrayList<Tile> enemy;
+	
 	//************************//
 	//****** CONSTRUCTOR *****//
 	//************************//
@@ -46,9 +49,6 @@ public class State extends Stage{
 		this.colActors = DEFAULT_MAP_WIDTH;
 		this.tileList = new ArrayList<Tile>();
 		initialise();
-		
-		// assumes no player initially
-		this.playerCoord = null;
 	}
 
 	private void initialise() {
@@ -97,7 +97,7 @@ public class State extends Stage{
 	
 	
 	public void clearGrid() {		
-		this.playerCoord = null;
+		this.player = null;
 		for(Tile tile : tileList) {
 			tile.clear();
 		}
@@ -127,7 +127,7 @@ public class State extends Stage{
 			tile.setObject(cur_object);
 			// Overwrite player if same tile as player
 			if (tile.getObjectType() == ObjectType.PLAYER) {
-				this.playerCoord = null; 
+				this.player = null; 
 			}
 			break;
 		case PLAYER:
