@@ -58,9 +58,9 @@ public class DynamicGame {
 	
 	
 	
-	// Player Actions:
-	// 	Movement and attack
-	// false means action can not be made and no changes are made to the state
+	/* Player actions, returns false if unable to perform
+	 * 
+	 */
 	
 	public boolean makeAction(Action a) {
 		GameObject curr = activeState.getPlayer();

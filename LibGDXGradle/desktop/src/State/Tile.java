@@ -119,6 +119,7 @@ public class Tile extends Stack implements Serializable {
 	
 	
 	// Overwrites current object if any
+	// 
 	public void setObject(GameObject new_object) {
 		this.clearChildren();
 		this.object_texture = new_object.getTexture();

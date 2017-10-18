@@ -367,7 +367,7 @@ public class State extends Stage{
 					GameObject new_obj = new GameObject(type, cur_texture);
 					
 					new_obj.setCoord(tile_pos);
-					if (type == ObjectType.PLAYER) player = new_obj;				// Need to reassemble player object
+					if (type == ObjectType.PLAYER) player = new_obj;				// Need to reassemble player object, may need changes
 					tile.setObject(new_obj);
 				}
 			}
