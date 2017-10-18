@@ -48,6 +48,7 @@ public class Tile extends Stack implements Serializable {
 	 * Keeps the empty texture 
 	 */
 	public void clear() {
+		System.out.print("clearing");
 		this.clearChildren();
 		this.object = null;
 		this.d_object = null;
