@@ -5,6 +5,7 @@ import com.badlogic.gdx.InputProcessor;
 import Interface.GameInputProcessor;
 import Tileset.DynamicObject;
 import Tileset.GameObject;
+import Tileset.Player;
 
 //temporary class for Game, 
 // showing interface necessary for higher level input and step processing
@@ -62,30 +63,34 @@ public class DynamicGame {
 	// false means action can not be made and no changes are made to the state
 	
 	public boolean makeAction(Action a) {
-		Coord curr = activeState.findPlayer();
-		assert(curr !=  null);
-		assert(curr.getX() != -1);
-		assert(curr.getY() != -1);
+		GameObject curr = activeState.getPlayer();
+		
+		if (curr == null) return false;
+		System.out.println("successful!");
+		Coord pos = curr.getCoord();
+		System.out.println(pos);
 		
 		switch (a) {
 		case ATTACK:
 			System.out.print("USER INPUT: ATTACK\n");
 			break;
 		case MOVE_DOWN:
-			activeState.movePlayer(new Coord(curr.getX(), curr.getY() + 1));
+			Coord next = new Coord(pos.getX() + 1, pos.getY());
+			if (activeState.isValid(next) == false) return false;
+			activeState.movePlayer(next);
 			System.out.print("USER INPUT: DOWN\n");
 			break;
+		case MOVE_UP:
+			activeState.movePlayer(new Coord(pos.getX() - 1, pos.getY()));
+			System.out.print("USER INPUT: UP\n");
+			break;
 		case MOVE_LEFT:
-			activeState.movePlayer(new Coord(curr.getX() - 1, curr.getY()));
+			activeState.movePlayer(new Coord(pos.getX(), pos.getY() - 1));
 			System.out.print("USER INPUT: LEFT\n");
 			break;
 		case MOVE_RIGHT:
-			activeState.movePlayer(new Coord(curr.getX() + 1, curr.getY()));
+			activeState.movePlayer(new Coord(pos.getX(), pos.getY() + 1));
 			System.out.print("USER INPUT: RIGHT\n");
-			break;
-		case MOVE_UP:
-			activeState.movePlayer(new Coord(curr.getX(), curr.getY() - 1));
-			System.out.print("USER INPUT: UP\n");
 			break;
 		default:
 			break;

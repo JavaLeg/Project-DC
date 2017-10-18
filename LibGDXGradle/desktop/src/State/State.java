@@ -31,7 +31,12 @@ public class State extends Stage{
 
 	private TextureRegion selected_tr;
 	private GameObject cur_object;
+	
+	// Should be a Player Object
+	private GameObject player;
 	private ToolbarSelection selectedToolBar;
+	
+	private Coord playerCoord;
 	
 	private ArrayList<Tile> tileList;
 	
@@ -45,10 +50,10 @@ public class State extends Stage{
 		this.rowActors = DEFAULT_MAP_HEIGHT;
 		this.colActors = DEFAULT_MAP_WIDTH;
 		this.tileList = new ArrayList<Tile>();
-		initialise();
-		
 		// assumes no player initially
 		this.playerCoord = null;
+		this.player = null;
+		initialise();
 	}
 
 	private void initialise() {
@@ -124,20 +129,19 @@ public class State extends Stage{
 		case ITEM:
 		case WALL:
 			cur_object.setCoord(tile.getCoord());
-			tile.setObject(cur_object);
 			// Overwrite player if same tile as player
 			if (tile.getObjectType() == ObjectType.PLAYER) {
 				this.playerCoord = null; 
+				player = null;
 			}
+			tile.setObject(cur_object);
 			break;
 		case PLAYER:
 			// If player already exists, move it
-			if(this.hasPlayer()) {
-				this.deletePlayer();
-			}
+			if (player != null) this.deletePlayer();
 			cur_object.setCoord(tile.getCoord());
 			tile.setObject(cur_object);
-			this.playerCoord = tile.getCoord();
+			player = (Player) cur_object;
 			break;
 		default:
 			// SAVE, EDIT
@@ -184,11 +188,13 @@ public class State extends Stage{
 	//************************//
 	
 	public GameObject getObject(Coord coord) {
-		return this.tileList.get(coord.getX()  + coord.getY() * colActors).getObject();
+		return this.tileList.get(coord.getX() * rowActors + coord.getY()).getObject();
 	}
 	
 	public void setObject(GameObject newObject, Coord coord) {
-		// Overwriting player?
+		/*
+		 *  
+		 * 
 		if(this.tileList.get(coord.getX()  + coord.getY() * colActors).getObjectType() == ObjectType.PLAYER) {
 			this.playerCoord = null;
 		}
@@ -197,18 +203,15 @@ public class State extends Stage{
 		if(newObject.getType() == ObjectType.PLAYER) {
 			this.playerCoord = coord;
 		}
-		
-		newObject.setCoord(coord);;
-		this.tileList.get(coord.getX()  + coord.getY() * colActors).setObject(newObject);
+		*/
+		newObject.setCoord(coord);
+		this.tileList.get(coord.getX() * rowActors + coord.getY()).setObject(newObject);
 	}
 	
 	public void deleteObject(Coord coord) {
-		if(this.tileList.get(coord.getX()  + coord.getY() * colActors).getObjectType() == ObjectType.PLAYER) {
-			this.playerCoord = null;
-		}
-		this.tileList.get(coord.getX()  + coord.getY() * colActors).deleteObject();
+		Tile cur_tile = tileList.get(coord.getX() * rowActors  + coord.getY());
+		cur_tile.deleteObject();
 	}
-	
 	
 	public void moveObject(Coord from, Coord to) {
 		GameObject temp = this.getObject(from);
@@ -256,27 +259,28 @@ public class State extends Stage{
 	
 	// Return coord of player
 	public Coord findPlayer(){
-		return this.playerCoord;
+		return player.getCoord();
 	}
 	
 	// Get player object
-	public Player getPlayer(){
-		if (!this.hasPlayer()) return null;
-		return (Player) this.getObject(this.playerCoord);
+	public GameObject getPlayer(){
+		if (player == null) return null;
+		return player;
 	}
 	
 	
 	public void deletePlayer(){
-		this.deleteObject(playerCoord);
-		this.playerCoord = null;
+		if (player == null) return;
+		this.deleteObject(player.getCoord());
 	}
 	
 	
 	public void movePlayer(Coord to) {
-		Player temp = this.getPlayer();
+		// Player temp = this.getPlayer();
+		System.out.println(to);
+		if (player == null) return;				// Only move existent players
 		this.deletePlayer();
-		this.setObject(temp, to);
-		this.playerCoord = to;
+		this.setObject(player, to);
 	}
 	
 	
@@ -354,16 +358,28 @@ public class State extends Stage{
 				// Set terrain
 				if(t_tuple.getFloor() != null)
 					tile.setFloor(new TextureRegion(new Texture(Gdx.files.internal(t_tuple.getFloor()))));
-				
-				
+					
 				// Set object
 				if(t_tuple.getObject() != null) {
+					ObjectType type = t_tuple.getID();
+					Coord tile_pos = tile.getCoord();
 					TextureRegion cur_texture = new TextureRegion(new Texture(Gdx.files.internal(t_tuple.getObject())));
-					GameObject new_obj = new GameObject(t_tuple.getID(), cur_texture);
+					GameObject new_obj = new GameObject(type, cur_texture);
+					
+					new_obj.setCoord(tile_pos);
+					if (type == ObjectType.PLAYER) player = new_obj;				// Need to reassemble player object
 					tile.setObject(new_obj);
 				}
 			}
 		}
+	}
+
+	/* 
+	 * Determines if the next position is valid (for player)
+	 */
+	public boolean isValid(Coord next) {
+		// TODO Auto-generated method stub
+		return (next.getX() >= 0 && next.getX() < colActors) && (next.getY() >= 0 && next.getY() < rowActors);
 	}
 	
 	
