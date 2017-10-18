@@ -47,11 +47,6 @@ public class State extends Stage{
 	// Should rename it soon, Image Stack can hold more than one "layer" of object objects.
 	private ToolbarSelection selectedLayer;
 	
-	// private List<List<Tile>> map;
-	// The outer index is x, the inner index is y
-	// private int mapWidth;
-	// private int mapHeight;
-	
 	
 	//************************//
 	//******* CREATORS *******//
@@ -67,19 +62,6 @@ public class State extends Stage{
 		
 		// assumes no player initially
 		this.playerCoord = null;
-		
-		// this.map = new ArrayList<List<Tile>>();
-		
-		// for(int i = 0; i < DEFAULT_MAP_WIDTH; i++) {
-		// 	this.map.add(new ArrayList<Tile>());
-		// 	for(int j = 0; j < DEFAULT_MAP_HEIGHT; j++) {
-		// 		Coordinates tempCoord = new Coordinates(i,j);
-		// 		this.map.get(i).add(new Tile(tempCoord));
-		// 	}
-		// }
-		
-		// this.mapWidth = DEFAULT_MAP_WIDTH;
-		// this.mapHeight = DEFAULT_MAP_HEIGHT;
 	}
 
 	//************************//
@@ -88,11 +70,9 @@ public class State extends Stage{
 
 	private void initialise() {
 		Table gridTable = new Table();
-		//ImageStack[] tiles = new ImageStack[rowActors * colActors];
 		
 		for(int i = 0; i < rowActors; i++) {
 			for(int j = 0; j < colActors; j++) {
-				//System.out.println("x: " + i + " y: " + j);
 								
 				final Tile tile = new Tile();
 				tileList.add(tile);
@@ -108,7 +88,6 @@ public class State extends Stage{
 			}
 			gridTable.row();
 		}
-		//gridTable.setPosition(tablePos.getX(), tablePos.getY());
 		gridTable.top();
 		gridTable.setFillParent(true);
 		super.addActor(gridTable);
@@ -147,7 +126,6 @@ public class State extends Stage{
 		System.out.println("Fill grid with : " + path);
 		
 		for(Tile tile : tileList) {
-			// setTileTexture(tile, selectedLayer);
 			setTileTexture(tile, ToolbarSelection.FLOOR);
 		}
 	}
@@ -223,12 +201,6 @@ public class State extends Stage{
 	public GameObject getObject(Coord coord) {
 		return this.tileList.get(coord.getX()  + coord.getY() * colActors).getObject();
 	}
-	
-	/*
-	public void setObject(GameObject newObject, Coord coord) {
-		this.tileList.get(coord.getX()  + coord.getY() * colActors).setObject(newObject);
-	}
-	*/
 	
 	public void deleteObject(Coord coord) {
 		this.tileList.get(coord.getX()  + coord.getY() * colActors).deleteObject();
@@ -312,7 +284,6 @@ public class State extends Stage{
 		System.out.println("Moving\n");
 		playerCoord = to; // TODO: all that is necessary?
 	}
-	
 	
 	
 	//************************//
