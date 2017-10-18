@@ -26,7 +26,6 @@ public class State extends Stage{
 	private static final int DEFAULT_MAP_WIDTH = 50; 
 	private static final int DEFAULT_MAP_HEIGHT = 50;
 	
-	
 	private int rowActors;
 	private int colActors;
 
@@ -35,8 +34,6 @@ public class State extends Stage{
 	private ToolbarSelection selectedToolBar;
 	
 	private ArrayList<Tile> tileList;
-	private Coord playerCoord;
-	
 	
 	//************************//
 	//****** CONSTRUCTOR *****//
