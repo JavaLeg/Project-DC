@@ -156,28 +156,17 @@ public class State extends Stage{
 		// No texture selected
 		if (ts == null) return;
 		
-		
-		GameObject objClone = null;
-		DynamicObject dObjClone = null;
-		
-		try {
-			if (cur_object != null) objClone = this.cur_object.clone();
-			if(cur_d_object != null) dObjClone = this.cur_d_object.clone();
-		} catch (CloneNotSupportedException e) {
-			e.printStackTrace();
-		}
-		
 		switch (ts){
 		case FLOOR:
 			tile.setFloor(selected_tr);
 			break;
 		case PLAYER:
 		case ENEMY:
-			setObject(dObjClone, tile.getCoord());
+			setObject(cur_d_object, tile.getCoord());
 			break;
 		case ITEM:
 		case WALL:
-			setObject(objClone, tile.getCoord());
+			setObject(cur_object, tile.getCoord());
 			break;
 		default:
 			// SAVE, EDIT
