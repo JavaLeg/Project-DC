@@ -37,7 +37,8 @@ public class State extends Stage{
 
 	private TextureRegion selected_tr;
 	private GameObject cur_object;
-	private DynamicObject cur_d_object;
+	private GameObject cur_d_object;
+	//private DynamicObject cur_d_object;
 	private ToolbarSelection selectedToolBar;
 
 	private ArrayList<Tile> tileList;
@@ -181,12 +182,12 @@ public class State extends Stage{
 			break;
 		case PLAYER:
 			// If player already exists, move it
-			if(this.hasPlayer()) {
-				this.deletePlayer();
-			}
+			if(this.hasPlayer()) return;
+			
+			
 			cur_d_object.setCoord(tile.getCoord());
 			tile.setObject(cur_d_object);
-			this.player = (Player) cur_d_object;
+			//this.player = (Player) cur_d_object;
 			break;
 		default:
 			// SAVE, EDIT
@@ -422,8 +423,7 @@ public class State extends Stage{
 	}
 
 	public TableTuple getDim() {
-		// TODO Auto-generated method stub
-		return null;
+		return new TableTuple(rowActors, colActors);
 	}
 	
 	
