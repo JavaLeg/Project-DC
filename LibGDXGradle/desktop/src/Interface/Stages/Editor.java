@@ -153,7 +153,15 @@ public class Editor extends Stage{
 		return tf;
 	}
 	
-
+	
+	/*
+	 * Everything in here is for when you press the custom button
+	 * Loads in all saved objects from corresponding "_custom" directory
+	 * Creates an icon from each loaded object
+	 * Attaches a listener to each icon, and if pressed sends the appropriate loaded object to the state class
+	 * 
+	 * PRESERVES ATTRIBUTES
+	 */
 	private Table generateCustomTable(final ToolbarSelection s) throws ClassNotFoundException, IOException {
 		
 		String quick_path = path + s.toString().toLowerCase() + "_custom/";
@@ -244,14 +252,12 @@ public class Editor extends Stage{
 		int i = 0;
 		for(FileHandle file: files) {
 			ObjectModel model = saver.LoadObj(file.name(), quick_path);
-			
-			System.out.println(model.getPath());
 
 			final Texture texture = new Texture(Gdx.files.internal(model.getPath()));
 			final ObjectType cur = ObjectType.valueOf(s.toString());
 			Image icon = new Image(new TextureRegion(texture));
 
-			DynamicObject object = new DynamicObject(ObjectType.valueOf(s.toString()), model.getHp(), model.getDmg(), texture);
+			final DynamicObject object = new DynamicObject(ObjectType.valueOf(s.toString()), model.getHp(), model.getDmg(), texture);
 			object.setName(model.getName());
 			
 			String labels = "Name: " + object.getName() + "\n" + 
@@ -269,9 +275,9 @@ public class Editor extends Stage{
 			icon.addListener(new ClickListener(){
 				@Override
 			    public void clicked(InputEvent event, float x, float y) {
-					DynamicObject d_obj = new DynamicObject(cur, 0, 0, texture);
-					selectedObject = d_obj;
-					related.setSelection(texture, s, d_obj);
+					System.out.println("Selected - " + object.getName());
+					selectedObject = object;
+					related.setSelection(texture, s, object);
 			    }
 			});
 			
@@ -284,6 +290,9 @@ public class Editor extends Stage{
 		}	
 		return newTable;
 	}
+	
+	
+	
 	
 	/*
 	 * Generates a table according to the structure of SpriteFamily/* directory
@@ -438,15 +447,16 @@ public class Editor extends Stage{
 		
 		for(FileHandle file: files) {
 
-			String fileName = file.name();
+			final String fileName = file.name();
+			String labels = fileName;
 			final Texture texture = new Texture(file);	
 			final ObjectType cur = ObjectType.valueOf(s.toString());
 						
 			if(cur == ObjectType.ENEMY || cur == ObjectType.PLAYER)
-				fileName = "Health: 1\nDamage: 1\nSpeed: 1";
+				labels = "Health: 1\nDamage: 1\nSpeed: 1";
 
 			final Image icon = new Image(new TextureRegion(texture));
-			Label icon_name = new Label(fileName, new Label.LabelStyle(new BitmapFont(), Color.BLACK));
+			Label icon_name = new Label(labels, new Label.LabelStyle(new BitmapFont(), Color.BLACK));
 			
 			newTable.add(icon).size(40, 40);
 			newTable.add(icon_name).pad(5);
@@ -455,6 +465,7 @@ public class Editor extends Stage{
 				icon.addListener(new ClickListener(){
 					@Override
 			        public void clicked(InputEvent event, float x, float y) {
+						System.out.println("Selected - " + fileName);
 						DynamicObject d_obj = new DynamicObject(cur, 0, 0, texture);
 						selectedObject = d_obj;
 						related.setSelection(texture, s, d_obj);
@@ -464,6 +475,7 @@ public class Editor extends Stage{
 				icon.addListener(new ClickListener(){
 					@Override
 			        public void clicked(InputEvent event, float x, float y) {
+						System.out.println("Selected - " + fileName);
 						GameObject obj = new GameObject(cur, new TextureRegion(texture));
 						related.setSelection(texture, s, obj);
 			        }
