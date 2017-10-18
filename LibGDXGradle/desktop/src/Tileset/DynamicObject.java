@@ -6,13 +6,16 @@ import java.util.List;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.graphics.glutils.FileTextureData;
 
+import Interface.ObjectModel;
 import State.Coord;
 import State.State;
 
-
-public class DynamicObject extends GameObject {
-
+// DynamicObject is in charge of: hp
+public class DynamicObject extends GameObject implements Cloneable{
+	// Dynamic types are: Enemy, Player, Trap
+	// Not dynamic types are: Terrain, Item
 	public static enum DynamicObjectType {
 		PLAYER, ENEMY
 	} 
@@ -22,8 +25,7 @@ public class DynamicObject extends GameObject {
 	}
 	
 	
-	private double curHp;
-	private double maxHp;
+	private double hp;
 	private double contactDamage; // how much damage entity deals
 	
 	private int iFrames;
@@ -34,44 +36,36 @@ public class DynamicObject extends GameObject {
 	
 	public DynamicObject(ObjectType type, Coord position, double hp, double damage, Texture texture) {
 		super(type, position, new TextureRegion(texture));
-		this.maxHp = hp;
-		this.curHp = hp;
+		this.hp = hp;
+		this.contactDamage = damage;
+		this.iFrames = 0;
+		statuses = new HashMap<Status, Integer>();
+	}
+	
+	public DynamicObject(ObjectType type, double hp, double damage, Texture texture) {
+		super(type, new TextureRegion(texture));
+		this.hp = hp;
 		this.contactDamage = damage;
 		this.iFrames = 0;
 		statuses = new HashMap<Status, Integer>();
 	}
 	
 	public double getHp() {
-		return curHp;
+		return hp;
 	}
 
 	public void setHp(double hp) {
-		if (hp > maxHp) {
-			curHp = maxHp;
-			return;
-		}
-		this.curHp = hp;
-	}
-	
-	public double getMaxHp() {
-		return maxHp;
-	}
-	
-	public void setMaxHp(double hp) {
-		this.maxHp = hp;
+		this.hp = hp;
 	}
 	
 	public void damage(double hp) {
 		if (iFrames > 0) return;
-		this.curHp -= hp;
+		this.hp -= hp;
 		iFrames = iFramesMax;
 	}
 	
 	public void heal(double hp) {
-		this.curHp += hp;
-		if (curHp > maxHp) {
-			curHp = maxHp;
-		}
+		this.hp += hp;
 	}
 	
 	
@@ -108,5 +102,20 @@ public class DynamicObject extends GameObject {
 	public boolean canChangePosition() {
 		// test state here
 		return true;
+	}
+	
+	/*
+	 * Used only for dynamic objects (EDITOR SIDE)
+	 */
+	public ObjectModel getModel() {
+		Texture texture = super.getTexture().getTexture();
+		String texturePath = ((FileTextureData)texture.getTextureData()).getFileHandle().path();
+		DynamicObjectType type = DynamicObjectType.valueOf(super.getType().toString());
+		ObjectModel model = new ObjectModel(hp, contactDamage, texturePath, super.getName(), type);
+		return model;
+	}
+	
+	public DynamicObject clone() throws CloneNotSupportedException {
+		return (DynamicObject)super.clone();
 	}
 }

@@ -10,7 +10,11 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.FileTextureData;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
@@ -18,6 +22,7 @@ import Tileset.*;
 import Tileset.GameObject.ObjectType;
 import Interface.EditorModel;
 import Interface.TileTuple;
+import Interface.Stages.TableTuple;
 import Interface.Stages.Selections.ToolbarSelection;
 
 
@@ -31,25 +36,36 @@ public class State extends Stage{
 
 	private TextureRegion selected_tr;
 	private GameObject cur_object;
+	private GameObject cur_d_object;
+	//private DynamicObject cur_d_object;
 	private ToolbarSelection selectedToolBar;
-	
+
 	private ArrayList<Tile> tileList;
-	
+
 	private Player player;
-	private ArrayList<Tile> enemy;
+	private ArrayList<Enemy> enemyList;
+	private ArrayList<Item> itemList;
+	private ArrayList<Wall> wallList;
 	
 	//************************//
 	//****** CONSTRUCTOR *****//
 	//************************//
 	
 	// default create an empty State
-	public State(Viewport v){
-		super(v);
-		this.rowActors = DEFAULT_MAP_HEIGHT;
-		this.colActors = DEFAULT_MAP_WIDTH;
-		this.tileList = new ArrayList<Tile>();
-		initialise();
-	}
+
+		public State(Viewport v){
+			super(v);
+			this.rowActors = DEFAULT_MAP_HEIGHT;
+			this.colActors = DEFAULT_MAP_WIDTH;
+			this.tileList = new ArrayList<Tile>();
+			this.enemyList = new ArrayList<Enemy>();
+			this.wallList = new ArrayList<Wall>();
+			this.itemList = new ArrayList<Item>();
+			initialise();
+			
+			// assumes no player initially
+			this.player = null;
+		}
 
 	private void initialise() {
 		Table gridTable = new Table();
@@ -80,7 +96,26 @@ public class State extends Stage{
 	//************************//
 	//******** EDITOR ********//
 	//************************//
-		
+	/*
+	 * GameObject selection
+	 */
+	public void setSelection(Texture t, ToolbarSelection s, GameObject obj) {
+		selected_tr = new TextureRegion(t);
+		selectedToolBar = s;
+		if (s != ToolbarSelection.FLOOR) cur_object = obj;
+	}
+	
+	/*
+	 * DynamicObject Selection
+	 */
+	public void setSelection(Texture t, ToolbarSelection s, DynamicObject obj) {
+		selected_tr = new TextureRegion(t);
+		selectedToolBar = s;
+		if (s != ToolbarSelection.FLOOR) cur_d_object = obj;
+	}
+	
+	
+
 	// Fill grid with selected floor
 	public void fillGrid() {
 		if(selected_tr == null || selectedToolBar != ToolbarSelection.FLOOR) 
@@ -101,13 +136,10 @@ public class State extends Stage{
 		for(Tile tile : tileList) {
 			tile.clear();
 		}
-	}
-
-
-	public void setSelection(Texture t, ToolbarSelection s, GameObject icon) {
-		selected_tr = new TextureRegion(t);
-		selectedToolBar = s;
-		if (s != ToolbarSelection.FLOOR) cur_object = icon;
+		this.tileList.clear();
+		this.enemyList.clear();
+		this.wallList.clear();
+		this.itemList.clear();
 	}
 	
 	
@@ -121,7 +153,23 @@ public class State extends Stage{
 			tile.setFloor(selected_tr);
 			break;
 		case ENEMY:
+			cur_d_object.setCoord(tile.getCoord());
+			tile.setObject(cur_d_object);
+			// Overwrite player if same tile as player
+			if (tile.getObjectType() == ObjectType.PLAYER) {
+				this.player = null; 
+			}
+			//this.enemyList.add((Enemy) cur_d_object);
+			break;
 		case ITEM:
+			cur_object.setCoord(tile.getCoord());
+			tile.setObject(cur_object);
+			// Overwrite player if same tile as player
+			if (tile.getObjectType() == ObjectType.PLAYER) {
+				this.player = null; 
+			}
+		//	this.itemList.add((Item) cur_object);
+			break;
 		case WALL:
 			cur_object.setCoord(tile.getCoord());
 			tile.setObject(cur_object);
@@ -129,15 +177,16 @@ public class State extends Stage{
 			if (tile.getObjectType() == ObjectType.PLAYER) {
 				this.player = null; 
 			}
+			//this.wallList.add((Wall) cur_object);
 			break;
 		case PLAYER:
 			// If player already exists, move it
-			if(this.hasPlayer()) {
-				this.deletePlayer();
-			}
-			cur_object.setCoord(tile.getCoord());
-			tile.setObject(cur_object);
-			this.playerCoord = tile.getCoord();
+			if(this.hasPlayer()) return;
+			
+			
+			cur_d_object.setCoord(tile.getCoord());
+			tile.setObject(cur_d_object);
+			//this.player = (Player) cur_d_object;
 			break;
 		default:
 			// SAVE, EDIT
@@ -190,12 +239,17 @@ public class State extends Stage{
 	public void setObject(GameObject newObject, Coord coord) {
 		// Overwriting player?
 		if(this.tileList.get(coord.getX()  + coord.getY() * colActors).getObjectType() == ObjectType.PLAYER) {
-			this.playerCoord = null;
+			this.player = null;
 		}
 		
-		// Setting player?
 		if(newObject.getType() == ObjectType.PLAYER) {
-			this.playerCoord = coord;
+			this.player = (Player) newObject;
+	/*	} else if (newObject.getType() == ObjectType.ENEMY) {
+			this.enemyList.add((Enemy) newObject);
+		} else if (newObject.getType() == ObjectType.WALL) {
+			this.wallList.add((Wall) newObject);
+		} else if (newObject.getType() == ObjectType.ITEM) {
+			this.wallList.add((Wall) newObject); */
 		}
 		
 		newObject.setCoord(coord);;
@@ -204,7 +258,7 @@ public class State extends Stage{
 	
 	public void deleteObject(Coord coord) {
 		if(this.tileList.get(coord.getX()  + coord.getY() * colActors).getObjectType() == ObjectType.PLAYER) {
-			this.playerCoord = null;
+			this.player = null;
 		}
 		this.tileList.get(coord.getX()  + coord.getY() * colActors).deleteObject();
 	}
@@ -250,25 +304,24 @@ public class State extends Stage{
 	//************************//
 	
 	public boolean hasPlayer() {
-		return this.playerCoord != null;
+		return this.player != null;
 	}
 	
 	
 	// Return coord of player
 	public Coord findPlayer(){
-		return this.playerCoord;
+		return this.player.getCoord();
 	}
 	
 	// Get player object
 	public Player getPlayer(){
-		if (!this.hasPlayer()) return null;
-		return (Player) this.getObject(this.playerCoord);
+		return this.player;
 	}
 	
 	
 	public void deletePlayer(){
-		this.deleteObject(playerCoord);
-		this.playerCoord = null;
+		this.deleteObject(player.getCoord());
+		this.player = null;
 	}
 	
 	
@@ -276,7 +329,7 @@ public class State extends Stage{
 		Player temp = this.getPlayer();
 		this.deletePlayer();
 		this.setObject(temp, to);
-		this.playerCoord = to;
+
 	}
 	
 	
@@ -365,6 +418,10 @@ public class State extends Stage{
 			}
 		}
 	}
+
+	public TableTuple getDim() {
+		return new TableTuple(rowActors, colActors);
+	}
 	
 	
 	/*
@@ -378,6 +435,7 @@ public class State extends Stage{
 		}
 		return null;
 	}
+<<<<<<< HEAD
 	*/
 	
 	// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ FOR CAMERA MOVEMENT ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -396,19 +454,12 @@ public class State extends Stage{
 		dragX = screenX;
 		dragY = screenY;
 		return true;
-	}
-
-
-	@Override
-	public boolean touchDragged(int screenX, int screenY, int pointer) {
-	    float dX = (float)(dragX - screenX)/(float)Gdx.graphics.getWidth();
-	    float dY = (float)(screenY - dragY)/(float)Gdx.graphics.getHeight();
-	    dragX = screenX;
-	    dragY = screenY;
-	    
-	    this.getCamera().position.add(dX * intensity, dY * intensity, 0f);
-	    this.getCamera().update();
-	    return true;
+=======
+	
+	public TableTuple getDim() {
+		TableTuple t = new TableTuple(rowActors, colActors);
+		return t;
+>>>>>>> branch 'EditorAttributes' of https://github.com/JavaLeg/Project-DC
 	}
 	*/
 }
