@@ -23,7 +23,7 @@ import Interface.Stages.TableTuple;
 import Interface.Stages.Selections.ToolbarSelection;
 
 
-public class State extends Stage{
+public class State extends Stage {
 	
 	private static final int DEFAULT_MAP_WIDTH = 50; 
 	private static final int DEFAULT_MAP_HEIGHT = 50;
@@ -65,13 +65,14 @@ public class State extends Stage{
 		}
 
 	private void initialise() {
-		Table gridTable = new Table();
+//		Table gridTable = new Table();
 		
 		for(int i = 0; i < rowActors; i++) {
 			for(int j = 0; j < colActors; j++) {
 								
 				final Tile tile = new Tile(new Coord(i,j));
 				tileList.add(tile);
+				this.addActor(tile);
 				
 				tile.addListener(new ClickListener(){
 					@Override
@@ -79,16 +80,15 @@ public class State extends Stage{
 						setTileTexture(tile, selectedToolBar);
 			        }
 				});
-				gridTable.add(tile).size(40, 40);
+//				gridTable.add(tile).size(40, 40);
 			}
-			gridTable.row();
+//			gridTable.row();
 		}
-		gridTable.top();
-		gridTable.setFillParent(true);
-		super.addActor(gridTable);
+//		gridTable.top();
+//		gridTable.setFillParent(true);
+//		super.addActor(gridTable);
+		
 	}
-	
-	
 	
 	//************************//
 	//******** EDITOR ********//
@@ -217,7 +217,7 @@ public class State extends Stage{
 	//************************//
 	
 	public GameObject getObject(Coord coord) {
-		return this.tileList.get(coord.getX()* colActors  + coord.getY() ).getObject();
+		return this.tileList.get(coord.getX()* colActors  + coord.getY()).getObject();
 	}
 	
 	/*
