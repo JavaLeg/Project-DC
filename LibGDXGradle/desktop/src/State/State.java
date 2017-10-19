@@ -87,7 +87,12 @@ public class State extends Stage{
 				tile.addListener(new ClickListener(){
 					@Override
 			        public void clicked(InputEvent event, float x, float y) {
-						setTile(tile, selection);
+						try {
+							setTile(tile, selection);
+						} catch (CloneNotSupportedException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
 			        }
 				});
 				gridTable.add(tile).size(40, 40);
@@ -167,35 +172,38 @@ public class State extends Stage{
 	 * Splits to different object types and
 	 * their respective tile function
 	 */
-	private void setTile(Tile tile, ObjectType type) {
+	private void setTile(Tile tile, ObjectType type) throws CloneNotSupportedException {
 		if (type == null) return;
 		switch (type){
 		case FLOOR:
-			staticSelection.setCoord(tile.getCoord());
+			
+			System.out.println(tile.getCoord().getX() + " " + tile.getCoord().getY());
+			
+			staticSelection.setCoord(tile.getCoord().clone());
 			staticList.add(staticSelection);
 			tile.setFloor(staticSelection);
 			break;
 		case WALL:
 			if (tile.getPlayerObj() != null) player = null;
-			staticSelection.setCoord(tile.getCoord());
+			staticSelection.setCoord(tile.getCoord().clone());
 			staticList.add(staticSelection);
 			tile.setWall(staticSelection);
 			break;
 		case ITEM:
 			if (tile.getPlayerObj() != null) player = null;
-			staticSelection.setCoord(tile.getCoord());
+			staticSelection.setCoord(tile.getCoord().clone());
 			itemList.add(itemSelection);
 			tile.setItem(itemSelection);
 			break;
 		case ENEMY:
 			if (tile.getPlayerObj() != null) player = null;
-			enemySelection.setCoord(tile.getCoord());
+			enemySelection.setCoord(tile.getCoord().clone());
 			enemyList.add(enemySelection);
 			tile.setEnemy(enemySelection);
 			break;
 		case PLAYER:
 			deletePlayer();
-			playerSelection.setCoord(tile.getCoord());
+			playerSelection.setCoord(tile.getCoord().clone());
 			player = playerSelection;
 			tile.setPlayer(player);
 			break;
@@ -422,7 +430,7 @@ public class State extends Stage{
 			encodedTable[c.getX()][c.getY()].setItem(obj);
 		}
 		
-		model.display();
+		//model.display();
 		
 		return model;
 	}
