@@ -5,15 +5,20 @@ import java.io.IOException;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
@@ -64,10 +69,11 @@ public class MainMenuScreen implements Screen {
          * Add table to stage
          */
         //Create buttons
-        TextButton playButton = new TextButton("Editor", skin);
-        TextButton LibButton = new TextButton("Library", skin);
-        TextButton runButton = new TextButton("Play", skin);
-        TextButton exitButton = new TextButton("Exit", skin);
+        TextButton playButton = new TextButton(" Editor ", skin);
+        TextButton LibButton = new TextButton(" Library ", skin);
+        TextButton runButton = new TextButton(" Play ", skin);
+        TextButton helpButton = new TextButton(" Help ", skin);
+        TextButton exitButton = new TextButton(" Exit ", skin);
 
         //Add listeners to buttons
         
@@ -101,19 +107,56 @@ public class MainMenuScreen implements Screen {
 				}
             }
         });
+        
+        helpButton.addListener(new ClickListener(){
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+            	try {
+					((Game)Gdx.app.getApplicationListener()).setScreen(new HelpScreen(game));
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+            }
+        });
 
+        
+        // Main Table
+        // Add title
+        BitmapFont titleFont = new BitmapFont();
+        titleFont.getData().setScale(2, 2);        
+        Label title = new Label("Dungeon Creator", 
+        		new Label.LabelStyle(titleFont, Color.WHITE));
+        mainTable.add(title);
+        
+        // Add blank line after title
+        BitmapFont itemFont = new BitmapFont();
+        itemFont.getData().setScale(1, 1);  
+        mainTable.row();
+        Label blank = new Label("", new Label.LabelStyle(itemFont, Color.WHITE));
+        mainTable.add(blank);
+        
         //Add buttons to table
+        mainTable.row();
         mainTable.add(playButton);
         mainTable.row();
         mainTable.add(LibButton);
         mainTable.row();
         mainTable.add(runButton);
         mainTable.row();
-        mainTable.add(exitButton);
+        mainTable.add(helpButton);
         
         //Add table to stage
         stage.addActor(mainTable);
-		
+        
+        // Add exit button on bottom right
+        Table backTable = new Table();
+        backTable.add(exitButton);		
+        backTable.bottom();
+        backTable.left();
+        backTable.padBottom(10);
+        backTable.padLeft(10);
+        stage.addActor(backTable);
 	}
 
 	@Override

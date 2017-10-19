@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;
@@ -25,6 +26,7 @@ import com.engine.desktop.SaveSys;
 
 import Interface.EditorModel;
 import Interface.ObjectModel;
+import Interface.Screens.MainMenuScreen;
 import Interface.Stages.Selections.ToolbarSelection;
 import State.State;
 import Tileset.DynamicObject;
@@ -149,7 +151,8 @@ public class Editor extends Stage{
 	// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ GENERATION ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 	
 	private TextButton generateButton(String s) {
-		TextButton button = new TextButton(s, skin);
+		String newString = " " + s + " ";
+		TextButton button = new TextButton(newString, skin);
 		return button;
 	}
 	
@@ -492,6 +495,7 @@ public class Editor extends Stage{
 					related.clearGrid();
 		        }
 			});
+			
 			return newTable;
 		default:
 			break;

@@ -146,6 +146,7 @@ public class LibraryScreen implements Screen{
         mainTable.top();
         mainTable.add(title);
         sideTable.bottom();
+        sideTable.padBottom(20);
         
 
         
@@ -167,6 +168,24 @@ public class LibraryScreen implements Screen{
         mainStage.addActor(new Image(new TextureRegion(new Texture(Gdx.files.internal("LibScreen/bg2.jpg")))));
         mainStage.addActor(mainTable);
         mainStage.addActor(sideTable);
+        
+        
+        // Add back button
+        Table backTable = new Table();
+        TextButton backButton = generateButton("Back");
+        backButton.addListener(new ClickListener(){
+			@Override
+	        public void clicked(InputEvent event, float x, float y) {
+				mainStage.dispose();
+            	((Game)Gdx.app.getApplicationListener()).setScreen(new MainMenuScreen(game));
+			}
+		});
+        backTable.add(backButton);
+        backTable.bottom();
+        backTable.left();
+        backTable.padLeft(10);
+        backTable.padBottom(10);        
+        mainStage.addActor(backTable);
         
         
         
@@ -231,7 +250,8 @@ public class LibraryScreen implements Screen{
 	}
 	
 	private TextButton generateButton(String s) {
-		TextButton button = new TextButton(s, skin);
+		String newString = " " + s + " ";
+		TextButton button = new TextButton(newString, skin);
 		return button;
 	}
 
