@@ -58,8 +58,6 @@ public class Enemy extends DynamicObject {
 				setActionState(ActionState.MOVE);
 			}
 			break;
-		case DISABLED:
-			break;
 		case MOVE:
 			// movement behavior
 			if (sinceLastMove >= moveRate && moveBehaviour != null) {
@@ -75,6 +73,16 @@ public class Enemy extends DynamicObject {
 			} else {
 				sinceLastMove++;
 			}
+			
+			// attack behaviour
+			if (sinceLastAttack >= attack.getAttackCooldown() && attack != null) {
+				setActionState(ActionState.ATTACK);
+				attackTime = attack.getAttackSpeed();
+			} else {
+				sinceLastAttack++;
+			}
+			break;
+		case DISABLED:
 			break;
 		default:
 			break;
@@ -84,12 +92,6 @@ public class Enemy extends DynamicObject {
 		
 		
 		
-		// attack behaviour
-		if (sinceLastAttack >= attack.getAttackCooldown() && attack != null) {
-			setActionState(ActionState.ATTACK);
-			attackTime = attack.getAttackSpeed();
-		} else {
-			sinceLastAttack++;
-		}
+		
 	}
 }

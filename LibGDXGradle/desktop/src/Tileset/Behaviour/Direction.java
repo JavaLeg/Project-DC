@@ -18,4 +18,20 @@ public enum Direction {NORTH, SOUTH, EAST, WEST;
 		return null;
 	}
 
+	
+	// assumes initial direction was NORTH
+	public Coord rotate(Coord from) {
+		switch(this) {
+		case EAST:
+			return new Coord(from.getY(), -from.getX());
+		case NORTH:
+			return from.clone();
+		case SOUTH:
+			return new Coord(-from.getX(), -from.getY());
+		case WEST:
+			return new Coord(-from.getY(), from.getX());
+		}
+		return from.clone();
+	}
+	
 }

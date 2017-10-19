@@ -31,7 +31,12 @@ public class Attack {
 	public void applyAttack(State s, Coord origin, Direction facing) {
 		// grabs valid objects from State and damages all
 		// TODO: rotate with facing
-		for (Coord c : applyHitBox(origin)) {
+		List<Coord> adjustedHitBox = new LinkedList<Coord>();
+		for (Coord c : hitbox) {
+			adjustedHitBox.add(facing.rotate(c));
+		}
+		
+		for (Coord c : applyHitBox(adjustedHitBox, origin)) {
 			DynamicObject g = s.getDynamicObject(c);
 			if (g != null && targets.contains(g.getType())) {
 				g.damage(damage);
@@ -40,7 +45,7 @@ public class Attack {
 	}
 
 	
-	public List<Coord> applyHitBox(Coord origin) {
+	public List<Coord> applyHitBox(List<Coord> hitbox, Coord origin) {
 		List<Coord> hits = new LinkedList<Coord>();
 		for (Coord c : hitbox) {
 			hits.add(new Coord(c.getX() + origin.getX(), c.getY() + origin.getY()));
