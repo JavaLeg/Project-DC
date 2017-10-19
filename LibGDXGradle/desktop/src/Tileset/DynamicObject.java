@@ -11,6 +11,7 @@ import com.badlogic.gdx.graphics.glutils.FileTextureData;
 import Interface.ObjectModel;
 import State.Coord;
 import State.State;
+import Tileset.Behaviour.Direction;
 
 // DynamicObject is in charge of: hp
 public class DynamicObject extends GameObject implements Cloneable{
@@ -40,6 +41,7 @@ public class DynamicObject extends GameObject implements Cloneable{
 	
 	private HashMap<Status, Integer> statuses;
 	private ActionState state;
+	private Direction facing;
 	
 	public DynamicObject(ObjectType type, Coord position, double hp, double damage, Texture texture) {
 		super(type, position, new TextureRegion(texture));
@@ -166,4 +168,17 @@ public class DynamicObject extends GameObject implements Cloneable{
 	public DynamicObject clone() throws CloneNotSupportedException {
 		return (DynamicObject)super.clone();
 	}
+	
+	public void setCoord(Coord coord) {
+		if (getCoord() != null)
+			facing = facing.getDirection(getCoord(), coord);
+		else 
+			facing = Direction.NORTH;
+		super.setCoord(coord);
+	}
+	
+	public Direction getFacing() {
+		return facing;
+	}
+	
 }

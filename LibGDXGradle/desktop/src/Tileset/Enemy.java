@@ -19,7 +19,6 @@ public class Enemy extends DynamicObject {
 	private int attackTime;
 	private int sinceLastAttack;
 	private int attackCooldown;
-	private Direction facing;
 	private Attack attack; 
 	
 	
@@ -51,7 +50,7 @@ public class Enemy extends DynamicObject {
 		
 		switch (getActionState()) {
 		case ATTACK:
-			attack.applyAttack(s, getCoord(), facing);
+			attack.applyAttack(s, getCoord(), getFacing());
 			if (attackTime > 0) {
 				attackTime--;
 			} else {

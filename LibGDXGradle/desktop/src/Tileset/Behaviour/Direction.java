@@ -3,19 +3,19 @@ package Tileset.Behaviour;
 import State.Coord;
 
 public enum Direction {NORTH, SOUTH, EAST, WEST;
-	
-	// naive, only handles adjacent coords
+
 	public Direction getDirection(Coord from, Coord to) {
-		if (from.getX() == to.getX() - 1) {
+		if (to == null || from == null) return this;
+		if (from.getX() < to.getX()) {
 			return EAST;
-		} else if (from.getX() == to.getX() + 1) {
+		} else if (from.getX() > to.getX()) {
 			return WEST;
-		} else if (from.getY() == to.getY() - 1) {
+		} else if (from.getY() < to.getY()) {
 			return NORTH;
-		} else if (from.getX() == to.getX() + 1) {
+		} else if (from.getX() > to.getX()) {
 			return SOUTH;
 		}
-		return null;
+		return this;
 	}
 
 	
