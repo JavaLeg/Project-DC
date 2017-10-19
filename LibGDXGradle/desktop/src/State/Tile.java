@@ -52,6 +52,7 @@ public class Tile extends Stack implements Serializable {
 		this.object = null;
 		this.d_object = null;
 		this.floor = null;
+		this.object_texture = null;
 		this.add(empty);
 	}
 
@@ -95,6 +96,7 @@ public class Tile extends Stack implements Serializable {
 	
 	public void deleteFloor() {
 		this.floor = null;
+		this.floor_texture = null;
 		this.clearChildren();
 		this.add(empty);
 		this.add(object);
@@ -122,18 +124,20 @@ public class Tile extends Stack implements Serializable {
 	}
 	
 	
-	
+	// Overwrites current object if any
+
 	// Setters overwrite current object if any
 	/*
 	 * The general object setter for ITEMS, WALLS, PLAYERS AND ENEMIES
 	 */
+
 	public void setObject(GameObject new_object) {
 		if(this.d_object != null) {
 			this.d_object = null;
 		}
 		
 		this.clearChildren();
-		object_texture = new_object.getTexture();
+		this.object_texture = new_object.getTexture();
 		try {
 			object = new_object.clone();
 		} catch (CloneNotSupportedException e) {
@@ -198,6 +202,7 @@ public class Tile extends Stack implements Serializable {
 	
 	public void deleteObject() {
 		this.object = null;
+		this.object_texture = null;
 		this.d_object = null;
 		this.clearChildren();
 		if (this.hasFloor()) {
