@@ -176,36 +176,68 @@ public class State extends Stage{
 		if (type == null) return;
 		switch (type){
 		case FLOOR:
+			GameObject clonedFloor = null;
+			try {
+				clonedFloor = staticSelection.clone();
+			} catch (CloneNotSupportedException e) {
+				e.printStackTrace();
+			}
 			
-			System.out.println(tile.getCoord().getX() + " " + tile.getCoord().getY());
-			
-			staticSelection.setCoord(tile.getCoord().clone());
-			staticList.add(staticSelection);
-			tile.setFloor(staticSelection);
+			clonedFloor.setCoord(tile.getCoord());
+			staticList.add(clonedFloor);
+			tile.setFloor(clonedFloor);
 			break;
 		case WALL:
+			GameObject clonedWall = null;
+			try {
+				clonedWall = staticSelection.clone();
+			} catch (CloneNotSupportedException e) {
+				e.printStackTrace();
+			}
+			
 			if (tile.getPlayerObj() != null) player = null;
-			staticSelection.setCoord(tile.getCoord().clone());
-			staticList.add(staticSelection);
-			tile.setWall(staticSelection);
+			clonedWall.setCoord(tile.getCoord());
+			staticList.add(clonedWall);
+			tile.setWall(clonedWall);
 			break;
 		case ITEM:
+			Item clonedItem = null;
+			try {
+				clonedItem = (Item) itemSelection.clone();
+			} catch (CloneNotSupportedException e) {
+				e.printStackTrace();
+			}
+			
 			if (tile.getPlayerObj() != null) player = null;
-			staticSelection.setCoord(tile.getCoord().clone());
-			itemList.add(itemSelection);
-			tile.setItem(itemSelection);
+			clonedItem.setCoord(tile.getCoord());
+			itemList.add(clonedItem);
+			tile.setItem(clonedItem);
 			break;
 		case ENEMY:
+			Enemy clonedEnemy = null;
+			try {
+				clonedEnemy = enemySelection.clone();
+			} catch (CloneNotSupportedException e) {
+				e.printStackTrace();
+			}
+			
 			if (tile.getPlayerObj() != null) player = null;
-			enemySelection.setCoord(tile.getCoord().clone());
-			enemyList.add(enemySelection);
-			tile.setEnemy(enemySelection);
+			clonedEnemy.setCoord(tile.getCoord());
+			enemyList.add(clonedEnemy);
+			tile.setEnemy(clonedEnemy);
 			break;
 		case PLAYER:
+			Player clonedPlayer = null;
+			try {
+				clonedPlayer = playerSelection.clone();
+			} catch (CloneNotSupportedException e) {
+				e.printStackTrace();
+			}
+			
 			deletePlayer();
-			playerSelection.setCoord(tile.getCoord().clone());
-			player = playerSelection;
-			tile.setPlayer(player);
+			clonedPlayer.setCoord(tile.getCoord());
+			player = clonedPlayer;
+			tile.setPlayer(clonedPlayer);
 			break;
 		default:
 			break;
