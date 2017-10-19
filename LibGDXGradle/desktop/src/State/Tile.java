@@ -236,6 +236,8 @@ public class Tile extends Stack implements Serializable {
 		this.add(player);
 	}
 	
+	
+	// Removal of image from tile
 	public void deleteTileElement(ObjectType t) {
 		switch(t) {
 		case WALL:

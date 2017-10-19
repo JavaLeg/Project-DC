@@ -40,8 +40,10 @@ public class State extends Stage{
 	private Player player;
 	private ArrayList<GameObject> staticList;
 	private ArrayList<Enemy> enemyList;
-	private ArrayList<Item> itemList;
-	private ArrayList<Wall> wallList;
+	
+	private Enemy enemySelection;
+	private Player playerSelection;
+	private GameObject staticSelection;
 
 	
 	
@@ -57,8 +59,8 @@ public class State extends Stage{
 		this.colActors = DEFAULT_MAP_WIDTH;
 		this.tileList = new ArrayList<Tile>();
 		this.enemyList = new ArrayList<Enemy>();
-		this.wallList = new ArrayList<Wall>();
-		this.itemList = new ArrayList<Item>();
+//		this.wallList = new ArrayList<Wall>();
+//		this.itemList = new ArrayList<Item>();
 		initialise();
 
 			
@@ -95,12 +97,6 @@ public class State extends Stage{
 	//************************//
 	//******** EDITOR ********//
 	//************************//
-	
-	private Enemy enemySelection;
-	private Player playerSelection;
-	private GameObject staticSelection;
-	
-	private boolean hasPlayer = false;
 	
 	public void setEnemySelection(Enemy e) {
 		this.enemySelection = e;		
@@ -172,18 +168,22 @@ public class State extends Stage{
 		switch (type){
 		case FLOOR:
 			staticSelection.setCoord(tile.getCoord());
+			staticList.add(staticSelection);
 			tile.setFloor(staticSelection);
 			break;
 		case WALL:
 			staticSelection.setCoord(tile.getCoord());
+			staticList.add(staticSelection);
 			tile.setWall(staticSelection);
 			break;
 		case ITEM:
 			staticSelection.setCoord(tile.getCoord());
+			staticList.add(staticSelection);
 			tile.setItem(staticSelection);
 			break;
 		case ENEMY:
 			enemySelection.setCoord(tile.getCoord());
+			enemyList.add(enemySelection);
 			tile.setEnemy(enemySelection);
 			break;
 		case PLAYER:
@@ -243,35 +243,37 @@ public class State extends Stage{
 	}
 	
 	
-	public void setObject(GameObject newObject, Coord coord) {
-		ObjectType type = newObject.getType();
-		
-		switch(type) {
-		case PLAYER:
-			deletePlayer();
-			this.player = (DynamicObject) newObject;
-			break;
-		case ENEMY:
-			enemyList.add((DynamicObject) newObject);
-			break;
-		case ITEM:
-			itemList.add(newObject);
-			break;
-		case WALL:
-			wallList.add(newObject);
-			break;
-		default:
-			return;
-		}
-		
-		newObject.setCoord(coord);
-		this.tileList.get(coord.getX()* colActors  + coord.getY()).setObject(newObject);
-	}
+//	public void setObject(GameObject newObject, Coord coord) {
+//		ObjectType type = newObject.getType();
+//		
+//		switch(type) {
+//		case PLAYER:
+//			deletePlayer();
+//			this.player = (DynamicObject) newObject;
+//			break;
+//		case ENEMY:
+//			enemyList.add((DynamicObject) newObject);
+//			break;
+//		case ITEM:
+//			itemList.add(newObject);
+//			break;
+//		case WALL:
+//			wallList.add(newObject);
+//			break;
+//		default:
+//			return;
+//		}
+//		
+//		newObject.setCoord(coord);
+//		this.tileList.get(coord.getX()* colActors  + coord.getY()).setObject(newObject);
+//	}
 	
 	
 	public void deleteObject(Coord coord, ObjectType type) {
 		
 		Tile tile = tileList.get(coord.getX()*colActors + coord.getY());
+		
+		// Removal of image from tile
 		tile.deleteTileElement(type);
 		
 		switch(type) {
@@ -281,13 +283,8 @@ public class State extends Stage{
 		case ENEMY:
 			enemyList.remove(tile.getEnemyObj());
 			break;
-		case ITEM:
-			itemList.remove(tile.getStaticObj(type));
-			break;
-		case WALL:
-			itemList.remove(tile.getStaticObj(type));
-			break;
 		default:
+			staticList.remove(tile.getStaticObj(type));
 			break;
 		}
 	}
