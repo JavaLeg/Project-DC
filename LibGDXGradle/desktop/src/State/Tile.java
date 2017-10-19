@@ -59,8 +59,8 @@ public class Tile extends Stack implements Serializable {
 		this.clearChildren();
 		this.floorObj = null;
 		this.wallObj = null;
-		this.playerObj = null;
-		this.enemyObj = null;
+		this.setPlayerObj(null);
+		this.setEnemyObj(null);
 		
 		this.wall = null;
 		this.floor = null;
@@ -170,10 +170,10 @@ public class Tile extends Stack implements Serializable {
 		itemObj = obj;
 		item = processPath(obj.getImgPath());
 		
-		enemyObj = null;
+		setEnemyObj(null);
 		enemy = null;
 		
-		playerObj = null;
+		setPlayerObj(null);
 		player = null;
 		
 		wallObj = null;
@@ -192,10 +192,10 @@ public class Tile extends Stack implements Serializable {
 	public void setEnemy(Enemy obj) {
 		this.clearChildren();
 		
-		enemyObj = obj;
+		setEnemyObj(obj);
 		enemy = processPath(obj.getImgPath());
 		
-		playerObj = null;
+		setPlayerObj(null);
 		player = null;
 		
 		itemObj = null;
@@ -216,10 +216,10 @@ public class Tile extends Stack implements Serializable {
 	public void setPlayer(Player obj) {
 		this.clearChildren();
 		
-		playerObj = obj;
+		setPlayerObj(obj);
 		player = processPath(obj.getImgPath());
 		
-		enemyObj = null;
+		setEnemyObj(null);
 		enemy = null;
 		
 		itemObj = null;
@@ -236,11 +236,79 @@ public class Tile extends Stack implements Serializable {
 		this.add(player);
 	}
 	
+	public void deleteTileElement(ObjectType t) {
+		switch(t) {
+		case WALL:
+			wall = null;
+			break;
+		case FLOOR:
+			floor = null;
+			break;
+		case ITEM:
+			item = null;
+			break;
+		case PLAYER:
+			player = null;
+			break;
+		case ENEMY:
+			enemy = null;
+			break;
+		default:
+			break;
+		}
+	}
+	
 	/*
 	 * Retrieve texture and returns an image
 	 */
 	private Image processPath(String path) {
 		return new Image(new TextureRegion(new Texture(Gdx.files.internal(path))));
+	}
+
+
+	public Enemy getEnemyObj() {
+		return enemyObj;
+	}
+
+
+	public void setEnemyObj(Enemy enemyObj) {
+		this.enemyObj = enemyObj;
+	}
+
+
+	public Player getPlayerObj() {
+		return playerObj;
+	}
+
+
+	public void setPlayerObj(Player playerObj) {
+		this.playerObj = playerObj;
+	}
+
+
+	public GameObject getStaticObj(ObjectType t) {
+		
+		GameObject obj = null;
+		
+		switch(t){
+		case WALL:
+			obj = wallObj;
+			break;
+		case FLOOR:
+			obj = floorObj;
+			break;
+		case ITEM:
+			obj = itemObj;
+			break;
+		default:
+			break;
+		}
+		return obj;
+	}
+
+
+	public void setStaticObj(GameObject wallObj) {
+		this.wallObj = wallObj;
 	}
 
 }
