@@ -35,7 +35,7 @@ public class Player extends DynamicObject {
 		super.step(s);
 		switch (this.getActionState()) {
 		case ATTACK:
-			selected.applyAttack(s, getCoord(), currentFacing);
+			selected.applyAttack(s, getCoord(), getFacing());
 			if (attackCooldown > 0) {
 				attackCooldown--;
 			} else {
@@ -55,13 +55,5 @@ public class Player extends DynamicObject {
 	
 	public void selectLight() {
 		selected = light;
-	}
-	
-	public Direction getFacing() {
-		return currentFacing;
-	}
-	
-	public void setFacing(Direction d) {
-		currentFacing = d;
 	}
 }

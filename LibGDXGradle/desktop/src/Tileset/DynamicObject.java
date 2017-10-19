@@ -151,7 +151,7 @@ public class DynamicObject extends GameObject implements Cloneable{
 	
 	public boolean canChangePosition() {
 		// test state here
-		return state == ActionState.MOVE;
+		return (state == ActionState.MOVE);
 	}
 	
 	/*

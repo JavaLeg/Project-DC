@@ -4,8 +4,11 @@ import com.badlogic.gdx.InputProcessor;
 
 import Interface.GameInputProcessor;
 import Tileset.DynamicObject;
+import Tileset.DynamicObject.ActionState;
 import Tileset.GameObject;
 import Tileset.GameObject.ObjectType;
+import Tileset.Player;
+import Tileset.Behaviour.Direction;
 
 //temporary class for Game, 
 // showing interface necessary for higher level input and step processing
@@ -26,9 +29,6 @@ public class DynamicGame {
 		this.activeState = startState;
 		System.out.print("Initiated\n");
 		this.input = input;
-		if (this.input == null) {
-			System.out.print("shitttdsyyucjsvcblskb\n");
-		}
 	}
 	
 	public void step() {
@@ -42,12 +42,6 @@ public class DynamicGame {
 			o.step(activeState);
 		}
 		input.step();
-		
-		
-		/*
-		 * 
-		 * 
-		 */
 		
 		// Conflict Resolution
 		
@@ -69,25 +63,41 @@ public class DynamicGame {
 	// false means action can not be made and no changes are made to the state
 	
 	public boolean makeAction(Action a) {
-		//Coord curr = activeState.findPlayer();
+		Coord curr = activeState.findPlayer();
+		Player p = activeState.getPlayer();
 		switch (a) {
 		case ATTACK:
-			System.out.print("USER INPUT: ATTACK\n");
+			p.selectLight();
+			p.setActionState(ActionState.ATTACK);
+			System.out.print("USER INPUT: LIGHT ATTACK\n");
 			break;
-		case MOVE_DOWN:
-			//activeState.movePlayer(new Coord(curr.getX(), curr.getY() + 1));
+		case SPECIAL:
+			p.selectSpecial();
+			p.setActionState(ActionState.ATTACK);
+			System.out.print("USER INPUT: HEAVY ATTACK\n");
+			break;
+		case MOVE_SOUTH:
+			if (p.canChangePosition()) {
+				activeState.movePlayer((Direction.SOUTH).moveInDirection(curr));
+			}
 			System.out.print("USER INPUT: DOWN\n");
 			break;
-		case MOVE_LEFT:
-			//activeState.movePlayer(new Coord(curr.getX() - 1, curr.getY()));
+		case MOVE_WEST:
+			if (p.canChangePosition()) {
+				activeState.movePlayer((Direction.WEST).moveInDirection(curr));
+			}
 			System.out.print("USER INPUT: LEFT\n");
 			break;
-		case MOVE_RIGHT:
-			//activeState.movePlayer(new Coord(curr.getX() + 1, curr.getY()));
+		case MOVE_EAST:
+			if (p.canChangePosition()) {
+				activeState.movePlayer((Direction.EAST).moveInDirection(curr));
+			}
 			System.out.print("USER INPUT: RIGHT\n");
 			break;
-		case MOVE_UP:
-			//activeState.movePlayer(new Coord(curr.getX(), curr.getY() - 1));
+		case MOVE_NORTH:
+			if (p.canChangePosition()) {
+				activeState.movePlayer((Direction.NORTH).moveInDirection(curr));
+			}
 			System.out.print("USER INPUT: UP\n");
 			break;
 		default:
