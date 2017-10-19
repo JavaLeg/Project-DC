@@ -1,6 +1,8 @@
 package State;
 
 
+import java.io.Serializable;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -13,7 +15,7 @@ import Tileset.*;
 import Tileset.GameObject.ObjectType;
 
 
-public class Tile extends Group implements Serializable {
+public class Tile extends Group{
 	private final Coord coordinates; 
 	
 	private TextureRegion floor_texture;

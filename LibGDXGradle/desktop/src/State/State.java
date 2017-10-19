@@ -31,29 +31,13 @@ public class State extends Stage {
 	
 	private int rowActors;
 	private int colActors;
-<<<<<<< HEAD
 
-	//private DynamicObject cur_d_object;
-	private ObjectType selection;
 
-	private ArrayList<Tile> tileList;
-	private Player player;
-	private ArrayList<GameObject> staticList;
-	private ArrayList<Item> itemList;
-	private ArrayList<Enemy> enemyList;
-	
-	private Enemy enemySelection;
-	private Player playerSelection;
-	private GameObject staticSelection;
-	private Item itemSelection;
-
-	/**			
-	 * 			{PLAYER}{ENEMY}{ITEM} ------------ Item should have their own list??
-	 * 				{FLOOR} {WALL}    ------------ Static objects
-	 * 			
-	 */		
-	
-=======
+/**			
+ * 			{PLAYER}{ENEMY}{ITEM} ------------ Item should have their own list??
+ * 				{FLOOR} {WALL}    ------------ Static objects
+ * 			
+ */		
 
 	private TextureRegion selected_tr;
 
@@ -68,47 +52,27 @@ public class State extends Stage {
 	private ArrayList<DynamicObject> enemyList;
 	private ArrayList<GameObject> itemList;
 	private ArrayList<GameObject> wallList;
->>>>>>> refs/remotes/origin/state-remodel
+
 	
 	//************************//
 	//****** CONSTRUCTOR *****//
 	//************************//
 	
-<<<<<<< HEAD
 	// default create an empty State
 	public State(Viewport v){
 		super(v);
 		this.rowActors = DEFAULT_MAP_HEIGHT;
 		this.colActors = DEFAULT_MAP_WIDTH;
 		this.tileList = new ArrayList<Tile>();
-		this.enemyList = new ArrayList<Enemy>();
-		this.staticList = new ArrayList <GameObject>();
-		this.itemList = new ArrayList<Item>();
+		this.enemyList = new ArrayList<DynamicObject>();
+		this.wallList = new ArrayList<GameObject>();
+		this.itemList = new ArrayList<GameObject>();
 		this.player = null;
 		initialise();
-
-=======
-
-	// default create an empty State
-		public State(Viewport v){
-			super(v);
-			this.rowActors = DEFAULT_MAP_HEIGHT;
-			this.colActors = DEFAULT_MAP_WIDTH;
-			this.tileList = new ArrayList<Tile>();
-			this.enemyList = new ArrayList<DynamicObject>();
-			this.wallList = new ArrayList<GameObject>();
-			this.itemList = new ArrayList<GameObject>();
-			this.player = null;
-			initialise();
->>>>>>> refs/remotes/origin/state-remodel
-			
-<<<<<<< HEAD
+		
 		// assumes no player initially
 		this.player = null;
 	}
-=======
-		}
->>>>>>> refs/remotes/origin/state-remodel
 
 	private void initialise() {
 //		Table gridTable = new Table();
@@ -191,27 +155,6 @@ public class State extends Stage {
 	/*
 	 * Setting the tile texture
 	 */
-<<<<<<< HEAD
-
-	public void moveObject(Coord from, Coord to) {
-		GameObject temp = this.getObject(from);
-		this.deleteObject(from);
-		this.setObject(temp, to);
-	}
-	
-	public void movePlayerTo(Coord c) {
-		Player temp = playerSelection;
-		
-	}
-	
-	/*
-	 * Splits to different object types and
-	 * their respective tile function
-	 */
-	private void setTile(Tile tile, ObjectType type) throws CloneNotSupportedException {
-		if (type == null) return;
-		switch (type){
-=======
 	private void setTileTexture(Tile tile, ToolbarSelection ts) {
 		// If tile already has an object, remove it and return
 		if(tile.hasObject() && ts != ToolbarSelection.FLOOR) {
@@ -219,81 +162,13 @@ public class State extends Stage {
 			return;
 		}
 		if (ts == null) return;
-		
 		switch (ts){
->>>>>>> refs/remotes/origin/state-remodel
 		case FLOOR:
-<<<<<<< HEAD
-			GameObject clonedFloor = null;
-			try {
-				clonedFloor = staticSelection.clone();
-			} catch (CloneNotSupportedException e) {
-				e.printStackTrace();
-			}
-			
-			clonedFloor.setCoord(tile.getCoord());
-			staticList.add(clonedFloor);
-			tile.setFloor(clonedFloor);
-			break;
-		case WALL:
-			GameObject clonedWall = null;
-			try {
-				clonedWall = staticSelection.clone();
-			} catch (CloneNotSupportedException e) {
-				e.printStackTrace();
-			}
-			
-			if (tile.getPlayerObj() != null) player = null;
-			clonedWall.setCoord(tile.getCoord());
-			staticList.add(clonedWall);
-			tile.setWall(clonedWall);
-=======
 			tile.setFloor(selected_tr);
 			break;
 		case ENEMY:
 			setObject(cur_d_object, tile.getCoord());
->>>>>>> refs/remotes/origin/state-remodel
 			break;
-<<<<<<< HEAD
-		case ITEM:
-			Item clonedItem = null;
-			try {
-				clonedItem = (Item) itemSelection.clone();
-			} catch (CloneNotSupportedException e) {
-				e.printStackTrace();
-			}
-			
-			if (tile.getPlayerObj() != null) player = null;
-			clonedItem.setCoord(tile.getCoord());
-			itemList.add(clonedItem);
-			tile.setItem(clonedItem);
-			break;
-		case ENEMY:
-			Enemy clonedEnemy = null;
-			try {
-				clonedEnemy = enemySelection.clone();
-			} catch (CloneNotSupportedException e) {
-				e.printStackTrace();
-			}
-			
-			if (tile.getPlayerObj() != null) player = null;
-			clonedEnemy.setCoord(tile.getCoord());
-			enemyList.add(clonedEnemy);
-			tile.setEnemy(clonedEnemy);
-			break;
-		case PLAYER:
-			Player clonedPlayer = null;
-			try {
-				clonedPlayer = playerSelection.clone();
-			} catch (CloneNotSupportedException e) {
-				e.printStackTrace();
-			}
-			
-			deletePlayer();
-			clonedPlayer.setCoord(tile.getCoord());
-			player = clonedPlayer;
-			tile.setPlayer(clonedPlayer);
-=======
 		case ITEM:
 		case WALL:
 			cur_object.setCoord(tile.getCoord());
@@ -306,7 +181,6 @@ public class State extends Stage {
 			if (this.player != null) deletePlayer();
 			setObject(cur_d_object, tile.getCoord());
 			player = cur_d_object;
->>>>>>> refs/remotes/origin/state-remodel
 			break;
 		default:
 			break;
@@ -337,10 +211,6 @@ public class State extends Stage {
 		return no_err;
 	}
 	
-<<<<<<< HEAD
-		
-=======
-	
 	/* 
 	 * Called by Editor.java when attempting to edit an enemy
 	 * or player attribute
@@ -348,9 +218,7 @@ public class State extends Stage {
 	public void isEditable() {
 		System.out.println(selectedToolBar);
 	}
-	
-	
->>>>>>> refs/remotes/origin/state-remodel
+
 	//************************//
 	//******** OBJECT ********//
 	//************************//
@@ -359,51 +227,6 @@ public class State extends Stage {
 		return this.tileList.get(coord.getX()* colActors  + coord.getY()).getObject();
 	}
 	
-<<<<<<< HEAD
-	
-//	public void setObject(GameObject newObject, Coord coord) {
-//		ObjectType type = newObject.getType();
-//		
-//		switch(type) {
-//		case PLAYER:
-//			deletePlayer();
-//			this.player = (DynamicObject) newObject;
-//			break;
-//		case ENEMY:
-//			enemyList.add((DynamicObject) newObject);
-//			break;
-//		case ITEM:
-//			itemList.add(newObject);
-//			break;
-//		case WALL:
-//			wallList.add(newObject);
-//			break;
-//		default:
-//			return;
-//		}
-//		
-//		newObject.setCoord(coord);
-//		this.tileList.get(coord.getX()* colActors  + coord.getY()).setObject(newObject);
-//	}
-	
-	
-	public void deleteObject(Coord coord, ObjectType type) {
-		
-		Tile tile = tileList.get(coord.getX()*colActors + coord.getY());
-		
-		// Removal of image from tile
-		
-		switch(type) {
-		case PLAYER:
-			// Already done no?
-			player = null;
-			break;
-		case ENEMY:
-			enemyList.remove(tile.getEnemyObj());
-			break;
-		default:
-			staticList.remove(tile.getStaticObj(type));
-=======
 	/*
 	 * Sets a tile to a GameObject
 	 */
@@ -446,21 +269,11 @@ public class State extends Stage {
 			}
 			break;
 		default:
->>>>>>> refs/remotes/origin/state-remodel
 			break;
-		}
-<<<<<<< HEAD
-		tile.deleteTileElement(type);
-=======
-		
+		}		
 		this.tileList.get(coord.getX()* colActors  + coord.getY()).deleteObject();
->>>>>>> refs/remotes/origin/state-remodel
 	}
 	
-<<<<<<< HEAD
-	
-
-=======
 	/*
 	 * TODO, does this need a clone?
 	 */
@@ -469,7 +282,6 @@ public class State extends Stage {
 		this.deleteObject(from);
 		this.setObject(temp, to);
 	}
->>>>>>> refs/remotes/origin/state-remodel
 	
 	
 	public void swapObject(Coord from, Coord to) {
@@ -501,13 +313,8 @@ public class State extends Stage {
 	}
 	
 	public void deletePlayer(){
-<<<<<<< HEAD
-		if(this.player == null) return;
-		this.deleteObject(player.getCoord(), ObjectType.PLAYER);
-=======
 		this.deleteObject(player.getCoord());
 		this.player = null;
->>>>>>> refs/remotes/origin/state-remodel
 	}
 	
 	
@@ -648,7 +455,6 @@ public class State extends Stage {
 				if(enc_tile == null || enc_tile.isEmpty())
 					continue;
 
-<<<<<<< HEAD
 				ObjectType type = enc_tile.getID();
 				Tile tile = getTile(new Coord(i, j));
 				
@@ -687,62 +493,28 @@ public class State extends Stage {
 					break;
 				default:
 					break;
-=======
-				// Set terrain
-				if(t_tuple.getFloor() != null)
-					tile.setFloor(new TextureRegion(new Texture(Gdx.files.internal(t_tuple.getFloor()))));
 					
-				// Set object
-				if(t_tuple.getObject() != null) {
-					ObjectType type = t_tuple.getID();
-					Coord tile_pos = tile.getCoord();
-					TextureRegion cur_texture = new TextureRegion(new Texture(Gdx.files.internal(t_tuple.getObject())));
-					GameObject new_obj = new GameObject(type, cur_texture);
-					
-					if (type == ObjectType.PLAYER) {
-						player = new Player(tile_pos, 1, 1, new Texture(Gdx.files.internal(t_tuple.getObject())));
-					} else {			
-						new_obj.setCoord(tile_pos);
-					}
-					tile.setObject(new_obj);
->>>>>>> refs/remotes/origin/state-remodel
+//				// Set terrain
+//				if(t_tuple.getFloor() != null)
+//					tile.setFloor(new TextureRegion(new Texture(Gdx.files.internal(t_tuple.getFloor()))));
+//					
+//				// Set object
+//				if(t_tuple.getObject() != null) {
+//					ObjectType type = t_tuple.getID();
+//					Coord tile_pos = tile.getCoord();
+//					TextureRegion cur_texture = new TextureRegion(new Texture(Gdx.files.internal(t_tuple.getObject())));
+//					GameObject new_obj = new GameObject(type, cur_texture);
+//					
+//					if (type == ObjectType.PLAYER) {
+//						player = new Player(tile_pos, 1, 1, new Texture(Gdx.files.internal(t_tuple.getObject())));
+//					} else {			
+//						new_obj.setCoord(tile_pos);
+//					}
+//					tile.setObject(new_obj);
 				}
 			}
 		}
 	}
-<<<<<<< HEAD
-	
-//	public void restoreModel(EditorModel m) {
-//		TileTuple[][] map = m.getmodelPaths();
-//		
-//		for(int i = 0; i < rowActors; i++) {
-//			for(int j = 0; j < colActors; j++) {
-//				int index = colActors*i + j;
-//				
-//				TileTuple t_tuple = map[i][j];
-//				Tile tile = tileList.get(index);
-//
-//				// Set terrain
-//				if(t_tuple.getFloor() != null)
-//					tile.setFloor(new TextureRegion(new Texture(Gdx.files.internal(t_tuple.getFloor()))));
-//				
-//				
-//				// Set object
-//				if(t_tuple.getObject() != null) {
-//					TextureRegion cur_texture = new TextureRegion(new Texture(Gdx.files.internal(t_tuple.getObject())));
-//					GameObject new_obj = new GameObject(t_tuple.getID(), cur_texture);
-//					tile.setObject(new_obj);
-//				}
-//			}
-//		}
-//	}
-
-	
-	/*
-	 * Not related to tables
-	 * Just using as a 2 variable tuple
-	 */
-=======
 
 	/* 
 	 * Determines if the next position is valid (for player)
@@ -752,7 +524,6 @@ public class State extends Stage {
 		return (next.getX() >= 0 && next.getX() < colActors) && (next.getY() >= 0 && next.getY() < rowActors);
 	}
 		
->>>>>>> refs/remotes/origin/state-remodel
 	public TableTuple getDim() {
 		return new TableTuple(rowActors, colActors);
 	}

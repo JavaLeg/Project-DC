@@ -2,13 +2,7 @@ package State;
 
 import java.io.Serializable;
 
-<<<<<<< HEAD
-import Tileset.DynamicObject;
-
 public class Coord implements Serializable, Cloneable{
-=======
-public class Coord implements Serializable {
->>>>>>> refs/remotes/origin/state-remodel
 	/**
 	 * 
 	 */
