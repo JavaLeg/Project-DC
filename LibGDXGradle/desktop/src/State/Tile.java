@@ -4,54 +4,22 @@ package State;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-<<<<<<< HEAD
-=======
 import com.badlogic.gdx.graphics.glutils.FileTextureData;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Group;
->>>>>>> refs/remotes/origin/state-remodel
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 
 import Tileset.*;
 import Tileset.GameObject.ObjectType;
 
-<<<<<<< HEAD
-public class Tile extends Stack{
-=======
-public class Tile extends Group implements Serializable {
->>>>>>> refs/remotes/origin/state-remodel
-	
 
+public class Tile extends Group implements Serializable {
 	private final Coord coordinates; 
 	
-<<<<<<< HEAD
-	
-	// Static objects
-	// Defined as: Always the same in-game
-	private GameObject wallObj;
-	private GameObject floorObj;
-	
-	
-	// Dynamic objects
-	// Defined as: May change in-game
-	private Player playerObj;
-	private Enemy enemyObj;
-	private Item itemObj;
-	
-	private Image floor;
-	private Image wall;
-	private Image player;
-	private Image enemy;
-	private Image item;
-	private Image empty;
-	
-		
-=======
 	private TextureRegion floor_texture;
 	private TextureRegion object_texture;
 	
 	
->>>>>>> refs/remotes/origin/state-remodel
 	//*************************//
 	//******** GENERAL ********//
 	//*************************//
@@ -65,9 +33,6 @@ public class Tile extends Group implements Serializable {
 		clear();
 	}
 	
-<<<<<<< HEAD
-	
-=======
 	private void addActor(Actor actor, String name, int order) {
 		actor.setName(name);
 		actor.setZIndex(order);
