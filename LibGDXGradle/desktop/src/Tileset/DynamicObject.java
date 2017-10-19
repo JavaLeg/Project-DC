@@ -1,5 +1,6 @@
 package Tileset;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -13,7 +14,12 @@ import State.Coord;
 import State.State;
 
 // DynamicObject is in charge of: hp
-public class DynamicObject extends GameObject implements Cloneable{
+public class DynamicObject extends GameObject implements Cloneable, Serializable{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -6521298265497519435L;
+
 	// Dynamic types are: Enemy, Player, Trap
 	// Not dynamic types are: Terrain, Item
 	public static enum DynamicObjectType {

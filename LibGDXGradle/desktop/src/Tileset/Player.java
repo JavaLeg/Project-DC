@@ -1,11 +1,18 @@
 package Tileset;
 
 
+import java.io.Serializable;
+
 import State.Coord;
 import State.State;
 
-public class Player extends DynamicObject {
+public class Player extends DynamicObject implements Cloneable, Serializable {
 	
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 629680615400266941L;
 
 	/*
 	 * Initialized from the editor
@@ -22,6 +29,12 @@ public class Player extends DynamicObject {
 	@Override
 	public void step(State s) {
 		super.step(s);
-
 	}
+	
+	@Override
+	public Player clone() throws CloneNotSupportedException {
+		return (Player) super.clone();
+	}
+	
+	
 }

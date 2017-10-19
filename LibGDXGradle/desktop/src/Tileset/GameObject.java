@@ -1,9 +1,17 @@
 package Tileset;
 
+import java.io.Serializable;
+
 import State.Coord;
 
-public class GameObject implements Cloneable {
+public class GameObject implements Cloneable, Serializable {
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -7501274792615810029L;
+
+
 	public static enum ObjectType {
 		PLAYER, ENEMY, WALL, ITEM, FLOOR;
 	}

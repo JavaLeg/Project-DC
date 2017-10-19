@@ -1,13 +1,19 @@
 package Tileset;
 
 
+import java.io.Serializable;
+
 import State.Coord;
 import State.State;
 import Tileset.Behaviour.Attack;
 import Tileset.Behaviour.MoveBehaviour;
 
-public class Enemy extends DynamicObject {
+public class Enemy extends DynamicObject implements Cloneable, Serializable{
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -5193796609184048030L;
 	private int moveRate;
 	private int sinceLastMove;
 	private MoveBehaviour moveBehaviour;
@@ -39,8 +45,7 @@ public class Enemy extends DynamicObject {
 		this.sinceLastAttack = 0;
 		//this.moveBehaviour = b;
 	}
-	
-	
+		
 	public void setBehaviour(MoveBehaviour b) {
 		moveBehaviour = b;
 	}
@@ -79,5 +84,66 @@ public class Enemy extends DynamicObject {
 		} else {
 			sinceLastAttack++;
 		}
+	}
+	
+	@Override
+	public Enemy clone() throws CloneNotSupportedException {
+		return (Enemy) super.clone();
+	}
+
+	public int getMoveRate() {
+		return moveRate;
+	}
+
+	public void setMoveRate(int moveRate) {
+		this.moveRate = moveRate;
+	}
+
+	public int getSinceLastMove() {
+		return sinceLastMove;
+	}
+
+	public void setSinceLastMove(int sinceLastMove) {
+		this.sinceLastMove = sinceLastMove;
+	}
+
+	public MoveBehaviour getMoveBehaviour() {
+		return moveBehaviour;
+	}
+
+	public void setMoveBehaviour(MoveBehaviour moveBehaviour) {
+		this.moveBehaviour = moveBehaviour;
+	}
+
+	public int getAttackRate() {
+		return attackRate;
+	}
+
+	public void setAttackRate(int attackRate) {
+		this.attackRate = attackRate;
+	}
+
+	public int getSinceLastAttack() {
+		return sinceLastAttack;
+	}
+
+	public void setSinceLastAttack(int sinceLastAttack) {
+		this.sinceLastAttack = sinceLastAttack;
+	}
+
+	public Attack getAttack() {
+		return attack;
+	}
+
+	public void setAttack(Attack attack) {
+		this.attack = attack;
+	}
+
+	public int getAttackTime() {
+		return attackTime;
+	}
+
+	public void setAttackTime(int attackTime) {
+		this.attackTime = attackTime;
 	}
 }

@@ -48,7 +48,10 @@ public class Editor extends Stage{
 	private HashMap<Enum<?>, Class<?>> classMap;
 	private HashMap<ToolbarSelection, String[]> customButtonMap;
 	
-	private DynamicObject selectedObject;
+	//private DynamicObject selectedObject;
+	private Player selectedPlayerObj;
+	private Enemy selectedEnemyObj;
+	
 	private ToolbarSelection current;
 		
 	//private Stage related;
@@ -175,37 +178,59 @@ public class Editor extends Stage{
 		TextButton editButton = null;
 		TextButton customButton = null;
 		
-		if(s == ToolbarSelection.PLAYER || s == ToolbarSelection.ENEMY) {
+		switch(s) {
+		case PLAYER:
 			editButton = generateButton("Edit");
 			newTable.add(editButton);
 			editButton.addListener(new ClickListener(){
 				@Override
 		        public void clicked(InputEvent event, float x, float y) {
 					
-					if(selectedObject == null) {
+					if(selectedPlayerObj == null) {
 						System.out.println("No object selected!");
 						return;
 					}
 
-					System.out.println("Editing - " + selectedObject);
-					newEdit(selectedObject, skin);
+					System.out.println("Editing - " + selectedPlayerObj);
+					newPlayerEdit(selectedPlayerObj);
 		        }
 			});
-			
-			customButton = generateButton("default");
-			newTable.add(customButton);
-			customButton.addListener(new ClickListener(){
+			break;
+		case ENEMY:
+			editButton = generateButton("Edit");
+			newTable.add(editButton);
+			editButton.addListener(new ClickListener(){
 				@Override
 		        public void clicked(InputEvent event, float x, float y) {
-					try {
-						update(s);
-					} catch (IOException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
+					
+					if(selectedEnemyObj == null) {
+						System.out.println("No object selected!");
+						return;
 					}
+
+					System.out.println("Editing - " + selectedEnemyObj);
+					newEnemyEdit(selectedEnemyObj);
 		        }
 			});
+			break;
+		default:
+			break;
 		}
+		
+		customButton = generateButton("default");
+		newTable.add(customButton);
+		customButton.addListener(new ClickListener(){
+			@Override
+		    public void clicked(InputEvent event, float x, float y) {
+				try {
+					update(s);
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		});
+		newTable.row();
 		
 		// INCASE WE NEED IT LATER
 		/*
@@ -280,13 +305,77 @@ public class Editor extends Stage{
 			break;
 		}
 		*/
-		newTable.row();
+		int i = 0;
 		
+		switch(s) {
+		case PLAYER:
+			for(FileHandle file: files) {
+				final Player player = saver.LoadPlayer(file.name());
+				Image icon = processPath(player.getImgPath());
+			
+				String labels = "Name: " + player.getName() + "\n" + 
+								"Health: " + player.getHp() + "\n" +
+								"Damage: " + player.getContactDamage() + "\n";
+				
+				Label icon_labels = new Label(labels, new Label.LabelStyle(new BitmapFont(), Color.BLACK));
+				
+				newTable.add(icon).size(40, 40);
+				newTable.add(icon_labels).pad(5);
+				
+
+				icon.addListener(new ClickListener(){
+					@Override
+				    public void clicked(InputEvent event, float x, float y) {
+						System.out.println("Selected - " + player.getName());
+						selectedPlayerObj = player;
+						related.setPlayerSelection(player);
+				    }
+				});
+				
+				// Need to format these
+				if (i % 2 == 1 && i != 0) newTable.row();
+				i++;		
+			}	
+			break;
+		case ENEMY:
+			for(FileHandle file: files) {
+				final Enemy enemy = saver.LoadEnemy(file.name());
+				Image icon = processPath(enemy.getImgPath());
+			
+				String labels = "Name: " + enemy.getName() + "\n" + 
+								"Health: " + enemy.getHp() + "\n" +
+								"Damage: " + enemy.getContactDamage() + "\n";
+				
+				Label icon_labels = new Label(labels, new Label.LabelStyle(new BitmapFont(), Color.BLACK));
+				
+				newTable.add(icon).size(40, 40);
+				newTable.add(icon_labels).pad(5);
+				
+
+				icon.addListener(new ClickListener(){
+					@Override
+				    public void clicked(InputEvent event, float x, float y) {
+						System.out.println("Selected - " + enemy.getName());
+						selectedEnemyObj = enemy;
+						related.setEnemySelection(enemy);
+				    }
+				});
+				
+				// Need to format these
+				if (i % 2 == 1 && i != 0) newTable.row();
+				i++;		
+			}	
+			break;
+		default:
+			break;
+		}
+		
+		return newTable;
 		
 		/*
 		 * Load all saved objects into custom table
 		 * And revive attributes
-		 */
+		 
 		int i = 0;
 		for(FileHandle file: files) {
 			ObjectModel model = saver.LoadObj(file.name(), quick_path);
@@ -327,6 +416,7 @@ public class Editor extends Stage{
 			i++;		
 		}	
 		return newTable;
+		*/
 	}
 	
 	
@@ -366,13 +456,13 @@ public class Editor extends Stage{
 				@Override
 		        public void clicked(InputEvent event, float x, float y) {
 					
-					if(selectedObject == null) {
+					if(selectedPlayerObj == null) {
 						System.out.println("No object selected!");
 						return;
 					}
 					
-					System.out.println("Editing - " + selectedObject);
-					newEdit(selectedObject, skin);
+					System.out.println("Editing - " + selectedPlayerObj);
+					newPlayerEdit(selectedPlayerObj);
 		        }
 			});
 
@@ -392,13 +482,13 @@ public class Editor extends Stage{
 				@Override
 		        public void clicked(InputEvent event, float x, float y) {
 					
-					if(selectedObject == null) {
+					if(selectedEnemyObj == null) {
 						System.out.println("No object selected!");
 						return;
 					}
 					
-					System.out.println("Editing - " + selectedObject);
-					newEdit(selectedObject, skin);
+					System.out.println("Editing - " + selectedEnemyObj);
+					newEnemyEdit(selectedEnemyObj);
 		        }
 			});
 			customButton = generateButton("Custom");
@@ -416,7 +506,8 @@ public class Editor extends Stage{
 			fillButton.addListener(new ClickListener(){
 				@Override
 		        public void clicked(InputEvent event, float x, float y) {
-					related.fillGrid();
+					System.out.println("FILL GRID!");
+					//related.fillGrid();
 		        }
 			});
 			newTable.row();
@@ -515,6 +606,7 @@ public class Editor extends Stage{
 						
 						// Right now all attributes initialized as null (Changed through edit)
 						Enemy enemy = new Enemy(filePath);
+						selectedEnemyObj = enemy;
 						related.setEnemySelection(enemy);
 			        }
 				});
@@ -527,6 +619,7 @@ public class Editor extends Stage{
 						
 						// Right now all attributes initialised as null (Changed through edit)
 						Player player = new Player(filePath);
+						selectedPlayerObj = player;
 						related.setPlayerSelection(player);
 			        }
 				});
@@ -572,20 +665,23 @@ public class Editor extends Stage{
 	/*
 	 * Creates a new table pop up
 	 * Displays all attributes
-	 */
-	public void newEdit(DynamicObject obj, Skin skin) {
+	 */	
+	public void newEnemyEdit(final Enemy obj) {
 		Table editTable = new Table();
 		Double hp = obj.getHp();
 		Double dmg = obj.getContactDamage();
 		String name = obj.getName();
-		TextureRegion tr = obj.getTexture();
+		int atk = obj.getAttackRate();
+		Image icon = processPath(obj.getImgPath());
 		
-		editTable.add(new Image(tr));
+		editTable.add(icon);
 		editTable.row();
 		
+		// Add more later
 		final TextField nameField = generateTextField("Name - " + name);
 		final TextField hpField = generateTextField("HP - " + Double.toString(hp));
 		final TextField dmgField = generateTextField("DMG - " + Double.toString(dmg));
+		final TextField atkField = generateTextField("Atk rate - " + Integer.toString(atk));
 		
 		editTable.add(nameField);
 		editTable.row();
@@ -594,6 +690,9 @@ public class Editor extends Stage{
 		editTable.row();
 		
 		editTable.add(dmgField);
+		editTable.row();
+		
+		editTable.add(atkField);
 		editTable.row();
 		
 		TextButton saveButton = generateButton("Save");
@@ -607,8 +706,7 @@ public class Editor extends Stage{
 			@Override
 	        public void clicked(InputEvent event, float x, float y) {
 				try {
-					DynamicObject clone = selectedObject.clone();
-					
+					Enemy clone = obj.clone();
 					
 					// Sanitation check
 					boolean check = true;
@@ -638,13 +736,102 @@ public class Editor extends Stage{
 					clone.setHp(Double.valueOf(hpField.getText()));
 					clone.setContactDamage(Double.valueOf(dmgField.getText()));
 
-					saveObj(clone);
+					saveEnemy(clone);
 				} catch (CloneNotSupportedException e) {
 					System.out.println("Not cloneable");
 					e.printStackTrace();
 				}
-				
+	        }
+		});
+		
+		TextButton closeButton = generateButton("Close");
+		editTable.add(closeButton);
+		editTable.row();
+		closeButton.addListener(new ClickListener(){
+			@Override
+	        public void clicked(InputEvent event, float x, float y) {
+				try {
+					update(current);
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+	        }
+		});
+		display(editTable);
+	}
+	
+	
+	public void newPlayerEdit(final Player obj) {
+		Table editTable = new Table();
+		Double hp = obj.getHp();
+		Double dmg = obj.getContactDamage();
+		String name = obj.getName();
+		Image icon = processPath(obj.getImgPath());
+		
+		editTable.add(icon);
+		editTable.row();
+		
+		// Add more later
+		final TextField nameField = generateTextField("Name - " + name);
+		final TextField hpField = generateTextField("HP - " + Double.toString(hp));
+		final TextField dmgField = generateTextField("DMG - " + Double.toString(dmg));
+		
+		editTable.add(nameField);
+		editTable.row();
+		
+		editTable.add(hpField);
+		editTable.row();
+		
+		editTable.add(dmgField);
+		editTable.row();
+		
+		TextButton saveButton = generateButton("Save");
+		editTable.add(saveButton);
+		editTable.row();
+		
+		
+		// If save gets clicked, clone it with new attributes
+		// before saving
+		saveButton.addListener(new ClickListener(){
+			@Override
+	        public void clicked(InputEvent event, float x, float y) {
+				try {
+					Player clone = obj.clone();
+					
+					// Sanitation check
+					boolean check = true;
+					
+					if(nameField.getText().isEmpty()) {
+						System.out.println("Invalid name field!");
+						check = false;
+					}
+					
+					if(!hpField.getText().matches("[0-9]+")) {
+						System.out.println("Invalid HP value!");
+						check = false;
+					}
+					
+					if(!dmgField.getText().matches("[0-9]+")) {
+						System.out.println("Invalid Damage value!");
+						check = false;
+					}
+					
+					if(!check)
+						return;
+					
+					
+					String s = nameField.getText().replaceAll(" ","_");
+					
+					clone.setName(s);
+					clone.setHp(Double.valueOf(hpField.getText()));
+					clone.setContactDamage(Double.valueOf(dmgField.getText()));
 
+					savePlayer(clone);
+				} catch (CloneNotSupportedException e) {
+					System.out.println("Not cloneable");
+					e.printStackTrace();
+				}
 	        }
 		});
 		
@@ -673,6 +860,13 @@ public class Editor extends Stage{
 	
 	
 	// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ INTERNALS ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+	
+	/*
+	 * String to image
+	 */
+	private Image processPath(String path) {
+		return new Image(new TextureRegion(new Texture(Gdx.files.internal(path))));
+	}
 	
 	/*
 	 * Updates the stage according to toolbar selection
@@ -730,15 +924,28 @@ public class Editor extends Stage{
 	}
 	
 	/*
-	 * Saving Dynamic objects (Custom objects)
+	 * Saving custom player objects
 	 */
-	private void saveObj(DynamicObject obj){
-		
-		ObjectModel model = obj.getModel();
+	private void savePlayer(Player obj){
 		
 		try {
-			saver.Save(model, model.getName());
-			System.out.println("Object - " + obj + " saved!");
+			saver.SavePlayer(obj, obj.getName());
+			System.out.println("Object - " + obj.getName() + " saved!");
+		} catch (IOException e) {
+			System.out.println("I/O Error. Cannot save object");
+			e.printStackTrace();
+		}
+
+	}
+	
+	/*
+	 * Saving custom enemy objects
+	 */
+	private void saveEnemy(Enemy obj){
+		
+		try {
+			saver.SaveEnemy(obj, obj.getName());
+			System.out.println("Object - " + obj.getName() + " saved!");
 		} catch (IOException e) {
 			System.out.println("I/O Error. Cannot save object");
 			e.printStackTrace();

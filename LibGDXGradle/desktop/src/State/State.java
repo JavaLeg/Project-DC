@@ -44,6 +44,7 @@ public class State extends Stage{
 
 	private ArrayList<Tile> tileList;
 	private Player player;
+	private ArrayList<GameObject> staticList;
 	private ArrayList<Enemy> enemyList;
 	private ArrayList<Item> itemList;
 	private ArrayList<Wall> wallList;
