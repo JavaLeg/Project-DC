@@ -28,8 +28,10 @@ import Interface.ObjectModel;
 import Interface.Stages.Selections.ToolbarSelection;
 import State.State;
 import Tileset.DynamicObject;
+import Tileset.Enemy;
 import Tileset.GameObject;
 import Tileset.GameObject.ObjectType;
+import Tileset.Player;
 
 /*
  * Stage for the editor UI (Tools on the left of the screen)
@@ -48,7 +50,7 @@ public class Editor extends Stage{
 	
 	private DynamicObject selectedObject;
 	private ToolbarSelection current;
-	
+		
 	//private Stage related;
 	private State related;
 	private String path;
@@ -72,6 +74,7 @@ public class Editor extends Stage{
 		update(ToolbarSelection.FLOOR);
 	}
 	
+	/*
 	private void formatButtons() {
 		
 		String[] playerList = {"Edit"};
@@ -99,8 +102,8 @@ public class Editor extends Stage{
 				}
 	        }
 		});
-		*/
-	}
+		
+	}*/
 	
 	
 	
@@ -172,6 +175,40 @@ public class Editor extends Stage{
 		TextButton editButton = null;
 		TextButton customButton = null;
 		
+		if(s == ToolbarSelection.PLAYER || s == ToolbarSelection.ENEMY) {
+			editButton = generateButton("Edit");
+			newTable.add(editButton);
+			editButton.addListener(new ClickListener(){
+				@Override
+		        public void clicked(InputEvent event, float x, float y) {
+					
+					if(selectedObject == null) {
+						System.out.println("No object selected!");
+						return;
+					}
+
+					System.out.println("Editing - " + selectedObject);
+					newEdit(selectedObject, skin);
+		        }
+			});
+			
+			customButton = generateButton("default");
+			newTable.add(customButton);
+			customButton.addListener(new ClickListener(){
+				@Override
+		        public void clicked(InputEvent event, float x, float y) {
+					try {
+						update(s);
+					} catch (IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+		        }
+			});
+		}
+		
+		// INCASE WE NEED IT LATER
+		/*
 		switch(s) {
 		case PLAYER:
 			editButton = generateButton("Edit");
@@ -242,6 +279,7 @@ public class Editor extends Stage{
 		default:
 			break;
 		}
+		*/
 		newTable.row();
 		
 		
@@ -443,43 +481,82 @@ public class Editor extends Stage{
 		
 		
 		// DEFAULT TABLE CONTINUES
+		// Editor tab
 		newTable.row();
 		
 		for(FileHandle file: files) {
 
+			
+			// Display Images on the editor tab as Icons
+			// No object correspondence
 			final String fileName = file.name();
+			final String filePath = file.path();
 			String labels = fileName;
-			final Texture texture = new Texture(file);	
+			
 			final ObjectType cur = ObjectType.valueOf(s.toString());
-						
+
 			if(cur == ObjectType.ENEMY || cur == ObjectType.PLAYER)
 				labels = "Health: 1\nDamage: 1\nSpeed: 1";
 
-			final Image icon = new Image(new TextureRegion(texture));
+			// Display the sprite (Information)
+			final Texture texture = new Texture(file);	
+			Image icon = new Image(new TextureRegion(texture));
 			Label icon_name = new Label(labels, new Label.LabelStyle(new BitmapFont(), Color.BLACK));
 			
 			newTable.add(icon).size(40, 40);
 			newTable.add(icon_name).pad(5);
 			
-			if(cur == ObjectType.ENEMY || cur == ObjectType.PLAYER) {
+			switch(cur) {
+			case ENEMY:
 				icon.addListener(new ClickListener(){
 					@Override
 			        public void clicked(InputEvent event, float x, float y) {
 						System.out.println("Selected - " + fileName);
-						DynamicObject d_obj = new DynamicObject(cur, 0, 0, texture);
-						selectedObject = d_obj;
-						related.setSelection(texture, s, d_obj);
+						
+						// Right now all attributes initialized as null (Changed through edit)
+						Enemy enemy = new Enemy(filePath);
+						related.setEnemySelection(enemy);
 			        }
 				});
-			}else {
+				break;
+			case PLAYER:
 				icon.addListener(new ClickListener(){
 					@Override
 			        public void clicked(InputEvent event, float x, float y) {
 						System.out.println("Selected - " + fileName);
-						GameObject obj = new GameObject(cur, new TextureRegion(texture));
-						related.setSelection(texture, s, obj);
+						
+						// Right now all attributes initialised as null (Changed through edit)
+						Player player = new Player(filePath);
+						related.setPlayerSelection(player);
 			        }
 				});
+				break;
+			case FLOOR:
+				icon.addListener(new ClickListener(){
+					@Override
+			        public void clicked(InputEvent event, float x, float y) {
+						System.out.println("Selected - " + fileName);
+						
+						// Right now all attributes initialised as null (Changed through edit)
+						GameObject floor = new GameObject(cur, filePath);
+						related.setStaticSelection(floor);
+			        }
+				});
+				break;
+			case WALL:
+				icon.addListener(new ClickListener(){
+					@Override
+			        public void clicked(InputEvent event, float x, float y) {
+						System.out.println("Selected - " + fileName);
+						
+						// Right now all attributes initialised as null (Changed through edit)
+						GameObject wall = new GameObject(cur, filePath);
+						related.setStaticSelection(wall);
+			        }
+				});
+				break;
+			default:
+				break;
 			}
 			if (i % 2 == 1 && i != 0) newTable.row();
 			

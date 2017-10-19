@@ -17,15 +17,18 @@ public class Tile extends Stack implements Serializable {
 	private static final long serialVersionUID = 1L;
 	private final Coord coordinates; 
 	
+	
+	private GameObject wallObj; // can only have object or d_object
+	private GameObject floorObj;
+	private Player playerObj;
+	private Enemy enemyObj;
+	
 	private Image floor;
-	private GameObject object; // can only have object or d_object
-	private DynamicObject d_object;
+	private Image wall;
+	private Image player;
+	private Image enemy;
 	private Image empty;
-	
-	private TextureRegion floor_texture;
-	private TextureRegion object_texture;
-	
-	
+		
 	//*************************//
 	//******** GENERAL ********//
 	//*************************//
@@ -49,20 +52,29 @@ public class Tile extends Stack implements Serializable {
 	 */
 	public void clear() {
 		this.clearChildren();
-		this.object = null;
-		this.d_object = null;
+		this.floorObj = null;
+		this.wallObj = null;
+		this.playerObj = null;
+		this.enemyObj = null;
+		
+		this.wall = null;
 		this.floor = null;
+		this.player = null;
+		this.enemy = null;
+
 		this.add(empty);
 	}
+	
+
 
 	
 	/*
 	 * Checks if this grid is valid (can't have object on null cell)
 	 */
-	public boolean isValid() {
-		if ((object != null || d_object != null) && floor == null) return false;
-		return true;
-	}
+//	public boolean isValid() {
+//		if ((object != null || d_object != null) && floor == null) return false;
+//		return true;
+//	}
 	
 	
 	public Coord getCoord() {
@@ -74,146 +86,127 @@ public class Tile extends Stack implements Serializable {
 	//********* FLOOR *********//
 	//*************************//
 	
-	public boolean hasFloor (){
-		return this.floor != null;
-	}
-	
-	
-	public void setFloor(TextureRegion txt) {
-		this.clearChildren();
-		floor_texture = txt;
+
 		
-		Image floor_img = new Image(txt);
-		floor = floor_img;
-		this.add(floor);
-		
-		if (this.hasObject()) {
-			this.add(object);
-		}
-	}
 		
 	
-	public void deleteFloor() {
-		this.floor = null;
-		this.clearChildren();
-		this.add(empty);
-		this.add(object);
-	}
-	
-	
-	public String getFloorPath() {
-		if (floor_texture != null) {
-			String k = ((FileTextureData)floor_texture.getTexture().getTextureData()).getFileHandle().path();
-			return k;
-		}
-		return null;
-	}
+
 	
 	
 	//*************************//
 	//******** OBJECT *********//
 	//*************************//
 	
-	public boolean hasObject() {
-		if(this.object != null || this.d_object != null) {
-			return true;
-		}
-		return false;
-	}
+//	public boolean hasObject() {
+//		if(this.object != null || this.d_object != null) {
+//			return true;
+//		}
+//		return false;
+//	}
 	
-	
-	
-	// Setters overwrite current object if any
-	/*
-	 * The general object setter for ITEMS, WALLS, PLAYERS AND ENEMIES
-	 */
-	public void setObject(GameObject new_object) {
-		if(this.d_object != null) {
-			this.d_object = null;
-		}
-		
-		this.clearChildren();
-		object_texture = new_object.getTexture();
-		try {
-			object = new_object.clone();
-		} catch (CloneNotSupportedException e) {
-			e.printStackTrace();
-		}
-		if(this.hasFloor()) {
-			this.add(floor);
-		} else {
-			this.add(empty);
-		}
-		this.add(object);
-	}	
 	
 	
 	/*
 	 * Object setter for dynamic objects (player, enemy)
 	 * Only 1 GameObject should be allowed at once
 	 */
-	public void setDynamicObject(DynamicObject new_d_object) {
-		if(this.object != null) {
-			this.object = null;
-		}
-		
+//	public void setDynamicObject(DynamicObject new_d_object) {
+//		if(this.object != null) {
+//			this.object = null;
+//		}
+//		
+//		this.clearChildren();
+//		object_texture = new_d_object.getTexture();
+//		try {
+//			d_object = (DynamicObject) new_d_object.clone();
+//		} catch (CloneNotSupportedException e) {
+//			e.printStackTrace();
+//		}
+//		if(this.hasFloor()) {
+//			this.add(floor);
+//		} else {
+//			this.add(empty);
+//		}
+//		this.add(d_object);
+//	}
+	
+			
+	public void setFloor(GameObject obj) {
 		this.clearChildren();
-		object_texture = new_d_object.getTexture();
-		try {
-			d_object = (DynamicObject) new_d_object.clone();
-		} catch (CloneNotSupportedException e) {
-			e.printStackTrace();
+		
+		floorObj = obj;
+		floor = processPath(obj.getImgPath());
+		
+		wallObj = null;
+		wall = null;
+		
+		this.add(floor);
+		
+		if(player != null)
+			this.add(player);
+		else if(enemy != null) {
+			this.add(enemy);
 		}
-		if(this.hasFloor()) {
+	}
+	
+	public void setWall(GameObject obj) {
+		this.clear();
+		this.clearChildren();
+			
+		wallObj = obj;
+		wall = processPath(obj.getImgPath());
+		
+		this.add(wall);
+	}
+
+
+
+	public void setEnemy(Enemy obj) {
+		this.clearChildren();
+		
+		enemyObj = obj;
+		enemy = processPath(obj.getImgPath());
+		
+		playerObj = null;
+		player = null;
+		
+		wallObj = null;
+		wall = null;
+		
+		if(floor != null) {
 			this.add(floor);
-		} else {
+		}else{
 			this.add(empty);
 		}
-		this.add(d_object);
+		this.add(enemy);
 	}
-	
-	
-	public ObjectType getObjectType() {
-		if(this.object != null) {
-			return this.object.getType();
-		}
-		if(this.d_object != null) {
-			return this.d_object.getType();
-		}
-		return null;
-	}
-		
-	
-	// Gets object, can return null
-	public GameObject getObject() {
-		if(this.object != null) {
-			return this.object;
-		}
-		if(this.d_object != null) {
-			return (GameObject) this.d_object;
-		}
-		return null;
-	}
-	
-	
-	public void deleteObject() {
-		this.object = null;
-		this.d_object = null;
+
+
+	public void setPlayer(Player obj) {
 		this.clearChildren();
-		if (this.hasFloor()) {
+		
+		playerObj = obj;
+		player = processPath(obj.getImgPath());
+		
+		enemyObj = null;
+		enemy = null;
+		
+		wallObj = null;
+		wall = null;
+		
+		if(floor != null) {
 			this.add(floor);
-		} else {
+		}else{
 			this.add(empty);
 		}
+		this.add(player);
 	}
 	
-	
-	public String getObjectPath() {
-		if (object_texture != null) {
-			String k = ((FileTextureData)object_texture.getTexture().getTextureData()).getFileHandle().path();
-			return k;
-		}
-		return null;
+	/*
+	 * Retrieve texture and returns an image
+	 */
+	private Image processPath(String path) {
+		return new Image(new TextureRegion(new Texture(Gdx.files.internal(path))));
 	}
 
 }

@@ -6,6 +6,7 @@ import java.util.List;
 
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.FileTextureData;
@@ -39,7 +40,7 @@ public class State extends Stage{
 	private GameObject cur_object;
 	private GameObject cur_d_object;
 	//private DynamicObject cur_d_object;
-	private ToolbarSelection selectedToolBar;
+	private ObjectType selection;
 
 	private ArrayList<Tile> tileList;
 	private Player player;
@@ -54,19 +55,19 @@ public class State extends Stage{
 	//************************//
 	
 	// default create an empty State
-		public State(Viewport v){
-			super(v);
-			this.rowActors = DEFAULT_MAP_HEIGHT;
-			this.colActors = DEFAULT_MAP_WIDTH;
-			this.tileList = new ArrayList<Tile>();
-			this.enemyList = new ArrayList<Enemy>();
-			this.wallList = new ArrayList<Wall>();
-			this.itemList = new ArrayList<Item>();
-			initialise();
+	public State(Viewport v){
+		super(v);
+		this.rowActors = DEFAULT_MAP_HEIGHT;
+		this.colActors = DEFAULT_MAP_WIDTH;
+		this.tileList = new ArrayList<Tile>();
+		this.enemyList = new ArrayList<Enemy>();
+		this.wallList = new ArrayList<Wall>();
+		this.itemList = new ArrayList<Item>();
+		initialise();
 			
-			// assumes no player initially
-			this.player = null;
-		}
+		// assumes no player initially
+		this.player = null;
+	}
 
 	private void initialise() {
 		Table gridTable = new Table();
@@ -80,7 +81,7 @@ public class State extends Stage{
 				tile.addListener(new ClickListener(){
 					@Override
 			        public void clicked(InputEvent event, float x, float y) {
-						setTileTexture(tile, selectedToolBar);
+						setTileTexture(tile, selection);
 			        }
 				});
 				gridTable.add(tile).size(40, 40);
@@ -97,26 +98,50 @@ public class State extends Stage{
 	//************************//
 	//******** EDITOR ********//
 	//************************//
-	/*
-	 * GameObject selection
-	 */
-	public void setSelection(Texture t, ToolbarSelection s, GameObject obj) {
-		selected_tr = new TextureRegion(t);
-		selectedToolBar = s;
-		if (s != ToolbarSelection.FLOOR) cur_object = obj;
+	
+	private Enemy enemySelection;
+	private Player playerSelection;
+	private GameObject staticSelection;
+	
+	private boolean hasPlayer = false;
+	
+	public void setEnemySelection(Enemy e) {
+		this.enemySelection = e;		
+		this.selection = ObjectType.ENEMY;
 	}
 	
-	/*
-	 * DynamicObject Selection
-	 */
-	public void setSelection(Texture t, ToolbarSelection s, DynamicObject obj) {
-		selected_tr = new TextureRegion(t);
-		selectedToolBar = s;
-		if (s != ToolbarSelection.FLOOR) cur_d_object = obj;
+	public void setPlayerSelection(Player p) {
+		this.playerSelection = p;
+		this.selection = ObjectType.PLAYER;
 	}
 	
+	public void setStaticSelection(GameObject obj) {
+		this.staticSelection = obj;
+		this.selection = obj.getType();
+	}
 	
 
+	
+//	/*
+//	 * GameObject selection
+//	 */
+//	public void setSelection(Texture t, ToolbarSelection s, GameObject obj) {
+//		selected_tr = new TextureRegion(t);
+//		selectedToolBar = s;
+//		if (s != ToolbarSelection.FLOOR) cur_object = obj;
+//	}
+//	
+//	/*
+//	 * DynamicObject Selection
+//	 */
+//	public void setSelection(Texture t, ToolbarSelection s, DynamicObject obj) {
+//		selected_tr = new TextureRegion(t);
+//		selectedToolBar = s;
+//		if (s != ToolbarSelection.FLOOR) cur_d_object = obj;
+//	}
+	
+	
+	/*
 	// Fill grid with selected floor
 	public void fillGrid() {
 		if(selected_tr == null || selectedToolBar != ToolbarSelection.FLOOR) 
@@ -130,6 +155,7 @@ public class State extends Stage{
 			setTileTexture(tile, ToolbarSelection.FLOOR);
 		}
 	}
+	*/
 	
 	
 	public void clearGrid() {		
@@ -147,50 +173,35 @@ public class State extends Stage{
 	/*
 	 * Setting the tile texture, if it's an object we pass that instead
 	 */
-	private void setTileTexture(Tile tile, ToolbarSelection ts) {
-		if (ts == null) return;
-		switch (ts){
+	private void setTileTexture(Tile tile, ObjectType type) {
+		if (type == null) return;
+		switch (type){
 		case FLOOR:
-			tile.setFloor(selected_tr);
-			break;
-		case ENEMY:
-			cur_d_object.setCoord(tile.getCoord());
-			tile.setObject(cur_d_object);
-			// Overwrite player if same tile as player
-			if (tile.getObjectType() == ObjectType.PLAYER) {
-				this.player = null; 
-			}
-			//this.enemyList.add((Enemy) cur_d_object);
-			break;
-		case ITEM:
-			cur_object.setCoord(tile.getCoord());
-			tile.setObject(cur_object);
-			// Overwrite player if same tile as player
-			if (tile.getObjectType() == ObjectType.PLAYER) {
-				this.player = null; 
-			}
-		//	this.itemList.add((Item) cur_object);
+			staticSelection.setCoord(tile.getCoord());
+			tile.setFloor(staticSelection);
 			break;
 		case WALL:
-			cur_object.setCoord(tile.getCoord());
-			tile.setObject(cur_object);
-			// Overwrite player if same tile as player
-			if (tile.getObjectType() == ObjectType.PLAYER) {
-				this.player = null; 
-			}
-			//this.wallList.add((Wall) cur_object);
+			staticSelection.setCoord(tile.getCoord());
+			tile.setWall(staticSelection);
+			break;
+		case ITEM:
+			// TODO
+			break;
+		case ENEMY:
+			enemySelection.setCoord(tile.getCoord());
+			tile.setEnemy(enemySelection);
 			break;
 		case PLAYER:
-			// If player already exists, move it
-			if(this.hasPlayer()) return;
-			
-			
-			cur_d_object.setCoord(tile.getCoord());
-			tile.setObject(cur_d_object);
-			//this.player = (Player) cur_d_object;
+			if(!hasPlayer) {
+				playerSelection.setCoord(tile.getCoord());
+				tile.setPlayer(playerSelection);
+				hasPlayer = true;
+			}else {
+				// TODO Get player object and relocate it to this tile
+				System.out.println("Player already exists");
+			}
 			break;
 		default:
-			// SAVE, EDIT
 			break;
 		}
 	}
@@ -427,7 +438,6 @@ public class State extends Stage{
 	}
 	
 	
-	/*
 	// String splitting
 	private ObjectType getType(String path) {
 		String[] parts = path.split("/");
@@ -438,31 +448,5 @@ public class State extends Stage{
 		}
 		return null;
 	}
-<<<<<<< HEAD
-	*/
-	
-	// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ FOR CAMERA MOVEMENT ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-	/*
-	 * Movement involves left click followed by dragging motion
-	 * Degree of movement by variable intensity
-	 */
-	/*
-	private int dragX, dragY;
-	private float intensity = 150f;
-	
-	
-	
-	@Override
-	public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-		dragX = screenX;
-		dragY = screenY;
-		return true;
-=======
-	
-	public TableTuple getDim() {
-		TableTuple t = new TableTuple(rowActors, colActors);
-		return t;
->>>>>>> branch 'EditorAttributes' of https://github.com/JavaLeg/Project-DC
-	}
-	*/
+
 }
