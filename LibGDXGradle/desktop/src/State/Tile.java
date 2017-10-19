@@ -18,8 +18,12 @@ public class Tile extends Stack implements Serializable {
 	private final Coord coordinates; 
 	
 	
-	private GameObject wallObj; // can only have object or d_object
+	// Static objects
+	private GameObject wallObj;
 	private GameObject floorObj;
+	private GameObject itemObj;
+	
+	// Dynamic objects
 	private Player playerObj;
 	private Enemy enemyObj;
 	
@@ -27,6 +31,7 @@ public class Tile extends Stack implements Serializable {
 	private Image wall;
 	private Image player;
 	private Image enemy;
+	private Image item;
 	private Image empty;
 		
 	//*************************//
@@ -158,6 +163,29 @@ public class Tile extends Stack implements Serializable {
 		
 		this.add(wall);
 	}
+	
+	public void setItem(GameObject obj) {
+		this.clearChildren();
+		
+		itemObj = obj;
+		item = processPath(obj.getImgPath());
+		
+		enemyObj = null;
+		enemy = null;
+		
+		playerObj = null;
+		player = null;
+		
+		wallObj = null;
+		wall = null;
+		
+		if(floor != null) {
+			this.add(floor);
+		}else{
+			this.add(empty);
+		}
+		this.add(item);
+	}
 
 
 
@@ -169,6 +197,9 @@ public class Tile extends Stack implements Serializable {
 		
 		playerObj = null;
 		player = null;
+		
+		itemObj = null;
+		item = null;
 		
 		wallObj = null;
 		wall = null;
@@ -190,6 +221,9 @@ public class Tile extends Stack implements Serializable {
 		
 		enemyObj = null;
 		enemy = null;
+		
+		itemObj = null;
+		item = null;
 		
 		wallObj = null;
 		wall = null;

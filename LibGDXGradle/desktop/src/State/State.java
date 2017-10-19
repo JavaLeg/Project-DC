@@ -36,9 +36,6 @@ public class State extends Stage{
 	private int rowActors;
 	private int colActors;
 
-	private TextureRegion selected_tr;
-	private GameObject cur_object;
-	private GameObject cur_d_object;
 	//private DynamicObject cur_d_object;
 	private ObjectType selection;
 
@@ -186,7 +183,8 @@ public class State extends Stage{
 			tile.setWall(staticSelection);
 			break;
 		case ITEM:
-			// TODO
+			staticSelection.setCoord(tile.getCoord());
+			tile.setItem(staticSelection);
 			break;
 		case ENEMY:
 			enemySelection.setCoord(tile.getCoord());
@@ -226,7 +224,6 @@ public class State extends Stage{
 				no_err = false;
 			}
 		}	
-		
 		return no_err;
 	}
 	
@@ -391,16 +388,19 @@ public class State extends Stage{
 	public EditorModel getModel() {
 		EditorModel model = new EditorModel(rowActors, colActors);
 		
+		
+		
 		// Conversion should not take place inside the object
-		for(int i = 0; i < tileList.size(); i++) {
-			int row_val = i/colActors;
-			int col_val = i % colActors;
-			
-			Tile tile = tileList.get(i);
-			ObjectType ID = tile.getObjectType();
-			TileTuple t = new TileTuple(tile.getObjectPath(), tile.getFloorPath(), ID);
-			model.setTile(t, row_val, col_val);
-		}
+//		
+//		for(int i = 0; i < tileList.size(); i++) {
+//			int row_val = i/colActors;
+//			int col_val = i % colActors;
+//			
+//			Tile tile = tileList.get(i);
+//			ObjectType ID = tile.getObjectType();
+//			TileTuple t = new TileTuple(tile.getObjectPath(), tile.getFloorPath(), ID);
+//			model.setTile(t, row_val, col_val);
+//		}
 		return model;
 	}
 	
@@ -409,30 +409,30 @@ public class State extends Stage{
 	 * Regenerate the textures from string paths
 	 * Place back onto grid via direct calls instead of click listeners
 	 */
-	public void restoreModel(EditorModel m) {
-		TileTuple[][] map = m.getmodelPaths();
-		
-		for(int i = 0; i < rowActors; i++) {
-			for(int j = 0; j < colActors; j++) {
-				int index = colActors*i + j;
-				
-				TileTuple t_tuple = map[i][j];
-				Tile tile = tileList.get(index);
-
-				// Set terrain
-				if(t_tuple.getFloor() != null)
-					tile.setFloor(new TextureRegion(new Texture(Gdx.files.internal(t_tuple.getFloor()))));
-				
-				
-				// Set object
-				if(t_tuple.getObject() != null) {
-					TextureRegion cur_texture = new TextureRegion(new Texture(Gdx.files.internal(t_tuple.getObject())));
-					GameObject new_obj = new GameObject(t_tuple.getID(), cur_texture);
-					tile.setObject(new_obj);
-				}
-			}
-		}
-	}
+//	public void restoreModel(EditorModel m) {
+//		TileTuple[][] map = m.getmodelPaths();
+//		
+//		for(int i = 0; i < rowActors; i++) {
+//			for(int j = 0; j < colActors; j++) {
+//				int index = colActors*i + j;
+//				
+//				TileTuple t_tuple = map[i][j];
+//				Tile tile = tileList.get(index);
+//
+//				// Set terrain
+//				if(t_tuple.getFloor() != null)
+//					tile.setFloor(new TextureRegion(new Texture(Gdx.files.internal(t_tuple.getFloor()))));
+//				
+//				
+//				// Set object
+//				if(t_tuple.getObject() != null) {
+//					TextureRegion cur_texture = new TextureRegion(new Texture(Gdx.files.internal(t_tuple.getObject())));
+//					GameObject new_obj = new GameObject(t_tuple.getID(), cur_texture);
+//					tile.setObject(new_obj);
+//				}
+//			}
+//		}
+//	}
 
 	public TableTuple getDim() {
 		return new TableTuple(rowActors, colActors);

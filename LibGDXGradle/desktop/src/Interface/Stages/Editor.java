@@ -648,6 +648,18 @@ public class Editor extends Stage{
 			        }
 				});
 				break;
+			case ITEM:
+				icon.addListener(new ClickListener(){
+					@Override
+			        public void clicked(InputEvent event, float x, float y) {
+						System.out.println("Selected - " + fileName);
+						
+						// Right now all attributes initialised as null (Changed through edit)
+						GameObject item = new GameObject(cur, filePath);
+						related.setStaticSelection(item);
+			        }
+				});
+				break;
 			default:
 				break;
 			}
