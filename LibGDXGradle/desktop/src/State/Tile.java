@@ -66,6 +66,7 @@ public class Tile extends Stack{
 		
 		this.wall = null;
 		this.floor = null;
+
 		this.player = null;
 		this.enemy = null;
 
@@ -96,7 +97,22 @@ public class Tile extends Stack{
 
 		
 		
+	public void deleteFloor() {
+		this.floor = null;
+		this.floor_texture = null;
+		this.clearChildren();
+		this.add(empty);
+		this.add(object);
+	}
 	
+	
+	public String getFloorPath() {
+		if (floor_texture != null) {
+			String k = ((FileTextureData)floor_texture.getTexture().getTextureData()).getFileHandle().path();
+			return k;
+		}
+		return null;
+	}
 
 	
 	
@@ -111,6 +127,34 @@ public class Tile extends Stack{
 //		return false;
 //	}
 	
+	
+
+	// Overwrites current object if any
+
+	// Setters overwrite current object if any
+	/*
+	 * The general object setter for ITEMS, WALLS, PLAYERS AND ENEMIES
+	 */
+
+	public void setObject(GameObject new_object) {
+		if(this.d_object != null) {
+			this.d_object = null;
+		}
+		
+		this.clearChildren();
+		this.object_texture = new_object.getTexture();
+		try {
+			object = new_object.clone();
+		} catch (CloneNotSupportedException e) {
+			e.printStackTrace();
+		}
+		if(this.hasFloor()) {
+			this.add(floor);
+		} else {
+			this.add(empty);
+		}
+		this.add(object);
+	}	
 	
 	
 	/*
@@ -263,6 +307,7 @@ public class Tile extends Stack{
 		this.updateTile();
 	}
 	
+
 	/* 
 	 * After deletion, update the textures of the tile
 	 */
