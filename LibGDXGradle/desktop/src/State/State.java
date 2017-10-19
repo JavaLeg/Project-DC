@@ -442,7 +442,9 @@ public class State extends Stage {
 	 */
 	public boolean isValid(Coord next) {
 		// TODO Auto-generated method stub
-		return (next.getX() >= 0 && next.getX() < colActors) && (next.getY() >= 0 && next.getY() < rowActors);
+		return (next.getX() >= 0 && next.getX() < colActors) &&
+				(next.getY() >= 0 && next.getY() < rowActors) &&
+				(this.getObject(next) == null);
 	}
 		
 	public TableTuple getDim() {

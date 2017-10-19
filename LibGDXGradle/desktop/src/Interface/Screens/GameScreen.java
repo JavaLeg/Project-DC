@@ -23,6 +23,7 @@ import State.DynamicGame;
 import State.RunGame;
 import State.State;
 import State.Action;
+import State.Coord;
 
 public class GameScreen implements Screen {
 
@@ -32,7 +33,8 @@ public class GameScreen implements Screen {
 	private State previewStage;
 	private DynamicGame g;
 	private GameInputProcessor inputProcessor;
-    
+    private float lerp;
+	
 	public GameScreen(DCGame g) {
 		this.game = g;
 	}
@@ -44,16 +46,17 @@ public class GameScreen implements Screen {
 		int height = Gdx.graphics.getHeight();
 		int width = Gdx.graphics.getWidth();
 		
-		//Camera gameCamera = new OrthographicCamera();
-		Viewport gameViewport = new FitViewport(width, height);
+		lerp = 0.1f;
+		camera = new OrthographicCamera();
+		Viewport gameViewport = new FitViewport(width, height, camera);
 		
         previewStage = new State(gameViewport);
-		
-        
+
         g = new DynamicGame();
 		inputProcessor = new GameInputProcessor(g);
 		g.initialise(previewStage, inputProcessor); // input player created state here
 		Gdx.input.setInputProcessor(inputProcessor);
+		
 		gameThread = new RunGame(g, 30);
 		gameThread.run();
 	}
@@ -63,9 +66,18 @@ public class GameScreen implements Screen {
 		Gdx.gl.glClearColor(1, 1, 1, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         
-        // Draw both stage right and stage left
-        // If window resize (update TODO)
-
+        Coord centre = g.getState().getPlayer().getCoord();
+        
+        // Lerp the camera so it looks smooth, so smooth, what a feature
+        if (centre != null && camera != null) {
+        	Vector3 position = camera.position;
+        	// Can change the variable 0.4 (faster means faster camera flicks)
+        	position.x += (centre.getX() * 40 - position.x) * lerp * 0.4;
+        	position.y += (centre.getY() * 40 - position.y) * lerp * 0.4;
+	        camera.position.set(position.x, position.y, 0);
+	        camera.update();
+        }
+        
         g.getState().act();
         g.getState().draw();
         
