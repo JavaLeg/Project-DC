@@ -21,10 +21,12 @@ import com.badlogic.gdx.utils.Json;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
 import Interface.Stages.Selections.ToolbarSelection;
+import State.State;
 
 public class Toolbar extends Stage{
 	private Skin skin;
 	private Editor related;
+
 	private TableTuple toolbarPos;
 	private final int PAD = 5;
 
@@ -70,13 +72,7 @@ public class Toolbar extends Stage{
 		TextButton button = new TextButton(s, skin);
 		return button;
 	}
-	
-	/*
-	public void setDependence(Stage s) {
-		this.related = s;
-	}
-	*/
-	
+		
 	public void setDependence(Editor s) {
 		this.related = s;
 	}

@@ -5,6 +5,7 @@ import com.badlogic.gdx.InputProcessor;
 import Interface.GameInputProcessor;
 import Tileset.DynamicObject;
 import Tileset.GameObject;
+import Tileset.GameObject.ObjectType;
 
 //temporary class for Game, 
 // showing interface necessary for higher level input and step processing
@@ -41,6 +42,12 @@ public class DynamicGame {
 			o.step(activeState);
 		}
 		input.step();
+		
+		
+		/*
+		 * 
+		 * 
+		 */
 		
 		// Conflict Resolution
 		

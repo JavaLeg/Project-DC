@@ -1,17 +1,16 @@
 package State;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.FileTextureData;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
-import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.viewport.Viewport;
@@ -20,126 +19,106 @@ import Tileset.*;
 import Tileset.GameObject.ObjectType;
 import Interface.EditorModel;
 import Interface.TileTuple;
-import Interface.Stages.Editor;
 import Interface.Stages.TableTuple;
 import Interface.Stages.Selections.ToolbarSelection;
 
 
 public class State extends Stage{
 	
-	private static final long serialVersionUID = 1L;
-	private static final int DEFAULT_MAP_WIDTH = 50; // 50 tiles 
+	private static final int DEFAULT_MAP_WIDTH = 50; 
 	private static final int DEFAULT_MAP_HEIGHT = 50;
 	
-	// Coords of player
-	private Coord playerCoord;
-
+	
 	private int rowActors;
 	private int colActors;
-	private Stage related;
 
-	private boolean has_player = false;			// Is this the appropriate place
 	private TextureRegion selected_tr;
 	private GameObject cur_object;
-	
+	private DynamicObject cur_d_object;
+	//private DynamicObject cur_d_object;
+	private ToolbarSelection selectedToolBar;
+
 	private ArrayList<Tile> tileList;
+	private DynamicObject player;
+	private ArrayList<DynamicObject> enemyList;
+	private ArrayList<GameObject> itemList;
+	private ArrayList<GameObject> wallList;
 	
-	// Should rename it soon, Image Stack can hold more than one "layer" of object objects.
-	private ToolbarSelection selectedLayer;
-	
-	// private List<List<Tile>> map;
-	// The outer index is x, the inner index is y
-	// private int mapWidth;
-	// private int mapHeight;
 	
 	
 	//************************//
-	//******* CREATORS *******//
+	//****** CONSTRUCTOR *****//
 	//************************//
 	
 	// default create an empty State
-	public State(Viewport v){
-		super(v);
-		this.rowActors = DEFAULT_MAP_HEIGHT;
-		this.colActors = DEFAULT_MAP_WIDTH;
-		this.tileList = new ArrayList<Tile>();
-		initialise();
-		
-		// assumes no player initially
-		this.playerCoord = null;
-		
-		// this.map = new ArrayList<List<Tile>>();
-		
-		// for(int i = 0; i < DEFAULT_MAP_WIDTH; i++) {
-		// 	this.map.add(new ArrayList<Tile>());
-		// 	for(int j = 0; j < DEFAULT_MAP_HEIGHT; j++) {
-		// 		Coordinates tempCoord = new Coordinates(i,j);
-		// 		this.map.get(i).add(new Tile(tempCoord));
-		// 	}
-		// }
-		
-		// this.mapWidth = DEFAULT_MAP_WIDTH;
-		// this.mapHeight = DEFAULT_MAP_HEIGHT;
-	}
-
-	//************************//
-	//***** INITIALISE *******//
-	//************************//
+		public State(Viewport v){
+			super(v);
+			this.rowActors = DEFAULT_MAP_HEIGHT;
+			this.colActors = DEFAULT_MAP_WIDTH;
+			this.tileList = new ArrayList<Tile>();
+			this.enemyList = new ArrayList<DynamicObject>();
+			this.wallList = new ArrayList<GameObject>();
+			this.itemList = new ArrayList<GameObject>();
+			initialise();
+			
+			// assumes no player initially
+			this.player = null;
+		}
 
 	private void initialise() {
 		Table gridTable = new Table();
-		//ImageStack[] tiles = new ImageStack[rowActors * colActors];
 		
 		for(int i = 0; i < rowActors; i++) {
 			for(int j = 0; j < colActors; j++) {
-				//System.out.println("x: " + i + " y: " + j);
 								
-				final Tile tile = new Tile();
+				final Tile tile = new Tile(new Coord(i,j));
 				tileList.add(tile);
 				
 				tile.addListener(new ClickListener(){
 					@Override
 			        public void clicked(InputEvent event, float x, float y) {
-						// Allow for only one player per map (multiplayer possibly later)
-						setTileTexture(tile, selectedLayer);
+						setTileTexture(tile, selectedToolBar);
 			        }
 				});
 				gridTable.add(tile).size(40, 40);
 			}
 			gridTable.row();
 		}
-		//gridTable.setPosition(tablePos.getX(), tablePos.getY());
 		gridTable.top();
 		gridTable.setFillParent(true);
 		super.addActor(gridTable);
 	}
 	
-	/* 
-	 * Called by Editor.java when attempting to edit an enemy
-	 * or player attribute
+	
+	
+	//************************//
+	//******** EDITOR ********//
+	//************************//
+	
+	
+	/*
+	 * DynamicObject Selection
 	 */
-	public void isEditable() {
-		System.out.println(selectedLayer);
-	}
-
-	public void setDependence(Stage s) {
-		this.related = s;
-	}
-	
-	public void setDependence(Editor s) {
-		this.related = s;
-	}
-	
-	public void setSelection(Texture t, ToolbarSelection s, GameObject icon) {
-		// TODO Auto-generated method stub
+	public void setSelection(Texture t, ToolbarSelection s, DynamicObject obj) {
 		selected_tr = new TextureRegion(t);
-		selectedLayer = s;
-		if (s != ToolbarSelection.FLOOR) cur_object = icon;
+		selectedToolBar = s;
+		if (s != ToolbarSelection.FLOOR) cur_d_object = obj;
 	}
 	
+	
+	/*
+	 * GameObject selection
+	 */
+	public void setSelection(Texture t, ToolbarSelection s, GameObject obj) {
+		selected_tr = new TextureRegion(t);
+		selectedToolBar = s;
+		if (s != ToolbarSelection.FLOOR) cur_object = obj;
+	}
+	
+	
+	// Fill grid with selected floor
 	public void fillGrid() {
-		
-		if(selected_tr == null || selectedLayer != ToolbarSelection.FLOOR) 
+		if(selected_tr == null || selectedToolBar != ToolbarSelection.FLOOR) 
 			return;
 		
 		Texture texture = selected_tr.getTexture();
@@ -147,48 +126,54 @@ public class State extends Stage{
 		System.out.println("Fill grid with : " + path);
 		
 		for(Tile tile : tileList) {
-			// setTileTexture(tile, selectedLayer);
 			setTileTexture(tile, ToolbarSelection.FLOOR);
 		}
 	}
 	
+	
 	public void clearGrid() {		
-		has_player = false;
+		this.player = null;
 		for(Tile tile : tileList) {
 			tile.clear();
 		}
+		this.tileList.clear();
+		this.enemyList.clear();
+		this.wallList.clear();
+		this.itemList.clear();
 	}
+	
 	
 	/*
 	 * Setting the tile texture, if it's an object we pass that instead
 	 */
 	private void setTileTexture(Tile tile, ToolbarSelection ts) {
+		// If tile already has an object, remove it and return
+		if(tile.hasObject() && ts != ToolbarSelection.FLOOR) {
+			this.deleteObject(tile.getCoord());
+			return;
+		}
+		
+		// No texture selected
 		if (ts == null) return;
+		
 		switch (ts){
 		case FLOOR:
 			tile.setFloor(selected_tr);
 			break;
+		case PLAYER:
 		case ENEMY:
-			if (tile.getObjectType() == ObjectType.PLAYER) this.has_player = false;			// Overwrite player
-			tile.setObject(cur_object);
+			setObject(cur_d_object, tile.getCoord());
 			break;
 		case ITEM:
-			if (tile.getObjectType() == ObjectType.ITEM) this.has_player = false;
-			tile.setObject(cur_object);
-			break;	
 		case WALL:
-			if (tile.getObjectType() == ObjectType.PLAYER) this.has_player = false;			// Overwrite player
-			tile.setObject(cur_object);														// TODO
+			setObject(cur_object, tile.getCoord());
 			break;
-		case PLAYER:
-			if (has_player == true) return;			// Don't add multiple players
-			has_player = true;
-			tile.setObject(cur_object);
-			break;
-		case SAVE:
+		default:
+			// SAVE, EDIT
 			break;
 		}
 	}
+
 
 	/*
 	 * Check the map is valid before saving (e.g, at least one player)
@@ -197,7 +182,7 @@ public class State extends Stage{
 	public boolean checkValidMap() {
 		boolean no_err = true;
 		
-		if (has_player == false) {
+		if (!this.hasPlayer()) {
 			System.out.println("No player present, insert Player to fix");
 			no_err = false;
 		}
@@ -212,57 +197,110 @@ public class State extends Stage{
 		return no_err;
 	}
 	
-	//************************//
-	//******* GENERAL ********//
-	//************************//
-
 	
-	// TODO: get object from coord that is dynamic if able
+	/* 
+	 * Called by Editor.java when attempting to edit an enemy
+	 * or player attribute
+	 */
+	public void isEditable() {
+		System.out.println(selectedToolBar);
+	}
 	
+	
+		
+	//************************//
+	//******** OBJECT ********//
+	//************************//
 	
 	public GameObject getObject(Coord coord) {
-		return this.tileList.get(coord.getX()  + coord.getY() * colActors).getObject();
+		return this.tileList.get(coord.getX()* colActors  + coord.getY() ).getObject();
 	}
 	
 	public DynamicObject getDynamicObject(Coord coord) {
-		GameObject g = getObject(coord);
-		if (g.isDynamic()) {
-			return (DynamicObject) g;
+		GameObject o = getObject(coord);
+		if (o.isDynamic()) {
+			return (DynamicObject) o;
 		} else {
 			return null;
 		}
 	}
-
 	
-	/*
+	
 	public void setObject(GameObject newObject, Coord coord) {
-		this.tileList.get(coord.getX()  + coord.getY() * colActors).setObject(newObject);
+		ObjectType type = newObject.getType();
+		
+		switch(type) {
+		case PLAYER:
+			deletePlayer();
+			this.player = (DynamicObject) newObject;
+			break;
+		case ENEMY:
+			enemyList.add((DynamicObject) newObject);
+			break;
+		case ITEM:
+			itemList.add(newObject);
+			break;
+		case WALL:
+			wallList.add(newObject);
+			break;
+		default:
+			return;
+		}
+		
+		newObject.setCoord(coord);
+		this.tileList.get(coord.getX()* colActors  + coord.getY() ).setObject(newObject);
 	}
-	*/
+	
 	
 	public void deleteObject(Coord coord) {
-		this.tileList.get(coord.getX()  + coord.getY() * colActors).deleteObject();
+		ObjectType type = this.tileList.get(coord.getX()* colActors  + coord.getY() ).getObjectType();
+		switch(type) {
+		case PLAYER:
+			this.player = null;
+			break;
+		case ENEMY:
+			Iterator<DynamicObject> iterE = enemyList.iterator();
+			while(iterE.hasNext()) {
+				DynamicObject obj = iterE.next();
+				if(obj.getCoord() == coord) iterE.remove();
+			}
+			break;
+		case ITEM:
+			Iterator<GameObject> iterI = itemList.iterator();
+			while(iterI.hasNext()) {
+				GameObject obj = iterI.next();
+				if(obj.getCoord() == coord) iterI.remove();
+			}
+			break;
+		case WALL:
+			Iterator<GameObject> iterW = wallList.iterator();
+			while(iterW.hasNext()) {
+				GameObject obj = iterW.next();
+				if(obj.getCoord() == coord) iterW.remove();
+			}
+			break;
+		default:
+			break;
+		}
+		
+		this.tileList.get(coord.getX()* colActors  + coord.getY()).deleteObject();
 	}
 	
-	/*
-	 * Moves object, will overrite any object moving too
-	 */ 
+	
 	public void moveObject(Coord from, Coord to) {
-		GameObject toMove = getObject(from);
-		deleteObject(from);
-		getTile(to).setObject(toMove);
-		toMove.setCoord(to);
+		GameObject temp = this.getObject(from);
+		this.deleteObject(from);
+		this.setObject(temp, to);
 	}
 	
 	
-	/*
 	public void swapObject(Coord from, Coord to) {
-		GameObject fromObject = getObject(from);
-		GameObject toObject = getObject(to);
-		setObject(fromObject, to);
-		setObject(toObject, from);
+		GameObject fromObject = this.getObject(from);
+		GameObject toObject = this.getObject(to);
+		this.setObject(fromObject, to);
+		this.setObject(toObject, from);
 	}
-	*/
+	
 	
 	public List<GameObject> getAllObjects() {
 		List<GameObject> ret = new LinkedList<GameObject>();
@@ -271,6 +309,7 @@ public class State extends Stage{
 		}
 		return ret;
 	}
+	
 	
 	public List<DynamicObject> getAllDynamicObjects() {
 		List<DynamicObject> ret = new LinkedList<DynamicObject>();
@@ -287,49 +326,41 @@ public class State extends Stage{
 	//******* PLAYER *********//
 	//************************//
 	
+	public boolean hasPlayer() {
+		return this.player != null;
+	}
+	
+	
 	// Return coord of player
 	public Coord findPlayer(){
-		return this.playerCoord;
+		return this.player.getCoord();
 	}
 	
 	// Get player object
 	public Player getPlayer(){
-		if (playerCoord == null) return null;
-		return (Player) getObject(playerCoord);
+		return (Player) this.player;
 	}
 	
-	// Remove player from current coords and set player coords to -1,-1
-	// Returns false if player is already deleted/not on the map
+	
 	public void deletePlayer(){
-		deleteObject(playerCoord);
-		// change to null
-		playerCoord = null;
+		if(this.player == null) return;
+		this.deleteObject(player.getCoord());
+		this.player = null;
 	}
 	
-	// Moves player to different tile
-	// Returns false if player is already on that Tile
 	
-	/* CURRENTLY REDUNDANT but spawns errors
-	 * 
-	public void setPlayer(Coord to){
-		Player currPlayer = this.getPlayer();
+	public void movePlayer(Coord to) {
+		Player temp = this.getPlayer();
 		this.deletePlayer();
-		setObject(currPlayer, to);
-	}
-	*/
-	
-	// Same as setPlayer, redundant 
-	public void movePlayer(Coord to){
-		moveObject(playerCoord, to);
-		playerCoord = to.clone();
-	}
+		this.setObject(temp, to);
+	}	
 	
 	
 	
 	//************************//
 	//******* TERRAIN ********//
 	//************************//
-
+	
 	public boolean hasWall(Coord pos) {
 		GameObject g = getTile(pos).getObject();
 		return (g != null) && (g.getType() == ObjectType.WALL);
@@ -340,18 +371,20 @@ public class State extends Stage{
 	}
 	
 	
-	
 	//************************//
 	//******** TILES *********//
 	//************************//
 	
 	public Tile getTile(Coord coord) {
-		return this.tileList.get(coord.getX()  + coord.getY() * colActors); 
+		return this.tileList.get(coord.getX()* colActors  + coord.getY() ); 
 	}
-
+	
+	
+	// Deletes floor and object, replaces with empty tile texture
 	public void clearTile(Coord coord) {
-		deleteObject(coord);
+		this.tileList.get(coord.getX()* colActors  + coord.getY() ).clear(); 
 	}
+	
 	
 	public int getMapWidth() {
 		return colActors;
@@ -360,6 +393,13 @@ public class State extends Stage{
 	public int getMapHeight() {
 		return rowActors;
 	}
+	
+	
+	
+	//************************//
+	//******** OTHER *********//
+	//************************//
+	
 
 	public EditorModel getModel() {
 		EditorModel model = new EditorModel(rowActors, colActors);
@@ -371,7 +411,7 @@ public class State extends Stage{
 			
 			Tile tile = tileList.get(i);
 			ObjectType ID = tile.getObjectType();
-			TileTuple t = new TileTuple(tile.getObjectPath(), tile.getTerrainPath(), ID);
+			TileTuple t = new TileTuple(tile.getObjectPath(), tile.getFloorPath(), ID);
 			model.setTile(t, row_val, col_val);
 		}
 		return model;
@@ -406,10 +446,14 @@ public class State extends Stage{
 			}
 		}
 	}
+
+	public TableTuple getDim() {
+		return new TableTuple(rowActors, colActors);
+	}
+	
 	
 	/*
-	 * String splitting
-	 */
+	// String splitting
 	private ObjectType getType(String path) {
 		String[] parts = path.split("/");
 		
@@ -419,7 +463,8 @@ public class State extends Stage{
 		}
 		return null;
 	}
-	
+<<<<<<< HEAD
+	*/
 	
 	// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ FOR CAMERA MOVEMENT ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 	/*
@@ -437,19 +482,12 @@ public class State extends Stage{
 		dragX = screenX;
 		dragY = screenY;
 		return true;
-	}
-
-
-	@Override
-	public boolean touchDragged(int screenX, int screenY, int pointer) {
-	    float dX = (float)(dragX - screenX)/(float)Gdx.graphics.getWidth();
-	    float dY = (float)(screenY - dragY)/(float)Gdx.graphics.getHeight();
-	    dragX = screenX;
-	    dragY = screenY;
-	    
-	    this.getCamera().position.add(dX * intensity, dY * intensity, 0f);
-	    this.getCamera().update();
-	    return true;
+=======
+	
+	public TableTuple getDim() {
+		TableTuple t = new TableTuple(rowActors, colActors);
+		return t;
+>>>>>>> branch 'EditorAttributes' of https://github.com/JavaLeg/Project-DC
 	}
 	*/
 }

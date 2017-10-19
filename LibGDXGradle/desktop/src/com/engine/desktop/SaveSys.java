@@ -1,6 +1,9 @@
 package com.engine.desktop;
 
 import State.State;
+import Tileset.DynamicObject;
+import Tileset.DynamicObject.DynamicObjectType;
+
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -14,14 +17,18 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 
 import Interface.EditorModel;
+import Interface.ObjectModel;
 
 
 /*
- * Save System (Can work for game state + game object models)
+ * Save System
+ * Used for editor model
+ * Used for gameObjects
  */
 
 public class SaveSys{
 	private String dirPath;
+	private String objPath;
 	
 	/*
 	 * Construct directory path and directory for saving/loading
@@ -30,6 +37,7 @@ public class SaveSys{
 		        
         Path currentRelativePath = Paths.get("");
         dirPath = currentRelativePath.toAbsolutePath().toString() + "/Library";
+        objPath = currentRelativePath.toAbsolutePath().toString() + "/SpriteFamily";
 
         File dir = new File(dirPath);
 		
@@ -65,6 +73,31 @@ public class SaveSys{
         ObjectInputStream is = new ObjectInputStream(in);        
         return (EditorModel)is.readObject();
     }
+    
+    /*
+     * Save object Model
+     */
+    public void Save(ObjectModel s, String fileName) throws IOException{
+    	String dir = "/" + s.getID().toString().toLowerCase() + "_custom/";
+    	FileOutputStream fos = new FileOutputStream(new File(objPath + dir + fileName));
+    	ByteArrayOutputStream out = new ByteArrayOutputStream();
+        ObjectOutputStream os = new ObjectOutputStream(out);
+        os.writeObject(s);
+        out.writeTo(fos);
+    }
+    
+	/*
+	 * byte[] -> Object
+	 */
+    public ObjectModel LoadObj(String fileName, String q_path) throws IOException, ClassNotFoundException {
+    	
+    	Path path = Paths.get(q_path + fileName); 	
+    	byte[] data = Files.readAllBytes(path);
+        ByteArrayInputStream in = new ByteArrayInputStream(data);
+        ObjectInputStream is = new ObjectInputStream(in);        
+        return (ObjectModel)is.readObject();
+    }
+    
     
     public File[] getLibrary(){
 		File directory = new File(dirPath);

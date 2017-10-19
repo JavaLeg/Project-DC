@@ -37,7 +37,6 @@ public class Attack {
 				g.damage(damage);
 			}
 		}
-		
 	}
 
 	

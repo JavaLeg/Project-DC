@@ -17,6 +17,10 @@ public class Player extends DynamicObject {
 	
 	private int attackCooldown;
 	
+	public Player(double hp, double damage, Texture texture) {
+		// type, width, height, coords, hp, damage
+		super(ObjectType.PLAYER, hp, damage, texture);
+	}
 	
 	public Player(Coord position, double hp, double damage, Attack light, Attack special, Texture texture) {
 		// type, width, height, coords, hp, damage
