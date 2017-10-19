@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.Texture;
 import State.Coord;
 import State.State;
 import Tileset.Behaviour.Attack;
+import Tileset.Behaviour.Direction;
 import Tileset.Behaviour.MoveBehaviour;
 
 public class Enemy extends DynamicObject {
@@ -15,20 +16,18 @@ public class Enemy extends DynamicObject {
 	
 	// currently only supports one type of attack
 	// Change to HASHMAP<Attack, int> 
-	private int attackRate;
-	private int sinceLastAttack;
 	private int attackTime;
+	private int sinceLastAttack;
+	private int attackCooldown;
+	private Direction facing;
 	private Attack attack; 
-
-	//
 	
 	
 	public Enemy(Coord position, double hp, double damage, int moveRate, MoveBehaviour b, Attack attack, Texture texture) {
 		super(ObjectType.ENEMY, position,  hp, damage, texture);
 		this.moveRate = moveRate;
 		this.sinceLastMove = 0;
-		this.attackRate = attack.getAttackSpeed();
-		this.attackTime = attack.getAttackSpeed();
+		this.attackTime = 0;
 		this.sinceLastAttack = 0;
 		this.moveBehaviour = b;
 		this.attack = attack;
@@ -50,25 +49,45 @@ public class Enemy extends DynamicObject {
 	public void step(State s) {
 		super.step(s);
 		
-		// movement behavior
-		if (sinceLastMove >= moveRate && moveBehaviour != null) {
-			// move one step
-			Coord next = null;
-			next = moveBehaviour.nextStep(s, this.getCoord());
-			if (s.findPlayer().equals(next)) {
-				s.getPlayer().damage(this.getContactDamage()); // contact damage
+		switch (getActionState()) {
+		case ATTACK:
+			attack.applyAttack(s, getCoord(), facing);
+			if (attackTime > 0) {
+				attackTime--;
 			} else {
-				this.setCoord(next);
+				setActionState(ActionState.MOVE);
 			}
-			this.setLastMove(0);
-		} else {
-			sinceLastMove++;
+			break;
+		case DISABLED:
+			break;
+		case MOVE:
+			// movement behavior
+			if (sinceLastMove >= moveRate && moveBehaviour != null) {
+				// move one step
+				Coord next = null;
+				next = moveBehaviour.nextStep(s, this.getCoord());
+				if (s.findPlayer().equals(next)) { // may never happen how movement currently is handled
+					s.getPlayer().damage(this.getContactDamage()); // contact damage
+				} else {
+					s.moveObject(getCoord(), next);
+				}
+				this.setLastMove(0);
+			} else {
+				sinceLastMove++;
+			}
+			break;
+		default:
+			break;
+		
 		}
 		
 		
+		
+		
 		// attack behaviour
-		if (sinceLastAttack >= attackRate && attack != null) {
-			//attack.applyAttack(s, getCoord());
+		if (sinceLastAttack >= attack.getAttackCooldown() && attack != null) {
+			setActionState(ActionState.ATTACK);
+			attackTime = attack.getAttackSpeed();
 		} else {
 			sinceLastAttack++;
 		}

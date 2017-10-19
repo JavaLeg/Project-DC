@@ -11,7 +11,7 @@ import Tileset.GameObject.ObjectType;
 
 public class Attack {
 	private int damage;
-	private List<Coord> hitbox;
+	private List<Coord> hitbox; // treats default facing as NORTH
 	private List<ObjectType> targets;
 	private int speed;
 	private int cooldown;
@@ -30,6 +30,7 @@ public class Attack {
 	
 	public void applyAttack(State s, Coord origin, Direction facing) {
 		// grabs valid objects from State and damages all
+		// TODO: rotate with facing
 		for (Coord c : applyHitBox(origin)) {
 			DynamicObject g = s.getDynamicObject(c);
 			if (g != null && targets.contains(g.getType())) {

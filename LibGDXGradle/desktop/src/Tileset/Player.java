@@ -23,8 +23,7 @@ public class Player extends DynamicObject {
 		super(ObjectType.PLAYER, position, hp, damage, texture);
 		this.light = light;
 		this.special = special;
-		
-		this.selected = light;
+		this.selected = light; 
 	}
 	
 	@Override
@@ -43,10 +42,7 @@ public class Player extends DynamicObject {
 			break;
 		case MOVE:
 			break;
-		
 		}
-		
-		
 	}
 	
 	public void selectSpecial() {
