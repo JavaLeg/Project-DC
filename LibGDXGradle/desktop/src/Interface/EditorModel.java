@@ -27,24 +27,15 @@ public class EditorModel implements Serializable {
 		return encodedTable;
 	}
 	
-	/*
-	 * For debugging purposes
-	 * 1 - floor
-	 * 2 - object
-	 */
-//	public void display(int layer) {
-//		for(int i = 0; i < row; i++) {
-//			System.out.print("Row: " + i + " ");
-//			
-//			for(int j = 0; j < col; j++) {
-//				if(layer == 1) {
-//					System.out.print(encodedTable[i][j].getFloor());
-//				}else if(layer == 2) {
-//					System.out.print(encodedTable[i][j].getObject());
-//				}
-//				
-//			}
-//			System.out.println(" ");
-//		}
-//	}
+
+	public void display() {
+		for(int i = 0; i < 50; i++) {
+			System.out.print("Row: " + i + " ");
+			
+			for(int j = 0; j < 50; j++) {
+				System.out.print(encodedTable[i][j].getBase());
+			}
+			System.out.println(" ");
+		}
+	}
 }

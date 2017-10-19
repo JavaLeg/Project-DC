@@ -420,6 +420,9 @@ public class State extends Stage{
 			Coord c = obj.getCoord();
 			encodedTable[c.getX()][c.getY()].setItem(obj);
 		}
+		
+		model.display();
+		
 		return model;
 	}
 		
