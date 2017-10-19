@@ -232,79 +232,6 @@ public class Editor extends Stage{
 		});
 		newTable.row();
 		
-		// INCASE WE NEED IT LATER
-		/*
-		switch(s) {
-		case PLAYER:
-			editButton = generateButton("Edit");
-			newTable.add(editButton);
-			editButton.addListener(new ClickListener(){
-				@Override
-		        public void clicked(InputEvent event, float x, float y) {
-					
-					if(selectedObject == null) {
-						System.out.println("No object selected!");
-						return;
-					}
-
-					System.out.println("Editing - " + selectedObject);
-					newEdit(selectedObject, skin);
-		        }
-			});
-			
-			customButton = generateButton("default");
-			newTable.add(customButton);
-			customButton.addListener(new ClickListener(){
-				@Override
-		        public void clicked(InputEvent event, float x, float y) {
-					//newTable.setVisible(false);
-					//default_tab.setVisible(true);
-					try {
-						update(s);
-					} catch (IOException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
-		        }
-			});
-			break;
-		case ENEMY:
-			editButton = generateButton("Edit");
-			newTable.add(editButton);
-			editButton.addListener(new ClickListener(){
-				@Override
-		        public void clicked(InputEvent event, float x, float y) {
-					
-					if(selectedObject == null) {
-						System.out.println("No object selected!");
-						return;
-					}
-					
-					System.out.println("Editing - " + selectedObject);
-					newEdit(selectedObject, skin);
-		        }
-			});
-			
-			customButton = generateButton("default");
-			newTable.add(customButton);
-			customButton.addListener(new ClickListener(){
-				@Override
-		        public void clicked(InputEvent event, float x, float y) {
-					//newTable.setVisible(false);
-					//default_tab.setVisible(true);
-					try {
-						update(s);
-					} catch (IOException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
-		        }
-			});
-			break;
-		default:
-			break;
-		}
-		*/
 		int i = 0;
 		
 		switch(s) {
@@ -561,6 +488,7 @@ public class Editor extends Stage{
 			clearButton.addListener(new ClickListener(){
 				@Override
 		        public void clicked(InputEvent event, float x, float y) {
+					System.out.println("Clear grid!");
 					related.clearGrid();
 		        }
 			});

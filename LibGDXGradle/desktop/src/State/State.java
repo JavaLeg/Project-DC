@@ -61,8 +61,6 @@ public class State extends Stage{
 		this.enemyList = new ArrayList<Enemy>();
 		this.staticList = new ArrayList <GameObject>();
 		this.player = null;
-//		this.wallList = new ArrayList<Wall>();
-//		this.itemList = new ArrayList<Item>();
 		initialise();
 
 			
@@ -120,13 +118,6 @@ public class State extends Stage{
 	// Fill grid with selected floor
 	// TODO
 	public void fillGrid() {
-/*		if(selected_tr == null || selectedToolBar != ToolbarSelection.FLOOR) 
-			return;
-		
-		Texture texture = selected_tr.getTexture();
-		String path = ((FileTextureData)texture.getTextureData()).getFileHandle().name();
-		System.out.println("Fill grid with : " + path);*/
-		if (selection != ObjectType.FLOOR) return;				// Can only fill with floor
 		for(Tile tile : tileList) {
 			setTileTexture(tile, selection);
 		}
@@ -139,10 +130,9 @@ public class State extends Stage{
 		for(Tile tile : tileList) {
 			tile.clear();
 		}
-		this.tileList.clear();
+		//this.tileList.clear();
 		this.enemyList.clear();
-		this.wallList.clear();
-		this.itemList.clear();
+		this.staticList.clear();
 	}
 	
 	
@@ -293,26 +283,6 @@ public class State extends Stage{
 		GameObject toObject = this.getObject(to);
 		this.setObject(fromObject, to);
 		this.setObject(toObject, from);
-	}
-	
-	
-	public List<GameObject> getAllObjects() {
-		List<GameObject> ret = new LinkedList<GameObject>();
-		for (Tile ta : tileList) {	
-			ret.add(ta.getObject());
-		}
-		return ret;
-	}
-	
-	
-	public List<DynamicObject> getAllDynamicObjects() {
-		List<DynamicObject> ret = new LinkedList<DynamicObject>();
-		for (Tile ta : tileList) {
-			if(ta.getObject().isDynamic()) {
-				ret.add((DynamicObject) ta.getObject());
-			}
-		}
-		return ret;
 	}
 	
 	
