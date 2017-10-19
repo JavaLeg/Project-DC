@@ -36,7 +36,7 @@ import Tileset.Player;
 /*
  * Stage for the editor UI (Tools on the left of the screen)
  */
-public class Editor extends Stage{
+public class Editor extends Stage {
 	
 	private Skin skin;
 	private HashMap<ToolbarSelection, Table> tableMap;
