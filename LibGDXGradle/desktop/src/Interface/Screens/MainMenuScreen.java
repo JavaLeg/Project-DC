@@ -66,7 +66,7 @@ public class MainMenuScreen implements Screen {
         //Create buttons
         TextButton playButton = new TextButton("Editor", skin);
         TextButton LibButton = new TextButton("Library", skin);
-        TextButton runButton = new TextButton("Run", skin);
+        TextButton runButton = new TextButton("Play", skin);
         TextButton exitButton = new TextButton("Exit", skin);
 
         //Add listeners to buttons

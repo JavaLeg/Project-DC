@@ -101,12 +101,17 @@ public class LibraryScreen implements Screen{
 								((Game)Gdx.app.getApplicationListener()).setScreen(s);
 								((EditorScreen) s).loadModel(fileHandle.Load(selected_map));
 								break;
-							case RUN:
+							case PLAY:
 								s = new GameScreen(game);
 								System.out.println("Loading in Editor: " + selected_map + "...");
 								((Game)Gdx.app.getApplicationListener()).setScreen(s);
 								((GameScreen) s).loadModel(fileHandle.Load(selected_map));
 								break;
+							case DELETE:
+								System.out.println("Deleting map: " + selected_map + "...");
+								fileHandle.Delete(selected_map);
+								// Refresh screen
+								((Game)Gdx.app.getApplicationListener()).setScreen(new LibraryScreen(game));
 							default:
 								break;	
 							}
@@ -140,6 +145,7 @@ public class LibraryScreen implements Screen{
         
         mainTable.top();
         mainTable.add(title);
+        sideTable.bottom();
         
 
         
