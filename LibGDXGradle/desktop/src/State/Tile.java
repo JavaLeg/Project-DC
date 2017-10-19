@@ -228,9 +228,9 @@ public class Tile extends Stack implements Serializable {
 		wallObj = null;
 		wall = null;
 		
-		if(floor != null) {
+		if (floor != null) {
 			this.add(floor);
-		}else{
+		} else {
 			this.add(empty);
 		}
 		this.add(player);
@@ -257,6 +257,19 @@ public class Tile extends Stack implements Serializable {
 			break;
 		default:
 			break;
+		}
+		this.updateTile();
+	}
+	
+	/* 
+	 * After deletion, update the textures of the tile
+	 */
+	public void updateTile() {
+		this.clearChildren();
+		if (floor != null) {
+			this.add(floor);
+		} else {
+			this.add(empty);
 		}
 	}
 	

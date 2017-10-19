@@ -507,7 +507,7 @@ public class Editor extends Stage{
 				@Override
 		        public void clicked(InputEvent event, float x, float y) {
 					System.out.println("FILL GRID!");
-					//related.fillGrid();
+					related.fillGrid();
 		        }
 			});
 			newTable.row();

@@ -59,6 +59,8 @@ public class State extends Stage{
 		this.colActors = DEFAULT_MAP_WIDTH;
 		this.tileList = new ArrayList<Tile>();
 		this.enemyList = new ArrayList<Enemy>();
+		this.staticList = new ArrayList <GameObject>();
+		this.player = null;
 //		this.wallList = new ArrayList<Wall>();
 //		this.itemList = new ArrayList<Item>();
 		initialise();
@@ -116,16 +118,17 @@ public class State extends Stage{
 	}
 	
 	// Fill grid with selected floor
+	// TODO
 	public void fillGrid() {
-		if(selected_tr == null || selectedToolBar != ToolbarSelection.FLOOR) 
+/*		if(selected_tr == null || selectedToolBar != ToolbarSelection.FLOOR) 
 			return;
 		
 		Texture texture = selected_tr.getTexture();
 		String path = ((FileTextureData)texture.getTextureData()).getFileHandle().name();
-		System.out.println("Fill grid with : " + path);
-		
+		System.out.println("Fill grid with : " + path);*/
+		if (selection != ObjectType.FLOOR) return;				// Can only fill with floor
 		for(Tile tile : tileList) {
-			setTileTexture(tile, ToolbarSelection.FLOOR);
+			setTileTexture(tile, selection);
 		}
 	}
 	
@@ -156,7 +159,6 @@ public class State extends Stage{
 	public void movePlayerTo(Coord c) {
 		Player temp = playerSelection;
 		
-		
 	}
 	
 	/*
@@ -172,28 +174,28 @@ public class State extends Stage{
 			tile.setFloor(staticSelection);
 			break;
 		case WALL:
+			if (tile.getPlayerObj() != null) player = null;
 			staticSelection.setCoord(tile.getCoord());
 			staticList.add(staticSelection);
 			tile.setWall(staticSelection);
 			break;
 		case ITEM:
+			if (tile.getPlayerObj() != null) player = null;
 			staticSelection.setCoord(tile.getCoord());
 			staticList.add(staticSelection);
 			tile.setItem(staticSelection);
 			break;
 		case ENEMY:
+			if (tile.getPlayerObj() != null) player = null;
 			enemySelection.setCoord(tile.getCoord());
 			enemyList.add(enemySelection);
 			tile.setEnemy(enemySelection);
 			break;
 		case PLAYER:
-			if(player == null) {
-				playerSelection.setCoord(tile.getCoord());
-				tile.setPlayer(playerSelection);
-			}else {
-				// TODO Get player object and relocate it to this tile
-				System.out.println("Player already exists");
-			}
+			deletePlayer();
+			playerSelection.setCoord(tile.getCoord());
+			player = playerSelection;
+			tile.setPlayer(player);
 			break;
 		default:
 			break;
@@ -205,6 +207,7 @@ public class State extends Stage{
 	/*
 	 * Check the map is valid before saving (e.g, at least one player)
 	 * At least one tile, (check creatures on tile, etc. etc.)
+	 * UNUSED
 	 */
 	public boolean checkValidMap() {
 		boolean no_err = true;
@@ -222,16 +225,6 @@ public class State extends Stage{
 		}	
 		return no_err;
 	}
-	
-	
-	/* 
-	 * Called by Editor.java when attempting to edit an enemy
-	 * or player attribute
-	 */
-	public void isEditable() {
-		System.out.println(selectedToolBar);
-	}
-	
 	
 		
 	//************************//
@@ -274,11 +267,11 @@ public class State extends Stage{
 		Tile tile = tileList.get(coord.getX()*colActors + coord.getY());
 		
 		// Removal of image from tile
-		tile.deleteTileElement(type);
 		
 		switch(type) {
 		case PLAYER:
 			// Already done no?
+			player = null;
 			break;
 		case ENEMY:
 			enemyList.remove(tile.getEnemyObj());
@@ -287,6 +280,8 @@ public class State extends Stage{
 			staticList.remove(tile.getStaticObj(type));
 			break;
 		}
+		
+		tile.deleteTileElement(type);
 	}
 	
 	
@@ -343,8 +338,7 @@ public class State extends Stage{
 	
 	public void deletePlayer(){
 		if(this.player == null) return;
-		this.deleteObject(player.getCoord());
-		this.player = null;
+		this.deleteObject(player.getCoord(), ObjectType.PLAYER);
 	}
 	
 	
