@@ -18,8 +18,8 @@ import Tileset.GameObject.ObjectType;
 public class Tile extends Group{
 	private final Coord coordinates; 
 	
-	private TextureRegion floor_texture;
-	private TextureRegion object_texture;
+	private DynamicObject d_obj;
+	private GameObject g_obj;
 	
 	
 	//*************************//
@@ -91,11 +91,11 @@ public class Tile extends Group{
 		return this.hasActor("floor");
 	}
 	
-	public void setFloor(TextureRegion txt) {
-		Image floor_img = new Image(txt);
-		this.addActor(floor_img, "floor", 1);
+	public void setFloor(GameObject obj) {
+
+		this.addActor(processPath(obj.getImgPath()), "floor", 1);
 		// FOR JAMES
-		this.floor_texture = txt;
+		this.g_obj = obj;
 	}
 		
 	
@@ -106,13 +106,13 @@ public class Tile extends Group{
 	
 	
 	// FOR JAMES
-	public String getFloorPath() {
-		if (floor_texture != null) {
-			String k = ((FileTextureData)floor_texture.getTexture().getTextureData()).getFileHandle().path();
-			return k;
-		}
-		return null;
-	}
+//	public String getFloorPath() {
+//		if (floor_texture != null) {
+//			String k = ((FileTextureData)floor_texture.getTexture().getTextureData()).getFileHandle().path();
+//			return k;
+//		}
+//		return null;
+//	}
 
 	
 	
@@ -127,14 +127,13 @@ public class Tile extends Group{
 	public GameObject getObject() {
 		if (this.hasObject()) {
 			if (this.hasActor("object"))
-				return ((GameObject)this.getActor("object"));
+				return g_obj;
 			else
-				return ((GameObject)this.getActor("d_object"));
+				return d_obj;
 		}
 		return null;
-		
 	}
-
+	
 	// Overwrites current object if any
 
 	// Setters overwrite current object if any
@@ -145,13 +144,9 @@ public class Tile extends Group{
 	public void setObject(GameObject new_object) {
 
 		this.removeActor("d_object");
-		this.object_texture = new_object.getTexture();
-		try {
-			GameObject object = new_object.clone();
-			this.addActor(object, "object", 2);
-		} catch (CloneNotSupportedException e) {
-			e.printStackTrace();
-		}
+		g_obj = new_object;
+		//GameObject object = new_object.clone();
+		this.addActor(processPath(new_object.getImgPath()), "object", 2);
 	}	
 	
 	
@@ -161,13 +156,17 @@ public class Tile extends Group{
 	 */
 	public void setDynamicObject(DynamicObject new_d_object) {
 		this.removeActor("object");
-		object_texture = new_d_object.getTexture();
-		try {
-			DynamicObject d_object = (DynamicObject) new_d_object.clone();
-			this.addActor(d_object, "d_object", 2);
-		} catch (CloneNotSupportedException e) {
-			e.printStackTrace();
-		}		
+		d_obj = new_d_object;
+		//DynamicObject d_object = (DynamicObject) new_d_object.clone();
+		this.addActor(processPath(new_d_object.getImgPath()), "d_object", 2);		
+	}
+	
+//	private TextureRegion processPath(String path) {
+//		return new TextureRegion(new Texture(Gdx.files.internal(path)));
+//	}
+	
+	private Image processPath(String path) {
+		return new Image(new TextureRegion(new Texture(Gdx.files.internal(path))));
 	}
 	
 	public ObjectType getObjectType() {
@@ -181,17 +180,17 @@ public class Tile extends Group{
 		this.removeActor("object");
 		this.removeActor("d_object");
 		// FOR JAMES
-		this.object_texture = null;
+		this.d_obj = null;
+		this.g_obj = null;
 	}
 	
 
 	// FOR JAMES
-	public String getObjectPath() {
-		if (object_texture != null) {
-			String k = ((FileTextureData)object_texture.getTexture().getTextureData()).getFileHandle().path();
-			return k;
-		}
-		return null;
-
-	}
+//	public String getObjectPath() {
+//		if (object_texture != null) {
+//			String k = ((FileTextureData)object_texture.getTexture().getTextureData()).getFileHandle().path();
+//			return k;
+//		}
+//		return null;
+//	}
 }

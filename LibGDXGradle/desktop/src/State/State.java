@@ -43,16 +43,14 @@ public class State extends Stage {
 
 	private GameObject cur_object;
 	private DynamicObject cur_d_object;
-	private ToolbarSelection selectedToolBar;
+	private ObjectType selection;
 	
 	// private Coord playerCoord;
 	private ArrayList<Tile> tileList;
 
 	private DynamicObject player;
-	private ArrayList<DynamicObject> enemyList;
-	private ArrayList<GameObject> itemList;
-	private ArrayList<GameObject> wallList;
-
+	private ArrayList<DynamicObject> dynamicList;
+	private ArrayList<GameObject> staticList;
 	
 	//************************//
 	//****** CONSTRUCTOR *****//
@@ -64,9 +62,8 @@ public class State extends Stage {
 		this.rowActors = DEFAULT_MAP_HEIGHT;
 		this.colActors = DEFAULT_MAP_WIDTH;
 		this.tileList = new ArrayList<Tile>();
-		this.enemyList = new ArrayList<DynamicObject>();
-		this.wallList = new ArrayList<GameObject>();
-		this.itemList = new ArrayList<GameObject>();
+		this.dynamicList = new ArrayList<DynamicObject>();
+		this.staticList = new ArrayList<GameObject>();
 		this.player = null;
 		initialise();
 		
@@ -87,12 +84,7 @@ public class State extends Stage {
 				tile.addListener(new ClickListener(){
 					@Override
 			        public void clicked(InputEvent event, float x, float y) {
-						try {
-							setTile(tile, selection);
-						} catch (CloneNotSupportedException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
-						}
+						setTile(tile, selection);
 			        }
 				});
 //				gridTable.add(tile).size(40, 40);
@@ -109,27 +101,16 @@ public class State extends Stage {
 	//******** EDITOR ********//
 	//************************//
 	
-	public void setEnemySelection(Enemy e) {
-		this.enemySelection = e;		
-		this.selection = ObjectType.ENEMY;
-	}
-
-	
-	public void setPlayerSelection(Player p) {
-		this.playerSelection = p;
-		this.selection = ObjectType.PLAYER;
-	}
-	
-	public void setItemSelection(Item i) {
-		this.itemSelection = i;
-		this.selection = ObjectType.ITEM;
-	}
-	
-
-	public void setStaticSelection(GameObject obj) {
-		this.staticSelection = obj;
+	public void setDynamicSelection(DynamicObject obj) {
 		this.selection = obj.getType();
+		this.cur_d_object = obj;
 	}
+	
+	public void setStaticSelection(GameObject obj) {
+		this.selection = obj.getType();
+		this.cur_object = obj;
+	}
+	
 	
 	// Fill grid with selected floor
 	// TODO
@@ -139,15 +120,13 @@ public class State extends Stage {
 		}
 	}
 	
-	
-	
 	public void clearGrid() {		
 		this.player = null;
 		for(Tile tile : tileList) {
 			tile.clear();
 		}
 		//this.tileList.clear();
-		this.enemyList.clear();
+		this.dynamicList.clear();
 		this.staticList.clear();
 	}
 	
@@ -155,21 +134,24 @@ public class State extends Stage {
 	/*
 	 * Setting the tile texture
 	 */
-	private void setTileTexture(Tile tile, ToolbarSelection ts) {
+	private void setTile(Tile tile, ObjectType type) {
 		// If tile already has an object, remove it and return
-		if(tile.hasObject() && ts != ToolbarSelection.FLOOR) {
+		if(tile.hasObject() && type != ObjectType.FLOOR) {
 			this.deleteObject(tile.getCoord());
 			return;
 		}
-		if (ts == null) return;
-		switch (ts){
+		if (type == null) return;
+		
+		switch (type){
 		case FLOOR:
-			tile.setFloor(selected_tr);
+			tile.setFloor(cur_object);
 			break;
 		case ENEMY:
 			setObject(cur_d_object, tile.getCoord());
 			break;
 		case ITEM:
+			setObject(cur_d_object, tile.getCoord());
+			break;
 		case WALL:
 			cur_object.setCoord(tile.getCoord());
 			if (tile.getObjectType() == ObjectType.PLAYER) {
@@ -215,9 +197,9 @@ public class State extends Stage {
 	 * Called by Editor.java when attempting to edit an enemy
 	 * or player attribute
 	 */
-	public void isEditable() {
-		System.out.println(selectedToolBar);
-	}
+//	public void isEditable() {
+//		System.out.println(selectedToolBar);
+//	}
 
 	//************************//
 	//******** OBJECT ********//
@@ -241,36 +223,18 @@ public class State extends Stage {
 	 */
 	public void deleteObject(Coord coord) {
 
-		ObjectType type = this.tileList.get(coord.getX()* colActors  + coord.getY() ).getObjectType();
-		switch(type) {
-		case PLAYER:
-			this.player = null;
-			System.out.println("Deleting player");
-			break;
-		case ENEMY:
-			Iterator<DynamicObject> iterE = enemyList.iterator();
-			while(iterE.hasNext()) {
-				DynamicObject obj = iterE.next();
-				if(obj.getCoord() == coord) iterE.remove();
-			}
-			break;
-		case ITEM:
-			Iterator<GameObject> iterI = itemList.iterator();
-			while(iterI.hasNext()) {
-				GameObject obj = iterI.next();
-				if(obj.getCoord() == coord) iterI.remove();
-			}
-			break;
-		case WALL:
-			Iterator<GameObject> iterW = wallList.iterator();
-			while(iterW.hasNext()) {
-				GameObject obj = iterW.next();
-				if(obj.getCoord() == coord) iterW.remove();
-			}
-			break;
-		default:
-			break;
-		}		
+		Tile tile = tileList.get(coord.getX()* colActors  + coord.getY());
+		GameObject obj = tile.getObject();
+		
+		ObjectType type = obj.getType();
+		
+		if(type == ObjectType.PLAYER || type == ObjectType.ITEM || type == ObjectType.ENEMY) {
+			
+		}
+		
+		
+		
+			
 		this.tileList.get(coord.getX()* colActors  + coord.getY()).deleteObject();
 	}
 	

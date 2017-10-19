@@ -7,7 +7,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
 import State.Coord;
 
-public class Item extends GameObject implements Serializable{
+public class Item extends DynamicObject implements Serializable{
 
 
 	/**
@@ -17,7 +17,11 @@ public class Item extends GameObject implements Serializable{
 	private int restoreValue;	// Treat as a consumable? Could be negative value? for traps
 	
 	public Item(Coord position, String imgPath) {
-		super(ObjectType.ITEM, position, imgPath);
+		super(ObjectType.ITEM, imgPath);
+	}
+	
+	public Item(String imgPath) {
+		super(ObjectType.ITEM, imgPath);
 	}
 
 	public int getRestoreValue() {

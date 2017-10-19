@@ -23,7 +23,7 @@ public class DynamicObject extends GameObject implements Cloneable, Serializable
 	// Dynamic types are: Enemy, Player, Trap
 	// Not dynamic types are: Terrain, Item
 	public static enum DynamicObjectType {
-		PLAYER, ENEMY
+		PLAYER, ENEMY, ITEM
 	} 
 	
 	public static enum Status {
