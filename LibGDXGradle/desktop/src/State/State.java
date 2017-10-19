@@ -39,13 +39,19 @@ public class State extends Stage{
 	private ArrayList<Tile> tileList;
 	private Player player;
 	private ArrayList<GameObject> staticList;
+	private ArrayList<Item> itemList;
 	private ArrayList<Enemy> enemyList;
 	
 	private Enemy enemySelection;
 	private Player playerSelection;
 	private GameObject staticSelection;
+	private Item itemSelection;
 
-	
+	/**			
+	 * 			{PLAYER}{ENEMY}{ITEM} ------------ Item should have their own list??
+	 * 				{FLOOR} {WALL}    ------------ Static objects
+	 * 			
+	 */		
 	
 	
 	//************************//
@@ -60,6 +66,7 @@ public class State extends Stage{
 		this.tileList = new ArrayList<Tile>();
 		this.enemyList = new ArrayList<Enemy>();
 		this.staticList = new ArrayList <GameObject>();
+		this.itemList = new ArrayList<Item>();
 		this.player = null;
 		initialise();
 
@@ -80,7 +87,7 @@ public class State extends Stage{
 				tile.addListener(new ClickListener(){
 					@Override
 			        public void clicked(InputEvent event, float x, float y) {
-						setTileTexture(tile, selection);
+						setTile(tile, selection);
 			        }
 				});
 				gridTable.add(tile).size(40, 40);
@@ -109,6 +116,11 @@ public class State extends Stage{
 		this.selection = ObjectType.PLAYER;
 	}
 	
+	public void setItemSelection(Item i) {
+		this.itemSelection = i;
+		this.selection = ObjectType.ITEM;
+	}
+	
 
 	public void setStaticSelection(GameObject obj) {
 		this.staticSelection = obj;
@@ -119,7 +131,7 @@ public class State extends Stage{
 	// TODO
 	public void fillGrid() {
 		for(Tile tile : tileList) {
-			setTileTexture(tile, selection);
+			setTile(tile, selection);
 		}
 	}
 	
@@ -155,7 +167,7 @@ public class State extends Stage{
 	 * Splits to different object types and
 	 * their respective tile function
 	 */
-	private void setTileTexture(Tile tile, ObjectType type) {
+	private void setTile(Tile tile, ObjectType type) {
 		if (type == null) return;
 		switch (type){
 		case FLOOR:
@@ -172,8 +184,8 @@ public class State extends Stage{
 		case ITEM:
 			if (tile.getPlayerObj() != null) player = null;
 			staticSelection.setCoord(tile.getCoord());
-			staticList.add(staticSelection);
-			tile.setItem(staticSelection);
+			itemList.add(itemSelection);
+			tile.setItem(itemSelection);
 			break;
 		case ENEMY:
 			if (tile.getPlayerObj() != null) player = null;
@@ -270,7 +282,6 @@ public class State extends Stage{
 			staticList.remove(tile.getStaticObj(type));
 			break;
 		}
-		
 		tile.deleteTileElement(type);
 	}
 	
@@ -356,14 +367,61 @@ public class State extends Stage{
 	
 	
 	//************************//
-	//******** OTHER *********//
+	//******** SAVE/LOAD *********//
 	//************************//
 	
 
+	/*
+	 * Loop through each object list and encode tile information into the editor model
+	 */
 	public EditorModel getModel() {
-		EditorModel model = new EditorModel(rowActors, colActors);
 		
-		System.out.println(staticList);
+		// Sanity checks that the map is worth saving
+		// Add more conditionals later
+		boolean satisfied = true;
+		
+//		if(player == null) {
+//			System.out.println("No player object set!");
+//			satisfied = false;
+//		}
+
+		if(!satisfied)
+			return null;
+		
+		
+		/*
+		 * ORDER MATTERS IN WHICH YOU PUT ONTO THE TABLE
+		 * Ensure static objects iterated over first
+		 */
+		EditorModel model = new EditorModel(rowActors, colActors);
+		TileTuple[][] encodedTable = model.getEncodedTable();
+		
+		// Static Objects
+		for(GameObject obj : staticList) {
+			Coord c = obj.getCoord();
+			encodedTable[c.getX()][c.getY()].setBase(obj);
+		}
+
+		if(player != null) {
+			Coord pc = player.getCoord();
+			encodedTable[pc.getX()][pc.getY()].setPlayer(player);
+		}
+
+		
+		// Enemy Objects
+		for(Enemy obj : enemyList) {
+
+			Coord c = obj.getCoord();
+			encodedTable[c.getX()][c.getY()].setEnemy(obj);
+		}
+		
+		// Item Objects
+		for(Item obj : itemList) {
+			Coord c = obj.getCoord();
+			encodedTable[c.getX()][c.getY()].setItem(obj);
+		}
+		return model;
+	}
 		
 		// Conversion should not take place inside the object
 //		
@@ -376,14 +434,67 @@ public class State extends Stage{
 //			TileTuple t = new TileTuple(tile.getObjectPath(), tile.getFloorPath(), ID);
 //			model.setTile(t, row_val, col_val);
 //		}
-		return model;
-	}
+//		return model;
+//}
 	
 
 	/*
-	 * Regenerate the textures from string paths
-	 * Place back onto grid via direct calls instead of click listeners
+	 * Retrieve the objects from encoded table
+	 * Restore the state 
 	 */
+	public void restoreModel(EditorModel m) {
+		TileTuple[][] encodedTable = m.getEncodedTable();
+		
+		for(int i = 0; i < rowActors; i++) {
+			for(int j = 0; j < colActors; j++) {
+				TileTuple enc_tile = encodedTable[i][j];
+				
+				if(enc_tile == null || enc_tile.isEmpty())
+					continue;
+
+				ObjectType type = enc_tile.getID();
+				Tile tile = getTile(new Coord(i, j));
+				
+				GameObject base = null;
+				
+				switch(type) {
+				case FLOOR:
+					tile.setFloor(enc_tile.getBase());
+					break;
+				case WALL:
+					tile.setWall(enc_tile.getBase());
+					break;
+				case PLAYER:
+					base = enc_tile.getBase();
+					
+					if(base != null)
+						tile.setFloor(base);
+					
+					tile.setPlayer(enc_tile.getPlayer());
+					break;
+				case ENEMY:
+					base = enc_tile.getBase();
+					
+					if(base != null)
+						tile.setFloor(base);
+					
+					tile.setEnemy(enc_tile.getEnemy());
+					break;
+				case ITEM:
+					base = enc_tile.getBase();
+					
+					if(base != null)
+						tile.setFloor(base);
+					
+					tile.setItem(enc_tile.getItem());
+					break;
+				default:
+					break;
+				}
+			}
+		}
+	}
+	
 //	public void restoreModel(EditorModel m) {
 //		TileTuple[][] map = m.getmodelPaths();
 //		
@@ -409,6 +520,11 @@ public class State extends Stage{
 //		}
 //	}
 
+	
+	/*
+	 * Not related to tables
+	 * Just using as a 2 variable tuple
+	 */
 	public TableTuple getDim() {
 		return new TableTuple(rowActors, colActors);
 	}

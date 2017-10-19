@@ -1,31 +1,32 @@
 package State;
 
-import java.io.Serializable;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.graphics.glutils.FileTextureData;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Stack;
 
 import Tileset.*;
 import Tileset.GameObject.ObjectType;
 
-public class Tile extends Stack implements Serializable {
+public class Tile extends Stack{
 	
-	private static final long serialVersionUID = 1L;
+
 	private final Coord coordinates; 
 	
 	
 	// Static objects
+	// Defined as: Always the same in-game
 	private GameObject wallObj;
 	private GameObject floorObj;
-	private GameObject itemObj;
+	
 	
 	// Dynamic objects
+	// Defined as: May change in-game
 	private Player playerObj;
 	private Enemy enemyObj;
+	private Item itemObj;
 	
 	private Image floor;
 	private Image wall;
@@ -33,6 +34,7 @@ public class Tile extends Stack implements Serializable {
 	private Image enemy;
 	private Image item;
 	private Image empty;
+	
 		
 	//*************************//
 	//******** GENERAL ********//
@@ -164,7 +166,7 @@ public class Tile extends Stack implements Serializable {
 		this.add(wall);
 	}
 	
-	public void setItem(GameObject obj) {
+	public void setItem(Item obj) {
 		this.clearChildren();
 		
 		itemObj = obj;
@@ -312,18 +314,15 @@ public class Tile extends Stack implements Serializable {
 		case FLOOR:
 			obj = floorObj;
 			break;
-		case ITEM:
-			obj = itemObj;
-			break;
 		default:
 			break;
 		}
 		return obj;
 	}
 
+//	public void setStaticObj(GameObject wallObj) {
+//		this.wallObj = wallObj;
+//	}
 
-	public void setStaticObj(GameObject wallObj) {
-		this.wallObj = wallObj;
-	}
 
 }

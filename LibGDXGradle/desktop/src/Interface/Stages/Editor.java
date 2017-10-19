@@ -859,6 +859,12 @@ public class Editor extends Stage{
 		
 		s = s.replaceAll(" ","_");
 		EditorModel toSave = related.getModel();
+		
+		if(toSave == null) {
+			System.out.println("Map not saved.");
+			return;
+		}
+		
 		saver.Save(toSave, s);
 		System.out.println("Saved as file: " + s);
 	}
