@@ -2,6 +2,7 @@ package Interface;
 
 import java.io.Serializable;
 
+import Tileset.DynamicObject;
 import Tileset.Enemy;
 import Tileset.GameObject;
 import Tileset.GameObject.ObjectType;
@@ -19,10 +20,7 @@ public class TileTuple implements Serializable{
 	 */			
 	private static final long serialVersionUID = -7131326769212761462L;
 	private GameObject base;
-	
-	private Player player;
-	private Enemy enemy;
-	private Item item;
+	private DynamicObject obj;
 	
 	private ObjectType ID;
 			
@@ -38,42 +36,30 @@ public class TileTuple implements Serializable{
 		this.base = obj;
 	}
 	
-	public void setEnemy(Enemy obj) {
+
+	public void setDynamic(DynamicObject obj) {
 		this.ID = obj.getType();
-		this.enemy = obj;
-	}
-	
-	public void setPlayer(Player obj) {
-		this.ID = obj.getType();
-		this.player = obj;
-	}
-	
-	public void setItem(Item obj) {
-		this.ID = obj.getType();
-		this.item = obj;
+		this.obj = obj;
 	}
 	
 	/*
 	 * This will most likely be called
 	 * Handle null return in State's restore function
 	 */
+	
 	public GameObject getBase() {
 		return base;
 	}
 	
-	public Player getPlayer() {
-		return player;
+	public DynamicObject getDynamic() {
+		return obj;
 	}
 	
-	public Enemy getEnemy() {
-		return enemy;
-	}
 	
-	public Item getItem() {
-		return item;
-		
-	}
-
+	/*
+	 * ID is not set if none of the setters are called
+	 * Ensures the tile is empty
+	 */
 	public boolean isEmpty() {
 		if(ID == null)
 			return true;

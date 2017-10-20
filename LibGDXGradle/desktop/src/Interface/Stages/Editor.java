@@ -497,7 +497,7 @@ public class Editor extends Stage {
 		
 		if(type == ObjectType.ENEMY) {
 			atk = ((Enemy) obj).getAttackRate();
-			atkField = generateTextField("Atk rate - " + Integer.toString(atk));
+			//atkField = generateTextField("Atk rate - " + Integer.toString(atk));
 			editTable.add(atkField);
 			editTable.row();
 		}
@@ -544,7 +544,7 @@ public class Editor extends Stage {
 					clone.setContactDamage(Double.valueOf(dmgField.getText()));
 					
 					if(type == ObjectType.ENEMY)
-						((Enemy) clone).setAttackRate(Integer.valueOf(atkField.getText()));
+						//((Enemy) clone).setAttackRate(Integer.valueOf(atkField.getText()));
 
 					saveObject(clone);
 				} catch (CloneNotSupportedException e) {

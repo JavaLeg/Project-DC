@@ -34,12 +34,10 @@ public class State extends Stage {
 
 
 /**			
- * 			{PLAYER}{ENEMY}{ITEM} ------------ Item should have their own list??
+ * 			{PLAYER}{ENEMY}{ITEM} ------------ Uppermost layer
  * 				{FLOOR} {WALL}    ------------ Static objects
  * 			
  */		
-
-	private TextureRegion selected_tr;
 
 	private GameObject cur_object;
 	private DynamicObject cur_d_object;
@@ -144,7 +142,8 @@ public class State extends Stage {
 		
 		switch (type){
 		case FLOOR:
-			tile.setFloor(cur_object);
+			//tile.setFloor(cur_object);
+			setObject(cur_object, tile.getCoord());
 			break;
 		case ENEMY:
 			setObject(cur_d_object, tile.getCoord());
@@ -157,7 +156,7 @@ public class State extends Stage {
 			if (tile.getObjectType() == ObjectType.PLAYER) {
 				this.player = null; 
 			}
-			tile.setObject(cur_object);
+			setObject(cur_object, tile.getCoord());
 			break;
 		case PLAYER:
 			if (this.player != null) deletePlayer();
@@ -167,7 +166,6 @@ public class State extends Stage {
 		default:
 			break;
 		}
-		//setObject(cur_object, tile.getCoord());
 	}
 
 
@@ -213,7 +211,17 @@ public class State extends Stage {
 	 * Sets a tile to a GameObject
 	 */
 	public void setObject(GameObject newObject, Coord coord) {
-
+		
+		// Keep track of objects
+		ObjectType type = newObject.getType();
+		
+		if(type == ObjectType.ENEMY || type == ObjectType.PLAYER || type == ObjectType.ITEM) {
+			dynamicList.add((DynamicObject) newObject);
+		}else if(type == ObjectType.ENEMY || type == ObjectType.PLAYER) {
+			staticList.add(newObject);
+		}
+		
+		
 		newObject.setCoord(coord);
 		this.tileList.get(coord.getX() * colActors  + coord.getY() ).setObject(newObject);
 	}
@@ -368,46 +376,26 @@ public class State extends Stage {
 
 		if(player != null) {
 			Coord pc = player.getCoord();
-			encodedTable[pc.getX()][pc.getY()].setPlayer(player);
+			encodedTable[pc.getX()][pc.getY()].setDynamic(player);
 		}
 
 		
-		// Enemy Objects
-		for(Enemy obj : enemyList) {
-
-			Coord c = obj.getCoord();
-			encodedTable[c.getX()][c.getY()].setEnemy(obj);
+		for(DynamicObject obj : dynamicList) {
+			Coord c= obj.getCoord();
+			System.out.println(c.getX() + " " + c.getY());
+			encodedTable[c.getX()][c.getY()].setDynamic(obj);
 		}
 		
-		// Item Objects
-		for(Item obj : itemList) {
-			Coord c = obj.getCoord();
-			encodedTable[c.getX()][c.getY()].setItem(obj);
-		}
-		
-		//model.display();
+		model.display();
 		
 		return model;
 	}
-		
-		// Conversion should not take place inside the object
-//		
-//		for(int i = 0; i < tileList.size(); i++) {
-//			int row_val = i/colActors;
-//			int col_val = i % colActors;
-//			
-//			Tile tile = tileList.get(i);
-//			ObjectType ID = tile.getObjectType();
-//			TileTuple t = new TileTuple(tile.getObjectPath(), tile.getFloorPath(), ID);
-//			model.setTile(t, row_val, col_val);
-//		}
-//		return model;
-//}
-	
+
 
 	/*
 	 * Retrieve the objects from encoded table
 	 * Restore the state 
+	 * Directly sets the objects
 	 */
 	public void restoreModel(EditorModel m) {
 		TileTuple[][] encodedTable = m.getEncodedTable();
@@ -423,62 +411,25 @@ public class State extends Stage {
 				Tile tile = getTile(new Coord(i, j));
 				
 				GameObject base = null;
+				DynamicObject d_obj = null;
 				
-				switch(type) {
-				case FLOOR:
-					tile.setFloor(enc_tile.getBase());
-					break;
-				case WALL:
-					tile.setWall(enc_tile.getBase());
-					break;
-				case PLAYER:
-					base = enc_tile.getBase();
-					
-					if(base != null)
-						tile.setFloor(base);
-					
-					tile.setPlayer(enc_tile.getPlayer());
-					break;
-				case ENEMY:
-					base = enc_tile.getBase();
-					
-					if(base != null)
-						tile.setFloor(base);
-					
-					tile.setEnemy(enc_tile.getEnemy());
-					break;
-				case ITEM:
-					base = enc_tile.getBase();
-					
-					if(base != null)
-						tile.setFloor(base);
-					
-					tile.setItem(enc_tile.getItem());
-					break;
-				default:
-					break;
-					
-//				// Set terrain
-//				if(t_tuple.getFloor() != null)
-//					tile.setFloor(new TextureRegion(new Texture(Gdx.files.internal(t_tuple.getFloor()))));
-//					
-//				// Set object
-//				if(t_tuple.getObject() != null) {
-//					ObjectType type = t_tuple.getID();
-//					Coord tile_pos = tile.getCoord();
-//					TextureRegion cur_texture = new TextureRegion(new Texture(Gdx.files.internal(t_tuple.getObject())));
-//					GameObject new_obj = new GameObject(type, cur_texture);
-//					
-//					if (type == ObjectType.PLAYER) {
-//						player = new Player(tile_pos, 1, 1, new Texture(Gdx.files.internal(t_tuple.getObject())));
-//					} else {			
-//						new_obj.setCoord(tile_pos);
-//					}
-//					tile.setObject(new_obj);
+				// type will only show the top-most layer
+				if(type == ObjectType.ENEMY || type == ObjectType.PLAYER || type == ObjectType.ITEM) {
+					setObject(enc_tile.getDynamic(), new Coord(i, j));
 				}
+				
+				// If the tile only contains GameObjects
+				if(type == ObjectType.FLOOR || type == ObjectType.WALL) {
+					base = enc_tile.getBase();
+				}
+				
+				if(base != null)
+					setObject(base, new Coord(i, j));
+									
 			}
 		}
 	}
+	
 
 	/* 
 	 * Determines if the next position is valid (for player)
@@ -492,16 +443,4 @@ public class State extends Stage {
 		return new TableTuple(rowActors, colActors);
 	}
 	
-	
-	// String splitting
-	private ObjectType getType(String path) {
-		String[] parts = path.split("/");
-		
-		for(ObjectType t : ObjectType.values()) {
-			if(t.toString().toLowerCase().equals(parts[1]))
-					return t;
-		}
-		return null;
-	}
-
 }
