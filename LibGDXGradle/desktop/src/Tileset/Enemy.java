@@ -54,6 +54,7 @@ public class Enemy extends DynamicObject {
 			if (attackTime > 0) {
 				attackTime--;
 			} else {
+				System.out.print("Switched to Move.\n");
 				setActionState(ActionState.MOVE);
 			}
 			break;
@@ -77,7 +78,9 @@ public class Enemy extends DynamicObject {
 			if (attack != null) {
 				if (sinceLastAttack >= attack.getAttackCooldown() && attack != null) {
 					setActionState(ActionState.ATTACK);
+					System.out.print("Switched to Attack.\n");
 					attackTime = attack.getAttackSpeed();
+					sinceLastAttack = 0;
 				} else {
 					sinceLastAttack++;
 				}
@@ -91,6 +94,13 @@ public class Enemy extends DynamicObject {
 		
 		}
 	}
+	
+	@Override
+	public Attack getAttack() {
+		return attack;
+	}
+	
+
 	
 	
 	

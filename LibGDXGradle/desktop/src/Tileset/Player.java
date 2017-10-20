@@ -56,4 +56,9 @@ public class Player extends DynamicObject {
 	public void selectLight() {
 		selected = light;
 	}
+	
+	@Override
+	public Attack getAttack() {
+		return selected;
+	}
 }

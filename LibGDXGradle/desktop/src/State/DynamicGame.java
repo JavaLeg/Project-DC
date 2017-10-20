@@ -9,6 +9,7 @@ import Tileset.GameObject;
 import Tileset.GameObject.ObjectType;
 import Tileset.Player;
 import Tileset.Enemy;
+import Tileset.Behaviour.Attack;
 import Tileset.Behaviour.Direction;
 
 //temporary class for Game, 
@@ -54,7 +55,6 @@ public class DynamicGame {
 	public State getState() {
 		return activeState;
 	}
-	
 	
 	
 	// Player Actions:

@@ -61,4 +61,7 @@ public class Attack {
 		return cooldown;
 	}
 	
+	public List<Coord> getHitBox() {
+		return hitbox;
+	}
 }

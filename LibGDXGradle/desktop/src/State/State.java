@@ -1,9 +1,11 @@
 package State;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.Gdx;
@@ -16,6 +18,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
 import Tileset.*;
+import Tileset.DynamicObject.ActionState;
 import Tileset.GameObject.ObjectType;
 import Interface.EditorModel;
 import Interface.TileTuple;
@@ -222,19 +225,29 @@ public class State extends Stage {
 	//******** OBJECT ********//
 	//************************//
 	
+	public List<Coord> getAttackedLocations() {
+		Set<Coord> s = new HashSet<Coord>();
+		for (DynamicObject d : getAllDynamicObjects()) {
+			if (d.getActionState() == ActionState.ATTACK) {
+				
+			}
+		}
+		return s;
+	}
+	
+	
 	public GameObject getObject(Coord coord) {
 		return this.tileList.get(coord.getX()* colActors  + coord.getY()).getObject();
 	}
 	
 	public DynamicObject getDynamicObject(Coord coord) {
 		GameObject o = getObject(coord);
-		if (o.isDynamic()) {
+		if (o != null && o.isDynamic()) {
 			return (DynamicObject) o;
 		} else {
 			return null;
 		}
 	}
-	
 	
 	public void setObject(GameObject newObject, Coord coord) {
 		ObjectType type = newObject.getType();

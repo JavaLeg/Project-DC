@@ -11,6 +11,7 @@ import com.badlogic.gdx.graphics.glutils.FileTextureData;
 import Interface.ObjectModel;
 import State.Coord;
 import State.State;
+import Tileset.Behaviour.Attack;
 import Tileset.Behaviour.Direction;
 
 // DynamicObject is in charge of: hp
@@ -37,7 +38,7 @@ public class DynamicObject extends GameObject implements Cloneable{
 	private double contactDamage; // how much damage entity deals
 	
 	private int iFrames;
-	private static int iFramesMax = 15; // quarter second
+	private static int iFramesMax = 30; // quarter second
 	
 	private HashMap<Status, Integer> statuses;
 	private ActionState state;
@@ -76,6 +77,7 @@ public class DynamicObject extends GameObject implements Cloneable{
 		if (iFrames > 0) return;
 		this.hp -= hp;
 		iFrames = iFramesMax;
+		System.out.println("Got hit! You have " + this.hp + " Hp Left...");
 	}
 	
 	public void heal(double hp) {
@@ -185,6 +187,10 @@ public class DynamicObject extends GameObject implements Cloneable{
 	
 	public Direction getFacing() {
 		return facing;
+	}
+
+	public Attack getAttack() {
+		return null;
 	}
 	
 }
