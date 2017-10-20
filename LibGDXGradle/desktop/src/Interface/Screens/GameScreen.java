@@ -40,7 +40,7 @@ public class GameScreen implements Screen {
 		camera = new OrthographicCamera();
 		Viewport gameViewport = new FitViewport(width, height, camera);
 		previewStage = new State(gameViewport);
-		previewStage = g.getState();
+
 		lerp = 0.1f;
         g = new DynamicGame();
 		inputProcessor = new GameInputProcessor(g);
