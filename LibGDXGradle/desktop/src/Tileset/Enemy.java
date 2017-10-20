@@ -34,6 +34,18 @@ public class Enemy extends DynamicObject implements Cloneable, Serializable{
 		this.moveBehaviour = b;
 	}
 	
+
+	public Enemy(double hp, double damage, int moveRate, MoveBehaviour b, String img_path) {
+		super(ObjectType.ENEMY, hp, damage, img_path);
+		this.moveRate = moveRate;
+		this.sinceLastMove = 0;
+		this.attackRate = 60;
+		this.sinceLastAttack = 0;
+		this.moveBehaviour = b;
+	}
+	
+	
+	
 	/*
 	 * Initialized from the editor
 	 */
@@ -88,7 +100,7 @@ public class Enemy extends DynamicObject implements Cloneable, Serializable{
 	
 	@Override
 	public Enemy clone() throws CloneNotSupportedException {
-		return (Enemy) super.clone();
+		return new Enemy(getHp(), getContactDamage(), moveRate, moveBehaviour, getImgPath());
 	}
 
 	public int getMoveRate() {

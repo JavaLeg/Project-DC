@@ -39,6 +39,7 @@ public class TileTuple implements Serializable{
 
 	public void setDynamic(DynamicObject obj) {
 		this.ID = obj.getType();
+		//BEFORE
 		this.obj = obj;
 	}
 	

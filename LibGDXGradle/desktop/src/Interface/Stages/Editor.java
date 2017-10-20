@@ -31,6 +31,7 @@ import Tileset.DynamicObject;
 import Tileset.Enemy;
 import Tileset.GameObject;
 import Tileset.GameObject.ObjectType;
+import Tileset.Item;
 import Tileset.Player;
 
 /*
@@ -424,31 +425,74 @@ public class Editor extends Stage {
 			newTable.add(icon).size(40, 40);
 			newTable.add(icon_name).pad(5);
 			
-			if(cur == ObjectType.PLAYER || cur == ObjectType.ENEMY || cur == ObjectType.ITEM) {
+			switch(cur){
+			case PLAYER:
 				icon.addListener(new ClickListener(){
 					@Override
 			        public void clicked(InputEvent event, float x, float y) {
 						System.out.println("Selected - " + fileName);
 						
 						// Right now all attributes initialized as null (Changed through edit)
-						DynamicObject obj = new DynamicObject(cur, filePath);
+						Player obj = new Player(filePath);
 						selected_Dyn = obj;
 						related.setDynamicSelection(obj);
 			        }
 				});
-			}else {
-				// WALL/FLOOR
+				break;
+			case ENEMY:
 				icon.addListener(new ClickListener(){
 					@Override
 			        public void clicked(InputEvent event, float x, float y) {
 						System.out.println("Selected - " + fileName);
 						
-						// Right now all attributes initialised as null (Changed through edit)
+						// Right now all attributes initialized as null (Changed through edit)
+						Enemy obj = new Enemy(filePath);
+						selected_Dyn = obj;
+						related.setDynamicSelection(obj);
+			        }
+				});
+				break;
+			case ITEM:
+				icon.addListener(new ClickListener(){
+					@Override
+			        public void clicked(InputEvent event, float x, float y) {
+						System.out.println("Selected - " + fileName);
+						
+						// Right now all attributes initialized as null (Changed through edit)
+						Item obj = new Item(filePath);
+						selected_Dyn = obj;
+						related.setDynamicSelection(obj);
+			        }
+				});
+				break;
+			case FLOOR:
+				icon.addListener(new ClickListener(){
+					@Override
+			        public void clicked(InputEvent event, float x, float y) {
+						System.out.println("Selected - " + fileName);
+						
+						// Right now all attributes initialized as null (Changed through edit)
 						GameObject obj = new GameObject(cur, filePath);
+						selected_G = obj;
 						related.setStaticSelection(obj);
 			        }
 				});
+			case WALL:
+				icon.addListener(new ClickListener(){
+					@Override
+			        public void clicked(InputEvent event, float x, float y) {
+						System.out.println("Selected - " + fileName);
+						
+						// Right now all attributes initialized as null (Changed through edit)
+						GameObject obj = new GameObject(cur, filePath);
+						selected_G = obj;
+						related.setStaticSelection(obj);
+			        }
+				});
+			default:
+				break;
 			}
+		
 			if (i % 2 == 1 && i != 0) newTable.row();
 			
 			// Don't let it go over the edge

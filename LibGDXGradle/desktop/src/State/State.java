@@ -46,7 +46,7 @@ public class State extends Stage {
 	// private Coord playerCoord;
 	private ArrayList<Tile> tileList;
 
-	private DynamicObject player;
+	private Player player;
 	private ArrayList<DynamicObject> dynamicList;
 	private ArrayList<GameObject> staticList;
 	
@@ -252,7 +252,8 @@ public class State extends Stage {
 		if (type == ObjectType.PLAYER) {
 			if (this.hasPlayer() == true) this.deletePlayer(player.getCoord());
 			newObject.setCoord(coord);
-			player = (DynamicObject) newObject;
+			player = (Player) newObject;
+			//player = (Player) newObject;
 			cur.setDynamicObject((DynamicObject) newObject);
 		} else if(type == ObjectType.ENEMY || type == ObjectType.ITEM) {
 			if (cur.getObjectType() == ObjectType.PLAYER) player = null;
@@ -423,6 +424,7 @@ public class State extends Stage {
 		}
 
 		if(player != null) {
+			
 			Coord pc = player.getCoord();
 			encodedTable[pc.getX()][pc.getY()].setDynamic(player);
 		}
