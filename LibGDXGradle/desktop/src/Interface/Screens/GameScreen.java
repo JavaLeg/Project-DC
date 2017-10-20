@@ -55,7 +55,8 @@ public class GameScreen implements Screen {
 	public void render(float delta) {
 		Gdx.gl.glClearColor(1, 1, 1, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-        
+
+        // Make sure there is actually a player object
         Coord centre = g.getState().getPlayer().getCoord();
         
         // Lerp the camera so it looks smooth, so smooth, what a feature
