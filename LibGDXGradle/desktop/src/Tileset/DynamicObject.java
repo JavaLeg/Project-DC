@@ -16,7 +16,7 @@ import Tileset.Behaviour.Attack;
 import Tileset.Behaviour.Direction;
 
 // DynamicObject is in charge of: hp
-public class DynamicObject extends GameObject implements Cloneable, Serializable{
+public class DynamicObject extends GameObject implements Cloneable {
 	/**
 	 * 
 	 */
@@ -66,6 +66,7 @@ public class DynamicObject extends GameObject implements Cloneable, Serializable
 		this.contactDamage = damage;
 		this.iFrames = 0;
 		statuses = new HashMap<Status, Integer>();
+		state = ActionState.MOVE;
 	}
 	
 	public DynamicObject(ObjectType type, String img_path) {
@@ -169,18 +170,6 @@ public class DynamicObject extends GameObject implements Cloneable, Serializable
 		// test state here
 		return (state == ActionState.MOVE);
 	}
-	
-	/*
-	 * Used only for dynamic objects (EDITOR SIDE)
-	 */
-	/* No longer needed
-	public ObjectModel getModel() {
-		Texture texture = super.getTexture().getTexture();
-		String texturePath = ((FileTextureData)texture.getTextureData()).getFileHandle().path();
-		DynamicObjectType type = DynamicObjectType.valueOf(super.getType().toString());
-		ObjectModel model = new ObjectModel(hp, contactDamage, texturePath, super.getName(), type);
-		return model;
-	}*/
 	
 
 	public DynamicObject clone() {

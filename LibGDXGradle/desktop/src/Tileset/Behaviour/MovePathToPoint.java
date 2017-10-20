@@ -7,6 +7,10 @@ import State.State;
 
 // Move directly in the best route towards player
 public class MovePathToPoint extends MoveBehaviour {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 3159919302846591258L;
 	private boolean focus;
 	 
 	public MovePathToPoint(boolean focus) {

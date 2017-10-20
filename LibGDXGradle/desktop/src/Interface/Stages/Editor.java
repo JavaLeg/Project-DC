@@ -40,6 +40,8 @@ import Tileset.GameObject.ObjectType;
 import Tileset.Item;
 import Tileset.Player;
 import Tileset.Behaviour.Attack;
+import Tileset.Behaviour.MoveBehaviour;
+import Tileset.Behaviour.MoveRandom;
 
 /*
  * Stage for the editor UI (Tools on the left of the screen)
@@ -444,7 +446,6 @@ public class Editor extends Stage {
 			        public void clicked(InputEvent event, float x, float y) {
 						System.out.println("Selected - " + fileName);
 						
-						// Right now all attributes initialized as null (Changed through edit)
 						
 						// DEFAULTS FOR ATTACKS
 						Attack light = new Attack(Arrays.asList(new Coord(0,1)), 
@@ -453,6 +454,7 @@ public class Editor extends Stage {
 								5, Arrays.asList(ObjectType.ENEMY), 45 , 10);
 						
 						Player obj = new Player(10, 10, light, heavy, filePath);
+						//System.out.print(getActionState());
 						selected_Dyn = obj;
 						related.setDynamicSelection(obj);
 			        }
@@ -465,8 +467,8 @@ public class Editor extends Stage {
 						System.out.println("Selected - " + fileName);
 						
 						// Right now all attributes initialized as null (Changed through edit)
-						Enemy obj = new Enemy(filePath);
-						 
+						Enemy obj = new Enemy(10, 2, 30, new MoveRandom(), filePath);
+						// double hp, double damage, int moveRate, MoveBehaviour b, String img_path
 						selected_Dyn = obj;
 						related.setDynamicSelection(obj);
 			        }

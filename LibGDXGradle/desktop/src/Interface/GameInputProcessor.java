@@ -29,8 +29,8 @@ public class GameInputProcessor implements InputProcessor {
 	public boolean keyDown(int keycode) {		
 		if (!enabled) return false;
 		//SUPPORTS:
-		// 	Move: WSAD, Attack/Special: J
-		//  Move: Arrow Keys, Attack/Special: Z
+		// 	Move: WSAD, Attack/Special: J/K
+		//  Move: Arrow Keys, Attack/Special: Z/X
 		
 		Action toMake = null;
 		
@@ -68,7 +68,7 @@ public class GameInputProcessor implements InputProcessor {
 		default:
 			// nothing 
 		}		
-		
+		System.out.println("Make action.");
 		if (toMake != null) {
 			if (sinceLastAction > 0) {
 				queuedAction = toMake;

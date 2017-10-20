@@ -82,7 +82,7 @@ public class EditorScreen implements Screen {
 		try {
 			editorStage = new Editor(editor_viewport, skin);
 			UI.add(editorStage);
-			//UI.add(previewStage); TEMP
+			UI.add(previewStage); 
 			UI.add(toolbarStage);
 			toolbarStage.setDependence(editorStage);
 			editorStage.setDependence(previewStage);
@@ -108,8 +108,8 @@ public class EditorScreen implements Screen {
 			PreviewProcessor pp = new PreviewProcessor(preview_camera);
 
 			//TEMP
-			//InputMultiplexer multiplexer = new InputMultiplexer(editorStage, previewStage, toolbarStage, backProcessor, pp);
-			//Gdx.input.setInputProcessor(multiplexer);
+			InputMultiplexer multiplexer = new InputMultiplexer(editorStage, previewStage, toolbarStage, backProcessor, pp);
+			Gdx.input.setInputProcessor(multiplexer);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

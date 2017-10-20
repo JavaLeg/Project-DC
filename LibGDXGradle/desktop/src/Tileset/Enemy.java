@@ -9,7 +9,7 @@ import Tileset.Behaviour.Attack;
 import Tileset.Behaviour.Direction;
 import Tileset.Behaviour.MoveBehaviour;
 
-public class Enemy extends DynamicObject implements Cloneable, Serializable{
+public class Enemy extends DynamicObject implements Cloneable {
 	
 	/**
 	 * 
@@ -73,7 +73,6 @@ public class Enemy extends DynamicObject implements Cloneable, Serializable{
 	@Override
 	public void step(State s) {
 		super.step(s);
-		
 		switch (getActionState()) {
 		case ATTACK:
 			attack.applyAttack(s, getCoord(), getFacing());
@@ -85,10 +84,11 @@ public class Enemy extends DynamicObject implements Cloneable, Serializable{
 			}
 			break;
 		case MOVE:
+			System.out.println(sinceLastMove + " " + moveRate + " " + moveBehaviour);
 			// movement behavior
 			if (sinceLastMove >= moveRate && moveBehaviour != null) {
 				// move one step
-				Coord next = null;
+				Coord next;
 				next = moveBehaviour.nextStep(s, this.getCoord());
 				if (s.findPlayer().equals(next)) { // may never happen how movement currently is handled
 					s.getPlayer().damage(this.getContactDamage()); // contact damage

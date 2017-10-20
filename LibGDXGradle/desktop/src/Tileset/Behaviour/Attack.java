@@ -3,13 +3,18 @@ package Tileset.Behaviour;
 import java.util.LinkedList;
 import java.util.List;
 
+import java.io.Serializable;
+
 import State.Coord;
 import State.State;
 import Tileset.DynamicObject;
-import Tileset.GameObject;
 import Tileset.GameObject.ObjectType;
 
-public class Attack {
+public class Attack implements Serializable {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -7134641387590361982L;
 	private int damage;
 	private List<Coord> hitbox; // treats default facing as NORTH
 	private List<ObjectType> targets;

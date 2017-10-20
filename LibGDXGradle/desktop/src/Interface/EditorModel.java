@@ -29,10 +29,10 @@ public class EditorModel implements Serializable {
 	
 
 	public void display() {
-		for(int i = 0; i < 50; i++) {
+		for(int i = 0; i < 10; i++) {
 			System.out.print("Row: " + i + " ");
 			
-			for(int j = 0; j < 50; j++) {
+			for(int j = 0; j < 10; j++) {
 				System.out.print(encodedTable[i][j].getDynamic());
 			}
 			System.out.println(" ");

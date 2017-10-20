@@ -1,5 +1,6 @@
 package Tileset.Behaviour;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -8,7 +9,13 @@ import java.util.PriorityQueue;
 import State.Coord;
 import State.State;
 
-public class MoveBehaviour {
+public class MoveBehaviour implements Serializable  {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 595534154089190386L;
+
+
 	// Default behaviour returns current position
 	// 		Behaviours should override this
 	public Coord nextStep(State s, Coord currentPos) {

@@ -8,7 +8,7 @@ import State.State;
 import Tileset.Behaviour.Attack;
 import Tileset.Behaviour.Direction;
 
-public class Player extends DynamicObject implements Cloneable, Serializable {
+public class Player extends DynamicObject implements Cloneable {
 	private static final long serialVersionUID = 629680615400266941L;
 	//private static Attack lightAttack = new Attack()
 	private Direction currentFacing;
@@ -44,7 +44,8 @@ public class Player extends DynamicObject implements Cloneable, Serializable {
 	@Override
 	public void step(State s) {
 		super.step(s);
-		switch (this.getActionState()) {
+		
+		switch (getActionState()) {
 		case ATTACK:
 			selected.applyAttack(s, getCoord(), getFacing());
 			if (attackCooldown > 0) {
@@ -75,7 +76,9 @@ public class Player extends DynamicObject implements Cloneable, Serializable {
 	
 	@Override
 	public Player clone() {
-		return new Player( getHp(), getContactDamage(), getImgPath());
+		Player p = new Player( getHp(), getContactDamage(), light, special, getImgPath());
+		p.setActionState(getActionState());
+		return p;
 	}
 	
 	@Override

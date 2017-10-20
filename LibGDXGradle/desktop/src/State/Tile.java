@@ -15,7 +15,7 @@ import Tileset.*;
 import Tileset.GameObject.ObjectType;
 
 
-public class Tile extends Group{
+public class Tile extends Group {
 	private final Coord coordinates; 
 	
 	private DynamicObject d_obj;

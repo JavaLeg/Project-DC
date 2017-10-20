@@ -28,8 +28,8 @@ import Interface.Stages.Selections.ToolbarSelection;
 
 public class State extends Stage {
 	
-	private static final int DEFAULT_MAP_WIDTH = 50; 
-	private static final int DEFAULT_MAP_HEIGHT = 50;
+	private static final int DEFAULT_MAP_WIDTH = 10; 
+	private static final int DEFAULT_MAP_HEIGHT = 10;
 	
 	private int rowActors;
 	private int colActors;
@@ -192,7 +192,17 @@ public class State extends Stage {
 		
 		System.out.println("HEI");
 		if(type == ObjectType.ENEMY || type == ObjectType.ITEM || type == ObjectType.PLAYER) {
-			obj = cur_d_object.clone();
+			switch(type) {
+			case ENEMY:
+				obj = ((Enemy) cur_d_object).clone();
+				break;
+			case PLAYER:
+				obj = ((Player) cur_d_object).clone();
+				break;
+			default:
+				obj = cur_d_object.clone();	
+				break;
+			}
 			obj.setCoord(tile.getCoord());
 			dynamicList.add((DynamicObject) obj);
 		}else {

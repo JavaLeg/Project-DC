@@ -8,6 +8,10 @@ import State.State;
 
 // follow players movement but not in a particularly efficient way
 public class MoveTrack extends MoveBehaviour {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 5037148097623309944L;
 	private List<Coord> ongoingPath;
 	private int stayedStill;
 	

@@ -1,5 +1,6 @@
 package Tileset.Behaviour;
 
+
 import java.util.List;
 import java.util.Random;
 
@@ -9,6 +10,12 @@ import State.State;
 public class MoveRandom extends MoveBehaviour {
 	
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -1934575352260053825L;
+
+
 	public MoveRandom() {
 		
 	}
