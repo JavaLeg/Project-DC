@@ -117,7 +117,7 @@ public class State extends Stage {
 	
 	// Fill grid with selected floor
 	// TODO
-	public void fillGrid() {
+	public void fillGrid() throws CloneNotSupportedException {
 		for(Tile tile : tileList) {
 			setTile(tile, selection);
 		}
@@ -263,7 +263,7 @@ public class State extends Stage {
 		} else if(type == ObjectType.FLOOR || type == ObjectType.WALL) {
 			staticList.add(newObject);
 			newObject.setCoord(coord);
-			cur.setObject(newObject);
+			cur.setFloor(newObject);
 		}
 		
 		
