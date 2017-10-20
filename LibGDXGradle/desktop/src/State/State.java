@@ -328,8 +328,8 @@ public class State extends Stage {
 	
 	// Get player object
 
-	public Player getPlayer(){
-		return (Player) this.player;
+	public DynamicObject getPlayer(){
+		return this.player;
 	}
 	
 	public void deletePlayer(){
