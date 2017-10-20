@@ -72,9 +72,7 @@ public class GameScreen implements Screen {
         
         previewStage.act();
         previewStage.draw();
-        
-        inputProcessor = new GameInputProcessor(g);
-        Gdx.input.setInputProcessor(inputProcessor);
+
 
 	}
 
