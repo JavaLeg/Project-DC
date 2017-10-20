@@ -529,7 +529,7 @@ public class Editor extends Stage{
 		saveButton.addListener(new ClickListener(){
 			@Override
 	        public void clicked(InputEvent event, float x, float y) {
-				try {
+				//try {
 					DynamicObject clone = selectedObject.clone();
 					
 					
@@ -562,10 +562,11 @@ public class Editor extends Stage{
 					clone.setContactDamage(Double.valueOf(dmgField.getText()));
 
 					saveObj(clone);
-				} catch (CloneNotSupportedException e) {
-					System.out.println("Not cloneable");
-					e.printStackTrace();
-				}
+				//} 
+				//catch (CloneNotSupportedException e) {
+				//	System.out.println("Not cloneable");
+				//	e.printStackTrace();
+				//}
 				
 
 	        }

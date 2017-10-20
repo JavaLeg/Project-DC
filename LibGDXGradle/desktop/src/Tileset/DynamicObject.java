@@ -37,7 +37,7 @@ public class DynamicObject extends GameObject implements Cloneable{
 	private double contactDamage; // how much damage entity deals
 	
 	private int iFrames;
-	private static int iFramesMax = 15; // one second
+	private static int iFramesMax = 15; // quarter second
 	
 	private HashMap<Status, Integer> statuses;
 	private ActionState state;
@@ -49,6 +49,8 @@ public class DynamicObject extends GameObject implements Cloneable{
 		this.contactDamage = damage;
 		this.iFrames = 0;
 		statuses = new HashMap<Status, Integer>();
+		facing = Direction.NORTH;
+		state = ActionState.MOVE;
 	}
 	
 	public DynamicObject(ObjectType type, double hp, double damage, Texture texture) {
@@ -58,6 +60,8 @@ public class DynamicObject extends GameObject implements Cloneable{
 		this.contactDamage = damage;
 		this.iFrames = 0;
 		statuses = new HashMap<Status, Integer>();
+		facing = Direction.NORTH;
+		state = ActionState.MOVE;
 	}
 	
 	public double getHp() {
@@ -90,24 +94,24 @@ public class DynamicObject extends GameObject implements Cloneable{
 		this.contactDamage = damage;
 	}
 
-	
 	public boolean hasStatus(Status s) {
 		return statuses.get(s) != null;
 	}
 	
 	public void destroy(State s) {
 		// animation!!!
-		s.getTile(this.getCoord()).deleteObject();
+		s.deleteObject(getCoord());
 	}
+	
 	
 	public void step(State s) {
 		// potential ongoing effects
-
+		//System.out.print("step\n");
 		
 		// statuses
 		for (Status stat : Status.values()) {
 			Integer stepsLeft = statuses.get(stat);
-			if (stat != null) {
+			if (stepsLeft != null) {
 				
 				// handle effects
 				switch(stat) {
@@ -165,8 +169,10 @@ public class DynamicObject extends GameObject implements Cloneable{
 		return model;
 	}
 	
-	public DynamicObject clone() throws CloneNotSupportedException {
-		return (DynamicObject)super.clone();
+	// naive clone
+	public DynamicObject clone()  {
+		DynamicObject d = new DynamicObject(getType(), getCoord(), hp, contactDamage, getTexture().getTexture());
+		return d;
 	}
 	
 	public void setCoord(Coord coord) {

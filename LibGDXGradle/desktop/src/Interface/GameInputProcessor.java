@@ -15,16 +15,19 @@ public class GameInputProcessor implements InputProcessor {
 	private Action queuedAction;
 	private final int actionSpeed = 5;
 	private int sinceLastAction;
+	private boolean enabled;
 	
 	
 	public GameInputProcessor(DynamicGame g) {
 		this.activeGame = g;
 		sinceLastAction = 0;
+		enabled = false;
 	}
 	
 	
 	@Override
 	public boolean keyDown(int keycode) {		
+		if (!enabled) return false;
 		//SUPPORTS:
 		// 	Move: WSAD, Attack/Special: J
 		//  Move: Arrow Keys, Attack/Special: Z
@@ -71,7 +74,8 @@ public class GameInputProcessor implements InputProcessor {
 				queuedAction = toMake;
 			} else {
 				sinceLastAction = actionSpeed;
-				activeGame.makeAction(toMake);
+				activeGame.makeAction(toMake); // TODO: move to step to syncronise all actions
+				queuedAction = null;
 			}
 		}
 		
@@ -93,7 +97,14 @@ public class GameInputProcessor implements InputProcessor {
 	}
 	
 	
+	public void setEnabled(boolean enabled) {
+		if (!enabled) queuedAction = null; // remove queued actions on pause
+		this.enabled = enabled;
+	}
 	
+	public boolean isEnabled() {
+		return enabled;
+	}
 	
 	@Override
 	public boolean keyUp(int keycode) {

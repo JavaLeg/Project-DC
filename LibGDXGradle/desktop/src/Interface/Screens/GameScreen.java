@@ -61,8 +61,8 @@ public class GameScreen implements Screen {
 
         // Draw both stage right and stage left
         // If window resize (update TODO)
-        previewStage.act();
-        previewStage.draw();
+        //previewStage.act(); TEMP
+        //previewStage.draw(); TEMP
 	}
 
 	@Override

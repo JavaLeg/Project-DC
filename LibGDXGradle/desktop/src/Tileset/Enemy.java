@@ -18,7 +18,6 @@ public class Enemy extends DynamicObject {
 	// Change to HASHMAP<Attack, int> 
 	private int attackTime;
 	private int sinceLastAttack;
-	private int attackCooldown;
 	private Attack attack; 
 	
 	
@@ -45,6 +44,7 @@ public class Enemy extends DynamicObject {
 		this.sinceLastMove = time;
 	}
 	
+	@Override
 	public void step(State s) {
 		super.step(s);
 		
@@ -74,12 +74,15 @@ public class Enemy extends DynamicObject {
 			}
 			
 			// attack behaviour
-			if (sinceLastAttack >= attack.getAttackCooldown() && attack != null) {
-				setActionState(ActionState.ATTACK);
-				attackTime = attack.getAttackSpeed();
-			} else {
-				sinceLastAttack++;
+			if (attack != null) {
+				if (sinceLastAttack >= attack.getAttackCooldown() && attack != null) {
+					setActionState(ActionState.ATTACK);
+					attackTime = attack.getAttackSpeed();
+				} else {
+					sinceLastAttack++;
+				}
 			}
+			
 			break;
 		case DISABLED:
 			break;
@@ -87,10 +90,8 @@ public class Enemy extends DynamicObject {
 			break;
 		
 		}
-		
-		
-		
-		
-		
 	}
+	
+	
+	
 }

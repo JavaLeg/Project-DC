@@ -46,6 +46,20 @@ public class MoveBehaviour {
 		return adj;
 	}
 	
+	public List<Coord> getAdjacentBlocked(Coord c, State s) {
+		List<Coord> adj = new LinkedList<Coord>();
+		if (!s.isBlocked(new Coord(c.getX() + 1, c.getY())))
+			adj.add(new Coord(c.getX() + 1, c.getY()));
+		if (!s.isBlocked(new Coord(c.getX() - 1, c.getY())))
+			adj.add(new Coord(c.getX() - 1, c.getY()));
+		if (!s.isBlocked(new Coord(c.getX(), c.getY() + 1)))
+			adj.add(new Coord(c.getX(), c.getY() + 1));
+		if (!s.isBlocked(new Coord(c.getX(), c.getY() - 1)))
+			adj.add(new Coord(c.getX(), c.getY() - 1));
+		return adj;
+	}
+	
+	
 	
 	// Astar search finding shortest path from one location to other
 	//		Does not take into account active objects, only whether terrain is passable
@@ -88,7 +102,7 @@ public class MoveBehaviour {
 			
 			SearchState curr = searchQueue.poll();
 			pred.put(curr.c, curr.p);
-			System.out.print("added: " + curr.c + " h, f: " + curr.h + "," +  curr.f +  " from: " + pred.get(curr.c) + "\n");
+			//System.out.print("added: " + curr.c + " h, f: " + curr.h + "," +  curr.f +  " from: " + pred.get(curr.c) + "\n");
 			if (curr.c.equals(dst)) {
 				// found path, extract from predecessor array
 				List<Coord> path = new LinkedList<Coord>();

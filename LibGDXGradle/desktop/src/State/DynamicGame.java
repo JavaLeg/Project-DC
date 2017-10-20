@@ -8,6 +8,7 @@ import Tileset.DynamicObject.ActionState;
 import Tileset.GameObject;
 import Tileset.GameObject.ObjectType;
 import Tileset.Player;
+import Tileset.Enemy;
 import Tileset.Behaviour.Direction;
 
 //temporary class for Game, 
@@ -17,18 +18,16 @@ import Tileset.Behaviour.Direction;
 public class DynamicGame {
 	private int steps;
 	private State activeState;
-	private GameInputProcessor input;
 	
 	public DynamicGame() {
 		steps = 0;
 	}
 	
 	// GENERAL FUNCTIONALITY
-	public void initialise(State startState, GameInputProcessor input) {
+	public void initialise(State startState) {
 		// take in a new GameState, and execute any other preamble
 		this.activeState = startState;
 		System.out.print("Initiated\n");
-		this.input = input;
 	}
 	
 	public void step() {
@@ -37,11 +36,11 @@ public class DynamicGame {
 		// get all gameworld objects
 		// iterate upon these objects running their step()
 
-		// TODO: when state fixed
+		//System.out.print(activeState.getAllDynamicObjects().size());
 		for (DynamicObject o : activeState.getAllDynamicObjects()) {
 			o.step(activeState);
 		}
-		input.step();
+		
 		
 		// Conflict Resolution
 		
@@ -65,6 +64,7 @@ public class DynamicGame {
 	public boolean makeAction(Action a) {
 		Coord curr = activeState.findPlayer();
 		Player p = activeState.getPlayer();
+		Coord toMove = null;
 		switch (a) {
 		case ATTACK:
 			p.selectLight();
@@ -77,26 +77,30 @@ public class DynamicGame {
 			System.out.print("USER INPUT: HEAVY ATTACK\n");
 			break;
 		case MOVE_SOUTH:
-			if (p.canChangePosition()) {
-				activeState.movePlayer((Direction.SOUTH).moveInDirection(curr));
+			toMove = (Direction.SOUTH).moveInDirection(curr);
+			if (p.canChangePosition() && !activeState.isBlocked(toMove)) {
+				activeState.movePlayer(toMove);
 			}
 			System.out.print("USER INPUT: DOWN\n");
 			break;
 		case MOVE_WEST:
-			if (p.canChangePosition()) {
-				activeState.movePlayer((Direction.WEST).moveInDirection(curr));
+			toMove = (Direction.WEST).moveInDirection(curr);
+			if (p.canChangePosition() && !activeState.isBlocked(toMove)) {
+				activeState.movePlayer(toMove);
 			}
 			System.out.print("USER INPUT: LEFT\n");
 			break;
 		case MOVE_EAST:
-			if (p.canChangePosition()) {
-				activeState.movePlayer((Direction.EAST).moveInDirection(curr));
+			toMove = (Direction.EAST).moveInDirection(curr);
+			if (p.canChangePosition() && !activeState.isBlocked(toMove)) {
+				activeState.movePlayer(toMove);
 			}
 			System.out.print("USER INPUT: RIGHT\n");
 			break;
 		case MOVE_NORTH:
-			if (p.canChangePosition()) {
-				activeState.movePlayer((Direction.NORTH).moveInDirection(curr));
+			toMove = (Direction.NORTH).moveInDirection(curr);
+			if (p.canChangePosition() && !activeState.isBlocked(toMove)) {
+				activeState.movePlayer(toMove);
 			}
 			System.out.print("USER INPUT: UP\n");
 			break;

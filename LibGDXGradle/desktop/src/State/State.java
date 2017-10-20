@@ -23,7 +23,7 @@ import Interface.Stages.TableTuple;
 import Interface.Stages.Selections.ToolbarSelection;
 
 
-public class State extends Stage{
+public class State extends Stage {
 	
 	private static final int DEFAULT_MAP_WIDTH = 50; 
 	private static final int DEFAULT_MAP_HEIGHT = 50;
@@ -65,6 +65,12 @@ public class State extends Stage{
 			this.player = null;
 		}
 
+		public State(Viewport v, int height, int width) {
+			this(v);
+			this.rowActors = height;
+			this.colActors = width;
+			
+		}
 	private void initialise() {
 		Table gridTable = new Table();
 		
@@ -91,6 +97,11 @@ public class State extends Stage{
 	
 	
 	
+	// TEMP THINGS AS I TRY SOME RENDERING
+	
+	
+	
+	
 	//************************//
 	//******** EDITOR ********//
 	//************************//
@@ -104,7 +115,6 @@ public class State extends Stage{
 		selectedToolBar = s;
 		if (s != ToolbarSelection.FLOOR) cur_d_object = obj;
 	}
-	
 	
 	/*
 	 * GameObject selection
@@ -213,7 +223,7 @@ public class State extends Stage{
 	//************************//
 	
 	public GameObject getObject(Coord coord) {
-		return this.tileList.get(coord.getX()* colActors  + coord.getY() ).getObject();
+		return this.tileList.get(coord.getX()* colActors  + coord.getY()).getObject();
 	}
 	
 	public DynamicObject getDynamicObject(Coord coord) {
@@ -250,6 +260,15 @@ public class State extends Stage{
 		newObject.setCoord(coord);
 		this.tileList.get(coord.getX()* colActors  + coord.getY() ).setObject(newObject);
 	}
+	
+	public void fillObject(GameObject g) {
+		for (int x = 0; x < rowActors; x++) {
+			for (int y = 0; y < colActors; y++) {
+				setObject(g.clone(), new Coord(x,y));
+			}
+		}
+	}
+	
 	
 	
 	public void deleteObject(Coord coord) {
@@ -314,6 +333,7 @@ public class State extends Stage{
 	public List<DynamicObject> getAllDynamicObjects() {
 		List<DynamicObject> ret = new LinkedList<DynamicObject>();
 		for (Tile ta : tileList) {
+			if (ta.getObject() == null) continue;
 			if(ta.getObject().isDynamic()) {
 				ret.add((DynamicObject) ta.getObject());
 			}

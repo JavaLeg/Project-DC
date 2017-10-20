@@ -38,9 +38,9 @@ public class GameObject extends Image implements Cloneable {
 	}
 
 	
-	public GameObject clone() throws CloneNotSupportedException {
-		return (GameObject)super.clone();
-	}
+	//public GameObject clone() throws CloneNotSupportedException {
+	//	return (GameObject)super.clone();
+	//}
 	
 	
 	public TextureRegion getTexture() {
@@ -95,4 +95,11 @@ public class GameObject extends Image implements Cloneable {
 	public void setName(String s) {
 		this.name = s;
 	}
+	
+	public GameObject clone() {
+		GameObject g = new GameObject(this.type, this.cur_texture);
+		g.setCoord(this.position);
+		return g;
+	}
+	
 }

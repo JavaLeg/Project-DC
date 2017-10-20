@@ -16,7 +16,7 @@ public class MoveRandom extends MoveBehaviour {
 	
 	@Override
 	public Coord nextStep(State s, Coord currentPos) {
-		List<Coord> options = this.getAdjacent(currentPos, s);
+		List<Coord> options = this.getAdjacentBlocked(currentPos, s);
 		if (options.size() == 0) {
 			return currentPos;
 		}

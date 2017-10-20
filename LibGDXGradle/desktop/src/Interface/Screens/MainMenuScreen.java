@@ -101,6 +101,15 @@ public class MainMenuScreen implements Screen {
 				}
             }
         });
+        
+        runButton.addListener(new ClickListener() {
+        	@Override
+        	public void clicked(InputEvent event, float x, float y) {
+            
+					((Game)Gdx.app.getApplicationListener()).setScreen(new GameScreen2(game));
+				
+            }
+        });
 
         //Add buttons to table
         mainTable.add(playButton);

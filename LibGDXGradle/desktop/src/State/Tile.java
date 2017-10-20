@@ -134,11 +134,11 @@ public class Tile extends Stack implements Serializable {
 		
 		this.clearChildren();
 		object_texture = new_object.getTexture();
-		try {
-			object = new_object.clone();
-		} catch (CloneNotSupportedException e) {
-			e.printStackTrace();
-		}
+		//try {
+			object = new_object;
+		//} catch (CloneNotSupportedException e) {
+		//	e.printStackTrace();
+		//}
 		if(this.hasFloor()) {
 			this.add(floor);
 		} else {
@@ -159,11 +159,11 @@ public class Tile extends Stack implements Serializable {
 		
 		this.clearChildren();
 		object_texture = new_d_object.getTexture();
-		try {
-			d_object = (DynamicObject) new_d_object.clone();
-		} catch (CloneNotSupportedException e) {
-			e.printStackTrace();
-		}
+		//try {
+			d_object = new_d_object;
+		//} catch (CloneNotSupportedException e) {
+		//	e.printStackTrace();
+		//}
 		if(this.hasFloor()) {
 			this.add(floor);
 		} else {
@@ -215,5 +215,19 @@ public class Tile extends Stack implements Serializable {
 		}
 		return null;
 	}
+	
+	public Texture getFloorTexture() {
+		if (floor_texture == null) return null;
+		return floor_texture.getTexture();
+	}
 
+	public Texture getObjectTexture() {
+		if (this.hasObject()) {
+			return object_texture.getTexture();
+		} else {
+			return null;
+		}
+	}
+	
+	
 }
