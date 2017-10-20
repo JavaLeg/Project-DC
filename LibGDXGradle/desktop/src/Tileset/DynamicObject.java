@@ -119,19 +119,7 @@ public class DynamicObject extends GameObject implements Cloneable, Serializable
 		// test state here
 		return true;
 	}
-	
-	/*
-	 * Used only for dynamic objects (EDITOR SIDE)
-	 */
-	/* No longer needed
-	public ObjectModel getModel() {
-		Texture texture = super.getTexture().getTexture();
-		String texturePath = ((FileTextureData)texture.getTextureData()).getFileHandle().path();
-		DynamicObjectType type = DynamicObjectType.valueOf(super.getType().toString());
-		ObjectModel model = new ObjectModel(hp, contactDamage, texturePath, super.getName(), type);
-		return model;
-	}*/
-	
+		
 	public DynamicObject clone() {
 		return new DynamicObject(getType(), hp, contactDamage, getImgPath());
 	}

@@ -5,7 +5,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;
@@ -22,13 +21,10 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
-import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.engine.desktop.SaveSys;
 
 import Interface.EditorModel;
-import Interface.ObjectModel;
-import Interface.Screens.MainMenuScreen;
 import Interface.Stages.Selections.ToolbarSelection;
 import State.State;
 import Tileset.DynamicObject;
@@ -48,17 +44,9 @@ public class Editor extends Stage {
 	
 	private TableTuple titlePos;
 	private TableTuple tablePos;
-
 	
-	private HashMap<Enum<?>, Class<?>> classMap;
-	private HashMap<ToolbarSelection, String[]> customButtonMap;
-	
-	//private DynamicObject selectedObject;
-	//private Player selectedPlayerObj;
-	//private Enemy selectedEnemyObj;
-	
+	// Used purely for edits
 	private DynamicObject selected_Dyn;
-	private GameObject selected_G;
 	
 	private ToolbarSelection current;
 		
@@ -78,44 +66,10 @@ public class Editor extends Stage {
 		this.tablePos = new TableTuple(v.getScreenWidth()*7/40, v.getScreenHeight());
 		this.path = "SpriteFamily/";
 		this.tableMap = new HashMap<ToolbarSelection, Table>();
-		this.customButtonMap = new HashMap<ToolbarSelection, String[]>();
 		this.saver = new SaveSys();
-		//formatButtons();
 		initialise();
 		update(ToolbarSelection.FLOOR);
 	}
-	
-	/*
-	private void formatButtons() {
-		
-		String[] playerList = {"Edit"};
-		String[] mapList = {"Save", "Refresh", "Clear"};
-		String[] enemyList = {"Edit"};
-		String[] itemList = {"Edit"};
-		
-		customButtonMap.put(ToolbarSelection.PLAYER, playerList);
-		customButtonMap.put(ToolbarSelection.MAP, mapList);
-		customButtonMap.put(ToolbarSelection.ENEMY, enemyList);
-		customButtonMap.put(ToolbarSelection.ITEM, itemList);
-		
-		/*
-		HashMap<String, TextButton> stringMap = new HashMap<String, TextButton>();
-		
-		TextButton saveButton = generateButton("Save Map");		
-		saveButton.addListener(new ClickListener(){
-			@Override
-	        public void clicked(InputEvent event, float x, float y) {
-				try {
-					saveMap(textField.getText());
-				} catch (IOException e) {
-					System.out.println("Cannot save map");
-					e.printStackTrace();
-				}
-	        }
-		});
-		
-	}*/
-	
 	
 	
 	// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ DISPLAYS ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -482,7 +436,6 @@ public class Editor extends Stage {
 						
 						// Right now all attributes initialized as null (Changed through edit)
 						GameObject obj = new GameObject(cur, filePath);
-						selected_G = obj;
 						related.setStaticSelection(obj);
 			        }
 				});
@@ -492,9 +445,7 @@ public class Editor extends Stage {
 			        public void clicked(InputEvent event, float x, float y) {
 						System.out.println("Selected - " + fileName);
 						
-						// Right now all attributes initialized as null (Changed through edit)
 						GameObject obj = new GameObject(cur, filePath);
-						selected_G = obj;
 						related.setStaticSelection(obj);
 			        }
 				});
@@ -517,44 +468,66 @@ public class Editor extends Stage {
 	 * Creates a new table pop up
 	 * Displays all attributes
 	 */	
-	
-	
 	public void newEdit(DynamicObject obj) {
 		final DynamicObject object = obj;
+		ObjectType type = object.getType();
+		
 		Table editTable = new Table();
-		Double hp = obj.getHp();
-		Double dmg = obj.getContactDamage();
-		String name = obj.getName();
-		int atk = 0;
 		Image icon = processPath(obj.getImgPath());
 		
-		final ObjectType type = obj.getType();
-			
 		editTable.add(icon);
 		editTable.row();
 		
-		// Add more later
+		Double hp = obj.getHp();
+		Double dmg = obj.getContactDamage();
+		String name = obj.getName();
+		
+		int atk = 0;
+		int restore = 0;
+		
+		// Special attributes for objects
+		if(type == ObjectType.ENEMY) {
+			atk = ((Enemy) obj).getAttackRate();
+		}else if(type == ObjectType.ITEM) {
+			restore = ((Item) obj).getRestoreValue();
+		}
+		
+		ArrayList<TextField> fieldList = new ArrayList<TextField>();
+		
 		final TextField nameField = generateTextField("Name - " + name);
 		final TextField hpField = generateTextField("HP - " + Double.toString(hp));
 		final TextField dmgField = generateTextField("DMG - " + Double.toString(dmg));
-		final TextField atkField = null;
+		final TextField atkField = generateTextField("Atk rate - " + Integer.toString(atk));
+		final TextField resField = generateTextField("Restore - " + Integer.toString(restore));
 		
-		editTable.add(nameField);
-		editTable.row();
+
+		switch(type) {
+		case PLAYER:
+			fieldList.add(nameField);
+			fieldList.add(hpField);
+			fieldList.add(dmgField);
+			break;
+			
+		case ENEMY:
+			fieldList.add(nameField);
+			fieldList.add(hpField);
+			fieldList.add(dmgField);
+			fieldList.add(atkField);
+			break;
+			
+		case ITEM:
+			fieldList.add(resField);
+			break;
+		default:
+			break;
+		}
 		
-		editTable.add(hpField);
-		editTable.row();
 		
-		editTable.add(dmgField);
-		editTable.row();
+		for(TextField tf : fieldList) {
+			editTable.add(tf);
+			editTable.row();
+		}
 		
-//		if(type == ObjectType.ENEMY) {
-//			atk = ((Enemy) obj).getAttackRate();
-//			//atkField = generateTextField("Atk rate - " + Integer.toString(atk));
-//			editTable.add(atkField);
-//			editTable.row();
-//		}
-				
 		TextButton saveButton = generateButton("Save");
 		editTable.add(saveButton);
 		editTable.row();
@@ -586,6 +559,16 @@ public class Editor extends Stage {
 						check = false;
 					}
 					
+					if(!resField.getText().matches("[0-9]+")) {
+						System.out.println("Invalid restore value!");
+						check = false;
+					}
+					
+					if(!atkField.getText().matches("[0-9]+")) {
+						System.out.println("Invalid restore value!");
+						check = false;
+					}
+					
 					if(!check)
 						return;
 					
@@ -596,9 +579,6 @@ public class Editor extends Stage {
 					clone.setHp(Double.valueOf(hpField.getText()));
 					clone.setContactDamage(Double.valueOf(dmgField.getText()));
 					
-					//if(type == ObjectType.ENEMY)
-						//((Enemy) clone).setAttackRate(Integer.valueOf(atkField.getText()));
-
 					saveObject(clone);
 				
 	        }
