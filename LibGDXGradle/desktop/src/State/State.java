@@ -1,27 +1,16 @@
 package State;
 
 import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
-
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.graphics.glutils.FileTextureData;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
-import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.viewport.Viewport;
-
 import Tileset.*;
 import Tileset.GameObject.ObjectType;
 import Interface.EditorModel;
 import Interface.TileTuple;
 import Interface.Stages.TableTuple;
-import Interface.Stages.Selections.ToolbarSelection;
+
 
 
 public class State extends Stage {
@@ -87,14 +76,8 @@ public class State extends Stage {
 						
 			        }
 				});
-//				gridTable.add(tile).size(40, 40);
 			}
-//			gridTable.row();
 		}
-//		gridTable.top();
-//		gridTable.setFillParent(true);
-//		super.addActor(gridTable);
-		
 	}
 	
 	//************************//
@@ -134,51 +117,6 @@ public class State extends Stage {
 	/*
 	 * Setting the tile texture
 	 */
-//	private void setTile(Tile tile, ObjectType type) {
-//		// If tile already has an object, remove it and return
-//		if(tile.hasObject() && type != ObjectType.FLOOR) {
-//			this.deleteObject(tile.getCoord());
-//			return;
-//		}
-//		if (type == null) return;
-//		
-//		Coord c = null;
-//		
-//		try {
-//			c = tile.getCoord().clone();
-//		} catch (CloneNotSupportedException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
-//		
-//		switch (type){
-//		case FLOOR:
-//			//tile.setFloor(cur_object);
-//			setObject(cur_object, c);
-//			break;
-//		case ENEMY:
-//			setObject(cur_d_object, c);
-//			break;
-//		case ITEM:
-//			setObject(cur_d_object, c);
-//			break;
-//		case WALL:
-//			cur_object.setCoord(tile.getCoord());
-//			if (tile.getObjectType() == ObjectType.PLAYER) {
-//				this.player = null; 
-//			}
-//			setObject(cur_object, c);
-//			break;
-//		case PLAYER:
-//			if (this.player != null) deletePlayer();
-//			setObject(cur_d_object, c);
-//			player = cur_d_object;
-//			break;
-//		default:
-//			break;
-//		}
-//	}
-	
 	private void setTile(Tile tile, ObjectType type) {
 		if (type == null) return;
 		
@@ -245,26 +183,34 @@ public class State extends Stage {
 		ObjectType type = newObject.getType();
 		Tile cur = tileList.get(coord.getX() * colActors  + coord.getY());
 		
-		if (type == ObjectType.PLAYER) {
+		switch(type) {
+		case PLAYER:
 			if (this.hasPlayer() == true) this.deletePlayer(player.getCoord());
 			newObject.setCoord(coord);
 			player = (Player) newObject;
-			//player = (Player) newObject;
-			cur.setDynamicObject((DynamicObject) newObject);
-		} else if(type == ObjectType.ENEMY || type == ObjectType.ITEM) {
+			cur.setObject(player);
+			break;
+		case ENEMY:
+		case ITEM:
 			if (cur.getObjectType() == ObjectType.PLAYER) player = null;
 			dynamicList.add((DynamicObject) newObject);
 			newObject.setCoord(coord);
 			cur.setDynamicObject((DynamicObject) newObject);
-		} else if(type == ObjectType.FLOOR || type == ObjectType.WALL) {
+			break;
+		case WALL:
+			staticList.add(newObject);
+			newObject.setCoord(coord);
+			cur.setObject(newObject);
+			break;
+		case FLOOR:
 			staticList.add(newObject);
 			newObject.setCoord(coord);
 			cur.setFloor(newObject);
+			break;
+		default:
+			break;
+
 		}
-		
-		
-		//newObject.setCoord(coord);
-		//this.tileList.get(coord.getX() * colActors  + coord.getY() ).setObject(newObject);
 	}
 	
 	/*

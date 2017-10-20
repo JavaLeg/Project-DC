@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 import Interface.Splash;
 import Interface.Screens.MainMenuScreen;
+import Interface.Screens.SplashScreen;
 
 public class DCGame extends Game{
 
@@ -20,10 +21,9 @@ public class DCGame extends Game{
 	@Override
 	public void create() {
 		batch = new SpriteBatch();
-		//Use LibGDX's default Arial font.
 		font = new BitmapFont();
-		this.setScreen(new Splash(game));
-		//this.setScreen(new MainMenuScreen(game));
+		this.setScreen(new SplashScreen(game));
+
 	}
 	
 	public void render() {

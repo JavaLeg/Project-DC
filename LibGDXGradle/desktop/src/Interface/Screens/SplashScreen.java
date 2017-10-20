@@ -1,9 +1,7 @@
-package Interface;
+package Interface.Screens;
 
-import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -11,21 +9,18 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.utils.TimeUtils;
 import com.engine.desktop.DCGame;
 
-import Interface.Screens.MainMenuScreen;
 import externals.GifDecoder;
 
-public class Splash implements Screen{
+public class SplashScreen implements Screen{
 
 	private SpriteBatch batch;
 	private Animation<TextureRegion> animation;
-	private AssetManager assetManager;
 	private float elapsed;
 	private float startTime;
 	private DCGame g;
 	
-	public Splash(DCGame g) {
+	public SplashScreen(DCGame g) {
 		this.g = g;
-		assetManager = new AssetManager();
 	}
 	
 	@Override
@@ -45,9 +40,10 @@ public class Splash implements Screen{
         batch.begin();
         batch.draw(animation.getKeyFrame(elapsed), 20.0f, 20.0f);        
         batch.end();
-        
-        //System.out.println(TimeUtils.timeSinceMillis((long) startTime));
-        
+
+        /*
+         * Delay before showing main menu
+         */
         if(TimeUtils.timeSinceMillis((long) startTime) > 5000){
             g.setScreen(new MainMenuScreen(g));
         }

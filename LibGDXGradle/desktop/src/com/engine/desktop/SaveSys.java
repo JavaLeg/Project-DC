@@ -15,7 +15,6 @@ import java.util.Arrays;
 import java.util.Iterator;
 
 import Interface.EditorModel;
-import Interface.ObjectModel;
 import Tileset.DynamicObject;
 import Tileset.Enemy;
 import Tileset.GameObject.ObjectType;
