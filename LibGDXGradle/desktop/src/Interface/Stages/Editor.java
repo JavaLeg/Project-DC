@@ -373,12 +373,20 @@ public class Editor extends Stage {
 			// No object correspondence
 			final String fileName = file.name();
 			final String filePath = file.path();
+			
 			String labels = fileName;
 			
 			final ObjectType cur = ObjectType.valueOf(s.toString());
 
-			if(cur == ObjectType.ENEMY || cur == ObjectType.PLAYER)
+			if (cur == ObjectType.ENEMY || cur == ObjectType.PLAYER) {
 				labels = "Health: 1\nDamage: 1\nSpeed: 1";
+			} else if (cur == ObjectType.ITEM) {
+				labels = "Item";
+			} else if (cur == ObjectType.WALL) {
+				labels = "Wall";
+			} else if (cur == ObjectType.FLOOR) {
+				labels = "Floor";
+			}
 
 			// Display the sprite (Information)
 			final Texture texture = new Texture(file);	

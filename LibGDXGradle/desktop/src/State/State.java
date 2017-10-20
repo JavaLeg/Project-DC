@@ -196,7 +196,7 @@ public class State extends Stage {
 		} else if(type == ObjectType.FLOOR || type == ObjectType.WALL) {
 			staticList.add(newObject);
 			newObject.setCoord(coord);
-			cur.setFloor(newObject);
+			cur.setObject(newObject);
 		}
 	}
 	
