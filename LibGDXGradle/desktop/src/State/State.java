@@ -82,7 +82,12 @@ public class State extends Stage {
 				tile.addListener(new ClickListener(){
 					@Override
 			        public void clicked(InputEvent event, float x, float y) {
-						setTile(tile, selection);
+						try {
+							setTile(tile, selection);
+						} catch (CloneNotSupportedException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
 			        }
 				});
 //				gridTable.add(tile).size(40, 40);
@@ -132,40 +137,66 @@ public class State extends Stage {
 	/*
 	 * Setting the tile texture
 	 */
-	private void setTile(Tile tile, ObjectType type) {
-		// If tile already has an object, remove it and return
-		if(tile.hasObject() && type != ObjectType.FLOOR) {
-			this.deleteObject(tile.getCoord());
-			return;
-		}
+//	private void setTile(Tile tile, ObjectType type) {
+//		// If tile already has an object, remove it and return
+//		if(tile.hasObject() && type != ObjectType.FLOOR) {
+//			this.deleteObject(tile.getCoord());
+//			return;
+//		}
+//		if (type == null) return;
+//		
+//		Coord c = null;
+//		
+//		try {
+//			c = tile.getCoord().clone();
+//		} catch (CloneNotSupportedException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+//		
+//		switch (type){
+//		case FLOOR:
+//			//tile.setFloor(cur_object);
+//			setObject(cur_object, c);
+//			break;
+//		case ENEMY:
+//			setObject(cur_d_object, c);
+//			break;
+//		case ITEM:
+//			setObject(cur_d_object, c);
+//			break;
+//		case WALL:
+//			cur_object.setCoord(tile.getCoord());
+//			if (tile.getObjectType() == ObjectType.PLAYER) {
+//				this.player = null; 
+//			}
+//			setObject(cur_object, c);
+//			break;
+//		case PLAYER:
+//			if (this.player != null) deletePlayer();
+//			setObject(cur_d_object, c);
+//			player = cur_d_object;
+//			break;
+//		default:
+//			break;
+//		}
+//	}
+	
+	private void setTile(Tile tile, ObjectType type) throws CloneNotSupportedException {
 		if (type == null) return;
 		
-		switch (type){
-		case FLOOR:
-			//tile.setFloor(cur_object);
-			setObject(cur_object, tile.getCoord());
-			break;
-		case ENEMY:
-			setObject(cur_d_object, tile.getCoord());
-			break;
-		case ITEM:
-			setObject(cur_d_object, tile.getCoord());
-			break;
-		case WALL:
-			cur_object.setCoord(tile.getCoord());
-			if (tile.getObjectType() == ObjectType.PLAYER) {
-				this.player = null; 
-			}
-			setObject(cur_object, tile.getCoord());
-			break;
-		case PLAYER:
-			if (this.player != null) deletePlayer();
-			setObject(cur_d_object, tile.getCoord());
-			player = cur_d_object;
-			break;
-		default:
-			break;
+		GameObject obj = null;
+		
+		if(type == ObjectType.ENEMY || type == ObjectType.ITEM || type == ObjectType.PLAYER) {
+			obj = cur_d_object.clone();
+			obj.setCoord(tile.getCoord());
+			dynamicList.add((DynamicObject) obj);
+		}else {
+			obj = cur_object.clone();
+			obj.setCoord(tile.getCoord());
+			staticList.add(obj);
 		}
+		tile.setObject(obj);
 	}
 
 
@@ -217,7 +248,7 @@ public class State extends Stage {
 		
 		if(type == ObjectType.ENEMY || type == ObjectType.PLAYER || type == ObjectType.ITEM) {
 			dynamicList.add((DynamicObject) newObject);
-		}else if(type == ObjectType.ENEMY || type == ObjectType.PLAYER) {
+		}else if(type == ObjectType.FLOOR || type == ObjectType.WALL) {
 			staticList.add(newObject);
 		}
 		
@@ -237,7 +268,9 @@ public class State extends Stage {
 		ObjectType type = obj.getType();
 		
 		if(type == ObjectType.PLAYER || type == ObjectType.ITEM || type == ObjectType.ENEMY) {
-			
+			dynamicList.remove(obj);
+		}else {
+			staticList.remove(obj);
 		}
 		
 		

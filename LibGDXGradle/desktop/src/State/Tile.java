@@ -157,8 +157,8 @@ public class Tile extends Group{
 	public void setDynamicObject(DynamicObject new_d_object) {
 		this.removeActor("object");
 		d_obj = new_d_object;
-		//DynamicObject d_object = (DynamicObject) new_d_object.clone();
-		this.addActor(processPath(new_d_object.getImgPath()), "d_object", 2);		
+		DynamicObject d_object = (DynamicObject) new_d_object.clone();
+		//this.addActor(processPath(new_d_object.getImgPath()), "d_object", 2);		
 	}
 	
 //	private TextureRegion processPath(String path) {
