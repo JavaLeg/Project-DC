@@ -2,14 +2,8 @@ package Tileset;
 
 import java.io.Serializable;
 import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
 
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.graphics.glutils.FileTextureData;
 
-import Interface.ObjectModel;
 import State.Coord;
 import State.State;
 import Tileset.Behaviour.MoveBehaviour;

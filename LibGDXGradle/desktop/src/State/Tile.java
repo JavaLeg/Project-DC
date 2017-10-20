@@ -1,12 +1,10 @@
 package State;
 
 
-import java.io.Serializable;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.graphics.glutils.FileTextureData;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
@@ -182,13 +180,4 @@ public class Tile extends Group{
 		this.g_obj = null;
 	}*/
 	
-
-	// FOR JAMES
-//	public String getObjectPath() {
-//		if (object_texture != null) {
-//			String k = ((FileTextureData)object_texture.getTexture().getTextureData()).getFileHandle().path();
-//			return k;
-//		}
-//		return null;
-//	}
 }

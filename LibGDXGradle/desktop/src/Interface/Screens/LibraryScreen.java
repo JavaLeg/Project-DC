@@ -72,7 +72,7 @@ public class LibraryScreen implements Screen{
         mainTable.setFillParent(true);
     	sideTable.bottom();
         sideTable.padBottom(10);
-        mainTable.bottom();
+        mainTable.top();
         
         
         // SIDE TABLE
@@ -148,7 +148,7 @@ public class LibraryScreen implements Screen{
         // Add maps to list
         File[] list = fileHandle.getLibrary();
         for (final File f : list) {
-        	final String fileName = f.getName().split("\\.", 2)[0];
+        	final String fileName = f.getName();
         	final Label fileLabel = new Label(fileName, new LabelStyle(itemFont, Color.WHITE));
         	fileLabel.addListener(new ClickListener(){
                 @Override
