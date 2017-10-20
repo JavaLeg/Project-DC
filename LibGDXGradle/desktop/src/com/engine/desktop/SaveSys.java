@@ -10,6 +10,9 @@ import java.io.ObjectOutputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Iterator;
 
 import Interface.EditorModel;
 import Interface.ObjectModel;
@@ -78,7 +81,15 @@ public class SaveSys{
     }
     
     
-    
+    public void Delete(String fileName) {
+    	 File[] list = this.getLibrary();
+    	 
+         for (final File f : list) {
+        	 final String file = f.getName().split("\\.", 2)[0];
+        	 if(file.equals(fileName)) {
+        		 f.delete();        	 }
+         }
+	}
     
     
     

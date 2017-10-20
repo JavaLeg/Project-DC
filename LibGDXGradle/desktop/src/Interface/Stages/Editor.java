@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;
@@ -15,16 +16,19 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.engine.desktop.SaveSys;
 
 import Interface.EditorModel;
 import Interface.ObjectModel;
+import Interface.Screens.MainMenuScreen;
 import Interface.Stages.Selections.ToolbarSelection;
 import State.State;
 import Tileset.DynamicObject;
@@ -139,7 +143,10 @@ public class Editor extends Stage {
 		newTable.top();
 
 		super.addActor(new Image(new TextureRegion(new Texture(Gdx.files.internal("EditorScreen/midwall_background_side.png")))));
-		super.addActor(newTable);
+		ScrollPane scroll = new ScrollPane(newTable);
+		scroll.setSize(220,470);
+		scroll.moveBy(10, 0);
+		super.addActor(scroll);
 	}
 
 	
@@ -153,7 +160,8 @@ public class Editor extends Stage {
 	// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ GENERATION ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 	
 	private TextButton generateButton(String s) {
-		TextButton button = new TextButton(s, skin);
+		String newString = " " + s + " ";
+		TextButton button = new TextButton(newString, skin);
 		return button;
 	}
 	
@@ -392,6 +400,7 @@ public class Editor extends Stage {
 					related.clearGrid();
 		        }
 			});
+			
 			return newTable;
 		default:
 			break;
