@@ -183,20 +183,33 @@ public class State extends Stage {
 		ObjectType type = newObject.getType();
 		Tile cur = tileList.get(coord.getX() * colActors  + coord.getY());
 		
-		if (type == ObjectType.PLAYER) {
+		switch(type) {
+		case PLAYER:
 			if (this.hasPlayer() == true) this.deletePlayer(player.getCoord());
 			newObject.setCoord(coord);
 			player = (Player) newObject;
-			cur.setDynamicObject((DynamicObject) newObject);
-		} else if(type == ObjectType.ENEMY || type == ObjectType.ITEM) {
+			cur.setObject(player);
+			break;
+		case ENEMY:
+		case ITEM:
 			if (cur.getObjectType() == ObjectType.PLAYER) player = null;
 			dynamicList.add((DynamicObject) newObject);
 			newObject.setCoord(coord);
 			cur.setDynamicObject((DynamicObject) newObject);
-		} else if(type == ObjectType.FLOOR || type == ObjectType.WALL) {
+			break;
+		case WALL:
+			staticList.add(newObject);
+			newObject.setCoord(coord);
+			cur.setObject(newObject);
+			break;
+		case FLOOR:
 			staticList.add(newObject);
 			newObject.setCoord(coord);
 			cur.setFloor(newObject);
+			break;
+		default:
+			break;
+
 		}
 	}
 	
