@@ -238,8 +238,8 @@ public class Editor extends Stage {
 						 "Atk Rate: " + ((Enemy) obj).getAttackRate() + "\n";
 				break;
 			case ITEM:
-				labels = "Name: " + obj.getName() + "\n" + 
-						 "Restore: " + ((Item) obj).getRestoreValue() + "\n";
+				labels = "Name: " + obj.getName() + "\n";
+						 //"Restore: " + ((Item) obj).getRestoreValue() + "\n";
 				break;
 			default:
 				break;
