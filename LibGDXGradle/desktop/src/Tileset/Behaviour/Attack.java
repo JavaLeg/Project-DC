@@ -19,6 +19,13 @@ public class Attack {
 	
 	// likely takes in some sort of id or animaton as well
 	// does not clone lists
+	/**
+	 * @param hitbox : Relative squares it will damage
+	 * @param damage : Amount of damage inflicted on enemies
+	 * @param targets : ObjectTypes it damages
+	 * @param speed : Amount of time the Attack lasts
+	 * @param cooldown : Amount of time it takes to use attack again (applicable to enemies)
+	 */
 	public Attack(List<Coord> hitbox, int damage, List<ObjectType> targets, int speed, int cooldown) {
 		this.hitbox = hitbox;
 		this.damage = damage;
