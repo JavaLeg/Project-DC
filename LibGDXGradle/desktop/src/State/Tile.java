@@ -40,6 +40,7 @@ public class Tile extends Group{
 		this.addActor(actor);
 		actor.setZIndex(order);
 		actor.setBounds(0, 0, 40, 40);
+		System.out.println("adding " + name + " at " + order);
 	}
 	
 	private void removeActor(String name) {
@@ -90,6 +91,7 @@ public class Tile extends Group{
 	}
 	
 	public void setFloor(GameObject obj) {
+		this.deleteFloor();
 		this.addActor(processPath(obj.getImgPath()), "floor", 1);
 		// FOR JAMES
 		this.g_obj = obj;
@@ -105,15 +107,13 @@ public class Tile extends Group{
 	//*************************//
 	
 	public boolean hasObject() {
-		return (this.hasActor("object") || this.hasActor("d_object"));
+		return this.hasActor("object");
 	}
 
 	public GameObject getObject() {
 		if (this.hasObject()) {
 			if (this.hasActor("object"))
 				return g_obj;
-			else
-				return d_obj;
 		}
 		return null;
 	}
@@ -126,12 +126,13 @@ public class Tile extends Group{
 	 */
 
 	public void setObject(GameObject new_object) {
-		this.removeActor("object");
-		this.removeActor("d_object");
+		if (this.hasObject()) {
+			deleteObject();
+			return;
+		}
+		deleteObject();
 		g_obj = new_object;
-		//GameObject object = new_object.clone();
 		this.addActor(processPath(new_object.getImgPath()), "object", 2);
-		if (d_obj != null) this.addActor(processPath(d_obj.getImgPath()), "d_object", 2);
 	}	
 	
 	
@@ -140,23 +141,14 @@ public class Tile extends Group{
 	 * Only 1 GameObject should be allowed at once
 	 */
 	public void setDynamicObject(DynamicObject new_d_object) {
-		this.removeActor("d_object");
-		this.removeActor("object");
-		d_obj = new_d_object;
-/*		try {
-			DynamicObject d_object = new_d_object.clone();
-		} catch (CloneNotSupportedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}*/
-		
-		if (g_obj != null) this.addActor(processPath(g_obj.getImgPath()), "object", 2);
-		this.addActor(processPath(new_d_object.getImgPath()), "d_object", 2);		
+		if (this.hasObject()) {
+			deleteObject();
+			return;
+		}
+		deleteObject();
+		g_obj = new_d_object;
+		this.addActor(processPath(new_d_object.getImgPath()), "object", 2);		
 	}
-	
-//	private TextureRegion processPath(String path) {
-//		return new TextureRegion(new Texture(Gdx.files.internal(path)));
-//	}
 	
 	private Image processPath(String path) {
 		return new Image(new TextureRegion(new Texture(Gdx.files.internal(path))));
@@ -170,8 +162,9 @@ public class Tile extends Group{
 	}
 	
 	public void deleteObject() {
-		this.removeActor("d_object");
-		this.d_obj = null;
+		this.removeActor("object");
+//		this.d_obj = null;
+		this.g_obj = null;
 	}
 	
 /*	public void deleteObject() {
