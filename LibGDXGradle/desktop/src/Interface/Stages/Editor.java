@@ -49,8 +49,8 @@ public class Editor extends Stage {
 	private HashMap<ToolbarSelection, String[]> customButtonMap;
 	
 	//private DynamicObject selectedObject;
-	private Player selectedPlayerObj;
-	private Enemy selectedEnemyObj;
+	//private Player selectedPlayerObj;
+	//private Enemy selectedEnemyObj;
 	
 	private DynamicObject selected_Dyn;
 	private GameObject selected_G;
@@ -234,12 +234,12 @@ public class Editor extends Stage {
 			case ENEMY:
 				labels = "Name: " + obj.getName() + "\n" + 
 						 "Health: " + obj.getHp() + "\n" +
-						 "Damage: " + obj.getContactDamage() + "\n" +
-						 "Atk Rate: " + ((Enemy) obj).getAttackRate() + "\n";
+						 "Damage: " + obj.getContactDamage() + "\n";
+						 //"Atk Rate: " + ((Enemy) obj).getAttackRate() + "\n";
 				break;
 			case ITEM:
-				labels = "Name: " + obj.getName() + "\n" + 
-						 "Restore: " + ((Item) obj).getRestoreValue() + "\n";
+				labels = "Name: " + obj.getName() + "\n"; 
+						 //"Restore: " + ((Item) obj).getRestoreValue() + "\n";
 				break;
 			default:
 				break;
@@ -304,7 +304,7 @@ public class Editor extends Stage {
 				@Override
 		        public void clicked(InputEvent event, float x, float y) {
 					
-					if(selectedPlayerObj == null) {
+					if(selected_Dyn == null) {
 						System.out.println("No object selected!");
 						return;
 					}
@@ -495,12 +495,12 @@ public class Editor extends Stage {
 		editTable.add(dmgField);
 		editTable.row();
 		
-		if(type == ObjectType.ENEMY) {
-			atk = ((Enemy) obj).getAttackRate();
-			//atkField = generateTextField("Atk rate - " + Integer.toString(atk));
-			editTable.add(atkField);
-			editTable.row();
-		}
+//		if(type == ObjectType.ENEMY) {
+//			atk = ((Enemy) obj).getAttackRate();
+//			//atkField = generateTextField("Atk rate - " + Integer.toString(atk));
+//			editTable.add(atkField);
+//			editTable.row();
+//		}
 				
 		TextButton saveButton = generateButton("Save");
 		editTable.add(saveButton);
@@ -543,7 +543,7 @@ public class Editor extends Stage {
 					clone.setHp(Double.valueOf(hpField.getText()));
 					clone.setContactDamage(Double.valueOf(dmgField.getText()));
 					
-					if(type == ObjectType.ENEMY)
+					//if(type == ObjectType.ENEMY)
 						//((Enemy) clone).setAttackRate(Integer.valueOf(atkField.getText()));
 
 					saveObject(clone);
