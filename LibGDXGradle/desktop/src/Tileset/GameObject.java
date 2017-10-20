@@ -42,7 +42,7 @@ public class GameObject implements Cloneable, Serializable {
 
 	
 	public GameObject clone() throws CloneNotSupportedException {
-		return (GameObject)super.clone();
+		return new GameObject(type, imgPath);
 	}
 		
 	/*

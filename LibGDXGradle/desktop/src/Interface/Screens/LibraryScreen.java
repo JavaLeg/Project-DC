@@ -30,6 +30,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
+import com.engine.desktop.DCGame;
 import com.engine.desktop.SaveSys;
 import Interface.Stages.Selections.LibrarySelection;
 
@@ -37,7 +38,7 @@ public class LibraryScreen implements Screen{
 	
     private TextureAtlas atlas;
     protected Skin skin;
-    private Game game;
+    private DCGame game;
     private SaveSys fileHandle;
     
     private Viewport viewport;
@@ -47,8 +48,8 @@ public class LibraryScreen implements Screen{
     private LibrarySelection selection;
     private String selected_map;
 
-    public LibraryScreen(Game game) throws IOException {
-    	this.game = game;
+    public LibraryScreen(DCGame game2) throws IOException {
+    	this.game = game2;
     	this.fileHandle = new SaveSys();
     }
     
@@ -86,6 +87,12 @@ public class LibraryScreen implements Screen{
 						try {
 							switch(selection) {
 							case EDIT:
+								
+								if(selected_map == null) {
+									System.out.println("No map selected!");
+									return;
+								}
+								
 								s = new EditorScreen(game);
 								System.out.println("Loading into Game: " + selected_map + "...");
 								((Game)Gdx.app.getApplicationListener()).setScreen(s);

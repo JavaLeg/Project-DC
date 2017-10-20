@@ -2,8 +2,6 @@ package State;
 
 import java.io.Serializable;
 
-import Tileset.DynamicObject;
-
 public class Coord implements Serializable, Cloneable{
 	/**
 	 * 

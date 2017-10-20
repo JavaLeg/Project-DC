@@ -12,6 +12,8 @@ import com.badlogic.gdx.graphics.glutils.FileTextureData;
 import Interface.ObjectModel;
 import State.Coord;
 import State.State;
+import Tileset.Behaviour.MoveBehaviour;
+import Tileset.Behaviour.MoveTrack;
 
 // DynamicObject is in charge of: hp
 public class DynamicObject extends GameObject implements Cloneable, Serializable{
@@ -23,14 +25,14 @@ public class DynamicObject extends GameObject implements Cloneable, Serializable
 	// Dynamic types are: Enemy, Player, Trap
 	// Not dynamic types are: Terrain, Item
 	public static enum DynamicObjectType {
-		PLAYER, ENEMY
+		PLAYER, ENEMY, ITEM
 	} 
 	
 	public static enum Status {
 		POISON, STUN, SLOW
 	}
 	
-	
+	private MoveTrack moves;
 	private double hp;
 	private double contactDamage; // how much damage entity deals
 	
@@ -101,7 +103,9 @@ public class DynamicObject extends GameObject implements Cloneable, Serializable
 	
 	public void step(State s) {
 		// potential ongoing effects
-		
+		if (moves.nextStep(s, this.getCoord()) != null) {
+			
+		}
 		// general management
 		if (getHp() < 0) {
 			destroy(s);
@@ -129,6 +133,6 @@ public class DynamicObject extends GameObject implements Cloneable, Serializable
 	}*/
 	
 	public DynamicObject clone() throws CloneNotSupportedException {
-		return (DynamicObject)super.clone();
+		return new DynamicObject(getType(), hp, contactDamage, getImgPath());
 	}
 }

@@ -35,12 +35,13 @@ import Tileset.DynamicObject;
 import Tileset.Enemy;
 import Tileset.GameObject;
 import Tileset.GameObject.ObjectType;
+import Tileset.Item;
 import Tileset.Player;
 
 /*
  * Stage for the editor UI (Tools on the left of the screen)
  */
-public class Editor extends Stage{
+public class Editor extends Stage {
 	
 	private Skin skin;
 	private HashMap<ToolbarSelection, Table> tableMap;
@@ -53,8 +54,11 @@ public class Editor extends Stage{
 	private HashMap<ToolbarSelection, String[]> customButtonMap;
 	
 	//private DynamicObject selectedObject;
-	private Player selectedPlayerObj;
-	private Enemy selectedEnemyObj;
+	//private Player selectedPlayerObj;
+	//private Enemy selectedEnemyObj;
+	
+	private DynamicObject selected_Dyn;
+	private GameObject selected_G;
 	
 	private ToolbarSelection current;
 		
@@ -186,172 +190,91 @@ public class Editor extends Stage{
 		TextButton editButton = null;
 		TextButton customButton = null;
 		
-		switch(s) {
-		case PLAYER:
+		if(s == ToolbarSelection.PLAYER || s == ToolbarSelection.ENEMY || s == ToolbarSelection.ITEM) {
 			editButton = generateButton("Edit");
 			newTable.add(editButton);
 			editButton.addListener(new ClickListener(){
 				@Override
 		        public void clicked(InputEvent event, float x, float y) {
 					
-					if(selectedPlayerObj == null) {
+					if(selected_Dyn == null) {
 						System.out.println("No object selected!");
 						return;
 					}
 
-					System.out.println("Editing - " + selectedPlayerObj);
-					newPlayerEdit(selectedPlayerObj);
+					System.out.println("Editing - " + selected_Dyn);
+					newEdit(selected_Dyn);
 		        }
 			});
-			break;
-		case ENEMY:
-			editButton = generateButton("Edit");
-			newTable.add(editButton);
-			editButton.addListener(new ClickListener(){
+			
+			customButton = generateButton("default");
+			newTable.add(customButton);
+			customButton.addListener(new ClickListener(){
 				@Override
-		        public void clicked(InputEvent event, float x, float y) {
-					
-					if(selectedEnemyObj == null) {
-						System.out.println("No object selected!");
-						return;
+			    public void clicked(InputEvent event, float x, float y) {
+					try {
+						update(s);
+					} catch (IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
 					}
-
-					System.out.println("Editing - " + selectedEnemyObj);
-					newEnemyEdit(selectedEnemyObj);
-		        }
-			});
-			break;
-		default:
-			break;
-		}
-		
-		customButton = generateButton("default");
-		newTable.add(customButton);
-		customButton.addListener(new ClickListener(){
-			@Override
-		    public void clicked(InputEvent event, float x, float y) {
-				try {
-					update(s);
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
 				}
-			}
-		});
+			});
+		}
 		newTable.row();
 		
 		int i = 0;
+		ObjectType type = ObjectType.valueOf(s.toString());
 		
-		switch(s) {
-		case PLAYER:
-			for(FileHandle file: files) {
-				final Player player = saver.LoadPlayer(file.name());
-				Image icon = processPath(player.getImgPath());
-			
-				String labels = "Name: " + player.getName() + "\n" + 
-								"Health: " + player.getHp() + "\n" +
-								"Damage: " + player.getContactDamage() + "\n";
-				
-				Label icon_labels = new Label(labels, new Label.LabelStyle(new BitmapFont(), Color.BLACK));
-				
-				newTable.add(icon).size(40, 40);
-				newTable.add(icon_labels).pad(5);
-				
 
-				icon.addListener(new ClickListener(){
-					@Override
-				    public void clicked(InputEvent event, float x, float y) {
-						System.out.println("Selected - " + player.getName());
-						selectedPlayerObj = player;
-						related.setPlayerSelection(player);
-				    }
-				});
-				
-				// Need to format these
-				if (i % 2 == 1 && i != 0) newTable.row();
-				i++;		
-			}	
-			break;
-		case ENEMY:
-			for(FileHandle file: files) {
-				final Enemy enemy = saver.LoadEnemy(file.name());
-				Image icon = processPath(enemy.getImgPath());
-			
-				String labels = "Name: " + enemy.getName() + "\n" + 
-								"Health: " + enemy.getHp() + "\n" +
-								"Damage: " + enemy.getContactDamage() + "\n";
-				
-				Label icon_labels = new Label(labels, new Label.LabelStyle(new BitmapFont(), Color.BLACK));
-				
-				newTable.add(icon).size(40, 40);
-				newTable.add(icon_labels).pad(5);
-				
-
-				icon.addListener(new ClickListener(){
-					@Override
-				    public void clicked(InputEvent event, float x, float y) {
-						System.out.println("Selected - " + enemy.getName());
-						selectedEnemyObj = enemy;
-						related.setEnemySelection(enemy);
-				    }
-				});
-				
-				// Need to format these
-				if (i % 2 == 1 && i != 0) newTable.row();
-				i++;		
-			}	
-			break;
-		default:
-			break;
-		}
-		
-		return newTable;
-		
-		/*
-		 * Load all saved objects into custom table
-		 * And revive attributes
-		 
-		int i = 0;
 		for(FileHandle file: files) {
-			ObjectModel model = saver.LoadObj(file.name(), quick_path);
-
-			final Texture texture = new Texture(Gdx.files.internal(model.getPath()));
-			final ObjectType cur = ObjectType.valueOf(s.toString());
-			Image icon = new Image(new TextureRegion(texture));
-
-			final DynamicObject object = new DynamicObject(ObjectType.valueOf(s.toString()), model.getHp(), model.getDmg(), texture);
-			object.setName(model.getName());
+			final DynamicObject obj = saver.Load(file.name(), type);
+			Image icon = processPath(obj.getImgPath());
 			
-			String labels = "Name: " + object.getName() + "\n" + 
-							"Health: " + object.getHp() + "\n" +
-							"Damage: " + object.getContactDamage() + "\n";
 			
-
-
-			Label icon_name = new Label(labels, new Label.LabelStyle(new BitmapFont(), Color.BLACK));
+			String labels = null;
 			
+			switch(type) {
+			case PLAYER:
+				labels = "Name: " + obj.getName() + "\n" + 
+						 "Health: " + obj.getHp() + "\n" +
+						 "Damage: " + obj.getContactDamage() + "\n";
+				break;
+			case ENEMY:
+				labels = "Name: " + obj.getName() + "\n" + 
+						 "Health: " + obj.getHp() + "\n" +
+						 "Damage: " + obj.getContactDamage() + "\n";
+						 //"Atk Rate: " + ((Enemy) obj).getAttackRate() + "\n";
+				break;
+			case ITEM:
+				labels = "Name: " + obj.getName() + "\n"; 
+						 //"Restore: " + ((Item) obj).getRestoreValue() + "\n";
+				break;
+			default:
+				break;
+			}
+
+				
+			Label icon_labels = new Label(labels, new Label.LabelStyle(new BitmapFont(), Color.BLACK));
+				
 			newTable.add(icon).size(40, 40);
-			newTable.add(icon_name).pad(5);
-			
+			newTable.add(icon_labels).pad(5);
+				
 
 			icon.addListener(new ClickListener(){
 				@Override
-			    public void clicked(InputEvent event, float x, float y) {
-					System.out.println("Selected - " + object.getName());
-					selectedObject = object;
-					related.setSelection(texture, s, object);
-			    }
+				public void clicked(InputEvent event, float x, float y) {
+					System.out.println("Selected - " + obj.getName());
+					selected_Dyn = obj;
+					related.setDynamicSelection(obj);
+				}
 			});
-			
+				
+			// Need to format these
 			if (i % 2 == 1 && i != 0) newTable.row();
-			
-			// Don't let it go over the edge
-			if (i > 20 && s == ToolbarSelection.FLOOR) break;
-			if (i > 14 && s == ToolbarSelection.ENEMY) break;
 			i++;		
-		}	
+			}	
 		return newTable;
-		*/
 	}
 	
 	
@@ -383,21 +306,20 @@ public class Editor extends Stage{
 		TextButton editButton = null;
 		TextButton customButton = null;
 		
-		switch(s) {
-		case PLAYER:
+		if(s == ToolbarSelection.PLAYER || s == ToolbarSelection.ENEMY || s == ToolbarSelection.ITEM) {
 			editButton = generateButton("Edit");
 			newTable.add(editButton);
 			editButton.addListener(new ClickListener(){
 				@Override
 		        public void clicked(InputEvent event, float x, float y) {
 					
-					if(selectedPlayerObj == null) {
+					if(selected_Dyn == null) {
 						System.out.println("No object selected!");
 						return;
 					}
 					
-					System.out.println("Editing - " + selectedPlayerObj);
-					newPlayerEdit(selectedPlayerObj);
+					System.out.println("Editing - " + selected_Dyn);
+					newEdit(selected_Dyn);
 		        }
 			});
 
@@ -409,32 +331,10 @@ public class Editor extends Stage{
 					updateCustom(s);
 		        }
 			});
-			break;
-		case ENEMY:
-			editButton = generateButton("Edit");
-			newTable.add(editButton);
-			editButton.addListener(new ClickListener(){
-				@Override
-		        public void clicked(InputEvent event, float x, float y) {
-					
-					if(selectedEnemyObj == null) {
-						System.out.println("No object selected!");
-						return;
-					}
-					
-					System.out.println("Editing - " + selectedEnemyObj);
-					newEnemyEdit(selectedEnemyObj);
-		        }
-			});
-			customButton = generateButton("Custom");
-			newTable.add(customButton);
-			customButton.addListener(new ClickListener(){
-				@Override
-		        public void clicked(InputEvent event, float x, float y) {
-					updateCustom(s);
-		        }
-			});
-			break;
+		}
+		
+		// Custom buttons
+		switch(s) {
 		case FLOOR:
 			TextButton fillButton = generateButton("Fill");
 			newTable.add(fillButton);
@@ -534,7 +434,20 @@ public class Editor extends Stage{
 			newTable.add(icon).size(40, 40);
 			newTable.add(icon_name).pad(5);
 			
-			switch(cur) {
+			switch(cur){
+			case PLAYER:
+				icon.addListener(new ClickListener(){
+					@Override
+			        public void clicked(InputEvent event, float x, float y) {
+						System.out.println("Selected - " + fileName);
+						
+						// Right now all attributes initialized as null (Changed through edit)
+						Player obj = new Player(filePath);
+						selected_Dyn = obj;
+						related.setDynamicSelection(obj);
+			        }
+				});
+				break;
 			case ENEMY:
 				icon.addListener(new ClickListener(){
 					@Override
@@ -542,46 +455,9 @@ public class Editor extends Stage{
 						System.out.println("Selected - " + fileName);
 						
 						// Right now all attributes initialized as null (Changed through edit)
-						Enemy enemy = new Enemy(filePath);
-						selectedEnemyObj = enemy;
-						related.setEnemySelection(enemy);
-			        }
-				});
-				break;
-			case PLAYER:
-				icon.addListener(new ClickListener(){
-					@Override
-			        public void clicked(InputEvent event, float x, float y) {
-						System.out.println("Selected - " + fileName);
-						
-						// Right now all attributes initialised as null (Changed through edit)
-						Player player = new Player(filePath);
-						selectedPlayerObj = player;
-						related.setPlayerSelection(player);
-			        }
-				});
-				break;
-			case FLOOR:
-				icon.addListener(new ClickListener(){
-					@Override
-			        public void clicked(InputEvent event, float x, float y) {
-						System.out.println("Selected - " + fileName);
-						
-						// Right now all attributes initialised as null (Changed through edit)
-						GameObject floor = new GameObject(cur, filePath);
-						related.setStaticSelection(floor);
-			        }
-				});
-				break;
-			case WALL:
-				icon.addListener(new ClickListener(){
-					@Override
-			        public void clicked(InputEvent event, float x, float y) {
-						System.out.println("Selected - " + fileName);
-						
-						// Right now all attributes initialised as null (Changed through edit)
-						GameObject wall = new GameObject(cur, filePath);
-						related.setStaticSelection(wall);
+						Enemy obj = new Enemy(filePath);
+						selected_Dyn = obj;
+						related.setDynamicSelection(obj);
 			        }
 				});
 				break;
@@ -591,15 +467,41 @@ public class Editor extends Stage{
 			        public void clicked(InputEvent event, float x, float y) {
 						System.out.println("Selected - " + fileName);
 						
-						// Right now all attributes initialised as null (Changed through edit)
-						GameObject item = new GameObject(cur, filePath);
-						related.setStaticSelection(item);
+						// Right now all attributes initialized as null (Changed through edit)
+						Item obj = new Item(filePath);
+						selected_Dyn = obj;
+						related.setDynamicSelection(obj);
 			        }
 				});
 				break;
+			case FLOOR:
+				icon.addListener(new ClickListener(){
+					@Override
+			        public void clicked(InputEvent event, float x, float y) {
+						System.out.println("Selected - " + fileName);
+						
+						// Right now all attributes initialized as null (Changed through edit)
+						GameObject obj = new GameObject(cur, filePath);
+						selected_G = obj;
+						related.setStaticSelection(obj);
+			        }
+				});
+			case WALL:
+				icon.addListener(new ClickListener(){
+					@Override
+			        public void clicked(InputEvent event, float x, float y) {
+						System.out.println("Selected - " + fileName);
+						
+						// Right now all attributes initialized as null (Changed through edit)
+						GameObject obj = new GameObject(cur, filePath);
+						selected_G = obj;
+						related.setStaticSelection(obj);
+			        }
+				});
 			default:
 				break;
 			}
+		
 			if (i % 2 == 1 && i != 0) newTable.row();
 			
 			// Don't let it go over the edge
@@ -615,14 +517,19 @@ public class Editor extends Stage{
 	 * Creates a new table pop up
 	 * Displays all attributes
 	 */	
-	public void newEnemyEdit(final Enemy obj) {
+	
+	
+	public void newEdit(DynamicObject obj) {
+		final DynamicObject object = obj;
 		Table editTable = new Table();
 		Double hp = obj.getHp();
 		Double dmg = obj.getContactDamage();
 		String name = obj.getName();
-		int atk = obj.getAttackRate();
+		int atk = 0;
 		Image icon = processPath(obj.getImgPath());
 		
+		final ObjectType type = obj.getType();
+			
 		editTable.add(icon);
 		editTable.row();
 		
@@ -630,7 +537,7 @@ public class Editor extends Stage{
 		final TextField nameField = generateTextField("Name - " + name);
 		final TextField hpField = generateTextField("HP - " + Double.toString(hp));
 		final TextField dmgField = generateTextField("DMG - " + Double.toString(dmg));
-		final TextField atkField = generateTextField("Atk rate - " + Integer.toString(atk));
+		final TextField atkField = null;
 		
 		editTable.add(nameField);
 		editTable.row();
@@ -641,9 +548,13 @@ public class Editor extends Stage{
 		editTable.add(dmgField);
 		editTable.row();
 		
-		editTable.add(atkField);
-		editTable.row();
-		
+//		if(type == ObjectType.ENEMY) {
+//			atk = ((Enemy) obj).getAttackRate();
+//			//atkField = generateTextField("Atk rate - " + Integer.toString(atk));
+//			editTable.add(atkField);
+//			editTable.row();
+//		}
+				
 		TextButton saveButton = generateButton("Save");
 		editTable.add(saveButton);
 		editTable.row();
@@ -655,7 +566,7 @@ public class Editor extends Stage{
 			@Override
 	        public void clicked(InputEvent event, float x, float y) {
 				try {
-					Enemy clone = obj.clone();
+					DynamicObject clone = object.clone();
 					
 					// Sanitation check
 					boolean check = true;
@@ -684,8 +595,11 @@ public class Editor extends Stage{
 					clone.setName(s);
 					clone.setHp(Double.valueOf(hpField.getText()));
 					clone.setContactDamage(Double.valueOf(dmgField.getText()));
+					
+					//if(type == ObjectType.ENEMY)
+						//((Enemy) clone).setAttackRate(Integer.valueOf(atkField.getText()));
 
-					saveEnemy(clone);
+					saveObject(clone);
 				} catch (CloneNotSupportedException e) {
 					System.out.println("Not cloneable");
 					e.printStackTrace();
@@ -709,104 +623,7 @@ public class Editor extends Stage{
 		});
 		display(editTable);
 	}
-	
-	
-	public void newPlayerEdit(final Player obj) {
-		Table editTable = new Table();
-		Double hp = obj.getHp();
-		Double dmg = obj.getContactDamage();
-		String name = obj.getName();
-		Image icon = processPath(obj.getImgPath());
-		
-		editTable.add(icon);
-		editTable.row();
-		
-		// Add more later
-		final TextField nameField = generateTextField("Name - " + name);
-		final TextField hpField = generateTextField("HP - " + Double.toString(hp));
-		final TextField dmgField = generateTextField("DMG - " + Double.toString(dmg));
-		
-		editTable.add(nameField);
-		editTable.row();
-		
-		editTable.add(hpField);
-		editTable.row();
-		
-		editTable.add(dmgField);
-		editTable.row();
-		
-		TextButton saveButton = generateButton("Save");
-		editTable.add(saveButton);
-		editTable.row();
-		
-		
-		// If save gets clicked, clone it with new attributes
-		// before saving
-		saveButton.addListener(new ClickListener(){
-			@Override
-	        public void clicked(InputEvent event, float x, float y) {
-				try {
-					Player clone = obj.clone();
-					
-					// Sanitation check
-					boolean check = true;
-					
-					if(nameField.getText().isEmpty()) {
-						System.out.println("Invalid name field!");
-						check = false;
-					}
-					
-					if(!hpField.getText().matches("[0-9]+")) {
-						System.out.println("Invalid HP value!");
-						check = false;
-					}
-					
-					if(!dmgField.getText().matches("[0-9]+")) {
-						System.out.println("Invalid Damage value!");
-						check = false;
-					}
-					
-					if(!check)
-						return;
-					
-					
-					String s = nameField.getText().replaceAll(" ","_");
-					
-					clone.setName(s);
-					clone.setHp(Double.valueOf(hpField.getText()));
-					clone.setContactDamage(Double.valueOf(dmgField.getText()));
 
-					savePlayer(clone);
-				} catch (CloneNotSupportedException e) {
-					System.out.println("Not cloneable");
-					e.printStackTrace();
-				}
-	        }
-		});
-		
-		TextButton closeButton = generateButton("Close");
-		editTable.add(closeButton);
-		editTable.row();
-		closeButton.addListener(new ClickListener(){
-			@Override
-	        public void clicked(InputEvent event, float x, float y) {
-				try {
-					update(current);
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-	        }
-		});
-		display(editTable);
-	}
-	
-	
-	
-	
-	
-	
-	
 	
 	// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ INTERNALS ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 	
@@ -878,34 +695,16 @@ public class Editor extends Stage{
 		System.out.println("Saved as file: " + s);
 	}
 	
-	/*
-	 * Saving custom player objects
-	 */
-	private void savePlayer(Player obj){
-		
-		try {
-			saver.SavePlayer(obj, obj.getName());
-			System.out.println("Object - " + obj.getName() + " saved!");
-		} catch (IOException e) {
-			System.out.println("I/O Error. Cannot save object");
-			e.printStackTrace();
-		}
 
-	}
 	
-	/*
-	 * Saving custom enemy objects
-	 */
-	private void saveEnemy(Enemy obj){
-		
+	private void saveObject(DynamicObject obj) {
 		try {
-			saver.SaveEnemy(obj, obj.getName());
+			saver.Save(obj, obj.getName());
 			System.out.println("Object - " + obj.getName() + " saved!");
 		} catch (IOException e) {
 			System.out.println("I/O Error. Cannot save object");
 			e.printStackTrace();
 		}
-
 	}
 	
 	public void setDependence(State s) {

@@ -26,6 +26,11 @@ public class Player extends DynamicObject implements Cloneable, Serializable {
 		super(ObjectType.PLAYER, position, hp, damage, img_path);
 	}
 	
+	public Player(double hp, double damage, String img_path) {
+		// type, width, height, coords, hp, damage
+		super(ObjectType.PLAYER, hp, damage, img_path);
+	}
+	
 	@Override
 	public void step(State s) {
 		super.step(s);
@@ -33,7 +38,7 @@ public class Player extends DynamicObject implements Cloneable, Serializable {
 	
 	@Override
 	public Player clone() throws CloneNotSupportedException {
-		return (Player) super.clone();
+		return new Player( getHp(), getContactDamage(), getImgPath());
 	}
 	
 	

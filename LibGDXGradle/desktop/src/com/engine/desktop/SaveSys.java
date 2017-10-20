@@ -16,7 +16,9 @@ import java.util.Iterator;
 
 import Interface.EditorModel;
 import Interface.ObjectModel;
+import Tileset.DynamicObject;
 import Tileset.Enemy;
+import Tileset.GameObject.ObjectType;
 import Tileset.Player;
 
 
@@ -98,41 +100,23 @@ public class SaveSys{
     /*
      * Player objects
      */
-    public void SavePlayer(Player p, String fileName) throws IOException{
-    	FileOutputStream fos = new FileOutputStream(new File(objPath + "/player_custom/" + fileName));
+    public void Save(DynamicObject obj, String fileName) throws IOException{
+    	FileOutputStream fos = new FileOutputStream(new File(objPath + "/" + obj.getType().toString().toLowerCase() + "_custom/" + fileName));
     	ByteArrayOutputStream out = new ByteArrayOutputStream();
         ObjectOutputStream os = new ObjectOutputStream(out);
-        os.writeObject(p);
+        os.writeObject(obj);
         out.writeTo(fos);
     }
     
-    public Player LoadPlayer(String fileName) throws IOException, ClassNotFoundException{
-    	Path path = Paths.get(objPath + "/player_custom/" + fileName); 	
+    public DynamicObject Load(String fileName, ObjectType type) throws IOException, ClassNotFoundException{
+    	Path path = Paths.get(objPath + "/" + type.toString().toLowerCase() + "_custom/" + fileName); 	
     	byte[] data = Files.readAllBytes(path);
         ByteArrayInputStream in = new ByteArrayInputStream(data);
         ObjectInputStream is = new ObjectInputStream(in);        
-        return (Player)is.readObject();
+        return (DynamicObject)is.readObject();
     }
     
     
-    /*
-     * Enemy objects
-     */
-    public void SaveEnemy(Enemy e, String fileName) throws IOException{
-    	FileOutputStream fos = new FileOutputStream(new File(objPath + "/enemy_custom/" + fileName));
-    	ByteArrayOutputStream out = new ByteArrayOutputStream();
-        ObjectOutputStream os = new ObjectOutputStream(out);
-        os.writeObject(e);
-        out.writeTo(fos);
-    }
-    
-    public Enemy LoadEnemy(String fileName) throws IOException, ClassNotFoundException{
-    	Path path = Paths.get(objPath + "/enemy_custom/" + fileName); 	
-    	byte[] data = Files.readAllBytes(path);
-        ByteArrayInputStream in = new ByteArrayInputStream(data);
-        ObjectInputStream is = new ObjectInputStream(in);        
-        return (Enemy)is.readObject();
-    }
     
 
     /*    

@@ -8,7 +8,7 @@ import Tileset.GameObject.ObjectType;
 
 // Move directly in the best route towards player
 public class MovePathToPoint extends MoveBehaviour {
-	 private ObjectType type;
+	private ObjectType type;
 	private boolean focus;
 	 
 	public MovePathToPoint(ObjectType type, boolean focus) {
