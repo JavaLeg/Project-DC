@@ -565,8 +565,8 @@ public class Editor extends Stage {
 		saveButton.addListener(new ClickListener(){
 			@Override
 	        public void clicked(InputEvent event, float x, float y) {
-				try {
-					DynamicObject clone = object.clone();
+				
+					DynamicObject clone = object.clone(); //CLONE
 					
 					// Sanitation check
 					boolean check = true;
@@ -600,10 +600,7 @@ public class Editor extends Stage {
 						//((Enemy) clone).setAttackRate(Integer.valueOf(atkField.getText()));
 
 					saveObject(clone);
-				} catch (CloneNotSupportedException e) {
-					System.out.println("Not cloneable");
-					e.printStackTrace();
-				}
+				
 	        }
 		});
 		

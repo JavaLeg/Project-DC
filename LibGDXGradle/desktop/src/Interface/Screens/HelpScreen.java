@@ -29,17 +29,18 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
+import com.engine.desktop.DCGame;
 
 public class HelpScreen implements Screen {
 
 	private TextureAtlas atlas;
     protected Skin skin;
-    private Game game;
+    private DCGame game;
     private Viewport viewport;
     private Camera camera;
     private Stage mainStage;
 	
-    public HelpScreen(Game game) throws IOException {
+    public HelpScreen(DCGame game) throws IOException {
     	this.game = game;
     }
 	

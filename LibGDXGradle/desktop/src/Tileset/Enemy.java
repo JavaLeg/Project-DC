@@ -99,7 +99,7 @@ public class Enemy extends DynamicObject implements Cloneable, Serializable{
 	}
 	
 	@Override
-	public Enemy clone() throws CloneNotSupportedException {
+	public Enemy clone() {
 		return new Enemy(getHp(), getContactDamage(), moveRate, moveBehaviour, getImgPath());
 	}
 
