@@ -36,8 +36,8 @@ public class Coord implements Serializable, Cloneable{
 
 	
 	@Override
-	public Coord clone() throws CloneNotSupportedException {
-		return (Coord)super.clone();
+	public Coord clone()  {
+		return new Coord(x,y);
 	}
 	
 	

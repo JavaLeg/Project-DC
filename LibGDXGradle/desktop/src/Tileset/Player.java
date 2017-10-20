@@ -37,7 +37,7 @@ public class Player extends DynamicObject implements Cloneable, Serializable {
 	}
 	
 	@Override
-	public Player clone() throws CloneNotSupportedException {
+	public Player clone() {
 		return new Player( getHp(), getContactDamage(), getImgPath());
 	}
 	

@@ -132,7 +132,7 @@ public class DynamicObject extends GameObject implements Cloneable, Serializable
 		return model;
 	}*/
 	
-	public DynamicObject clone() throws CloneNotSupportedException {
+	public DynamicObject clone() {
 		return new DynamicObject(getType(), hp, contactDamage, getImgPath());
 	}
 }

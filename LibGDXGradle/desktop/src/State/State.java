@@ -82,12 +82,9 @@ public class State extends Stage {
 				tile.addListener(new ClickListener(){
 					@Override
 			        public void clicked(InputEvent event, float x, float y) {
-						try {
-							setTile(tile, selection);
-						} catch (CloneNotSupportedException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
-						}
+					
+					setTile(tile, selection);
+						
 			        }
 				});
 //				gridTable.add(tile).size(40, 40);
@@ -117,7 +114,7 @@ public class State extends Stage {
 	
 	// Fill grid with selected floor
 	// TODO
-	public void fillGrid() throws CloneNotSupportedException {
+	public void fillGrid() {
 		for(Tile tile : tileList) {
 			setTile(tile, selection);
 		}
@@ -182,7 +179,7 @@ public class State extends Stage {
 //		}
 //	}
 	
-	private void setTile(Tile tile, ObjectType type) throws CloneNotSupportedException {
+	private void setTile(Tile tile, ObjectType type) {
 		if (type == null) return;
 		
 		GameObject obj = null;
