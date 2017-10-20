@@ -183,8 +183,7 @@ public class State extends Stage {
 		if (type == null) return;
 		
 		GameObject obj = null;
-		
-		System.out.println("HEI");
+
 		if(type == ObjectType.ENEMY || type == ObjectType.ITEM || type == ObjectType.PLAYER) {
 			obj = cur_d_object.clone();
 			obj.setCoord(tile.getCoord());
@@ -397,10 +396,10 @@ public class State extends Stage {
 		// Add more conditionals later
 		boolean satisfied = true;
 		
-//		if(player == null) {
-//			System.out.println("No player object set!");
-//			satisfied = false;
-//		}
+		if(player == null) {
+			System.out.println("No player object set!");
+			satisfied = false;
+		}
 
 		if(!satisfied)
 			return null;
@@ -431,10 +430,8 @@ public class State extends Stage {
 			Coord c= obj.getCoord();
 			System.out.println(c.getX() + " " + c.getY());
 			encodedTable[c.getX()][c.getY()].setDynamic(obj);
-		}
-		
-		model.display();
-		
+		}	
+		//model.display();
 		return model;
 	}
 
