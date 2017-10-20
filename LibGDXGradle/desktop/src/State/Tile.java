@@ -142,11 +142,13 @@ public class Tile extends Group{
 	 */
 
 	public void setObject(GameObject new_object) {
-
+		this.removeActor("object");
 		this.removeActor("d_object");
 		g_obj = new_object;
 		//GameObject object = new_object.clone();
 		this.addActor(processPath(new_object.getImgPath()), "object", 2);
+		if (d_obj != null) this.addActor(processPath(d_obj.getImgPath()), "d_object", 2);	
+
 	}	
 	
 	
@@ -155,10 +157,18 @@ public class Tile extends Group{
 	 * Only 1 GameObject should be allowed at once
 	 */
 	public void setDynamicObject(DynamicObject new_d_object) {
+		this.removeActor("d_object");
 		this.removeActor("object");
 		d_obj = new_d_object;
-		DynamicObject d_object = (DynamicObject) new_d_object.clone();
-		//this.addActor(processPath(new_d_object.getImgPath()), "d_object", 2);		
+/*		try {
+			DynamicObject d_object = new_d_object.clone();
+		} catch (CloneNotSupportedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}*/
+		
+		if (g_obj != null) this.addActor(processPath(g_obj.getImgPath()), "object", 2);
+		this.addActor(processPath(new_d_object.getImgPath()), "d_object", 2);		
 	}
 	
 //	private TextureRegion processPath(String path) {
@@ -177,12 +187,17 @@ public class Tile extends Group{
 	}
 	
 	public void deleteObject() {
+		this.removeActor("d_object");
+		this.d_obj = null;
+	}
+	
+/*	public void deleteObject() {
 		this.removeActor("object");
 		this.removeActor("d_object");
 		// FOR JAMES
 		this.d_obj = null;
 		this.g_obj = null;
-	}
+	}*/
 	
 
 	// FOR JAMES

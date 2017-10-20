@@ -187,6 +187,7 @@ public class State extends Stage {
 		
 		GameObject obj = null;
 		
+		System.out.println("HEI");
 		if(type == ObjectType.ENEMY || type == ObjectType.ITEM || type == ObjectType.PLAYER) {
 			obj = cur_d_object.clone();
 			obj.setCoord(tile.getCoord());
@@ -196,7 +197,8 @@ public class State extends Stage {
 			obj.setCoord(tile.getCoord());
 			staticList.add(obj);
 		}
-		tile.setObject(obj);
+		// tile.setObject(obj);
+		this.setObject(obj, obj.getCoord());
 	}
 
 
@@ -245,21 +247,38 @@ public class State extends Stage {
 		
 		// Keep track of objects
 		ObjectType type = newObject.getType();
+		Tile cur = tileList.get(coord.getX() * colActors  + coord.getY());
 		
-		if(type == ObjectType.ENEMY || type == ObjectType.PLAYER || type == ObjectType.ITEM) {
+		if (type == ObjectType.PLAYER) {
+			if (this.hasPlayer() == true) this.deletePlayer(player.getCoord());
+			newObject.setCoord(coord);
+			player = (DynamicObject) newObject;
+			cur.setDynamicObject((DynamicObject) newObject);
+		} else if(type == ObjectType.ENEMY || type == ObjectType.ITEM) {
+			if (cur.getObjectType() == ObjectType.PLAYER) player = null;
 			dynamicList.add((DynamicObject) newObject);
-		}else if(type == ObjectType.FLOOR || type == ObjectType.WALL) {
+			newObject.setCoord(coord);
+			cur.setDynamicObject((DynamicObject) newObject);
+		} else if(type == ObjectType.FLOOR || type == ObjectType.WALL) {
 			staticList.add(newObject);
+			newObject.setCoord(coord);
+			cur.setObject(newObject);
 		}
 		
 		
-		newObject.setCoord(coord);
-		this.tileList.get(coord.getX() * colActors  + coord.getY() ).setObject(newObject);
+		//newObject.setCoord(coord);
+		//this.tileList.get(coord.getX() * colActors  + coord.getY() ).setObject(newObject);
 	}
 	
 	/*
 	 * Deletes the object at that tile entirely, including getting rid of the texture
 	 */
+	public void deletePlayer(Coord coord) {
+		Tile tile = tileList.get(coord.getX()* colActors  + coord.getY());
+		tile.deleteObject();
+	}
+	
+	
 	public void deleteObject(Coord coord) {
 
 		Tile tile = tileList.get(coord.getX()* colActors  + coord.getY());
@@ -271,11 +290,7 @@ public class State extends Stage {
 			dynamicList.remove(obj);
 		}else {
 			staticList.remove(obj);
-		}
-		
-		
-		
-			
+		}	
 		this.tileList.get(coord.getX()* colActors  + coord.getY()).deleteObject();
 	}
 	

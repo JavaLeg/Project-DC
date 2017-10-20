@@ -12,6 +12,8 @@ import com.badlogic.gdx.graphics.glutils.FileTextureData;
 import Interface.ObjectModel;
 import State.Coord;
 import State.State;
+import Tileset.Behaviour.MoveBehaviour;
+import Tileset.Behaviour.MoveTrack;
 
 // DynamicObject is in charge of: hp
 public class DynamicObject extends GameObject implements Cloneable, Serializable{
@@ -30,7 +32,7 @@ public class DynamicObject extends GameObject implements Cloneable, Serializable
 		POISON, STUN, SLOW
 	}
 	
-	
+	private MoveTrack moves;
 	private double hp;
 	private double contactDamage; // how much damage entity deals
 	
@@ -101,7 +103,9 @@ public class DynamicObject extends GameObject implements Cloneable, Serializable
 	
 	public void step(State s) {
 		// potential ongoing effects
-		
+		if (moves.nextStep(s, this.getCoord()) != null) {
+			
+		}
 		// general management
 		if (getHp() < 0) {
 			destroy(s);
