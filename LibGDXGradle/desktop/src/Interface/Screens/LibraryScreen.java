@@ -45,7 +45,7 @@ public class LibraryScreen implements Screen{
 	
     private TextureAtlas atlas;
     protected Skin skin;
-    private Game game;
+    private DCGame game;
     private SaveSys fileHandle;
     
     private Viewport viewport;
@@ -60,8 +60,8 @@ public class LibraryScreen implements Screen{
     private static final int WORLD_WIDTH  = 800;
     private static final int WORLD_HEIGHT = 480;
 
-    public LibraryScreen(Game game) throws IOException {
-    	this.game = game;
+    public LibraryScreen(DCGame game2) throws IOException {
+    	this.game = game2;
     	this.fileHandle = new SaveSys();
     }
     
@@ -97,13 +97,13 @@ public class LibraryScreen implements Screen{
 							switch(selection) {
 							case EDIT:
 								s = new EditorScreen(game);
-								System.out.println("Loading in editor " + selected_map + "...");
+								System.out.println("Loading into Game: " + selected_map + "...");
 								((Game)Gdx.app.getApplicationListener()).setScreen(s);
 								((EditorScreen) s).loadModel(fileHandle.Load(selected_map));
 								break;
 							case RUN:
 								s = new GameScreen(game);
-								System.out.println("Loading in editor " + selected_map + "...");
+								System.out.println("Loading in Editor: " + selected_map + "...");
 								((Game)Gdx.app.getApplicationListener()).setScreen(s);
 								((GameScreen) s).loadModel(fileHandle.Load(selected_map));
 								break;

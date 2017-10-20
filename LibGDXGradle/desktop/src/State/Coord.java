@@ -2,7 +2,7 @@ package State;
 
 import java.io.Serializable;
 
-public class Coord implements Serializable{
+public class Coord implements Serializable, Cloneable{
 	/**
 	 * 
 	 */
@@ -33,10 +33,11 @@ public class Coord implements Serializable{
 		this.y = y;
 	}
 
+
 	
 	@Override
-	public Coord clone() {
-		return new Coord(x, y);
+	public Coord clone() throws CloneNotSupportedException {
+		return (Coord)super.clone();
 	}
 	
 	
