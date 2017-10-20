@@ -1,31 +1,41 @@
 package State;
 
-import java.io.Serializable;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.graphics.glutils.FileTextureData;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Stack;
 
 import Tileset.*;
 import Tileset.GameObject.ObjectType;
 
-public class Tile extends Stack implements Serializable {
+public class Tile extends Stack{
 	
-	private static final long serialVersionUID = 1L;
+
 	private final Coord coordinates; 
 	
+	
+	// Static objects
+	// Defined as: Always the same in-game
+	private GameObject wallObj;
+	private GameObject floorObj;
+	
+	
+	// Dynamic objects
+	// Defined as: May change in-game
+	private Player playerObj;
+	private Enemy enemyObj;
+	private Item itemObj;
+	
 	private Image floor;
-	private GameObject object; // can only have object or d_object
-	private DynamicObject d_object;
+	private Image wall;
+	private Image player;
+	private Image enemy;
+	private Image item;
 	private Image empty;
 	
-	private TextureRegion floor_texture;
-	private TextureRegion object_texture;
-	
-	
+		
 	//*************************//
 	//******** GENERAL ********//
 	//*************************//
@@ -49,21 +59,30 @@ public class Tile extends Stack implements Serializable {
 	 */
 	public void clear() {
 		this.clearChildren();
-		this.object = null;
-		this.d_object = null;
+		this.floorObj = null;
+		this.wallObj = null;
+		this.setPlayerObj(null);
+		this.setEnemyObj(null);
+		
+		this.wall = null;
 		this.floor = null;
-		this.object_texture = null;
+
+		this.player = null;
+		this.enemy = null;
+
 		this.add(empty);
 	}
+	
+
 
 	
 	/*
 	 * Checks if this grid is valid (can't have object on null cell)
 	 */
-	public boolean isValid() {
-		if ((object != null || d_object != null) && floor == null) return false;
-		return true;
-	}
+//	public boolean isValid() {
+//		if ((object != null || d_object != null) && floor == null) return false;
+//		return true;
+//	}
 	
 	
 	public Coord getCoord() {
@@ -75,25 +94,9 @@ public class Tile extends Stack implements Serializable {
 	//********* FLOOR *********//
 	//*************************//
 	
-	public boolean hasFloor (){
-		return this.floor != null;
-	}
-	
-	
-	public void setFloor(TextureRegion txt) {
-		this.clearChildren();
-		floor_texture = txt;
+
 		
-		Image floor_img = new Image(txt);
-		floor = floor_img;
-		this.add(floor);
 		
-		if (this.hasObject()) {
-			this.add(object);
-		}
-	}
-		
-	
 	public void deleteFloor() {
 		this.floor = null;
 		this.floor_texture = null;
@@ -110,20 +113,22 @@ public class Tile extends Stack implements Serializable {
 		}
 		return null;
 	}
+
 	
 	
 	//*************************//
 	//******** OBJECT *********//
 	//*************************//
 	
-	public boolean hasObject() {
-		if(this.object != null || this.d_object != null) {
-			return true;
-		}
-		return false;
-	}
+//	public boolean hasObject() {
+//		if(this.object != null || this.d_object != null) {
+//			return true;
+//		}
+//		return false;
+//	}
 	
 	
+
 	// Overwrites current object if any
 
 	// Setters overwrite current object if any
@@ -156,69 +161,213 @@ public class Tile extends Stack implements Serializable {
 	 * Object setter for dynamic objects (player, enemy)
 	 * Only 1 GameObject should be allowed at once
 	 */
-	public void setDynamicObject(DynamicObject new_d_object) {
-		if(this.object != null) {
-			this.object = null;
-		}
-		
+//	public void setDynamicObject(DynamicObject new_d_object) {
+//		if(this.object != null) {
+//			this.object = null;
+//		}
+//		
+//		this.clearChildren();
+//		object_texture = new_d_object.getTexture();
+//		try {
+//			d_object = (DynamicObject) new_d_object.clone();
+//		} catch (CloneNotSupportedException e) {
+//			e.printStackTrace();
+//		}
+//		if(this.hasFloor()) {
+//			this.add(floor);
+//		} else {
+//			this.add(empty);
+//		}
+//		this.add(d_object);
+//	}
+	
+			
+	public void setFloor(GameObject obj) {
 		this.clearChildren();
-		object_texture = new_d_object.getTexture();
-		try {
-			d_object = (DynamicObject) new_d_object.clone();
-		} catch (CloneNotSupportedException e) {
-			e.printStackTrace();
+		
+		floorObj = obj;
+		floor = processPath(obj.getImgPath());
+		
+		wallObj = null;
+		wall = null;
+		
+		this.add(floor);
+		
+		if(player != null)
+			this.add(player);
+		else if(enemy != null) {
+			this.add(enemy);
 		}
-		if(this.hasFloor()) {
+	}
+	
+	public void setWall(GameObject obj) {
+		this.clear();
+		this.clearChildren();
+			
+		wallObj = obj;
+		wall = processPath(obj.getImgPath());
+		
+		this.add(wall);
+	}
+	
+	public void setItem(Item obj) {
+		this.clearChildren();
+		
+		itemObj = obj;
+		item = processPath(obj.getImgPath());
+		
+		setEnemyObj(null);
+		enemy = null;
+		
+		setPlayerObj(null);
+		player = null;
+		
+		wallObj = null;
+		wall = null;
+		
+		if(floor != null) {
+			this.add(floor);
+		}else{
+			this.add(empty);
+		}
+		this.add(item);
+	}
+
+
+
+	public void setEnemy(Enemy obj) {
+		this.clearChildren();
+		
+		setEnemyObj(obj);
+		enemy = processPath(obj.getImgPath());
+		
+		setPlayerObj(null);
+		player = null;
+		
+		itemObj = null;
+		item = null;
+		
+		wallObj = null;
+		wall = null;
+		
+		if(floor != null) {
+			this.add(floor);
+		}else{
+			this.add(empty);
+		}
+		this.add(enemy);
+	}
+
+
+	public void setPlayer(Player obj) {
+		this.clearChildren();
+		
+		setPlayerObj(obj);
+		player = processPath(obj.getImgPath());
+		
+		setEnemyObj(null);
+		enemy = null;
+		
+		itemObj = null;
+		item = null;
+		
+		wallObj = null;
+		wall = null;
+		
+		if (floor != null) {
 			this.add(floor);
 		} else {
 			this.add(empty);
 		}
-		this.add(d_object);
+		this.add(player);
 	}
 	
 	
-	public ObjectType getObjectType() {
-		if(this.object != null) {
-			return this.object.getType();
+	// Removal of image from tile
+	public void deleteTileElement(ObjectType t) {
+		switch(t) {
+		case WALL:
+			wall = null;
+			break;
+		case FLOOR:
+			floor = null;
+			break;
+		case ITEM:
+			item = null;
+			break;
+		case PLAYER:
+			player = null;
+			break;
+		case ENEMY:
+			enemy = null;
+			break;
+		default:
+			break;
 		}
-		if(this.d_object != null) {
-			return this.d_object.getType();
-		}
-		return null;
+		this.updateTile();
 	}
-		
 	
-	// Gets object, can return null
-	public GameObject getObject() {
-		if(this.object != null) {
-			return this.object;
-		}
-		if(this.d_object != null) {
-			return (GameObject) this.d_object;
-		}
-		return null;
-	}
-	
-	
-	public void deleteObject() {
-		this.object = null;
-		this.object_texture = null;
-		this.d_object = null;
+
+	/* 
+	 * After deletion, update the textures of the tile
+	 */
+	public void updateTile() {
 		this.clearChildren();
-		if (this.hasFloor()) {
+		if (floor != null) {
 			this.add(floor);
 		} else {
 			this.add(empty);
 		}
 	}
 	
-	
-	public String getObjectPath() {
-		if (object_texture != null) {
-			String k = ((FileTextureData)object_texture.getTexture().getTextureData()).getFileHandle().path();
-			return k;
-		}
-		return null;
+	/*
+	 * Retrieve texture and returns an image
+	 */
+	private Image processPath(String path) {
+		return new Image(new TextureRegion(new Texture(Gdx.files.internal(path))));
 	}
+
+
+	public Enemy getEnemyObj() {
+		return enemyObj;
+	}
+
+
+	public void setEnemyObj(Enemy enemyObj) {
+		this.enemyObj = enemyObj;
+	}
+
+
+	public Player getPlayerObj() {
+		return playerObj;
+	}
+
+
+	public void setPlayerObj(Player playerObj) {
+		this.playerObj = playerObj;
+	}
+
+
+	public GameObject getStaticObj(ObjectType t) {
+		
+		GameObject obj = null;
+		
+		switch(t){
+		case WALL:
+			obj = wallObj;
+			break;
+		case FLOOR:
+			obj = floorObj;
+			break;
+		default:
+			break;
+		}
+		return obj;
+	}
+
+//	public void setStaticObj(GameObject wallObj) {
+//		this.wallObj = wallObj;
+//	}
+
 
 }

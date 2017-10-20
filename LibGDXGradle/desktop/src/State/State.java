@@ -7,6 +7,7 @@ import java.util.List;
 
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.FileTextureData;
@@ -32,18 +33,25 @@ public class State extends Stage{
 	private int rowActors;
 	private int colActors;
 
-	private TextureRegion selected_tr;
-	private GameObject cur_object;
-	private DynamicObject cur_d_object;
 	//private DynamicObject cur_d_object;
-	private ToolbarSelection selectedToolBar;
+	private ObjectType selection;
 
 	private ArrayList<Tile> tileList;
-	private DynamicObject player;
-	private ArrayList<DynamicObject> enemyList;
-	private ArrayList<GameObject> itemList;
-	private ArrayList<GameObject> wallList;
+	private Player player;
+	private ArrayList<GameObject> staticList;
+	private ArrayList<Item> itemList;
+	private ArrayList<Enemy> enemyList;
 	
+	private Enemy enemySelection;
+	private Player playerSelection;
+	private GameObject staticSelection;
+	private Item itemSelection;
+
+	/**			
+	 * 			{PLAYER}{ENEMY}{ITEM} ------------ Item should have their own list??
+	 * 				{FLOOR} {WALL}    ------------ Static objects
+	 * 			
+	 */		
 	
 	
 	//************************//
@@ -51,19 +59,21 @@ public class State extends Stage{
 	//************************//
 	
 	// default create an empty State
-		public State(Viewport v){
-			super(v);
-			this.rowActors = DEFAULT_MAP_HEIGHT;
-			this.colActors = DEFAULT_MAP_WIDTH;
-			this.tileList = new ArrayList<Tile>();
-			this.enemyList = new ArrayList<DynamicObject>();
-			this.wallList = new ArrayList<GameObject>();
-			this.itemList = new ArrayList<GameObject>();
-			initialise();
+	public State(Viewport v){
+		super(v);
+		this.rowActors = DEFAULT_MAP_HEIGHT;
+		this.colActors = DEFAULT_MAP_WIDTH;
+		this.tileList = new ArrayList<Tile>();
+		this.enemyList = new ArrayList<Enemy>();
+		this.staticList = new ArrayList <GameObject>();
+		this.itemList = new ArrayList<Item>();
+		this.player = null;
+		initialise();
+
 			
-			// assumes no player initially
-			this.player = null;
-		}
+		// assumes no player initially
+		this.player = null;
+	}
 
 	private void initialise() {
 		Table gridTable = new Table();
@@ -77,7 +87,12 @@ public class State extends Stage{
 				tile.addListener(new ClickListener(){
 					@Override
 			        public void clicked(InputEvent event, float x, float y) {
-						setTileTexture(tile, selectedToolBar);
+						try {
+							setTile(tile, selection);
+						} catch (CloneNotSupportedException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
 			        }
 				});
 				gridTable.add(tile).size(40, 40);
@@ -95,40 +110,36 @@ public class State extends Stage{
 	//******** EDITOR ********//
 	//************************//
 	
+	public void setEnemySelection(Enemy e) {
+		this.enemySelection = e;		
+		this.selection = ObjectType.ENEMY;
+	}
+
 	
-	/*
-	 * DynamicObject Selection
-	 */
-	public void setSelection(Texture t, ToolbarSelection s, DynamicObject obj) {
-		selected_tr = new TextureRegion(t);
-		selectedToolBar = s;
-		if (s != ToolbarSelection.FLOOR) cur_d_object = obj;
+	public void setPlayerSelection(Player p) {
+		this.playerSelection = p;
+		this.selection = ObjectType.PLAYER;
 	}
 	
-	
-	/*
-	 * GameObject selection
-	 */
-	public void setSelection(Texture t, ToolbarSelection s, GameObject obj) {
-		selected_tr = new TextureRegion(t);
-		selectedToolBar = s;
-		if (s != ToolbarSelection.FLOOR) cur_object = obj;
+	public void setItemSelection(Item i) {
+		this.itemSelection = i;
+		this.selection = ObjectType.ITEM;
 	}
 	
+
+	public void setStaticSelection(GameObject obj) {
+		this.staticSelection = obj;
+		this.selection = obj.getType();
+	}
 	
 	// Fill grid with selected floor
+	// TODO
 	public void fillGrid() {
-		if(selected_tr == null || selectedToolBar != ToolbarSelection.FLOOR) 
-			return;
-		
-		Texture texture = selected_tr.getTexture();
-		String path = ((FileTextureData)texture.getTextureData()).getFileHandle().name();
-		System.out.println("Fill grid with : " + path);
-		
 		for(Tile tile : tileList) {
-			setTileTexture(tile, ToolbarSelection.FLOOR);
+			setTile(tile, selection);
 		}
 	}
+	
 	
 	
 	public void clearGrid() {		
@@ -136,48 +147,109 @@ public class State extends Stage{
 		for(Tile tile : tileList) {
 			tile.clear();
 		}
-		this.tileList.clear();
+		//this.tileList.clear();
 		this.enemyList.clear();
-		this.wallList.clear();
-		this.itemList.clear();
+		this.staticList.clear();
 	}
 	
 	
 	/*
-	 * Setting the tile texture, if it's an object we pass that instead
+	 * Setting the tile texture
 	 */
-	private void setTileTexture(Tile tile, ToolbarSelection ts) {
-		// If tile already has an object, remove it and return
-		if(tile.hasObject() && ts != ToolbarSelection.FLOOR) {
-			this.deleteObject(tile.getCoord());
-			return;
-		}
+
+	public void moveObject(Coord from, Coord to) {
+		GameObject temp = this.getObject(from);
+		this.deleteObject(from);
+		this.setObject(temp, to);
+	}
+	
+	public void movePlayerTo(Coord c) {
+		Player temp = playerSelection;
 		
-		// No texture selected
-		if (ts == null) return;
-		
-		switch (ts){
+	}
+	
+	/*
+	 * Splits to different object types and
+	 * their respective tile function
+	 */
+	private void setTile(Tile tile, ObjectType type) throws CloneNotSupportedException {
+		if (type == null) return;
+		switch (type){
 		case FLOOR:
-			tile.setFloor(selected_tr);
+			GameObject clonedFloor = null;
+			try {
+				clonedFloor = staticSelection.clone();
+			} catch (CloneNotSupportedException e) {
+				e.printStackTrace();
+			}
+			
+			clonedFloor.setCoord(tile.getCoord());
+			staticList.add(clonedFloor);
+			tile.setFloor(clonedFloor);
 			break;
-		case PLAYER:
-		case ENEMY:
-			setObject(cur_d_object, tile.getCoord());
+		case WALL:
+			GameObject clonedWall = null;
+			try {
+				clonedWall = staticSelection.clone();
+			} catch (CloneNotSupportedException e) {
+				e.printStackTrace();
+			}
+			
+			if (tile.getPlayerObj() != null) player = null;
+			clonedWall.setCoord(tile.getCoord());
+			staticList.add(clonedWall);
+			tile.setWall(clonedWall);
 			break;
 		case ITEM:
-		case WALL:
-			setObject(cur_object, tile.getCoord());
+			Item clonedItem = null;
+			try {
+				clonedItem = (Item) itemSelection.clone();
+			} catch (CloneNotSupportedException e) {
+				e.printStackTrace();
+			}
+			
+			if (tile.getPlayerObj() != null) player = null;
+			clonedItem.setCoord(tile.getCoord());
+			itemList.add(clonedItem);
+			tile.setItem(clonedItem);
+			break;
+		case ENEMY:
+			Enemy clonedEnemy = null;
+			try {
+				clonedEnemy = enemySelection.clone();
+			} catch (CloneNotSupportedException e) {
+				e.printStackTrace();
+			}
+			
+			if (tile.getPlayerObj() != null) player = null;
+			clonedEnemy.setCoord(tile.getCoord());
+			enemyList.add(clonedEnemy);
+			tile.setEnemy(clonedEnemy);
+			break;
+		case PLAYER:
+			Player clonedPlayer = null;
+			try {
+				clonedPlayer = playerSelection.clone();
+			} catch (CloneNotSupportedException e) {
+				e.printStackTrace();
+			}
+			
+			deletePlayer();
+			clonedPlayer.setCoord(tile.getCoord());
+			player = clonedPlayer;
+			tile.setPlayer(clonedPlayer);
 			break;
 		default:
-			// SAVE, EDIT
 			break;
 		}
+		//setObject(cur_object, tile.getCoord());
 	}
 
 
 	/*
 	 * Check the map is valid before saving (e.g, at least one player)
 	 * At least one tile, (check creatures on tile, etc. etc.)
+	 * UNUSED
 	 */
 	public boolean checkValidMap() {
 		boolean no_err = true;
@@ -193,19 +265,8 @@ public class State extends Stage{
 				no_err = false;
 			}
 		}	
-		
 		return no_err;
 	}
-	
-	
-	/* 
-	 * Called by Editor.java when attempting to edit an enemy
-	 * or player attribute
-	 */
-	public void isEditable() {
-		System.out.println(selectedToolBar);
-	}
-	
 	
 		
 	//************************//
@@ -217,72 +278,55 @@ public class State extends Stage{
 	}
 	
 	
-	public void setObject(GameObject newObject, Coord coord) {
-		ObjectType type = newObject.getType();
+//	public void setObject(GameObject newObject, Coord coord) {
+//		ObjectType type = newObject.getType();
+//		
+//		switch(type) {
+//		case PLAYER:
+//			deletePlayer();
+//			this.player = (DynamicObject) newObject;
+//			break;
+//		case ENEMY:
+//			enemyList.add((DynamicObject) newObject);
+//			break;
+//		case ITEM:
+//			itemList.add(newObject);
+//			break;
+//		case WALL:
+//			wallList.add(newObject);
+//			break;
+//		default:
+//			return;
+//		}
+//		
+//		newObject.setCoord(coord);
+//		this.tileList.get(coord.getX()* colActors  + coord.getY()).setObject(newObject);
+//	}
+	
+	
+	public void deleteObject(Coord coord, ObjectType type) {
+		
+		Tile tile = tileList.get(coord.getX()*colActors + coord.getY());
+		
+		// Removal of image from tile
 		
 		switch(type) {
 		case PLAYER:
-			deletePlayer();
-			this.player = (DynamicObject) newObject;
+			// Already done no?
+			player = null;
 			break;
 		case ENEMY:
-			enemyList.add((DynamicObject) newObject);
-			break;
-		case ITEM:
-			itemList.add(newObject);
-			break;
-		case WALL:
-			wallList.add(newObject);
+			enemyList.remove(tile.getEnemyObj());
 			break;
 		default:
-			return;
-		}
-		
-		newObject.setCoord(coord);
-		this.tileList.get(coord.getX()* colActors  + coord.getY() ).setObject(newObject);
-	}
-	
-	
-	public void deleteObject(Coord coord) {
-		ObjectType type = this.tileList.get(coord.getX()* colActors  + coord.getY() ).getObjectType();
-		switch(type) {
-		case PLAYER:
-			this.player = null;
-			break;
-		case ENEMY:
-			Iterator<DynamicObject> iterE = enemyList.iterator();
-			while(iterE.hasNext()) {
-				DynamicObject obj = iterE.next();
-				if(obj.getCoord() == coord) iterE.remove();
-			}
-			break;
-		case ITEM:
-			Iterator<GameObject> iterI = itemList.iterator();
-			while(iterI.hasNext()) {
-				GameObject obj = iterI.next();
-				if(obj.getCoord() == coord) iterI.remove();
-			}
-			break;
-		case WALL:
-			Iterator<GameObject> iterW = wallList.iterator();
-			while(iterW.hasNext()) {
-				GameObject obj = iterW.next();
-				if(obj.getCoord() == coord) iterW.remove();
-			}
-			break;
-		default:
+			staticList.remove(tile.getStaticObj(type));
 			break;
 		}
-		
-		this.tileList.get(coord.getX()* colActors  + coord.getY()).deleteObject();
+		tile.deleteTileElement(type);
 	}
 	
 	
-	public void moveObject(Coord from, Coord to) {
-		GameObject temp = this.getObject(from);
-		this.deleteObject(from);
-		this.setObject(temp, to);
-	}
+
 	
 	
 	public void swapObject(Coord from, Coord to) {
@@ -290,26 +334,6 @@ public class State extends Stage{
 		GameObject toObject = this.getObject(to);
 		this.setObject(fromObject, to);
 		this.setObject(toObject, from);
-	}
-	
-	
-	public List<GameObject> getAllObjects() {
-		List<GameObject> ret = new LinkedList<GameObject>();
-		for (Tile ta : tileList) {	
-			ret.add(ta.getObject());
-		}
-		return ret;
-	}
-	
-	
-	public List<DynamicObject> getAllDynamicObjects() {
-		List<DynamicObject> ret = new LinkedList<DynamicObject>();
-		for (Tile ta : tileList) {
-			if(ta.getObject().isDynamic()) {
-				ret.add((DynamicObject) ta.getObject());
-			}
-		}
-		return ret;
 	}
 	
 	
@@ -335,8 +359,7 @@ public class State extends Stage{
 	
 	public void deletePlayer(){
 		if(this.player == null) return;
-		this.deleteObject(player.getCoord());
-		this.player = null;
+		this.deleteObject(player.getCoord(), ObjectType.PLAYER);
 	}
 	
 	
@@ -384,62 +407,173 @@ public class State extends Stage{
 	
 	
 	//************************//
-	//******** OTHER *********//
+	//******** SAVE/LOAD *********//
 	//************************//
 	
 
+	/*
+	 * Loop through each object list and encode tile information into the editor model
+	 */
 	public EditorModel getModel() {
-		EditorModel model = new EditorModel(rowActors, colActors);
 		
-		// Conversion should not take place inside the object
-		for(int i = 0; i < tileList.size(); i++) {
-			int row_val = i/colActors;
-			int col_val = i % colActors;
-			
-			Tile tile = tileList.get(i);
-			ObjectType ID = tile.getObjectType();
-			TileTuple t = new TileTuple(tile.getObjectPath(), tile.getFloorPath(), ID);
-			model.setTile(t, row_val, col_val);
+		// Sanity checks that the map is worth saving
+		// Add more conditionals later
+		boolean satisfied = true;
+		
+//		if(player == null) {
+//			System.out.println("No player object set!");
+//			satisfied = false;
+//		}
+
+		if(!satisfied)
+			return null;
+		
+		
+		/*
+		 * ORDER MATTERS IN WHICH YOU PUT ONTO THE TABLE
+		 * Ensure static objects iterated over first
+		 */
+		EditorModel model = new EditorModel(rowActors, colActors);
+		TileTuple[][] encodedTable = model.getEncodedTable();
+		
+		// Static Objects
+		for(GameObject obj : staticList) {
+			Coord c = obj.getCoord();
+			System.out.println(c.getX() + " " + c.getY());
+			encodedTable[c.getX()][c.getY()].setBase(obj);
 		}
+
+		if(player != null) {
+			Coord pc = player.getCoord();
+			encodedTable[pc.getX()][pc.getY()].setPlayer(player);
+		}
+
+		
+		// Enemy Objects
+		for(Enemy obj : enemyList) {
+
+			Coord c = obj.getCoord();
+			encodedTable[c.getX()][c.getY()].setEnemy(obj);
+		}
+		
+		// Item Objects
+		for(Item obj : itemList) {
+			Coord c = obj.getCoord();
+			encodedTable[c.getX()][c.getY()].setItem(obj);
+		}
+		
+		//model.display();
+		
 		return model;
 	}
+		
+		// Conversion should not take place inside the object
+//		
+//		for(int i = 0; i < tileList.size(); i++) {
+//			int row_val = i/colActors;
+//			int col_val = i % colActors;
+//			
+//			Tile tile = tileList.get(i);
+//			ObjectType ID = tile.getObjectType();
+//			TileTuple t = new TileTuple(tile.getObjectPath(), tile.getFloorPath(), ID);
+//			model.setTile(t, row_val, col_val);
+//		}
+//		return model;
+//}
 	
 
 	/*
-	 * Regenerate the textures from string paths
-	 * Place back onto grid via direct calls instead of click listeners
+	 * Retrieve the objects from encoded table
+	 * Restore the state 
 	 */
 	public void restoreModel(EditorModel m) {
-		TileTuple[][] map = m.getmodelPaths();
+		TileTuple[][] encodedTable = m.getEncodedTable();
 		
 		for(int i = 0; i < rowActors; i++) {
 			for(int j = 0; j < colActors; j++) {
-				int index = colActors*i + j;
+				TileTuple enc_tile = encodedTable[i][j];
 				
-				TileTuple t_tuple = map[i][j];
-				Tile tile = tileList.get(index);
+				if(enc_tile == null || enc_tile.isEmpty())
+					continue;
 
-				// Set terrain
-				if(t_tuple.getFloor() != null)
-					tile.setFloor(new TextureRegion(new Texture(Gdx.files.internal(t_tuple.getFloor()))));
+				ObjectType type = enc_tile.getID();
+				Tile tile = getTile(new Coord(i, j));
 				
+				GameObject base = null;
 				
-				// Set object
-				if(t_tuple.getObject() != null) {
-					TextureRegion cur_texture = new TextureRegion(new Texture(Gdx.files.internal(t_tuple.getObject())));
-					GameObject new_obj = new GameObject(t_tuple.getID(), cur_texture);
-					tile.setObject(new_obj);
+				switch(type) {
+				case FLOOR:
+					tile.setFloor(enc_tile.getBase());
+					break;
+				case WALL:
+					tile.setWall(enc_tile.getBase());
+					break;
+				case PLAYER:
+					base = enc_tile.getBase();
+					
+					if(base != null)
+						tile.setFloor(base);
+					
+					tile.setPlayer(enc_tile.getPlayer());
+					break;
+				case ENEMY:
+					base = enc_tile.getBase();
+					
+					if(base != null)
+						tile.setFloor(base);
+					
+					tile.setEnemy(enc_tile.getEnemy());
+					break;
+				case ITEM:
+					base = enc_tile.getBase();
+					
+					if(base != null)
+						tile.setFloor(base);
+					
+					tile.setItem(enc_tile.getItem());
+					break;
+				default:
+					break;
 				}
 			}
 		}
 	}
+	
+//	public void restoreModel(EditorModel m) {
+//		TileTuple[][] map = m.getmodelPaths();
+//		
+//		for(int i = 0; i < rowActors; i++) {
+//			for(int j = 0; j < colActors; j++) {
+//				int index = colActors*i + j;
+//				
+//				TileTuple t_tuple = map[i][j];
+//				Tile tile = tileList.get(index);
+//
+//				// Set terrain
+//				if(t_tuple.getFloor() != null)
+//					tile.setFloor(new TextureRegion(new Texture(Gdx.files.internal(t_tuple.getFloor()))));
+//				
+//				
+//				// Set object
+//				if(t_tuple.getObject() != null) {
+//					TextureRegion cur_texture = new TextureRegion(new Texture(Gdx.files.internal(t_tuple.getObject())));
+//					GameObject new_obj = new GameObject(t_tuple.getID(), cur_texture);
+//					tile.setObject(new_obj);
+//				}
+//			}
+//		}
+//	}
 
+	
+	/*
+	 * Not related to tables
+	 * Just using as a 2 variable tuple
+	 */
 	public TableTuple getDim() {
 		return new TableTuple(rowActors, colActors);
 	}
 	
 	
-	/*
 	// String splitting
 	private ObjectType getType(String path) {
 		String[] parts = path.split("/");
@@ -450,31 +584,5 @@ public class State extends Stage{
 		}
 		return null;
 	}
-<<<<<<< HEAD
-	*/
-	
-	// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ FOR CAMERA MOVEMENT ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-	/*
-	 * Movement involves left click followed by dragging motion
-	 * Degree of movement by variable intensity
-	 */
-	/*
-	private int dragX, dragY;
-	private float intensity = 150f;
-	
-	
-	
-	@Override
-	public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-		dragX = screenX;
-		dragY = screenY;
-		return true;
-=======
-	
-	public TableTuple getDim() {
-		TableTuple t = new TableTuple(rowActors, colActors);
-		return t;
->>>>>>> branch 'EditorAttributes' of https://github.com/JavaLeg/Project-DC
-	}
-	*/
+
 }
