@@ -1,28 +1,19 @@
 package Interface.Screens;
 
-import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input.Keys;
-import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.math.Vector3;
-import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.engine.desktop.DCGame;
 
 import Interface.EditorModel;
 import Interface.GameInputProcessor;
-import Interface.Viewports.PreviewViewport;
-import Interface.Viewports.ToolbarViewport;
 import State.DynamicGame;
 import State.RunGame;
 import State.State;
-import State.Action;
 import State.Coord;
 
 public class GameScreen implements Screen {
@@ -46,12 +37,11 @@ public class GameScreen implements Screen {
 		int height = Gdx.graphics.getHeight();
 		int width = Gdx.graphics.getWidth();
 		
-		lerp = 0.1f;
 		camera = new OrthographicCamera();
 		Viewport gameViewport = new FitViewport(width, height, camera);
-		
-        previewStage = new State(gameViewport);
-
+		previewStage = new State(gameViewport);
+		previewStage = g.getState();
+		lerp = 0.1f;
         g = new DynamicGame();
 		inputProcessor = new GameInputProcessor(g);
 		g.initialise(previewStage, inputProcessor); // input player created state here
@@ -78,8 +68,8 @@ public class GameScreen implements Screen {
 	        camera.update();
         }
         
-        g.getState().act();
-        g.getState().draw();
+        previewStage.act();
+        previewStage.draw();
         
         inputProcessor = new GameInputProcessor(g);
         Gdx.input.setInputProcessor(inputProcessor);
@@ -114,7 +104,6 @@ public class GameScreen implements Screen {
 	
 	public void loadModel(EditorModel m) {
 		System.out.println("Loaded model.");	
-		//show();
-		previewStage.restoreModel(m);
+		this.previewStage.restoreModel(m);
 	}
 }

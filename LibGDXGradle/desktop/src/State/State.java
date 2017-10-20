@@ -450,44 +450,4 @@ public class State extends Stage {
 	public TableTuple getDim() {
 		return new TableTuple(rowActors, colActors);
 	}
-	
-	
-	/*
-	// String splitting
-	private ObjectType getType(String path) {
-		String[] parts = path.split("/");
-		
-		for(ObjectType t : ObjectType.values()) {
-			if(t.toString().toLowerCase().equals(parts[1]))
-					return t;
-		}
-		return null;
-	}
-<<<<<<< HEAD
-	*/
-	
-	// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ FOR CAMERA MOVEMENT ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-	/*
-	 * Movement involves left click followed by dragging motion
-	 * Degree of movement by variable intensity
-	 */
-	/*
-	private int dragX, dragY;
-	private float intensity = 150f;
-	
-	
-	
-	@Override
-	public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-		dragX = screenX;
-		dragY = screenY;
-		return true;
-=======
-	
-	public TableTuple getDim() {
-		TableTuple t = new TableTuple(rowActors, colActors);
-		return t;
->>>>>>> branch 'EditorAttributes' of https://github.com/JavaLeg/Project-DC
-	}
-	*/
 }

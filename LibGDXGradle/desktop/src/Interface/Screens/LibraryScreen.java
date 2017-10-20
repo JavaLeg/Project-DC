@@ -96,12 +96,24 @@ public class LibraryScreen implements Screen{
 						try {
 							switch(selection) {
 							case EDIT:
+								
+								if(selected_map == null) {
+									System.out.println("No map selected!");
+									return;
+								}
+								
 								s = new EditorScreen(game);
 								System.out.println("Loading in editor " + selected_map + "...");
 								((Game)Gdx.app.getApplicationListener()).setScreen(s);
 								((EditorScreen) s).loadModel(fileHandle.Load(selected_map));
 								break;
 							case RUN:
+								
+								if(selected_map == null) {
+									System.out.println("No map selected!");
+									return;
+								}
+								
 								s = new GameScreen(game);
 								System.out.println("Loading in editor " + selected_map + "...");
 								((Game)Gdx.app.getApplicationListener()).setScreen(s);
