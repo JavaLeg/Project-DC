@@ -361,7 +361,6 @@ public class State extends Stage {
 		// Static Objects
 		for(GameObject obj : staticList) {
 			Coord c = obj.getCoord();
-			System.out.println(c.getX() + " " + c.getY());
 			encodedTable[c.getX()][c.getY()].setBase(obj);
 		}
 
