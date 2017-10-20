@@ -37,8 +37,8 @@ public class Tile extends Group{
 	
 	private void addActor(Actor actor, String name, int order) {
 		actor.setName(name);
-		actor.setZIndex(order);
 		this.addActor(actor);
+		actor.setZIndex(order);
 	}
 	
 	private void removeActor(String name) {
@@ -66,9 +66,6 @@ public class Tile extends Group{
 		addActor(empty, "empty", 0);
 	}
 	
-
-
-	
 	/*
 	 * Checks if this grid is valid (can't have object on null cell)
 	 */
@@ -92,28 +89,14 @@ public class Tile extends Group{
 	}
 	
 	public void setFloor(GameObject obj) {
-
 		this.addActor(processPath(obj.getImgPath()), "floor", 1);
 		// FOR JAMES
 		this.g_obj = obj;
 	}
-		
-	
 
 	public void deleteFloor() {
 		this.removeActor("floor");
 	}
-	
-	
-	// FOR JAMES
-//	public String getFloorPath() {
-//		if (floor_texture != null) {
-//			String k = ((FileTextureData)floor_texture.getTexture().getTextureData()).getFileHandle().path();
-//			return k;
-//		}
-//		return null;
-//	}
-
 	
 	
 	//*************************//
@@ -147,8 +130,7 @@ public class Tile extends Group{
 		g_obj = new_object;
 		//GameObject object = new_object.clone();
 		this.addActor(processPath(new_object.getImgPath()), "object", 2);
-		if (d_obj != null) this.addActor(processPath(d_obj.getImgPath()), "d_object", 2);	
-
+		if (d_obj != null) this.addActor(processPath(d_obj.getImgPath()), "d_object", 2);
 	}	
 	
 	
