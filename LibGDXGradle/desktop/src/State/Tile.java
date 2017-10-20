@@ -39,6 +39,7 @@ public class Tile extends Group{
 		actor.setName(name);
 		this.addActor(actor);
 		actor.setZIndex(order);
+		actor.setBounds(0, 0, 40, 40);
 	}
 	
 	private void removeActor(String name) {
