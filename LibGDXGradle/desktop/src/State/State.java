@@ -7,6 +7,7 @@ import java.util.List;
 
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.FileTextureData;
@@ -31,38 +32,42 @@ public class State extends Stage {
 	private int rowActors;
 	private int colActors;
 
-	private TextureRegion selected_tr;
+
+/**			
+ * 			{PLAYER}{ENEMY}{ITEM} ------------ Uppermost layer
+ * 				{FLOOR} {WALL}    ------------ Static objects
+ * 			
+ */		
 
 	private GameObject cur_object;
 	private DynamicObject cur_d_object;
-	private ToolbarSelection selectedToolBar;
+	private ObjectType selection;
 	
 	// private Coord playerCoord;
 	private ArrayList<Tile> tileList;
 
 	private DynamicObject player;
-	private ArrayList<DynamicObject> enemyList;
-	private ArrayList<GameObject> itemList;
-	private ArrayList<GameObject> wallList;
+	private ArrayList<DynamicObject> dynamicList;
+	private ArrayList<GameObject> staticList;
 	
 	//************************//
 	//****** CONSTRUCTOR *****//
 	//************************//
 	
-
 	// default create an empty State
-		public State(Viewport v){
-			super(v);
-			this.rowActors = DEFAULT_MAP_HEIGHT;
-			this.colActors = DEFAULT_MAP_WIDTH;
-			this.tileList = new ArrayList<Tile>();
-			this.enemyList = new ArrayList<DynamicObject>();
-			this.wallList = new ArrayList<GameObject>();
-			this.itemList = new ArrayList<GameObject>();
-			this.player = null;
-			initialise();
-			
-		}
+	public State(Viewport v){
+		super(v);
+		this.rowActors = DEFAULT_MAP_HEIGHT;
+		this.colActors = DEFAULT_MAP_WIDTH;
+		this.tileList = new ArrayList<Tile>();
+		this.dynamicList = new ArrayList<DynamicObject>();
+		this.staticList = new ArrayList<GameObject>();
+		this.player = null;
+		initialise();
+		
+		// assumes no player initially
+		this.player = null;
+	}
 
 	private void initialise() {
 //		Table gridTable = new Table();
@@ -77,7 +82,12 @@ public class State extends Stage {
 				tile.addListener(new ClickListener(){
 					@Override
 			        public void clicked(InputEvent event, float x, float y) {
-						setTileTexture(tile, selectedToolBar);
+						try {
+							setTile(tile, selection);
+						} catch (CloneNotSupportedException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
 			        }
 				});
 //				gridTable.add(tile).size(40, 40);
@@ -94,95 +104,108 @@ public class State extends Stage {
 	//******** EDITOR ********//
 	//************************//
 	
-	
-	/*
-	 * DynamicObject Selection
-	 */
-	public void setSelection(Texture t, ToolbarSelection s, DynamicObject obj) {
-		selected_tr = new TextureRegion(t);
-		selectedToolBar = s;
-		if (s != ToolbarSelection.FLOOR) cur_d_object = obj;
+	public void setDynamicSelection(DynamicObject obj) {
+		this.selection = obj.getType();
+		this.cur_d_object = obj;
 	}
 	
-	
-	/*
-	 * GameObject selection
-	 */
-	public void setSelection(Texture t, ToolbarSelection s, GameObject obj) {
-		selected_tr = new TextureRegion(t);
-		selectedToolBar = s;
-		if (s != ToolbarSelection.FLOOR) cur_object = obj;
+	public void setStaticSelection(GameObject obj) {
+		this.selection = obj.getType();
+		this.cur_object = obj;
 	}
 	
 	
 	// Fill grid with selected floor
+	// TODO
 	public void fillGrid() {
-		if(selected_tr == null || selectedToolBar != ToolbarSelection.FLOOR) 
-			return;
-		
-		Texture texture = selected_tr.getTexture();
-		String path = ((FileTextureData)texture.getTextureData()).getFileHandle().name();
-		System.out.println("Fill grid with : " + path);
-		
 		for(Tile tile : tileList) {
-			setTileTexture(tile, ToolbarSelection.FLOOR);
+			setTile(tile, selection);
 		}
 	}
-	
 	
 	public void clearGrid() {		
 		this.player = null;
 		for(Tile tile : tileList) {
 			tile.clear();
 		}
-		this.tileList.clear();
-		this.enemyList.clear();
-		this.wallList.clear();
-		this.itemList.clear();
+		//this.tileList.clear();
+		this.dynamicList.clear();
+		this.staticList.clear();
 	}
 	
 	
 	/*
-	 * Setting the tile texture, if it's an object we pass that instead
+	 * Setting the tile texture
 	 */
-	private void setTileTexture(Tile tile, ToolbarSelection ts) {
-		// If tile already has an object, remove it and return
-		if(tile.hasObject() && ts != ToolbarSelection.FLOOR) {
-			this.deleteObject(tile.getCoord());
-			return;
-		}
-		if (ts == null) return;
+//	private void setTile(Tile tile, ObjectType type) {
+//		// If tile already has an object, remove it and return
+//		if(tile.hasObject() && type != ObjectType.FLOOR) {
+//			this.deleteObject(tile.getCoord());
+//			return;
+//		}
+//		if (type == null) return;
+//		
+//		Coord c = null;
+//		
+//		try {
+//			c = tile.getCoord().clone();
+//		} catch (CloneNotSupportedException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+//		
+//		switch (type){
+//		case FLOOR:
+//			//tile.setFloor(cur_object);
+//			setObject(cur_object, c);
+//			break;
+//		case ENEMY:
+//			setObject(cur_d_object, c);
+//			break;
+//		case ITEM:
+//			setObject(cur_d_object, c);
+//			break;
+//		case WALL:
+//			cur_object.setCoord(tile.getCoord());
+//			if (tile.getObjectType() == ObjectType.PLAYER) {
+//				this.player = null; 
+//			}
+//			setObject(cur_object, c);
+//			break;
+//		case PLAYER:
+//			if (this.player != null) deletePlayer();
+//			setObject(cur_d_object, c);
+//			player = cur_d_object;
+//			break;
+//		default:
+//			break;
+//		}
+//	}
+	
+	private void setTile(Tile tile, ObjectType type) throws CloneNotSupportedException {
+		if (type == null) return;
 		
-		switch (ts){
-		case FLOOR:
-			tile.setFloor(selected_tr);
-			break;
-		case ENEMY:
-			setObject(cur_d_object, tile.getCoord());
-			break;
-		case ITEM:
-		case WALL:
-			cur_object.setCoord(tile.getCoord());
-			if (tile.getObjectType() == ObjectType.PLAYER) {
-				this.player = null; 
-			}
-			tile.setObject(cur_object);
-			break;
-		case PLAYER:
-			if (this.player != null) deletePlayer();
-			setObject(cur_d_object, tile.getCoord());
-			player = cur_d_object;
-			break;
-		default:
-			// SAVE, EDIT
-			break;
+		GameObject obj = null;
+		
+		System.out.println("HEI");
+		if(type == ObjectType.ENEMY || type == ObjectType.ITEM || type == ObjectType.PLAYER) {
+			obj = cur_d_object.clone();
+			obj.setCoord(tile.getCoord());
+			dynamicList.add((DynamicObject) obj);
+		}else {
+			obj = cur_object.clone();
+			obj.setCoord(tile.getCoord());
+			staticList.add(obj);
 		}
+		// tile.setObject(obj);
+		this.setObject(obj, obj.getCoord());
 	}
 
 
 	/*
 	 * Check the map is valid before saving (e.g, at least one player)
 	 * At least one tile, (check creatures on tile, etc. etc.)
+	 * UNUSED
 	 */
 	public boolean checkValidMap() {
 		boolean no_err = true;
@@ -198,20 +221,17 @@ public class State extends Stage {
 				no_err = false;
 			}
 		}	
-		
 		return no_err;
 	}
-	
 	
 	/* 
 	 * Called by Editor.java when attempting to edit an enemy
 	 * or player attribute
 	 */
-	public void isEditable() {
-		System.out.println(selectedToolBar);
-	}
-	
-	
+//	public void isEditable() {
+//		System.out.println(selectedToolBar);
+//	}
+
 	//************************//
 	//******** OBJECT ********//
 	//************************//
@@ -224,47 +244,53 @@ public class State extends Stage {
 	 * Sets a tile to a GameObject
 	 */
 	public void setObject(GameObject newObject, Coord coord) {
-
-		newObject.setCoord(coord);
-		this.tileList.get(coord.getX() * colActors  + coord.getY() ).setObject(newObject);
+		
+		// Keep track of objects
+		ObjectType type = newObject.getType();
+		Tile cur = tileList.get(coord.getX() * colActors  + coord.getY());
+		
+		if (type == ObjectType.PLAYER) {
+			if (this.hasPlayer() == true) this.deletePlayer(player.getCoord());
+			newObject.setCoord(coord);
+			player = (DynamicObject) newObject;
+			cur.setDynamicObject((DynamicObject) newObject);
+		} else if(type == ObjectType.ENEMY || type == ObjectType.ITEM) {
+			if (cur.getObjectType() == ObjectType.PLAYER) player = null;
+			dynamicList.add((DynamicObject) newObject);
+			newObject.setCoord(coord);
+			cur.setDynamicObject((DynamicObject) newObject);
+		} else if(type == ObjectType.FLOOR || type == ObjectType.WALL) {
+			staticList.add(newObject);
+			newObject.setCoord(coord);
+			cur.setObject(newObject);
+		}
+		
+		
+		//newObject.setCoord(coord);
+		//this.tileList.get(coord.getX() * colActors  + coord.getY() ).setObject(newObject);
 	}
 	
 	/*
 	 * Deletes the object at that tile entirely, including getting rid of the texture
 	 */
+	public void deletePlayer(Coord coord) {
+		Tile tile = tileList.get(coord.getX()* colActors  + coord.getY());
+		tile.deleteObject();
+	}
+	
+	
 	public void deleteObject(Coord coord) {
 
-		ObjectType type = this.tileList.get(coord.getX()* colActors  + coord.getY() ).getObjectType();
-		switch(type) {
-		case PLAYER:
-			this.player = null;
-			System.out.println("Deleting player");
-			break;
-		case ENEMY:
-			Iterator<DynamicObject> iterE = enemyList.iterator();
-			while(iterE.hasNext()) {
-				DynamicObject obj = iterE.next();
-				if(obj.getCoord() == coord) iterE.remove();
-			}
-			break;
-		case ITEM:
-			Iterator<GameObject> iterI = itemList.iterator();
-			while(iterI.hasNext()) {
-				GameObject obj = iterI.next();
-				if(obj.getCoord() == coord) iterI.remove();
-			}
-			break;
-		case WALL:
-			Iterator<GameObject> iterW = wallList.iterator();
-			while(iterW.hasNext()) {
-				GameObject obj = iterW.next();
-				if(obj.getCoord() == coord) iterW.remove();
-			}
-			break;
-		default:
-			break;
-		}
+		Tile tile = tileList.get(coord.getX()* colActors  + coord.getY());
+		GameObject obj = tile.getObject();
 		
+		ObjectType type = obj.getType();
+		
+		if(type == ObjectType.PLAYER || type == ObjectType.ITEM || type == ObjectType.ENEMY) {
+			dynamicList.remove(obj);
+		}else {
+			staticList.remove(obj);
+		}	
 		this.tileList.get(coord.getX()* colActors  + coord.getY()).deleteObject();
 	}
 	
@@ -283,26 +309,6 @@ public class State extends Stage {
 		GameObject toObject = this.getObject(to);
 		this.setObject(fromObject, to);
 		this.setObject(toObject, from);
-	}
-	
-	
-	public List<GameObject> getAllObjects() {
-		List<GameObject> ret = new LinkedList<GameObject>();
-		for (Tile ta : tileList) {	
-			ret.add(ta.getObject());
-		}
-		return ret;
-	}
-	
-	
-	public List<DynamicObject> getAllDynamicObjects() {
-		List<DynamicObject> ret = new LinkedList<DynamicObject>();
-		for (Tile ta : tileList) {
-			if(ta.getObject().isDynamic()) {
-				ret.add((DynamicObject) ta.getObject());
-			}
-		}
-		return ret;
 	}
 	
 	
@@ -380,62 +386,98 @@ public class State extends Stage {
 	
 	
 	//************************//
-	//******** OTHER *********//
+	//******** SAVE/LOAD *********//
 	//************************//
 	
 
+	/*
+	 * Loop through each object list and encode tile information into the editor model
+	 */
 	public EditorModel getModel() {
-		EditorModel model = new EditorModel(rowActors, colActors);
 		
-		// Conversion should not take place inside the object
-		for(int i = 0; i < tileList.size(); i++) {
-			int row_val = i/colActors;
-			int col_val = i % colActors;
-			
-			Tile tile = tileList.get(i);
-			ObjectType ID = tile.getObjectType();
-			TileTuple t = new TileTuple(tile.getObjectPath(), tile.getFloorPath(), ID);
-			model.setTile(t, row_val, col_val);
+		// Sanity checks that the map is worth saving
+		// Add more conditionals later
+		boolean satisfied = true;
+		
+//		if(player == null) {
+//			System.out.println("No player object set!");
+//			satisfied = false;
+//		}
+
+		if(!satisfied)
+			return null;
+		
+		
+		/*
+		 * ORDER MATTERS IN WHICH YOU PUT ONTO THE TABLE
+		 * Ensure static objects iterated over first
+		 */
+		EditorModel model = new EditorModel(rowActors, colActors);
+		TileTuple[][] encodedTable = model.getEncodedTable();
+		
+		// Static Objects
+		for(GameObject obj : staticList) {
+			Coord c = obj.getCoord();
+			System.out.println(c.getX() + " " + c.getY());
+			encodedTable[c.getX()][c.getY()].setBase(obj);
 		}
+
+		if(player != null) {
+			Coord pc = player.getCoord();
+			encodedTable[pc.getX()][pc.getY()].setDynamic(player);
+		}
+
+		
+		for(DynamicObject obj : dynamicList) {
+			Coord c= obj.getCoord();
+			System.out.println(c.getX() + " " + c.getY());
+			encodedTable[c.getX()][c.getY()].setDynamic(obj);
+		}
+		
+		model.display();
+		
 		return model;
 	}
-	
+
 
 	/*
-	 * Regenerate the textures from string paths
-	 * Place back onto grid via direct calls instead of click listeners
+	 * Retrieve the objects from encoded table
+	 * Restore the state 
+	 * Directly sets the objects
 	 */
 	public void restoreModel(EditorModel m) {
-		TileTuple[][] map = m.getmodelPaths();
+		TileTuple[][] encodedTable = m.getEncodedTable();
 		
 		for(int i = 0; i < rowActors; i++) {
 			for(int j = 0; j < colActors; j++) {
-				int index = colActors*i + j;
+				TileTuple enc_tile = encodedTable[i][j];
 				
-				TileTuple t_tuple = map[i][j];
-				Tile tile = tileList.get(index);
+				if(enc_tile == null || enc_tile.isEmpty())
+					continue;
 
-				// Set terrain
-				if(t_tuple.getFloor() != null)
-					tile.setFloor(new TextureRegion(new Texture(Gdx.files.internal(t_tuple.getFloor()))));
-					
-				// Set object
-				if(t_tuple.getObject() != null) {
-					ObjectType type = t_tuple.getID();
-					Coord tile_pos = tile.getCoord();
-					TextureRegion cur_texture = new TextureRegion(new Texture(Gdx.files.internal(t_tuple.getObject())));
-					GameObject new_obj = new GameObject(type, cur_texture);
-					
-					if (type == ObjectType.PLAYER) {
-						player = new Player(tile_pos, 1, 1, new Texture(Gdx.files.internal(t_tuple.getObject())));
-					} else {			
-						new_obj.setCoord(tile_pos);
-					}
-					tile.setObject(new_obj);
+				ObjectType type = enc_tile.getID();
+				Tile tile = getTile(new Coord(i, j));
+				
+				GameObject base = null;
+				DynamicObject d_obj = null;
+				
+				// type will only show the top-most layer
+				if(type == ObjectType.ENEMY || type == ObjectType.PLAYER || type == ObjectType.ITEM) {
+					setObject(enc_tile.getDynamic(), new Coord(i, j));
 				}
+				
+				// If the tile only contains GameObjects
+				if(type == ObjectType.FLOOR || type == ObjectType.WALL) {
+					base = enc_tile.getBase();
+				}
+				
+				if(base != null)
+					setObject(base, new Coord(i, j));
+									
 			}
 		}
 	}
+	
 
 	/* 
 	 * Determines if the next position is valid (for player)

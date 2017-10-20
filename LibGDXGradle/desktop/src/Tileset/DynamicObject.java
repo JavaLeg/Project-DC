@@ -1,5 +1,6 @@
 package Tileset;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -11,20 +12,27 @@ import com.badlogic.gdx.graphics.glutils.FileTextureData;
 import Interface.ObjectModel;
 import State.Coord;
 import State.State;
+import Tileset.Behaviour.MoveBehaviour;
+import Tileset.Behaviour.MoveTrack;
 
 // DynamicObject is in charge of: hp
-public class DynamicObject extends GameObject implements Cloneable{
+public class DynamicObject extends GameObject implements Cloneable, Serializable{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -6521298265497519435L;
+
 	// Dynamic types are: Enemy, Player, Trap
 	// Not dynamic types are: Terrain, Item
 	public static enum DynamicObjectType {
-		PLAYER, ENEMY
+		PLAYER, ENEMY, ITEM
 	} 
 	
 	public static enum Status {
 		POISON, STUN, SLOW
 	}
 	
-	
+	private MoveTrack moves;
 	private double hp;
 	private double contactDamage; // how much damage entity deals
 	
@@ -34,18 +42,24 @@ public class DynamicObject extends GameObject implements Cloneable{
 	private HashMap<Status, Integer> statuses;
 	
 	
-	public DynamicObject(ObjectType type, Coord position, double hp, double damage, Texture texture) {
-		super(type, position, new TextureRegion(texture));
+	public DynamicObject(ObjectType type, Coord position, double hp, double damage, String img_path) {
+		super(type, position, img_path);
 		this.hp = hp;
 		this.contactDamage = damage;
 		this.iFrames = 0;
 		statuses = new HashMap<Status, Integer>();
 	}
 	
-	public DynamicObject(ObjectType type, double hp, double damage, Texture texture) {
-		super(type, new TextureRegion(texture));
+	public DynamicObject(ObjectType type, double hp, double damage, String img_path) {
+		super(type, img_path);
 		this.hp = hp;
 		this.contactDamage = damage;
+		this.iFrames = 0;
+		statuses = new HashMap<Status, Integer>();
+	}
+	
+	public DynamicObject(ObjectType type, String img_path) {
+		super(type, img_path);
 		this.iFrames = 0;
 		statuses = new HashMap<Status, Integer>();
 	}
@@ -89,7 +103,9 @@ public class DynamicObject extends GameObject implements Cloneable{
 	
 	public void step(State s) {
 		// potential ongoing effects
-		
+		if (moves.nextStep(s, this.getCoord()) != null) {
+			
+		}
 		// general management
 		if (getHp() < 0) {
 			destroy(s);
@@ -107,13 +123,14 @@ public class DynamicObject extends GameObject implements Cloneable{
 	/*
 	 * Used only for dynamic objects (EDITOR SIDE)
 	 */
+	/* No longer needed
 	public ObjectModel getModel() {
 		Texture texture = super.getTexture().getTexture();
 		String texturePath = ((FileTextureData)texture.getTextureData()).getFileHandle().path();
 		DynamicObjectType type = DynamicObjectType.valueOf(super.getType().toString());
 		ObjectModel model = new ObjectModel(hp, contactDamage, texturePath, super.getName(), type);
 		return model;
-	}
+	}*/
 	
 	public DynamicObject clone() throws CloneNotSupportedException {
 		return (DynamicObject)super.clone();
