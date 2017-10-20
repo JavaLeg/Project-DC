@@ -130,6 +130,7 @@ public class Tile extends Group {
 		this.removeActor("d_object");
 		g_obj = new_object;
 		//GameObject object = new_object.clone();
+		
 		this.addActor(processPath(new_object.getImgPath()), "object", 2);
 		if (d_obj != null) this.addActor(processPath(d_obj.getImgPath()), "d_object", 2);
 	}	
