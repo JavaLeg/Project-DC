@@ -77,7 +77,7 @@ public class State extends Stage {
 			
 		}
 	private void initialise() {
-//		Table gridTable = new Table();
+		Table gridTable = new Table();
 		
 		for(int i = 0; i < rowActors; i++) {
 			for(int j = 0; j < colActors; j++) {
@@ -94,13 +94,13 @@ public class State extends Stage {
 						
 			        }
 				});
-//				gridTable.add(tile).size(40, 40);
+				gridTable.add(tile).size(40, 40);
 			}
-//			gridTable.row();
+			gridTable.row();
 		}
-//		gridTable.top();
-//		gridTable.setFillParent(true);
-//		super.addActor(gridTable);
+		gridTable.top();
+		gridTable.setFillParent(true);
+		super.addActor(gridTable);
 		
 	}
 
@@ -248,7 +248,7 @@ public class State extends Stage {
 			}
 		}
 		return new LinkedList<Coord>(s);
-}
+	}
 
 	public GameObject getObject(Coord coord) {
 		return this.tileList.get(coord.getX()* colActors  + coord.getY()).getObject();
@@ -538,7 +538,12 @@ public class State extends Stage {
 		}
 	}
 	
-
+	public boolean isValid(Coord next) {
+		// TODO Auto-generated method stub
+		return (next.getX() >= 0 && next.getX() < colActors) &&
+				(next.getY() >= 0 && next.getY() < rowActors) &&
+				(this.getObject(next) == null);
+	}
 		
 	public TableTuple getDim() {
 		return new TableTuple(rowActors, colActors);
