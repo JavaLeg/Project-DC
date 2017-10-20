@@ -56,14 +56,14 @@ public class DynamicGame {
 		return activeState;
 	}
 	
-	
+
 	// Player Actions:
 	// 	Movement and attack
 	// false means action can not be made and no changes are made to the state
 	
 	public boolean makeAction(Action a) {
 		Coord curr = activeState.findPlayer();
-		Player p = activeState.getPlayer();
+		Player p = (Player) activeState.getPlayer();
 		Coord toMove = null;
 		switch (a) {
 		case ATTACK:
@@ -103,10 +103,10 @@ public class DynamicGame {
 				activeState.movePlayer(toMove);
 			}
 			System.out.print("USER INPUT: UP\n");
+
 			break;
 		default:
 			break;
-		
 		}
 		return false;
 	}

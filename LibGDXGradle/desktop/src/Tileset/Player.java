@@ -1,14 +1,15 @@
 package Tileset;
 
-import com.badlogic.gdx.graphics.Texture;
+
+import java.io.Serializable;
 
 import State.Coord;
 import State.State;
 import Tileset.Behaviour.Attack;
 import Tileset.Behaviour.Direction;
 
-public class Player extends DynamicObject {
-	
+public class Player extends DynamicObject implements Cloneable, Serializable {
+	private static final long serialVersionUID = 629680615400266941L;
 	//private static Attack lightAttack = new Attack()
 	private Direction currentFacing;
 	private Attack light;
@@ -16,18 +17,28 @@ public class Player extends DynamicObject {
 	private Attack selected;
 	
 	private int attackCooldown;
+
 	
-	public Player(double hp, double damage, Texture texture) {
+	public Player(Coord position,  double hp, double damage, Attack light, Attack special, String img_path) {
 		// type, width, height, coords, hp, damage
-		super(ObjectType.PLAYER, hp, damage, texture);
-	}
-	
-	public Player(Coord position, double hp, double damage, Attack light, Attack special, Texture texture) {
-		// type, width, height, coords, hp, damage
-		super(ObjectType.PLAYER, position, hp, damage, texture);
+		super(ObjectType.PLAYER, position, hp, damage, img_path);
 		this.light = light;
 		this.special = special;
 		this.selected = light; 
+	}
+	
+	public Player(double hp, double damage, Attack light, Attack special, String img_path) {
+		// type, width, height, coords, hp, damage
+		super(ObjectType.PLAYER, hp, damage, img_path);
+		this.light = light;
+		this.special = special;
+		this.selected = light; 
+	}
+	
+	
+	public Player(double hp, double damage, String img_path) {
+		// type, width, height, coords, hp, damage
+		super(ObjectType.PLAYER, hp, damage, img_path);
 	}
 	
 	@Override
@@ -60,5 +71,15 @@ public class Player extends DynamicObject {
 	@Override
 	public Attack getAttack() {
 		return selected;
+	}
+	
+	@Override
+	public Player clone() {
+		return new Player( getHp(), getContactDamage(), getImgPath());
+	}
+	
+	@Override
+	public void destroy(State s) {
+		// does not destroy self
 	}
 }

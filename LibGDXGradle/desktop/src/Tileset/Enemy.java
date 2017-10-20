@@ -1,6 +1,7 @@
 package Tileset;
 
-import com.badlogic.gdx.graphics.Texture;
+
+import java.io.Serializable;
 
 import State.Coord;
 import State.State;
@@ -8,8 +9,12 @@ import Tileset.Behaviour.Attack;
 import Tileset.Behaviour.Direction;
 import Tileset.Behaviour.MoveBehaviour;
 
-public class Enemy extends DynamicObject {
+public class Enemy extends DynamicObject implements Cloneable, Serializable{
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -5193796609184048030L;
 	private int moveRate;
 	private int sinceLastMove;
 	private MoveBehaviour moveBehaviour;
@@ -19,10 +24,10 @@ public class Enemy extends DynamicObject {
 	private int attackTime;
 	private int sinceLastAttack;
 	private Attack attack; 
-	
-	
-	public Enemy(Coord position, double hp, double damage, int moveRate, MoveBehaviour b, Attack attack, Texture texture) {
-		super(ObjectType.ENEMY, position,  hp, damage, texture);
+
+
+	public Enemy(Coord position, double hp, double damage, int moveRate, MoveBehaviour b, Attack attack, String img_path) {
+		super(ObjectType.ENEMY, position,  hp, damage, img_path);
 		this.moveRate = moveRate;
 		this.sinceLastMove = 0;
 		this.attackTime = 0;
@@ -31,6 +36,27 @@ public class Enemy extends DynamicObject {
 		this.attack = attack;
 	}
 	
+
+	public Enemy(double hp, double damage, int moveRate, MoveBehaviour b, String img_path) {
+		super(ObjectType.ENEMY, hp, damage, img_path);
+		this.moveRate = moveRate;
+		this.sinceLastMove = 0;
+		this.sinceLastAttack = 0;
+		this.moveBehaviour = b;
+	}
+	
+	
+	
+	/*
+	 * Initialized from the editor
+	 */
+	public Enemy(String img_path) {
+		super(ObjectType.ENEMY, img_path);
+		this.sinceLastMove = 0;
+		this.sinceLastAttack = 0;
+		//this.moveBehaviour = b;
+	}
+		
 	public void setBehaviour(MoveBehaviour b) {
 		moveBehaviour = b;
 	}
@@ -95,13 +121,52 @@ public class Enemy extends DynamicObject {
 		}
 	}
 	
-	@Override
-	public Attack getAttack() {
-		return attack;
+	public Enemy clone() {
+		return new Enemy(getHp(), getContactDamage(), moveRate, moveBehaviour, getImgPath());
 	}
-	
 
-	
-	
-	
+	public int getMoveRate() {
+		return moveRate;
+	}
+
+	public void setMoveRate(int moveRate) {
+		this.moveRate = moveRate;
+	}
+
+	public int getSinceLastMove() {
+		return sinceLastMove;
+	}
+
+	public void setSinceLastMove(int sinceLastMove) {
+		this.sinceLastMove = sinceLastMove;
+	}
+
+	public MoveBehaviour getMoveBehaviour() {
+		return moveBehaviour;
+	}
+
+	public void setMoveBehaviour(MoveBehaviour moveBehaviour) {
+		this.moveBehaviour = moveBehaviour;
+	}
+
+	public int getSinceLastAttack() {
+		return sinceLastAttack;
+	}
+
+	public void setSinceLastAttack(int sinceLastAttack) {
+		this.sinceLastAttack = sinceLastAttack;
+	}
+
+
+	public void setAttack(Attack attack) {
+		this.attack = attack;
+	}
+
+	public int getAttackTime() {
+		return attackTime;
+	}
+
+	public void setAttackTime(int attackTime) {
+		this.attackTime = attackTime;
+	}
 }

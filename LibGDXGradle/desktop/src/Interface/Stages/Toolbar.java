@@ -69,7 +69,8 @@ public class Toolbar extends Stage{
 	}
 	
 	private TextButton generateButton(String s) {
-		TextButton button = new TextButton(s, skin);
+		String newString = " " + s + " ";
+		TextButton button = new TextButton(newString, skin);
 		return button;
 	}
 		

@@ -2,9 +2,6 @@ package Interface.Screens;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-
-import org.omg.PortableServer.POAManagerPackage.State;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
@@ -26,42 +23,33 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
+import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
-import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.engine.desktop.DCGame;
-//import com.engine.desktop.EditorController;
 import com.engine.desktop.SaveSys;
-
 import Interface.Stages.Selections.LibrarySelection;
-import Interface.Stages.Selections.ToolbarSelection;
-import State.*;
 
 public class LibraryScreen implements Screen{
 	
     private TextureAtlas atlas;
     protected Skin skin;
-    private Game game;
+    private DCGame game;
     private SaveSys fileHandle;
     
     private Viewport viewport;
     private Camera camera;
     private Stage mainStage;
     
-    
     private LibrarySelection selection;
     private String selected_map;
-    //private ArrayList<Stage> UI;
-    
-    private static final int WORLD_WIDTH  = 800;
-    private static final int WORLD_HEIGHT = 480;
 
-    public LibraryScreen(Game game) throws IOException {
-    	this.game = game;
+    public LibraryScreen(DCGame game2) throws IOException {
+    	this.game = game2;
     	this.fileHandle = new SaveSys();
     }
     
@@ -74,14 +62,17 @@ public class LibraryScreen implements Screen{
         camera = new OrthographicCamera();
         viewport = new ScreenViewport();
         mainStage = new Stage(viewport);
-        
-        //Camera sideCamera = new OrthographicCamera();
-        //Viewport sideViewport = new ScreenViewport();
-        //Stage sideStage = new Stage(sideViewport);
  
         //Create Table
         Table mainTable = new Table();
         Table sideTable = new Table();
+        
+        //Set table to fill stage
+        sideTable.setFillParent(true);
+        mainTable.setFillParent(true);
+    	sideTable.bottom();
+        sideTable.padBottom(10);
+        mainTable.bottom();
         
         
         // SIDE TABLE
@@ -96,17 +87,28 @@ public class LibraryScreen implements Screen{
 						try {
 							switch(selection) {
 							case EDIT:
+								
+								if(selected_map == null) {
+									System.out.println("No map selected!");
+									return;
+								}
+								
 								s = new EditorScreen(game);
-								System.out.println("Loading in editor " + selected_map + "...");
+								System.out.println("Loading into Game: " + selected_map + "...");
 								((Game)Gdx.app.getApplicationListener()).setScreen(s);
 								((EditorScreen) s).loadModel(fileHandle.Load(selected_map));
 								break;
-							case RUN:
+							case PLAY:
 								s = new GameScreen(game);
-								System.out.println("Loading in editor " + selected_map + "...");
+								System.out.println("Loading in Editor: " + selected_map + "...");
 								((Game)Gdx.app.getApplicationListener()).setScreen(s);
 								((GameScreen) s).loadModel(fileHandle.Load(selected_map));
 								break;
+							case DELETE:
+								System.out.println("Deleting map: " + selected_map + "...");
+								fileHandle.Delete(selected_map);
+								// Refresh screen
+								((Game)Gdx.app.getApplicationListener()).setScreen(new LibraryScreen(game));
 							default:
 								break;	
 							}
@@ -119,14 +121,9 @@ public class LibraryScreen implements Screen{
 						}
 		        }
 			});
-		}
+		} 
         
-        //Set table to fill stage
-        sideTable.setFillParent(true);
-        mainTable.setFillParent(true);
-       
-        
-        // Main Table
+		
         // FONTS
         BitmapFont titleFont = new BitmapFont();
         titleFont.getData().setScale(4, 4);
@@ -134,17 +131,22 @@ public class LibraryScreen implements Screen{
         BitmapFont itemFont = new BitmapFont();
         itemFont.getData().setScale(2, 2);
         
+        
+        // Blank line to make things look neater
+        Label blank = new Label("", new Label.LabelStyle(titleFont, Color.WHITE));
+        mainTable.add(blank);
+        
+   
+        // TITLE
         //Set alignment of contents in the table.
         Label title = new Label("Library", 
-        		new Label.LabelStyle(titleFont, Color.WHITE));
-        
-        mainTable.top();
+        		new Label.LabelStyle(titleFont, Color.WHITE));  
+        mainTable.row();
         mainTable.add(title);
-        
 
         
+        // Add maps to list
         File[] list = fileHandle.getLibrary();
-        
         for (final File f : list) {
         	final String fileName = f.getName().split("\\.", 2)[0];
         	final Label fileLabel = new Label(fileName, new LabelStyle(itemFont, Color.WHITE));
@@ -158,9 +160,33 @@ public class LibraryScreen implements Screen{
         	mainTable.row();
         	mainTable.add(fileLabel);
         }
+  
+        
+        // Put it on the stage
         mainStage.addActor(new Image(new TextureRegion(new Texture(Gdx.files.internal("LibScreen/bg2.jpg")))));
-        mainStage.addActor(mainTable);
+        ScrollPane scroll = new ScrollPane(mainTable);
+        scroll.setFillParent(true);
+        mainStage.addActor(scroll);
+        scroll.moveBy(0, 50);
         mainStage.addActor(sideTable);
+        
+        
+        // Add back button
+        Table backTable = new Table();
+        TextButton backButton = generateButton("Back");
+        backButton.addListener(new ClickListener(){
+			@Override
+	        public void clicked(InputEvent event, float x, float y) {
+				mainStage.dispose();
+            	((Game)Gdx.app.getApplicationListener()).setScreen(new MainMenuScreen(game));
+			}
+		});
+        backTable.add(backButton);
+        backTable.bottom();
+        backTable.left();
+        backTable.padLeft(10);
+        backTable.padBottom(10);        
+        mainStage.addActor(backTable);
         
         
         
@@ -225,7 +251,8 @@ public class LibraryScreen implements Screen{
 	}
 	
 	private TextButton generateButton(String s) {
-		TextButton button = new TextButton(s, skin);
+		String newString = " " + s + " ";
+		TextButton button = new TextButton(newString, skin);
 		return button;
 	}
 

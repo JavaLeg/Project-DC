@@ -1,9 +1,5 @@
 package com.engine.desktop;
 
-import State.State;
-import Tileset.DynamicObject;
-import Tileset.DynamicObject.DynamicObjectType;
-
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -11,13 +7,19 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.io.Serializable;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Iterator;
 
 import Interface.EditorModel;
 import Interface.ObjectModel;
+import Tileset.DynamicObject;
+import Tileset.Enemy;
+import Tileset.GameObject.ObjectType;
+import Tileset.Player;
 
 
 /*
@@ -52,6 +54,10 @@ public class SaveSys{
 		}
 	}
 	
+	
+	
+	
+	// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ SAVING MAP ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 	/*
 	 * Object -> byte[]
 	 */
@@ -74,31 +80,48 @@ public class SaveSys{
         return (EditorModel)is.readObject();
     }
     
+    
+    public void Delete(String fileName) {
+    	 File[] list = this.getLibrary();
+    	 
+         for (final File f : list) {
+        	 final String file = f.getName().split("\\.", 2)[0];
+        	 if(file.equals(fileName)) {
+        		 f.delete();        	 }
+         }
+	}
+    
+    
+    
+    
+	// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ SAVING OBJECT ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    
+
     /*
-     * Save object Model
+     * Player objects
      */
-    public void Save(ObjectModel s, String fileName) throws IOException{
-    	String dir = "/" + s.getID().toString().toLowerCase() + "_custom/";
-    	FileOutputStream fos = new FileOutputStream(new File(objPath + dir + fileName));
+    public void Save(DynamicObject obj, String fileName) throws IOException{
+    	FileOutputStream fos = new FileOutputStream(new File(objPath + "/" + obj.getType().toString().toLowerCase() + "_custom/" + fileName));
     	ByteArrayOutputStream out = new ByteArrayOutputStream();
         ObjectOutputStream os = new ObjectOutputStream(out);
-        os.writeObject(s);
+        os.writeObject(obj);
         out.writeTo(fos);
     }
     
-	/*
-	 * byte[] -> Object
-	 */
-    public ObjectModel LoadObj(String fileName, String q_path) throws IOException, ClassNotFoundException {
-    	
-    	Path path = Paths.get(q_path + fileName); 	
+    public DynamicObject Load(String fileName, ObjectType type) throws IOException, ClassNotFoundException{
+    	Path path = Paths.get(objPath + "/" + type.toString().toLowerCase() + "_custom/" + fileName); 	
     	byte[] data = Files.readAllBytes(path);
         ByteArrayInputStream in = new ByteArrayInputStream(data);
         ObjectInputStream is = new ObjectInputStream(in);        
-        return (ObjectModel)is.readObject();
+        return (DynamicObject)is.readObject();
     }
     
     
+    
+
+    /*    
+     * Returns list of files in the library directory
+     */
     public File[] getLibrary(){
 		File directory = new File(dirPath);
 		File[] library = directory.listFiles();

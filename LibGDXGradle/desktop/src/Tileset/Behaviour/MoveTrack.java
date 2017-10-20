@@ -16,7 +16,6 @@ public class MoveTrack extends MoveBehaviour {
 		this.stayedStill = 0;
 	}
 	
-	
 	// TODO: uncomment when Blocked implemented
 	@Override
 	public Coord nextStep(State s, Coord currentPos) {
