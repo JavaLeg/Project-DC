@@ -4,43 +4,36 @@ import java.io.Serializable;
 import java.util.ArrayList;
 
 import State.Tile;
+import Tileset.Enemy;
+import Tileset.Item;
+import Tileset.Player;
 
 public class EditorModel implements Serializable {
-	private int row;
-	private int col;
 	private static final long serialVersionUID = 1125293377219154163L;
-	private TileTuple[][] modelPaths;
+	private TileTuple[][] encodedTable;
 	
 	public EditorModel(int row, int col) {
-		this.row = row;
-		this.col = col;
-		modelPaths = new TileTuple[row][col];
-	}
-	
-	public void setTile(TileTuple t, int row, int col) {
-		this.modelPaths[row][col] = t;
-	}
-	
-	public TileTuple[][] getmodelPaths(){
-		return modelPaths;
-	}
-	
-	/*
-	 * For debugging purposes
-	 * 1 - floor
-	 * 2 - object
-	 */
-	public void display(int layer) {
+		this.encodedTable = new TileTuple[row][col];
+		
 		for(int i = 0; i < row; i++) {
+			for(int j = 0; j < col; j++) {
+				this.encodedTable[i][j] = new TileTuple();
+			}
+		}
+	}
+	
+	
+	public TileTuple[][] getEncodedTable(){
+		return encodedTable;
+	}
+	
+
+	public void display() {
+		for(int i = 0; i < 50; i++) {
 			System.out.print("Row: " + i + " ");
 			
-			for(int j = 0; j < col; j++) {
-				if(layer == 1) {
-					System.out.print(modelPaths[i][j].getFloor());
-				}else if(layer == 2) {
-					System.out.print(modelPaths[i][j].getObject());
-				}
-				
+			for(int j = 0; j < 50; j++) {
+				System.out.print(encodedTable[i][j].getBase());
 			}
 			System.out.println(" ");
 		}
