@@ -24,6 +24,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
+import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane.ScrollPaneStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
@@ -45,8 +46,8 @@ public class LibraryScreen implements Screen{
 	final DCGame game;
 	
     private SaveSys fileHandle;
-    private LibrarySelection selection;
     private String selected_map;
+    private Label prevSelected;
     
     private static final int WORLD_WIDTH  = 800;
 	private static final int WORLD_HEIGHT = 450;
@@ -59,6 +60,7 @@ public class LibraryScreen implements Screen{
     	viewport = new FitViewport(WORLD_WIDTH, WORLD_HEIGHT,  camera);
     	viewport.apply();
     	stage = new Stage(viewport);
+    	prevSelected = null;
     	
     	this.fileHandle = new SaveSys();
     }
@@ -75,6 +77,55 @@ public class LibraryScreen implements Screen{
     	sideTable.bottom();
         sideTable.padBottom(10);
         mainTable.top();
+  
+		
+        // FONTS
+        BitmapFont itemFont = new BitmapFont();
+        itemFont.getData().setScale(1, 1);
+        
+        
+        // TITLE
+        Image titleImage = new Image(new TextureRegion(new Texture(Gdx.files.internal("LibScreen/libheader.png"))));
+        mainTable.add(titleImage);
+        mainTable.padTop(20);
+        
+        
+        Table mapTable = new Table();
+        // Add maps to list
+        final LabelStyle def = new LabelStyle(itemFont, Color.WHITE);
+        final LabelStyle selec = new LabelStyle(itemFont, Color.YELLOW);
+        
+        File[] list = fileHandle.getLibrary();
+        for (final File f : list) {
+        	final String fileName = f.getName();
+        	final Label fileLabel = new Label(fileName, def);
+        	fileLabel.addListener(new ClickListener(){
+                @Override
+                public void clicked(InputEvent event, float x, float y) {
+                	fileLabel.setStyle(selec);
+                	selected_map =  fileName;     
+                	System.out.println("Selected map - " + selected_map);
+                	
+                	// Unselect prev
+                	if(prevSelected != null) {
+                		prevSelected.setStyle(def);
+                		prevSelected = fileLabel;
+                	} else {
+                		prevSelected = fileLabel;
+                	}
+                }
+        	});	
+        	mapTable.row();
+        	mapTable.add(fileLabel);
+        }
+        
+        final ScrollPane scroll = new ScrollPane(mapTable);
+        scroll.setFillParent(true);
+        scroll.setForceScroll(false,true);
+
+        Table scrolltable = new Table();
+        scrolltable.setBounds(175,45, 450, 322 );
+        scrolltable.add(scroll);
         
         
         // SIDE TABLE
@@ -131,43 +182,11 @@ public class LibraryScreen implements Screen{
 			});
 		} 
         
-		
-        // FONTS
-        BitmapFont itemFont = new BitmapFont();
-        itemFont.getData().setScale(1, 1);
-        
-        // Blank line to make things look neater
-        Label blank = new Label("", new Label.LabelStyle(itemFont, Color.WHITE));
-
-        
-        // TITLE
-        Image titleImage = new Image(new TextureRegion(new Texture(Gdx.files.internal("LibScreen/libheader.png"))));
-        mainTable.add(titleImage);
-        
-        
-        // Add maps to list
-        File[] list = fileHandle.getLibrary();
-        for (final File f : list) {
-        	final String fileName = f.getName();
-        	final Label fileLabel = new Label(fileName, new LabelStyle(itemFont, Color.WHITE));
-        	fileLabel.addListener(new ClickListener(){
-                @Override
-                public void clicked(InputEvent event, float x, float y) {
-                	selected_map =  fileName;     
-                	System.out.println("Selected map - " + selected_map);
-                }
-        	});	
-        	mainTable.row();
-        	mainTable.add(fileLabel);
-        }
-  
         
         // Put it on the stage
         stage.addActor(new Image(new TextureRegion(new Texture(Gdx.files.internal("LibScreen/rsz_libbg.jpg")))));
-        ScrollPane scroll = new ScrollPane(mainTable);
-        scroll.setFillParent(true);
-        stage.addActor(scroll);
-        scroll.moveBy(0, -20);
+        stage.addActor(mainTable);
+        stage.addActor(scrolltable);
         stage.addActor(sideTable);
         
         

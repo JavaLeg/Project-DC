@@ -42,8 +42,7 @@ public class SplashScreen implements Screen{
 		animation = GifDecoder.loadGIFAnimation(Animation.PlayMode.LOOP, 
 				Gdx.files.internal("Splash/splash.gif").read());
 	}
-	
-	
+
 	@Override
 	public void render(float delta) {
         Gdx.gl.glClearColor(0, 0, 0, 1);
