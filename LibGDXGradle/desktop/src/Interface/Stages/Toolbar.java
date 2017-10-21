@@ -1,20 +1,15 @@
 package Interface.Stages;
 
 import java.io.IOException;
-import java.util.HashMap;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
-import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.SelectBox;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
@@ -22,12 +17,11 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
-import com.badlogic.gdx.utils.Json;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
 import Interface.Stages.Selections.NewToolbarSelection;
 import Interface.Stages.Selections.ToolbarSelection;
-import State.State;
+
 
 public class Toolbar extends Stage{
 	private Skin skin;
@@ -67,7 +61,12 @@ public class Toolbar extends Stage{
 
 					@Override
 					public void changed(ChangeEvent event, Actor actor) {
-						System.out.println(terrainDrop.getSelected());
+						try {
+							related.update(terrainDrop.getSelected());
+						} catch (IOException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
 					}
 				 });
 				break;
@@ -83,7 +82,12 @@ public class Toolbar extends Stage{
 
 					@Override
 					public void changed(ChangeEvent event, Actor actor) {
-						System.out.println(objDrop.getSelected());
+						try {
+							related.update(objDrop.getSelected());
+						} catch (IOException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
 					}
 				 });
 				break;
@@ -116,12 +120,7 @@ public class Toolbar extends Stage{
 				yb.addListener(new ClickListener(){
 					@Override
 			        public void clicked(InputEvent event, float x, float y) {
-						try {
-							related.update(ToolbarSelection.MAP);
-						} catch (IOException e) {
-							e.printStackTrace();
-						}
-
+						System.out.println("EXIT!");
 			        }
 				});
 				break;
@@ -134,12 +133,7 @@ public class Toolbar extends Stage{
 				ybb.addListener(new ClickListener(){
 					@Override
 					public void clicked(InputEvent event, float x, float y) {
-						try {
-							related.update(ToolbarSelection.MAP);
-						} catch (IOException e) {
-							e.printStackTrace();
-						}
-
+						System.out.println("Something should go here!");
 					}
 					});
 				break;

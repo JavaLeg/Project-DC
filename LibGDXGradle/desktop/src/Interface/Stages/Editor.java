@@ -203,8 +203,8 @@ public class Editor extends Stage {
 
 				
 				tooltip_labels = labels + "\nHealth: " + obj.getHp() 
-				+ "\nDamage: " + obj.getContactDamage() 
-				+ "\nAtk Rate: " + ((Enemy) obj).getAttackRate();		
+				+ "\nDamage: " + obj.getContactDamage();
+
 				
 				break;
 			case ENEMY:
