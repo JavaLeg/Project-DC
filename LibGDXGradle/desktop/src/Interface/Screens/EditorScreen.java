@@ -56,7 +56,7 @@ public class EditorScreen implements Screen {
 		// Every viewport initializes with (0, 0) at bottom left of the stage
 		Viewport editor_viewport = new EditorViewport(APP_WIDTH*7/40, APP_HEIGHT);
 		Viewport preview_viewport = new PreviewViewport(APP_WIDTH, APP_HEIGHT);
-		Viewport toolbar_viewport = new ToolbarViewport(APP_WIDTH, APP_HEIGHT);
+		Viewport toolbar_viewport = new ToolbarViewport(APP_WIDTH*7/40, APP_HEIGHT);
 		
 		UI = new ArrayList<Stage>();
 		

@@ -3,7 +3,6 @@ package com.maindc.desktop;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
 import com.engine.desktop.DCGame;
-import com.maindc.DC_Main;
 
 public class DesktopLauncher {
 	public static void main (String[] arg) {
@@ -11,8 +10,8 @@ public class DesktopLauncher {
 		
 		// Ensure height to width ratio is 0.6
 		
-		config.width = 1600;
-		config.height = 900;
+		config.width = 1920;
+		config.height = 1080;
 		config.title = "Project-DC";
 		
 		new LwjglApplication(new DCGame(), config);
