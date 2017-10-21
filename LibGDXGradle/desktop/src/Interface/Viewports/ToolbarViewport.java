@@ -27,15 +27,7 @@ public class ToolbarViewport extends Viewport{
 		Vector2 scaled = scaling.apply(getWorldWidth(), getWorldHeight(), screenWidth, screenHeight);
 		int viewportWidth = Math.round(scaled.x);
 		int viewportHeight = Math.round(scaled.y);
-
-		// Center.
-		// Ratio used is 7/20 for the split coordinate of the screen
-		// Height is at 440 px, ratio 11/12
-		
-		
-		//setScreenBounds((screenWidth - viewportWidth) / 2, (screenHeight - viewportHeight) / 2, viewportWidth, viewportHeight);
-		setScreenBounds(screenWidth*7/20, screenHeight*11/12, viewportWidth, viewportHeight);
-
+		setScreenBounds(0, screenHeight*8/15, viewportWidth, viewportHeight);
 		apply(centerCamera);
 	}
 

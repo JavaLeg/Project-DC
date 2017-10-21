@@ -12,7 +12,7 @@ public class DesktopLauncher {
 		// Ensure height to width ratio is 0.6
 		
 		config.width = 1600;
-		config.height = 960;
+		config.height = 900;
 		config.title = "Project-DC";
 		
 		new LwjglApplication(new DCGame(), config);
