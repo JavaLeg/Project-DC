@@ -64,7 +64,7 @@ public class Toolbar extends Stage{
 		mainTable.setPosition(toolbarPos.getX() + pad, toolbarPos.getY(), 0);
 		
 		// Add this actor
-		super.addActor(new Image(new TextureRegion(new Texture(Gdx.files.internal("EditorScreen/tb_bg.png")))));
+		super.addActor(new Image(new TextureRegion(new Texture(Gdx.files.internal("EditorScreen/tb_bg.jpg")))));
 		super.addActor(mainTable);
 	}
 	
