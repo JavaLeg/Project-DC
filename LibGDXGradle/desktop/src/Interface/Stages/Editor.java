@@ -143,6 +143,12 @@ public class Editor extends Stage {
 		
 		final Table newTable = new Table();
 		
+		Label title = new Label(s.toString() + " - Custom", 
+        		new Label.LabelStyle(new BitmapFont(), Color.BLACK));
+		
+		newTable.add(title);
+		newTable.row();
+		
 		TextButton editButton = null;
 		TextButton customButton = null;
 		
@@ -193,9 +199,7 @@ public class Editor extends Stage {
 			
 			switch(type) {
 			case PLAYER:
-				labels = "Name: " + obj.getName() + "\n" + 
-						 "Health: " + obj.getHp() + "\n" +
-						 "Damage: " + obj.getContactDamage() + "\n";
+				labels = obj.getName() + "\n";
 				
 				tooltip_labels = labels;
 				
@@ -204,16 +208,15 @@ public class Editor extends Stage {
 				
 				break;
 			case ENEMY:
-				labels = "Name: " + obj.getName() + "\n" + 
-						 "Health: " + obj.getHp() + "\n" +
-						 "Damage: " + obj.getContactDamage() + "\n";
+				labels = obj.getName();
+
 				
 				tooltip_labels = labels;
 				tooltip_labels += "Atk Rate: " + ((Enemy) obj).getAttackRate();
 				
 				break;
 			case ITEM:
-				labels = "Name: " + obj.getName() + "\n"; 
+				labels = obj.getName() + "\n"; 
 				
 				tooltip_labels = labels;
 				tooltip_labels += "Restore: " + ((Item) obj).getRestoreValue();
@@ -229,7 +232,8 @@ public class Editor extends Stage {
 			icon.addListener(new TextTooltip(tooltip_labels, skin));
 			
 			newTable.add(icon).size(40, 40);
-			newTable.add(icon_labels).pad(5);
+			newTable.add(icon_labels);
+			newTable.row();
 				
 
 			icon.addListener(new ClickListener(){
@@ -483,8 +487,8 @@ public class Editor extends Stage {
 	 */	
 	public void newEdit(DynamicObject obj) {
 		final DynamicObject object = obj;
-		ObjectType type = object.getType();
-		
+		final ObjectType type = object.getType();
+				
 		Table editTable = new Table();
 		Image icon = processPath(obj.getImgPath());
 		
@@ -572,15 +576,28 @@ public class Editor extends Stage {
 						check = false;
 					}
 					
-					if(!resField.getText().matches("[0-9]+")) {
-						System.out.println("Invalid restore value!");
-						check = false;
-					}
 					
-					if(!atkField.getText().matches("[0-9]+")) {
-						System.out.println("Invalid restore value!");
-						check = false;
+					// Custom attributes
+					switch(type) {
+					case PLAYER:
+
+						break;
+					case ENEMY:
+						if(!atkField.getText().matches("[0-9]+")) {
+							System.out.println("Invalid attack value!");
+							check = false;
+						}
+						break;
+					case ITEM:
+						if(!resField.getText().matches("[0-9]+")) {
+							System.out.println("Invalid restore value!");
+							check = false;
+						}
+						break;
+					default:
+						break;
 					}
+
 					
 					if(!check)
 						return;
