@@ -46,11 +46,10 @@ public class OptionsScreen implements Screen {
     private Camera camera;
     private Stage mainStage;
     
-    private int resolutionBoxIndex;
+    static private int resolutionBoxIndex = 1;
 	
-    public OptionsScreen(DCGame game, int resBoxIdx) throws IOException {
+    public OptionsScreen(DCGame game) throws IOException {
     	this.game = game;
-    	this.resolutionBoxIndex = resBoxIdx;
     }
 	
 	@Override
@@ -115,7 +114,7 @@ public class OptionsScreen implements Screen {
             	   Gdx.graphics.setWindowedMode(oldResolutoins[0], oldResolutoins[1]);
             	   // Refresh screen
             	   try {
-	   					((Game)Gdx.app.getApplicationListener()).setScreen(new OptionsScreen(game, resolutionBoxIndex));
+	   					((Game)Gdx.app.getApplicationListener()).setScreen(new OptionsScreen(game));
 	   				} catch (IOException e) {
 	   					e.printStackTrace();
 	   				}
@@ -131,7 +130,7 @@ public class OptionsScreen implements Screen {
             	   Gdx.graphics.setFullscreenMode(Gdx.graphics.getDisplayMode());
             	   // Refresh screen
             	   try {
-	   					((Game)Gdx.app.getApplicationListener()).setScreen(new OptionsScreen(game, resolutionBoxIndex));
+	   					((Game)Gdx.app.getApplicationListener()).setScreen(new OptionsScreen(game));
 	   				} catch (IOException e) {
 	   					e.printStackTrace();
 	   				}
@@ -164,7 +163,7 @@ public class OptionsScreen implements Screen {
         	   int newIdx = selectbox.getSelectedIndex();
         	   resolutionBoxIndex = newIdx;
         	   try {
-   					((Game)Gdx.app.getApplicationListener()).setScreen(new OptionsScreen(game, resolutionBoxIndex));
+   					((Game)Gdx.app.getApplicationListener()).setScreen(new OptionsScreen(game));
    				} catch (IOException e) {
    					e.printStackTrace();
    				}
