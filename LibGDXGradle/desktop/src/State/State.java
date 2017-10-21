@@ -22,8 +22,8 @@ import Interface.Stages.TableTuple;
 
 public class State extends Stage {
 	
-	private static final int DEFAULT_MAP_WIDTH = 10; 
-	private static final int DEFAULT_MAP_HEIGHT = 10;
+	private static final int DEFAULT_MAP_WIDTH = 25; 
+	private static final int DEFAULT_MAP_HEIGHT = 25;
 	
 	private int rowActors;
 	private int colActors;
@@ -69,14 +69,17 @@ public class State extends Stage {
 		// assumes no player initially
 		this.player = null;
 	}
-		public State(Viewport v, int height, int width) {
-			this(v);
-			this.rowActors = height;
-			this.colActors = width;
+	
+	public State(Viewport v, int width, int height) {
+		this(v);
+		this.rowActors = height;
+		this.colActors = width;
 			
-		}
-	private void initialise() {
+	}
 		
+		
+	private void initialise() {
+				
 		for(int i = 0; i < this.rowActors; i++) {
 			for(int j = 0; j < this.colActors; j++) {
 								
@@ -460,6 +463,7 @@ public class State extends Stage {
 		
 		// Static Objects
 		for(GameObject obj : staticList) {
+			System.out.println("hi");
 			Coord c = obj.getCoord();
 			encodedTable[c.getX()][c.getY()].setBase(obj);
 		}
@@ -488,6 +492,10 @@ public class State extends Stage {
 	 */
 	public void restoreModel(EditorModel m) {
 		TileTuple[][] encodedTable = m.getEncodedTable();
+		
+		rowActors = m.getRows();
+		colActors = m.getCols();
+		initialise();
 
 		for(int i = 0; i < this.rowActors; i++) {
 			for(int j = 0; j < this.colActors; j++) {
