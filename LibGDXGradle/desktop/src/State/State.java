@@ -128,12 +128,12 @@ public class State extends Stage {
 		if(type == ObjectType.ENEMY || type == ObjectType.ITEM || type == ObjectType.PLAYER) {
 			obj = cur_d_object.clone();
 			obj.setCoord(tile.getCoord());
-			dynamicList.add((DynamicObject) obj);
+			// dynamicList.add((DynamicObject) obj);
 			obj.setName(cur_d_object.getName());
 		}else {
 			obj = cur_object.clone();
 			obj.setCoord(tile.getCoord());
-			staticList.add(obj);
+			// staticList.add(obj);
 		}
 		// tile.setObject(obj);
 		this.setObject(obj, obj.getCoord());
@@ -203,12 +203,13 @@ public class State extends Stage {
 			if (cur.getObjectType() == ObjectType.PLAYER) player = null;
 			newObject.setCoord(coord);
 			String name = newObject.getName();
-			if (name != null && name.equals("win")) {						// If win condition
+			
+			// Win condition handling
+			if (name != null && name.equals("win")) {						
 				if (win != null) this.deleteWin(win.getCoord());
 				win = (DynamicObject) newObject;
-			} else {
-				dynamicList.add((DynamicObject) newObject);
-			}
+			} 
+			dynamicList.add((DynamicObject) newObject);
 			cur.setDynamicObject((DynamicObject) newObject);
 			break;
 		case WALL:
@@ -438,13 +439,9 @@ public class State extends Stage {
 				// type will only show the top-most layer
 				if(type == ObjectType.ENEMY || type == ObjectType.PLAYER || type == ObjectType.ITEM) {
 					setObject(enc_tile.getDynamic(), new Coord(i, j));
-				}
+				} 
 				
-				// If the tile only contains GameObjects
-				if(type == ObjectType.FLOOR || type == ObjectType.WALL) {
-					base = enc_tile.getBase();
-				}
-				
+				base = enc_tile.getBase();
 				if(base != null)
 					setObject(base, new Coord(i, j));
 									
