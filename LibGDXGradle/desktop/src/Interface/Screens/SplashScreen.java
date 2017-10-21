@@ -4,11 +4,13 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.Animation;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.utils.TimeUtils;
 import com.engine.desktop.DCGame;
 
+import Tileset.Behaviour.Attack;
 import externals.GifDecoder;
 
 public class SplashScreen implements Screen{
@@ -38,8 +40,7 @@ public class SplashScreen implements Screen{
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         batch.begin();
-        batch.draw(animation.getKeyFrame(elapsed), 20.0f, 20.0f);        
-        batch.end();
+        batch.draw(animation.getKeyFrame(elapsed), 20.0f, 20.0f);   
 
         /*
          * Delay before showing main menu
@@ -48,12 +49,15 @@ public class SplashScreen implements Screen{
             g.setScreen(new MainMenuScreen(g));
         }
         
-        if(Gdx.input.justTouched())
+        // event to trigger the animation
+        if(Gdx.input.justTouched()){
         	g.setScreen(new MainMenuScreen(g));
-        
-
+        }
+        batch.end();
 	}
 
+	
+	
 	@Override
 	public void resize(int width, int height) {
 		// TODO Auto-generated method stub
