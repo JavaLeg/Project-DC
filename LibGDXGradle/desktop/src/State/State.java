@@ -1,6 +1,10 @@
 package State;
 
+
 import java.util.ArrayList;
+import java.util.List;
+
+
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
@@ -12,11 +16,10 @@ import Interface.TileTuple;
 import Interface.Stages.TableTuple;
 
 
-
 public class State extends Stage {
 	
-	private static final int DEFAULT_MAP_WIDTH = 50; 
-	private static final int DEFAULT_MAP_HEIGHT = 50;
+	private static final int DEFAULT_MAP_WIDTH = 25; 
+	private static final int DEFAULT_MAP_HEIGHT = 25;
 	
 	private int rowActors;
 	private int colActors;
@@ -33,10 +36,12 @@ public class State extends Stage {
 	private ObjectType selection;
 	
 	// private Coord playerCoord;
+
 	private ArrayList<Tile> tileList;
 
 	private DynamicObject win;			// The win condition 
-	
+
+
 	private Player player;
 	private ArrayList<DynamicObject> dynamicList;
 	private ArrayList<GameObject> staticList;
@@ -60,12 +65,19 @@ public class State extends Stage {
 		// assumes no player initially
 		this.player = null;
 	}
-
-	private void initialise() {
-//		Table gridTable = new Table();
+	
+//	public State(Viewport v, int width, int height) {
+//		this(v);
+//		this.rowActors = height;
+//		this.colActors = width;
+//			
+//	}
 		
-		for(int i = 0; i < rowActors; i++) {
-			for(int j = 0; j < colActors; j++) {
+		
+	private void initialise() {
+				
+		for(int i = 0; i < this.rowActors; i++) {
+			for(int j = 0; j < this.colActors; j++) {
 								
 				final Tile tile = new Tile(new Coord(i,j));
 				tileList.add(tile);
@@ -73,20 +85,18 @@ public class State extends Stage {
 				
 				tile.addListener(new ClickListener(){
 					@Override
-			        public void clicked(InputEvent event, float x, float y) {
-					
-					setTile(tile, selection);
-						
+			        public void clicked(InputEvent event, float x, float y) {	
+						setTile(tile, selection);	
 			        }
 				});
 			}
 		}
 	}
-	
+
 	//************************//
 	//******** EDITOR ********//
 	//************************//
-	
+
 	public void setDynamicSelection(DynamicObject obj) {
 		this.selection = obj.getType();
 		this.cur_d_object = obj;
@@ -96,7 +106,6 @@ public class State extends Stage {
 		this.selection = obj.getType();
 		this.cur_object = obj;
 	}
-	
 	
 	// Fill grid with selected floor
 	// TODO
@@ -174,8 +183,30 @@ public class State extends Stage {
 	//******** OBJECT ********//
 	//************************//
 	
+
+//	//WHY is this needed?
+//	public List<Coord> getAttackedLocations() {
+//		//Set<Coord> s = new HashSet<Coord>();
+//		for (DynamicObject d : dynamicList) {
+//			if (d.getActionState() == ActionState.ATTACK) {
+//				
+//			}
+//		}
+//		//return new LinkedList<Coord>(s);
+//	}
+
 	public GameObject getObject(Coord coord) {
 		return this.tileList.get(coord.getX()* colActors  + coord.getY()).getObject();
+	}
+	
+	
+	public DynamicObject getDynamicObject(Coord c) {
+		GameObject g = getObject(c);
+		if (g.isDynamic()) {
+			return (DynamicObject) g;
+		} else {
+			return null;
+		}
 	}
 	
 	/*
@@ -247,6 +278,7 @@ public class State extends Stage {
 		tile.deleteObject();
 	}
 	
+
 	/*
 	 * Deletes the object at that tile entirely, including getting rid of the texture
 	 */
@@ -254,6 +286,15 @@ public class State extends Stage {
 		Tile tile = tileList.get(coord.getX()* colActors  + coord.getY());
 		tile.deleteObject();
 	}
+	
+	public void fillObject(GameObject g) {
+		for (int x = 0; x < rowActors; x++) {
+			for (int y = 0; y < colActors; y++) {
+				setObject(g.clone(), new Coord(x,y));
+			}
+		}
+	}
+	
 	
 	
 	public void deleteObject(Coord coord) {
@@ -289,6 +330,19 @@ public class State extends Stage {
 	}
 	
 	
+	public List<GameObject> getAllObjects() {
+		List<GameObject> newList = new ArrayList<GameObject>(staticList.size() + dynamicList.size());
+		newList.addAll(staticList);
+		newList.addAll(dynamicList);
+		return newList;
+	}
+	
+	
+	public List<DynamicObject> getAllDynamicObjects() {
+		return dynamicList;
+	}
+	
+	
 	//************************//
 	//******* PLAYER *********//
 	//************************//
@@ -304,7 +358,6 @@ public class State extends Stage {
 	}
 	
 	// Get player object
-
 	public DynamicObject getPlayer(){
 		return this.player;
 	}
@@ -331,10 +384,22 @@ public class State extends Stage {
 	//******* TERRAIN ********//
 	//************************//
 	
-	public boolean isBlocked(Coord pos) {
-		return !(this.tileList.get(pos.getX()* colActors  + pos.getY() ).getObject()).isPassable();
+	public boolean hasWall(Coord pos) {
+		GameObject g = getTile(pos).getObject();
+		return (g != null) && (g.getType() == ObjectType.WALL);
 	}
 	
+	/*
+	 * Returns if the next position will block
+	 * Also checks win condition
+	 */
+	public boolean isBlocked(Coord pos) {
+		if (win != null && pos.equals(win.getCoord())) {		// If winnable
+			System.out.println("Win!");
+			return false;
+		}
+		return (getTile(pos).hasObject());
+	}
 	
 	
 	//************************//
@@ -389,11 +454,12 @@ public class State extends Stage {
 		 * ORDER MATTERS IN WHICH YOU PUT ONTO THE TABLE
 		 * Ensure static objects iterated over first
 		 */
-		EditorModel model = new EditorModel(rowActors, colActors);
+		EditorModel model = new EditorModel(this.rowActors, this.colActors);
 		TileTuple[][] encodedTable = model.getEncodedTable();
 		
 		// Static Objects
 		for(GameObject obj : staticList) {
+			System.out.println("hi");
 			Coord c = obj.getCoord();
 			encodedTable[c.getX()][c.getY()].setBase(obj);
 		}
@@ -421,17 +487,17 @@ public class State extends Stage {
 	 * Directly sets the objects
 	 */
 	public void restoreModel(EditorModel m) {
-		TileTuple[][] encodedTable = m.getEncodedTable();
-		
-		for(int i = 0; i < rowActors; i++) {
-			for(int j = 0; j < colActors; j++) {
+		TileTuple[][] encodedTable = m.getEncodedTable();	
+		resize(m.getRows(), m.getCols());
+
+		for(int i = 0; i < this.rowActors; i++) {
+			for(int j = 0; j < this.colActors; j++) {
 				TileTuple enc_tile = encodedTable[i][j];
 				
 				if(enc_tile == null || enc_tile.isEmpty())
 					continue;
 
 				ObjectType type = enc_tile.getID();
-				Tile tile = getTile(new Coord(i, j));
 				
 				GameObject base = null;
 				DynamicObject d_obj = null;
@@ -449,18 +515,40 @@ public class State extends Stage {
 		}
 	}
 	
-
-	/* 
-	 * Determines if the next position is valid (for player)
-	 */
 	public boolean isValid(Coord next) {
 		// TODO Auto-generated method stub
 		return (next.getX() >= 0 && next.getX() < colActors) &&
-				(next.getY() >= 0 && next.getY() < rowActors) &&
-				(this.getObject(next) == null);
+				(next.getY() >= 0 && next.getY() < rowActors);
 	}
 		
 	public TableTuple getDim() {
 		return new TableTuple(rowActors, colActors);
+	}
+	public int getRow() {
+		// TODO Auto-generated method stub
+		return this.rowActors;
+	}
+	
+	public int getColumn() {
+		// TODO Auto-generated method stub
+		return this.colActors;
+	}
+	
+	public void resize(int rows, int cols) {
+		// TODO Auto-generated method stub
+		this.clear();
+		this.rowActors = rows;
+		this.colActors = cols;
+		
+		this.tileList = null;
+		this.dynamicList = null;
+		this.staticList = null;
+		
+		this.tileList = new ArrayList<Tile>();
+		this.dynamicList = new ArrayList<DynamicObject>();
+		this.staticList = new ArrayList<GameObject>();
+		this.player = null;
+		this.win = null;
+		initialise();
 	}
 }

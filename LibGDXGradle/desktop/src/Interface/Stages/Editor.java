@@ -3,6 +3,7 @@ package Interface.Stages;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 
 import com.badlogic.gdx.Gdx;
@@ -14,6 +15,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
@@ -22,11 +24,13 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.scenes.scene2d.ui.TextTooltip;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.engine.desktop.SaveSys;
 
 import Interface.EditorModel;
 import Interface.Stages.Selections.ToolbarSelection;
+import State.Coord;
 import State.State;
 import Tileset.DynamicObject;
 import Tileset.Enemy;
@@ -34,6 +38,9 @@ import Tileset.GameObject;
 import Tileset.GameObject.ObjectType;
 import Tileset.Item;
 import Tileset.Player;
+import Tileset.Behaviour.Attack;
+import Tileset.Behaviour.MoveBehaviour;
+import Tileset.Behaviour.MoveRandom;
 
 /*
  * Stage for the editor UI (Tools on the left of the screen)
@@ -56,6 +63,10 @@ public class Editor extends Stage {
 	private State related;
 	private String path;
 	private SaveSys saver;
+	
+	// Map size constraints
+	private final static int MAP_MIN = 10;
+	private final static int MAP_MAX = 50;
 		
 	/*
 	 * Dimensions: 280 x 480
@@ -217,7 +228,7 @@ public class Editor extends Stage {
 				
 				tooltip_labels = labels + "\nHealth: " + obj.getHp() 
 										+ "\nDamage: " + obj.getContactDamage() 
-										+ "\nAtk Rate: " + ((Enemy) obj).getAttackRate();				
+										+ "\nAtk Rate: " + ((Enemy) obj).getAttackTime();				
 				break;
 			case ITEM:
 				labels = "Name: " + obj.getName();
@@ -340,7 +351,26 @@ public class Editor extends Stage {
 			final TextField colField = generateTextField(Integer.toString(dim.getY()));
 
 			newTable.add(rowField).size(40, 30);
-			newTable.add(colField).size(40, 30);
+			newTable.add(colField).size(40, 30).pad(PAD);
+			
+			
+			TextureRegionDrawable tr = new TextureRegionDrawable(new TextureRegion
+					(new Texture(Gdx.files.internal("EditorScreen/info_icon.png"))));
+			
+			
+			ImageButton ib = new ImageButton(tr);
+			
+			String description = "Dimension constraints:\n" +
+									"Min - " + Integer.toString(MAP_MIN) + " x " + Integer.toString(MAP_MIN) + "\n" +
+									"Max - " + Integer.toString(MAP_MAX) + " x " + Integer.toString(MAP_MAX);
+			
+			ib.addListener(new TextTooltip(description, skin));
+			
+			newTable.add(ib).size(40);
+			
+			
+			
+			
 			newTable.row();
 			
 			newTable.add(textField).size(80, 30);			
@@ -363,6 +393,13 @@ public class Editor extends Stage {
 				@Override
 		        public void clicked(InputEvent event, float x, float y) {
 					System.out.println("Reload State");
+					if (rowField.getText().matches("^-?\\d+$") && colField.getText().matches("^-?\\d+$")) {		// Check if number
+						int rows = Integer.parseInt(rowField.getText());
+						int cols = Integer.parseInt(colField.getText());
+						if (rows >= MAP_MIN && rows <= MAP_MAX && cols >= MAP_MIN && cols <= MAP_MAX)
+							related.resize(rows, cols);									// Deletes all of the old data, resizes map
+					}
+					System.out.println(rowField.getText() + ", " + colField.getText());
 		        }
 			});
 			newTable.add(refreshButton);
@@ -414,8 +451,15 @@ public class Editor extends Stage {
 			        public void clicked(InputEvent event, float x, float y) {
 						System.out.println("Selected - " + fileName);
 						
-						// Right now all attributes initialized as null (Changed through edit)
-						Player obj = new Player(filePath);
+						
+						// DEFAULTS FOR ATTACKS
+						Attack light = new Attack(Arrays.asList(new Coord(0,1)), 
+								5, Arrays.asList(ObjectType.ENEMY), 15 , 10);
+						Attack heavy = new Attack(Arrays.asList(new Coord(0,1), new Coord(1,1), new Coord(-1,1)), 
+								5, Arrays.asList(ObjectType.ENEMY), 45 , 10);
+						
+						Player obj = new Player(10, 10, light, heavy, filePath);
+						//System.out.print(getActionState());
 						selected_Dyn = obj;
 						related.setDynamicSelection(obj);
 			        }
@@ -428,7 +472,8 @@ public class Editor extends Stage {
 						System.out.println("Selected - " + fileName);
 						
 						// Right now all attributes initialized as null (Changed through edit)
-						Enemy obj = new Enemy(filePath);
+						Enemy obj = new Enemy(10, 2, 30, new MoveRandom(), filePath);
+						// double hp, double damage, int moveRate, MoveBehaviour b, String img_path
 						selected_Dyn = obj;
 						related.setDynamicSelection(obj);
 			        }
@@ -507,7 +552,7 @@ public class Editor extends Stage {
 		
 		// Special attributes for objects
 		if(type == ObjectType.ENEMY) {
-			atk = ((Enemy) obj).getAttackRate();
+			atk = ((Enemy) obj).getAttackTime();
 		}else if(type == ObjectType.ITEM) {
 			restore = ((Item) obj).getRestoreValue();
 		}
@@ -558,6 +603,7 @@ public class Editor extends Stage {
 		saveButton.addListener(new ClickListener(){
 			@Override
 	        public void clicked(InputEvent event, float x, float y) {
+
 				
 					DynamicObject clone = object.clone(); //CLONE
 					
@@ -613,6 +659,7 @@ public class Editor extends Stage {
 					clone.setContactDamage(Double.valueOf(dmgField.getText()));
 					
 					saveObject(clone);
+
 				
 	        }
 		});

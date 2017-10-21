@@ -15,19 +15,22 @@ public class GameInputProcessor implements InputProcessor {
 	private Action queuedAction;
 	private final int actionSpeed = 5;
 	private int sinceLastAction;
+	private boolean enabled;
 	
 	
 	public GameInputProcessor(DynamicGame g) {
 		this.activeGame = g;
 		sinceLastAction = 0;
+		enabled = false;
 	}
 	
 	
 	@Override
 	public boolean keyDown(int keycode) {		
+		if (!enabled) return false;
 		//SUPPORTS:
-		// 	Move: WSAD, Attack/Special: J
-		//  Move: Arrow Keys, Attack/Special: Z
+		// 	Move: WSAD, Attack/Special: J/K
+		//  Move: Arrow Keys, Attack/Special: Z/X
 		
 		Action toMake = null;
 		
@@ -36,19 +39,19 @@ public class GameInputProcessor implements InputProcessor {
 		// PLAYER MOVEMENT
 		case Keys.LEFT:
 		case Keys.A:
-			toMake = Action.MOVE_LEFT;
+			toMake = Action.MOVE_WEST;
 			break;
 		case Keys.RIGHT:
 		case Keys.D:	
-			toMake = Action.MOVE_RIGHT;
+			toMake = Action.MOVE_EAST;
 			break;
 		case Keys.UP:
 		case Keys.W:
-			toMake = Action.MOVE_UP;
+			toMake = Action.MOVE_NORTH;
 			break;
 		case Keys.DOWN:
 		case Keys.S:
-			toMake = Action.MOVE_DOWN;
+			toMake = Action.MOVE_SOUTH;
 			break;
 			
 		// PLAYER SPECIAL/ATTACK
@@ -65,13 +68,14 @@ public class GameInputProcessor implements InputProcessor {
 		default:
 			// nothing 
 		}		
-		
+		System.out.println("Make action.");
 		if (toMake != null) {
 			if (sinceLastAction > 0) {
 				queuedAction = toMake;
 			} else {
 				sinceLastAction = actionSpeed;
-				activeGame.makeAction(toMake);
+				activeGame.makeAction(toMake); // TODO: move to step to syncronise all actions
+				queuedAction = null;
 			}
 		}
 		
@@ -86,14 +90,21 @@ public class GameInputProcessor implements InputProcessor {
 		} else {
 			if (queuedAction != null) {
 				sinceLastAction = actionSpeed;
-				activeGame.makeAction(queuedAction);
+				//activeGame.makeAction(queuedAction);
 				queuedAction = null;
 			}
 		}
 	}
 	
 	
+	public void setEnabled(boolean enabled) {
+		if (!enabled) queuedAction = null; // remove queued actions on pause
+		this.enabled = enabled;
+	}
 	
+	public boolean isEnabled() {
+		return enabled;
+	}
 	
 	@Override
 	public boolean keyUp(int keycode) {

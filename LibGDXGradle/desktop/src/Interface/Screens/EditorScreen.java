@@ -76,6 +76,7 @@ public class EditorScreen implements Screen {
 			editorStage = new Editor(editor_viewport, skin);
 			UI.add(previewStage);
 			UI.add(editorStage);
+
 			UI.add(toolbarStage);
 			toolbarStage.setDependence(editorStage);
 			editorStage.setDependence(previewStage);
@@ -97,6 +98,7 @@ public class EditorScreen implements Screen {
 	        
 	        
 			PreviewProcessor pp = new PreviewProcessor(preview_viewport.getCamera());
+
 
 			
 			InputMultiplexer multiplexer = new InputMultiplexer(editorStage, toolbarStage, previewStage, backProcessor, pp);

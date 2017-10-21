@@ -11,9 +11,14 @@ import Tileset.Player;
 public class EditorModel implements Serializable {
 	private static final long serialVersionUID = 1125293377219154163L;
 	private TileTuple[][] encodedTable;
+	private int rows;
+	private int cols;
 	
 	public EditorModel(int row, int col) {
 		this.encodedTable = new TileTuple[row][col];
+		
+		this.rows = row;
+		this.cols = col;
 		
 		for(int i = 0; i < row; i++) {
 			for(int j = 0; j < col; j++) {
@@ -29,13 +34,21 @@ public class EditorModel implements Serializable {
 	
 
 	public void display() {
-		for(int i = 0; i < 50; i++) {
+		for(int i = 0; i < 10; i++) {
 			System.out.print("Row: " + i + " ");
 			
-			for(int j = 0; j < 50; j++) {
+			for(int j = 0; j < 10; j++) {
 				System.out.print(encodedTable[i][j].getDynamic());
 			}
 			System.out.println(" ");
 		}
+	}
+	
+	public int getRows() {
+		return rows;
+	}
+	
+	public int getCols() {
+		return cols;
 	}
 }
