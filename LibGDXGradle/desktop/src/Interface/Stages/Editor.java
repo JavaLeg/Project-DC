@@ -94,15 +94,9 @@ public class Editor extends Stage {
 	 * Initialise stage contents (Tables, Titles, Background etc...)
 	 */
 	private void initialise() {
-		Table titleTable = new Table();	
-        Label HUDlabel = new Label("Editor Mode", 
-        		new Label.LabelStyle(new BitmapFont(), Color.CYAN));
-        titleTable.add(HUDlabel);
-		titleTable.setPosition(titlePos.getX(), titlePos.getY(), 0);
 		
 		// Add background and title
 		super.addActor(new Image(new TextureRegion(new Texture(Gdx.files.internal("EditorScreen/Inventory_tab_4.png")))));
-		super.addActor(titleTable);
 	}
 	
 	/*
@@ -161,7 +155,7 @@ public class Editor extends Stage {
 		final Table newTable = new Table();
 		
 		Label title = new Label(s.toString() + " - Custom", 
-        		new Label.LabelStyle(new BitmapFont(), Color.BLACK));
+        		new Label.LabelStyle(new BitmapFont(), Color.WHITE));
 		
 		newTable.add(title);
 		newTable.row();
@@ -239,7 +233,7 @@ public class Editor extends Stage {
 			}
 
 				
-			Label icon_labels = new Label(labels, new Label.LabelStyle(new BitmapFont(), Color.BLACK));
+			Label icon_labels = new Label(labels, new Label.LabelStyle(new BitmapFont(), Color.WHITE));
 			
 			//Tool-tip (More information)
 			icon.addListener(new TextTooltip(tooltip_labels, skin));
@@ -260,7 +254,7 @@ public class Editor extends Stage {
 				
 			// Need to format these
 			if (i % 2 == 1 && i != 0) newTable.row();
-			i++;		
+				i++;		
 			}	
 		return newTable;
 	}
@@ -275,6 +269,7 @@ public class Editor extends Stage {
 	private Table generateTable(final ToolbarSelection s) {
 		
 		final Table newTable = new Table();
+		newTable.padLeft(10);
 		/*
 		 * Make a custom image icon class later
 		 * Includes image and name
@@ -282,7 +277,7 @@ public class Editor extends Stage {
 		FileHandle[] files = Gdx.files.internal(path + s.toString().toLowerCase()).list();
 		
 		Label title = new Label(s.toString(), 
-        		new Label.LabelStyle(new BitmapFont(), Color.BLACK));
+        		new Label.LabelStyle(new BitmapFont(), Color.WHITE));
 
 		newTable.add(title);
 		newTable.row();
@@ -341,7 +336,7 @@ public class Editor extends Stage {
 			textField.setMessageText("Save as...");
 			
 			// Map Title
-	        Label map_info = new Label("Map size", new Label.LabelStyle(new BitmapFont(), Color.BLACK));
+	        Label map_info = new Label("Map size", new Label.LabelStyle(new BitmapFont(), Color.WHITE));
 			newTable.add(map_info);
 			newTable.row();
 
@@ -478,7 +473,12 @@ public class Editor extends Stage {
 						related.setDynamicSelection(obj);
 			        }
 				});
-				break;
+				
+				if (i % 3 == 0) {
+					newTable.row();
+				}
+				i++;
+				return newTable;
 			case ITEM:
 				icon.addListener(new ClickListener(){
 					@Override
@@ -492,7 +492,13 @@ public class Editor extends Stage {
 						related.setDynamicSelection(obj);
 			        }
 				});
-				break;
+				
+				if (i % 3 == 0) {
+					newTable.row();
+				}
+				i++;
+				
+				return newTable;
 			case FLOOR:
 				icon.addListener(new ClickListener(){
 					@Override
