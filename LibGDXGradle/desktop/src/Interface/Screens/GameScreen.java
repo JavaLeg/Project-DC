@@ -48,7 +48,7 @@ public class GameScreen implements Screen {
 		g.initialise(previewStage); // input player created state here
 		Gdx.input.setInputProcessor(inputProcessor);
 		
-		gameThread = new RunGame(g, inputProcessor, 30);
+		gameThread = new RunGame(g, inputProcessor, 150);
 		gameThread.run();
 	}
 
