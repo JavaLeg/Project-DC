@@ -45,9 +45,12 @@ public class OptionsScreen implements Screen {
     private Viewport viewport;
     private Camera camera;
     private Stage mainStage;
+    
+    private int resolutionBoxIndex;
 	
-    public OptionsScreen(DCGame game) throws IOException {
+    public OptionsScreen(DCGame game, int resBoxIdx) throws IOException {
     	this.game = game;
+    	this.resolutionBoxIndex = resBoxIdx;
     }
 	
 	@Override
@@ -79,29 +82,47 @@ public class OptionsScreen implements Screen {
         mainTable.top();
         mainTable.add(title);
         
+        Label blank = new Label("", new Label.LabelStyle(itemFont, Color.WHITE));
+        mainTable.row();
+        mainTable.add(blank);
+        
+        
         
         /* Add things to page here */	
+        // Drop down box of resolutions
+        final SelectBox<String> selectbox = new SelectBox<String>(skin);
+	    String[] selection = {"1920x1080", "1600x900", "1366x768", "1280x720", "1152x648"
+	    	,"1024x576", "960x540", "896x504", "800x450"};
+	    selectbox.setItems(selection);
+	    selectbox.setSelectedIndex(resolutionBoxIndex);
+        
+        
+        // Fullscreen/window mode
         Label displayMode = new Label("Display mode:", 
         		new Label.LabelStyle(itemFont, Color.WHITE));
-       mainTable.row();
-       mainTable.add(displayMode);
-       
-       if(Gdx.graphics.isFullscreen()) {
-    	   TextButton windowedButton = generateButton("Windowed");
-    	   windowedButton.addListener(new ClickListener(){
+        mainTable.row();
+        mainTable.add(displayMode);
+      
+        
+        if(Gdx.graphics.isFullscreen()) {
+        	TextButton windowedButton = generateButton("Windowed");
+        	windowedButton.addListener(new ClickListener(){
                @Override
                public void clicked(InputEvent event, float x, float y) {
-            	   Gdx.graphics.setWindowedMode(1600, 960);
+            	   selectbox.setSelectedIndex(resolutionBoxIndex);
+            	   String oldResolution = selectbox.getSelected();
+            	   int[] oldResolutoins = splitResolutionString(oldResolution);
+            	   Gdx.graphics.setWindowedMode(oldResolutoins[0], oldResolutoins[1]);
             	   // Refresh screen
             	   try {
-	   					((Game)Gdx.app.getApplicationListener()).setScreen(new OptionsScreen(game));
+	   					((Game)Gdx.app.getApplicationListener()).setScreen(new OptionsScreen(game, resolutionBoxIndex));
 	   				} catch (IOException e) {
 	   					e.printStackTrace();
 	   				}
                }
-           });
-           mainTable.row();
-           mainTable.add(windowedButton);
+        	});
+        	mainTable.row();
+        	mainTable.add(windowedButton);
        } else {
     	   TextButton fullscreenButton = generateButton("Fullscreen");
            fullscreenButton.addListener(new ClickListener(){
@@ -110,7 +131,7 @@ public class OptionsScreen implements Screen {
             	   Gdx.graphics.setFullscreenMode(Gdx.graphics.getDisplayMode());
             	   // Refresh screen
             	   try {
-	   					((Game)Gdx.app.getApplicationListener()).setScreen(new OptionsScreen(game));
+	   					((Game)Gdx.app.getApplicationListener()).setScreen(new OptionsScreen(game, resolutionBoxIndex));
 	   				} catch (IOException e) {
 	   					e.printStackTrace();
 	   				}
@@ -120,28 +141,38 @@ public class OptionsScreen implements Screen {
            mainTable.add(fullscreenButton);
        }
        
-      
        
-       // TextButton button = generateButton("Windowed");
-        SelectBox<String> test = new SelectBox(skin);
-        String[] selection = new String[1];
-        String Res1 = "1355x768";
-        selection[0] = Res1;
-       
-        
-        test.setItems(selection);
+        // Resolution
         mainTable.row();
-        mainTable.add(test);
-        /*
-        
-		config.width = 800;
-		config.height = 480;
-		//config.fullscreen = true;
-		config.title = "Project-DC";
-		new LwjglApplication(new DCGame(), config);
-		*/
-        
-    	
+        mainTable.add(blank);
+	   
+        Label resolution = new Label("Resolution:", new Label.LabelStyle(itemFont, Color.WHITE));
+        mainTable.row();
+        mainTable.add(resolution);
+	  	    
+	    mainTable.row();
+	    mainTable.add(selectbox);
+	    
+	    TextButton applyButton = generateButton("Apply");
+	    applyButton.addListener(new ClickListener(){
+           @Override
+           public void clicked(InputEvent event, float x, float y) {
+        	   int[] resolutions = splitResolutionString(selectbox.getSelected());
+        	   Gdx.graphics.setWindowedMode(resolutions[0], resolutions[1]);
+        	   
+        	   // Refresh screen
+        	   int newIdx = selectbox.getSelectedIndex();
+        	   resolutionBoxIndex = newIdx;
+        	   try {
+   					((Game)Gdx.app.getApplicationListener()).setScreen(new OptionsScreen(game, resolutionBoxIndex));
+   				} catch (IOException e) {
+   					e.printStackTrace();
+   				}
+           }
+       });
+	    mainTable.row();
+	    mainTable.add(applyButton);
+	    
         
         mainStage.addActor(new Image(new TextureRegion(new Texture(Gdx.files.internal("LibScreen/bg2.jpg")))));
         mainStage.addActor(mainTable);
@@ -229,6 +260,14 @@ public class OptionsScreen implements Screen {
 		String newString = " " + s + " ";
 		TextButton button = new TextButton(newString, skin);
 		return button;
+	}
+	
+	private int[] splitResolutionString(String resString) {
+		String[] strings = resString.split("x");
+		int[] ret = new int[2];
+		ret[0] = Integer.parseInt(strings[0]);
+		ret[1] = Integer.parseInt(strings[1]);
+		return ret;
 	}
 
 }
