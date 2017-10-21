@@ -4,6 +4,9 @@ import java.util.LinkedList;
 import java.util.List;
 
 import java.io.Serializable;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Animation;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 
 import State.Coord;
 import State.State;
@@ -21,6 +24,24 @@ public class Attack implements Serializable {
 	private int speed;
 	private int cooldown;
 	
+	private final int NUM_FRAMES = 4;
+	
+	private Coord coord;
+	
+	private Sprite[] animationFrames;
+	
+	private String path = "SpriteFamily/attack/";
+	
+	private Animation animation;
+	private Dir dir;
+	
+	private enum Type {
+		ONE, TWO, THREE, FOUR
+	}
+	
+	public enum Dir {
+		LEFT, RIGHT, DOWN, UP
+	}
 	
 	// likely takes in some sort of id or animaton as well
 	// does not clone lists
@@ -37,6 +58,30 @@ public class Attack implements Serializable {
 		this.targets = targets;
 		this.speed = speed;
 		this.cooldown = cooldown;
+	}
+	
+	public Attack() {
+		this.animationFrames = new Sprite[NUM_FRAMES];
+		// load the attack image
+		this.coord = null;
+		this.dir = Dir.LEFT;
+		this.loadImage(Type.ONE);
+	}
+	
+	public Attack(Dir dir, Coord coord) {
+		this.animationFrames = new Sprite[NUM_FRAMES];
+		this.coord = coord;
+		this.dir = dir;
+		// load the attack image
+		this.loadImage(Type.ONE);
+	}
+	
+	public Animation getAttack() {
+		return animation;
+	}
+	
+	public Sprite[] getAnimationFrames() {
+		return this.animationFrames;
 	}
 	
 	
@@ -68,6 +113,52 @@ public class Attack implements Serializable {
 	public int getAttackSpeed() {
 		return speed;
 	}
+	private void loadImage(Type type) {
+		switch (type) {
+		case ONE:
+			path += "cut_a/";
+			break;
+		case TWO:
+			path += "cut_b/";
+			break;
+		case THREE:
+			path += "cut_c/";
+			break;
+		default:
+			path += "cut_d/";
+			break;
+		}
+		
+		for (int i = 0; i < NUM_FRAMES; i++) {
+			String filePath = path + (i + 1) + ".png";
+			Sprite sprite = new Sprite(new Texture(filePath));
+			// sets the size and position
+			sprite.setBounds(0, 0, 40, 40);
+			// sets the rotation origin to the middle
+			sprite.setOrigin(sprite.getWidth()/2f, sprite.getHeight()/2f);
+			// rotate
+			sprite.setRotation(this.getRotation());
+			
+			animationFrames[i] = sprite;
+		}
+		animation = new Animation(1f/20f, animationFrames);
+	}
+	
+	private float getRotation() {
+		switch (this.dir) {
+		case LEFT:
+			return 0;
+		case RIGHT:
+			return 180;
+		case DOWN:
+			return 90;
+		case UP:
+			return 270;
+		default:
+			return 0;	
+		}
+	}
+	
 	
 	public int getAttackCooldown() {
 		return cooldown;

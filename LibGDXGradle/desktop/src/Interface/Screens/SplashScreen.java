@@ -4,11 +4,13 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.Animation;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.utils.TimeUtils;
 import com.engine.desktop.DCGame;
 
+import Tileset.Behaviour.Attack;
 import externals.GifDecoder;
 
 public class SplashScreen implements Screen{
@@ -31,6 +33,11 @@ public class SplashScreen implements Screen{
 				Gdx.files.internal("Splash/splash.gif").read());
 		
 	}
+	
+	// TEST ANIMATION
+	private Attack att = new Attack();
+	private TextureRegion tR;
+	private float animateTime = 0f;
 
 	@Override
 	public void render(float delta) {
@@ -38,22 +45,33 @@ public class SplashScreen implements Screen{
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         batch.begin();
-        batch.draw(animation.getKeyFrame(elapsed), 20.0f, 20.0f);        
-        batch.end();
+        batch.draw(animation.getKeyFrame(elapsed), 20.0f, 20.0f);   
 
+        // animation is triggered
+        if (animateTime < att.getAttack().getAnimationDuration()) {
+        	   Sprite s = (Sprite)att.getAttack().getKeyFrame(animateTime,false);
+        	   s.draw(batch);
+        	   animateTime += Gdx.graphics.getDeltaTime();
+        }
+        
         /*
          * Delay before showing main menu
          */
         if(TimeUtils.timeSinceMillis((long) startTime) > 5000){
-            g.setScreen(new MainMenuScreen(g));
+//            g.setScreen(new MainMenuScreen(g));
         }
         
-        if(Gdx.input.justTouched())
-        	g.setScreen(new MainMenuScreen(g));
-        
-
+        // event to trigger the animation
+        if(Gdx.input.justTouched()){
+        	animateTime = 0f;
+//        	g.setScreen(new MainMenuScreen(g));
+        }
+        	
+        batch.end();
 	}
 
+	
+	
 	@Override
 	public void resize(int width, int height) {
 		// TODO Auto-generated method stub

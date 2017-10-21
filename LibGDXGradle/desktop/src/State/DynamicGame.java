@@ -69,13 +69,13 @@ public class DynamicGame {
 		System.out.println("Current pos = " + curr.getX() + ", " + curr.getY());
 		switch (a) {
 		case ATTACK:
-			p.selectLight();
-			p.setActionState(ActionState.ATTACK);
+//			p.selectLight();
+//			p.setActionState(ActionState.ATTACK);
 			System.out.print("USER INPUT: LIGHT ATTACK\n");
 			break;
 		case SPECIAL:
-			p.selectSpecial();
-			p.setActionState(ActionState.ATTACK);
+//			p.selectSpecial();
+//			p.setActionState(ActionState.ATTACK);
 			System.out.print("USER INPUT: HEAVY ATTACK\n");
 			break;
 		case MOVE_SOUTH:
