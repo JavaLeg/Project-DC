@@ -90,7 +90,7 @@ public class GameInputProcessor implements InputProcessor {
 		} else {
 			if (queuedAction != null) {
 				sinceLastAction = actionSpeed;
-				activeGame.makeAction(queuedAction);
+				//activeGame.makeAction(queuedAction);
 				queuedAction = null;
 			}
 		}
