@@ -4,7 +4,7 @@ import java.util.List;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 
 import State.Coord;
 import State.State;
@@ -17,7 +17,7 @@ public class Attack {
 	private List<Coord> hitbox;
 	private List<ObjectType> targets;
 	
-	private TextureRegion[] animationFrames;
+	private Sprite[] animationFrames;
 	
 	private String path = "SpriteFamily/attack/";
 	
@@ -35,13 +35,13 @@ public class Attack {
 		this.hitbox = hitbox;
 		this.damage = damage;
 		this.targets = targets;
-		this.animationFrames = new TextureRegion[NUM_FRAMES];
+		this.animationFrames = new Sprite[NUM_FRAMES];
 		// load the attack image
 		this.loadImage(Type.FOUR);
 	}
 	
 	public Attack() {
-		this.animationFrames = new TextureRegion[NUM_FRAMES];
+		this.animationFrames = new Sprite[NUM_FRAMES];
 		// load the attack image
 		this.loadImage(Type.ONE);
 	}
@@ -50,7 +50,7 @@ public class Attack {
 		return animation;
 	}
 	
-	public TextureRegion[] getAnimationFrames() {
+	public Sprite[] getAnimationFrames() {
 		return this.animationFrames;
 	}
 	
@@ -79,8 +79,11 @@ public class Attack {
 		
 		for (int i = 0; i < NUM_FRAMES; i++) {
 			String filePath = path + (i + 1) + ".png";
-			System.out.println("file at " + filePath);
-			animationFrames[i] = new TextureRegion(new Texture(filePath));
+			Sprite sprite = new Sprite(new Texture(filePath));
+//			sprite.setScale((float) 0.1);
+			sprite.setBounds(0, 0, 40, 40);
+			System.out.println("scale = " + sprite.getScaleX());
+			animationFrames[i] = sprite;
 		}
 		animation = new Animation(1f/20f, animationFrames);
 	}

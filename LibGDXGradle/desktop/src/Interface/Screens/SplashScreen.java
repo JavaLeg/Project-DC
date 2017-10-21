@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.Animation;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.utils.TimeUtils;
@@ -44,10 +45,13 @@ public class SplashScreen implements Screen{
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         batch.begin();
-//        batch.draw(animation.getKeyFrame(elapsed), 20.0f, 20.0f);   
-//        batch.draw((TextureRegion)att.getAttack().getKeyFrame(elapsed,false),0,0);
+        batch.draw(animation.getKeyFrame(elapsed), 20.0f, 20.0f);   
+
+        // animation is triggered
         if (animateTime < att.getAttack().getAnimationDuration()) {
-        	   batch.draw((TextureRegion)att.getAttack().getKeyFrame(animateTime,false), 0, 0);
+//        	   batch.draw((Sprite)att.getAttack().getKeyFrame(animateTime,false), 0, 0);
+        	   Sprite s = (Sprite)att.getAttack().getKeyFrame(animateTime,false);
+        	   s.draw(batch);
         	   animateTime += Gdx.graphics.getDeltaTime();
         }
 
@@ -58,6 +62,7 @@ public class SplashScreen implements Screen{
 //            g.setScreen(new MainMenuScreen(g));
         }
         
+        // event to trigger the animation
         if(Gdx.input.justTouched()){
         	animateTime = 0f;
         }
