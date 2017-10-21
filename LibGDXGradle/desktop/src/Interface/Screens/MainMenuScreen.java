@@ -8,10 +8,13 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
@@ -33,8 +36,8 @@ public class MainMenuScreen implements Screen {
     protected Skin skin;
     final DCGame game;
     
-    private static final int WORLD_WIDTH  = 250;
-    private static final int WORLD_HEIGHT = 250;
+    private static final int WORLD_WIDTH  = 800;
+    private static final int WORLD_HEIGHT = 480;
 	
     public MainMenuScreen(final DCGame game)
     {
@@ -44,11 +47,11 @@ public class MainMenuScreen implements Screen {
         skin = new Skin(Gdx.files.internal("uiskin.json"), atlas);
 
         camera = new OrthographicCamera();
-        viewport = new FitViewport(WORLD_HEIGHT, WORLD_WIDTH, camera);
+        viewport = new FitViewport(WORLD_WIDTH, WORLD_HEIGHT,  camera);
         viewport.apply();
 
-        camera.position.set(camera.viewportWidth / 2, camera.viewportHeight / 2, 0);
-        camera.update();
+//        camera.position.set(camera.viewportWidth / 2, camera.viewportHeight / 2, 0);
+//        camera.update();
 
         stage = new Stage(viewport);    
     }
@@ -63,7 +66,11 @@ public class MainMenuScreen implements Screen {
         //Set table to fill stage
         mainTable.setFillParent(true);
         //Set alignment of contents in the table.
-        mainTable.top();
+        //mainTable.top();
+        
+        // Place background
+        stage.addActor(new Image(new TextureRegion(new Texture(Gdx.files.internal("LibScreen/bg_resize2.jpg")))));
+        
         
         /*
          * Create table object
@@ -71,30 +78,28 @@ public class MainMenuScreen implements Screen {
          * Add table to stage
          */
         //Create buttons
-        TextButton playButton = new TextButton(" Editor ", skin);
+        TextButton editorButton = new TextButton(" Editor ", skin);
         TextButton LibButton = new TextButton(" Library ", skin);
-        TextButton runButton = new TextButton(" Play ", skin);
         TextButton helpButton = new TextButton(" Help ", skin);
         TextButton exitButton = new TextButton(" Exit ", skin);
 
-        //Add listeners to buttons
-        
-        playButton.addListener(new ClickListener(){
+        //Add listeners to buttons        
+        exitButton.addListener(new ClickListener(){
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                try {
+                Gdx.app.exit();
+            }
+        });
+        
+        editorButton.addListener(new ClickListener(){
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+            	try {
 					((Game)Gdx.app.getApplicationListener()).setScreen(new EditorScreen(game));
 				} catch (IOException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-            }
-        });
-        
-        exitButton.addListener(new ClickListener(){
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                Gdx.app.exit();
             }
         });
 
@@ -140,13 +145,12 @@ public class MainMenuScreen implements Screen {
         
         //Add buttons to table
         mainTable.row();
-        mainTable.add(playButton);
+        mainTable.add(editorButton);
         mainTable.row();
         mainTable.add(LibButton);
         mainTable.row();
-        mainTable.add(runButton);
-        mainTable.row();
         mainTable.add(helpButton);
+        mainTable.setPosition(0, WORLD_HEIGHT/6);
         
         //Add table to stage
         stage.addActor(mainTable);
@@ -158,7 +162,9 @@ public class MainMenuScreen implements Screen {
         backTable.left();
         backTable.padBottom(10);
         backTable.padLeft(10);
+        
         stage.addActor(backTable);
+        
 	}
 
 	@Override
