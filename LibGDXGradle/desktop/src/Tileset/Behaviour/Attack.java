@@ -13,9 +13,11 @@ import Tileset.GameObject.ObjectType;
 public class Attack {
 	
 	private final int NUM_FRAMES = 4;
-	private int damage;
-	private List<Coord> hitbox;
-	private List<ObjectType> targets;
+//	private int damage;
+//	private List<Coord> hitbox;
+//	private List<ObjectType> targets;
+	
+	private Coord coord;
 	
 	private Sprite[] animationFrames;
 	
@@ -33,25 +35,29 @@ public class Attack {
 	}
 	
 	// likely takes in some sort of id or animaton
-	public Attack(List<Coord> hitbox, int damage, List<ObjectType> targets) {
-		this.hitbox = hitbox;
-		this.damage = damage;
-		this.targets = targets;
-		this.animationFrames = new Sprite[NUM_FRAMES];
+//	public Attack(List<Coord> hitbox, int damage, List<ObjectType> targets) {
+//		this.hitbox = hitbox;
+//		this.damage = damage;
+//		this.targets = targets;
+//		this.animationFrames = new Sprite[NUM_FRAMES];
 		// load the attack image
 //		this.loadImage(Type.FOUR);
-	}
+//	}
 	
 	public Attack() {
 		this.animationFrames = new Sprite[NUM_FRAMES];
 		// load the attack image
-		this.loadImage(Type.ONE, Dir.LEFT);
+		this.coord = null;
+		this.dir = Dir.LEFT;
+		this.loadImage(Type.ONE);
 	}
 	
-	public Attack(Dir dir) {
+	public Attack(Dir dir, Coord coord) {
 		this.animationFrames = new Sprite[NUM_FRAMES];
+		this.coord = coord;
+		this.dir = dir;
 		// load the attack image
-		this.loadImage(Type.ONE, dir);
+		this.loadImage(Type.ONE);
 	}
 	
 	public Animation getAttack() {
@@ -69,7 +75,7 @@ public class Attack {
 		
 	}
 	
-	private void loadImage(Type type, Dir dir) {
+	private void loadImage(Type type) {
 		switch (type) {
 		case ONE:
 			path += "cut_a/";
@@ -93,22 +99,22 @@ public class Attack {
 			// sets the rotation origin to the middle
 			sprite.setOrigin(sprite.getWidth()/2f, sprite.getHeight()/2f);
 			// rotate
-			sprite.setRotation(this.getRotation(dir));
+			sprite.setRotation(this.getRotation());
 			
 			animationFrames[i] = sprite;
 		}
 		animation = new Animation(1f/20f, animationFrames);
 	}
 	
-	private float getRotation(Dir dir) {
-		switch (dir) {
+	private float getRotation() {
+		switch (this.dir) {
 		case LEFT:
 			return 0;
 		case RIGHT:
 			return 180;
-		case UP:
-			return 90;
 		case DOWN:
+			return 90;
+		case UP:
 			return 270;
 		default:
 			return 0;	

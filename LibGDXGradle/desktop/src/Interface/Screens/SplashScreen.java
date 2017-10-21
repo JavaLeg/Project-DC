@@ -35,7 +35,7 @@ public class SplashScreen implements Screen{
 	}
 	
 	// TEST ANIMATION
-	private Attack att = new Attack(Attack.Dir.RIGHT);
+	private Attack att = new Attack();
 	private TextureRegion tR;
 	private float animateTime = 0f;
 
@@ -49,11 +49,11 @@ public class SplashScreen implements Screen{
 
         // animation is triggered
         if (animateTime < att.getAttack().getAnimationDuration()) {
-//        	   batch.draw((Sprite)att.getAttack().getKeyFrame(animateTime,false), 0, 0);
         	   Sprite s = (Sprite)att.getAttack().getKeyFrame(animateTime,false);
         	   s.draw(batch);
         	   animateTime += Gdx.graphics.getDeltaTime();
         }
+        
         /*
          * Delay before showing main menu
          */
@@ -64,8 +64,8 @@ public class SplashScreen implements Screen{
         // event to trigger the animation
         if(Gdx.input.justTouched()){
         	animateTime = 0f;
-        }
 //        	g.setScreen(new MainMenuScreen(g));
+        }
         	
         batch.end();
 	}
