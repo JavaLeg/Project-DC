@@ -69,6 +69,12 @@ public class DynamicGame {
 		System.out.println("Current pos = " + curr.getX() + ", " + curr.getY());
 		switch (a) {
 		case ATTACK:
+			assert(p.getDirection() != null);
+			Coord coord = p.getDirection().moveInDirection(curr);
+			Attack att = new Attack(p.getDirection() , coord);
+			activeState.addActor(att);
+			activeState.attackObject(coord);
+			
 //			p.selectLight();
 //			p.setActionState(ActionState.ATTACK);
 			System.out.print("USER INPUT: LIGHT ATTACK\n");
@@ -79,6 +85,7 @@ public class DynamicGame {
 			System.out.print("USER INPUT: HEAVY ATTACK\n");
 			break;
 		case MOVE_SOUTH:
+			p.setDirection(Direction.SOUTH);
 			toMove = (Direction.SOUTH).moveInDirection(curr);
 			if (p.canChangePosition() && activeState.isValid(toMove) && !activeState.isBlocked(toMove)) {
 				activeState.movePlayer(toMove);
@@ -86,6 +93,7 @@ public class DynamicGame {
 			System.out.print("USER INPUT: DOWN\n");
 			break;
 		case MOVE_WEST:
+			p.setDirection(Direction.WEST);
 			toMove = (Direction.WEST).moveInDirection(curr);
 			if (p.canChangePosition() && activeState.isValid(toMove) && !activeState.isBlocked(toMove)) {
 				activeState.movePlayer(toMove);
@@ -93,6 +101,7 @@ public class DynamicGame {
 			System.out.print("USER INPUT: LEFT\n");
 			break;
 		case MOVE_EAST:
+			p.setDirection(Direction.EAST);
 			toMove = (Direction.EAST).moveInDirection(curr);
 			if (p.canChangePosition() && activeState.isValid(toMove) && !activeState.isBlocked(toMove)) {
 				activeState.movePlayer(toMove);
@@ -100,6 +109,7 @@ public class DynamicGame {
 			System.out.print("USER INPUT: RIGHT\n");
 			break;
 		case MOVE_NORTH:
+			p.setDirection(Direction.NORTH);
 			toMove = (Direction.NORTH).moveInDirection(curr);
 			if (p.canChangePosition() && activeState.isValid(toMove) && !activeState.isBlocked(toMove)) {
 				activeState.movePlayer(toMove);

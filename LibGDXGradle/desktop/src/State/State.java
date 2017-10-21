@@ -294,7 +294,12 @@ public class State extends Stage {
 		}
 	}
 	
-	
+	public void attackObject(Coord coord) {
+		Tile tile = tileList.get(coord.getX()* colActors  + coord.getY());
+		if (tile.getObject().getType().equals(ObjectType.ENEMY)) {
+			deleteObject(coord);
+		}
+	}
 	
 	public void deleteObject(Coord coord) {
 

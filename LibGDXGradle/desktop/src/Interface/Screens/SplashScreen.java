@@ -58,13 +58,13 @@ public class SplashScreen implements Screen{
          * Delay before showing main menu
          */
         if(TimeUtils.timeSinceMillis((long) startTime) > 5000){
-//            g.setScreen(new MainMenuScreen(g));
+            g.setScreen(new MainMenuScreen(g));
         }
         
         // event to trigger the animation
         if(Gdx.input.justTouched()){
         	animateTime = 0f;
-//        	g.setScreen(new MainMenuScreen(g));
+        	g.setScreen(new MainMenuScreen(g));
         }
         	
         batch.end();

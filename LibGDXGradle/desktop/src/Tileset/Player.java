@@ -17,7 +17,8 @@ public class Player extends DynamicObject implements Cloneable {
 	private Attack selected;
 	
 	private int attackCooldown;
-
+	
+	private Direction dir = Direction.EAST;
 	
 	public Player(Coord position,  double hp, double damage, Attack light, Attack special, String img_path) {
 		// type, width, height, coords, hp, damage
@@ -69,6 +70,14 @@ public class Player extends DynamicObject implements Cloneable {
 		selected = light;
 	}
 	
+	public void setDirection(Direction dir) {
+		this.dir = dir;
+	}
+	
+	public Direction getDirection(){
+		return this.dir;
+	}
+	
 	@Override
 	public Attack getAttack() {
 		return selected;
@@ -85,4 +94,5 @@ public class Player extends DynamicObject implements Cloneable {
 	public void destroy(State s) {
 		// does not destroy self
 	}
+	
 }

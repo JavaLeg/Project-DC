@@ -6,14 +6,16 @@ import java.util.List;
 import java.io.Serializable;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
+import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 
 import State.Coord;
 import State.State;
 import Tileset.DynamicObject;
 import Tileset.GameObject.ObjectType;
 
-public class Attack implements Serializable {
+public class Attack extends Actor implements Serializable {
 	/**
 	 * 
 	 */
@@ -33,14 +35,10 @@ public class Attack implements Serializable {
 	private String path = "SpriteFamily/attack/";
 	
 	private Animation animation;
-	private Dir dir;
+	private Direction dir;
 	
 	private enum Type {
 		ONE, TWO, THREE, FOUR
-	}
-	
-	public enum Dir {
-		LEFT, RIGHT, DOWN, UP
 	}
 	
 	// likely takes in some sort of id or animaton as well
@@ -63,12 +61,12 @@ public class Attack implements Serializable {
 	public Attack() {
 		this.animationFrames = new Sprite[NUM_FRAMES];
 		// load the attack image
-		this.coord = null;
-		this.dir = Dir.LEFT;
+		this.coord = new Coord(0,0);
+		this.dir = Direction.EAST;
 		this.loadImage(Type.ONE);
 	}
 	
-	public Attack(Dir dir, Coord coord) {
+	public Attack(Direction dir, Coord coord) {
 		this.animationFrames = new Sprite[NUM_FRAMES];
 		this.coord = coord;
 		this.dir = dir;
@@ -133,30 +131,47 @@ public class Attack implements Serializable {
 			String filePath = path + (i + 1) + ".png";
 			Sprite sprite = new Sprite(new Texture(filePath));
 			// sets the size and position
-			sprite.setBounds(0, 0, 40, 40);
+			sprite.setBounds(this.coord.getX() * 40, this.coord.getY() * 40, 40, 40);
 			// sets the rotation origin to the middle
 			sprite.setOrigin(sprite.getWidth()/2f, sprite.getHeight()/2f);
 			// rotate
-			sprite.setRotation(this.getRotation());
+			sprite.setRotation(this.getRotation2());
 			
 			animationFrames[i] = sprite;
 		}
 		animation = new Animation(1f/20f, animationFrames);
 	}
 	
-	private float getRotation() {
+	private float getRotation2() {
 		switch (this.dir) {
-		case LEFT:
+		case WEST:
 			return 0;
-		case RIGHT:
+		case EAST:
 			return 180;
-		case DOWN:
+		case SOUTH:
 			return 90;
-		case UP:
+		case NORTH:
 			return 270;
 		default:
 			return 0;	
 		}
+	}
+	
+	float time = 0f;
+	@Override
+	public void act(float delta) {
+		time += delta;
+	}
+	
+	@Override
+	public void draw(Batch batch, float parentAlpha) {
+		super.draw(batch, parentAlpha);
+		 if (time < this.animation.getAnimationDuration()) {
+			 Sprite s = (Sprite)this.animation.getKeyFrame(time,false);
+		 	 s.draw(batch);
+		 } else if (time > this.animation.getAnimationDuration()) {
+			 this.remove();
+		 }
 	}
 	
 	
