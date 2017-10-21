@@ -199,27 +199,25 @@ public class Editor extends Stage {
 			
 			switch(type) {
 			case PLAYER:
-				labels = obj.getName() + "\n";
+				labels = "Name: " + obj.getName();
+
 				
-				tooltip_labels = labels;
-				
-				// More info on player
-				//tooltip_labels += ""
+				tooltip_labels = labels + "\nHealth: " + obj.getHp() 
+				+ "\nDamage: " + obj.getContactDamage() 
+				+ "\nAtk Rate: " + ((Enemy) obj).getAttackRate();		
 				
 				break;
 			case ENEMY:
-				labels = obj.getName();
-
+				labels = "Name: " + obj.getName();
 				
-				tooltip_labels = labels;
-				tooltip_labels += "Atk Rate: " + ((Enemy) obj).getAttackRate();
-				
+				tooltip_labels = labels + "\nHealth: " + obj.getHp() 
+										+ "\nDamage: " + obj.getContactDamage() 
+										+ "\nAtk Rate: " + ((Enemy) obj).getAttackRate();				
 				break;
 			case ITEM:
-				labels = obj.getName() + "\n"; 
+				labels = "Name: " + obj.getName();
 				
-				tooltip_labels = labels;
-				tooltip_labels += "Restore: " + ((Item) obj).getRestoreValue();
+				tooltip_labels = labels + "\nRestore: " + ((Item) obj).getRestoreValue();
 				break;
 			default:
 				break;
