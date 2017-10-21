@@ -522,4 +522,13 @@ public class State extends Stage {
 	public TableTuple getDim() {
 		return new TableTuple(rowActors, colActors);
 	}
+	public int getRow() {
+		// TODO Auto-generated method stub
+		return this.rowActors;
+	}
+	
+	public int getColumn() {
+		// TODO Auto-generated method stub
+		return this.colActors;
+	}
 }
