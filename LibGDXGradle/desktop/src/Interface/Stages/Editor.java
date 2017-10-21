@@ -478,7 +478,7 @@ public class Editor extends Stage {
 					newTable.row();
 				}
 				i++;
-				return newTable;
+				continue;
 			case ITEM:
 				icon.addListener(new ClickListener(){
 					@Override
@@ -498,7 +498,7 @@ public class Editor extends Stage {
 				}
 				i++;
 				
-				return newTable;
+				continue;
 			case FLOOR:
 				icon.addListener(new ClickListener(){
 					@Override
