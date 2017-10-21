@@ -36,6 +36,7 @@ public class SplashScreen implements Screen{
 	// TEST ANIMATION
 	private Attack att = new Attack();
 	private TextureRegion tR;
+	private float animateTime = 0f;
 
 	@Override
 	public void render(float delta) {
@@ -44,8 +45,11 @@ public class SplashScreen implements Screen{
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         batch.begin();
 //        batch.draw(animation.getKeyFrame(elapsed), 20.0f, 20.0f);   
-        batch.draw((TextureRegion)att.getAttack().getKeyFrame(elapsed,true),0,0);
-        batch.end();
+//        batch.draw((TextureRegion)att.getAttack().getKeyFrame(elapsed,false),0,0);
+        if (animateTime < att.getAttack().getAnimationDuration()) {
+        	   batch.draw((TextureRegion)att.getAttack().getKeyFrame(animateTime,false), 0, 0);
+        	   animateTime += Gdx.graphics.getDeltaTime();
+        }
 
         /*
          * Delay before showing main menu
@@ -54,10 +58,12 @@ public class SplashScreen implements Screen{
 //            g.setScreen(new MainMenuScreen(g));
         }
         
-//        if(Gdx.input.justTouched())
-        	
+        if(Gdx.input.justTouched()){
+        	animateTime = 0f;
+        }
 //        	g.setScreen(new MainMenuScreen(g));
-
+        	
+        batch.end();
 	}
 
 	

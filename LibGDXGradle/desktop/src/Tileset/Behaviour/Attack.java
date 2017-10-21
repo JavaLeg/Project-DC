@@ -43,7 +43,7 @@ public class Attack {
 	public Attack() {
 		this.animationFrames = new TextureRegion[NUM_FRAMES];
 		// load the attack image
-		this.loadImage(Type.FOUR);
+		this.loadImage(Type.ONE);
 	}
 	
 	public Animation getAttack() {
