@@ -28,6 +28,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.engine.desktop.DCGame;
@@ -36,33 +37,34 @@ import Interface.Stages.Selections.LibrarySelection;
 
 public class LibraryScreen implements Screen{
 	
-    private TextureAtlas atlas;
-    protected Skin skin;
-    private DCGame game;
+	protected Stage stage;
+	private Viewport viewport;
+	private OrthographicCamera camera;
+	private TextureAtlas atlas;
+	protected Skin skin;
+	final DCGame game;
+	
     private SaveSys fileHandle;
-    
-    private Viewport viewport;
-    private Camera camera;
-    private Stage mainStage;
-    
     private LibrarySelection selection;
     private String selected_map;
+    
+    private static final int WORLD_WIDTH  = 800;
+	private static final int WORLD_HEIGHT = 450;
 
     public LibraryScreen(DCGame game2) throws IOException {
     	this.game = game2;
+    	atlas = new TextureAtlas(Gdx.files.internal("cloud-form-ui.atlas"));
+    	skin = new Skin(Gdx.files.internal("cloud-form-ui.json"), atlas);
+    	camera = new OrthographicCamera();
+    	viewport = new FitViewport(WORLD_WIDTH, WORLD_HEIGHT,  camera);
+    	viewport.apply();
+    	stage = new Stage(viewport);
+    	
     	this.fileHandle = new SaveSys();
     }
     
 	@Override
-	public void show() {
-				
-        atlas = new TextureAtlas(Gdx.files.internal("uiskin.atlas"));
-        skin = new Skin(Gdx.files.internal("uiskin.json"), atlas);
-
-        camera = new OrthographicCamera();
-        viewport = new ScreenViewport();
-        mainStage = new Stage(viewport);
- 
+	public void show() { 
         //Create Table
         Table mainTable = new Table();
         Table sideTable = new Table();
@@ -114,7 +116,7 @@ public class LibraryScreen implements Screen{
 								System.out.println("Deleting map: " + selected_map + "...");
 								fileHandle.Delete(selected_map);
 								// Refresh screen
-								//((Game)Gdx.app.getApplicationListener()).setScreen(new LibraryScreen(game));
+								((Game)Gdx.app.getApplicationListener()).setScreen(new LibraryScreen(game));
 							default:
 								break;	
 							}
@@ -131,25 +133,17 @@ public class LibraryScreen implements Screen{
         
 		
         // FONTS
-        BitmapFont titleFont = new BitmapFont();
-        titleFont.getData().setScale(4, 4);
-        
         BitmapFont itemFont = new BitmapFont();
-        itemFont.getData().setScale(2, 2);
-        
+        itemFont.getData().setScale(1, 1);
         
         // Blank line to make things look neater
-        Label blank = new Label("", new Label.LabelStyle(titleFont, Color.WHITE));
-        mainTable.add(blank);
-        
-   
-        // TITLE
-        //Set alignment of contents in the table.
-        Label title = new Label("Library", 
-        		new Label.LabelStyle(titleFont, Color.WHITE));  
-        mainTable.row();
-        mainTable.add(title);
+        Label blank = new Label("", new Label.LabelStyle(itemFont, Color.WHITE));
 
+        
+        // TITLE
+        Image titleImage = new Image(new TextureRegion(new Texture(Gdx.files.internal("LibScreen/libheader.png"))));
+        mainTable.add(titleImage);
+        
         
         // Add maps to list
         File[] list = fileHandle.getLibrary();
@@ -169,12 +163,12 @@ public class LibraryScreen implements Screen{
   
         
         // Put it on the stage
-        mainStage.addActor(new Image(new TextureRegion(new Texture(Gdx.files.internal("LibScreen/bg2.jpg")))));
+        stage.addActor(new Image(new TextureRegion(new Texture(Gdx.files.internal("LibScreen/rsz_libbg.jpg")))));
         ScrollPane scroll = new ScrollPane(mainTable);
         scroll.setFillParent(true);
-        mainStage.addActor(scroll);
-        scroll.moveBy(0, 50);
-        mainStage.addActor(sideTable);
+        stage.addActor(scroll);
+        scroll.moveBy(0, -20);
+        stage.addActor(sideTable);
         
         
         // Add back button
@@ -183,7 +177,7 @@ public class LibraryScreen implements Screen{
         backButton.addListener(new ClickListener(){
 			@Override
 	        public void clicked(InputEvent event, float x, float y) {
-				mainStage.dispose();
+				stage.dispose();
             	((Game)Gdx.app.getApplicationListener()).setScreen(new MainMenuScreen(game));
 			}
 		});
@@ -192,7 +186,7 @@ public class LibraryScreen implements Screen{
         backTable.left();
         backTable.padLeft(10);
         backTable.padBottom(10);        
-        mainStage.addActor(backTable);
+        stage.addActor(backTable);
         
         
         
@@ -202,7 +196,7 @@ public class LibraryScreen implements Screen{
             public boolean keyDown(int keycode) {
 
                 if ((keycode == Keys.ESCAPE) || (keycode == Keys.BACK)) {
-                	mainStage.dispose();
+                	stage.dispose();
                 	((Game)Gdx.app.getApplicationListener()).setScreen(new MainMenuScreen(game));
                 }
                 return false;
@@ -210,7 +204,7 @@ public class LibraryScreen implements Screen{
         };
         
 		//Stage should control input:
-		InputMultiplexer multiplexer = new InputMultiplexer(mainStage, backProcessor);
+		InputMultiplexer multiplexer = new InputMultiplexer(stage, backProcessor);
 		Gdx.input.setInputProcessor(multiplexer);
 				
 	}
@@ -220,8 +214,8 @@ public class LibraryScreen implements Screen{
         Gdx.gl.glClearColor(.1f, .12f, .16f, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
-        mainStage.act();
-        mainStage.draw();
+        stage.act();
+        stage.draw();
 	}
 
 	@Override
