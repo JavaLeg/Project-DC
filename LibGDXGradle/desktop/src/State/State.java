@@ -7,8 +7,10 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import Tileset.*;
 import Tileset.DynamicObject.ActionState;
@@ -75,8 +77,8 @@ public class State extends Stage {
 		}
 	private void initialise() {
 		
-		for(int i = 0; i < rowActors; i++) {
-			for(int j = 0; j < colActors; j++) {
+		for(int i = 0; i < this.rowActors; i++) {
+			for(int j = 0; j < this.colActors; j++) {
 								
 				final Tile tile = new Tile(new Coord(i,j));
 				tileList.add(tile);
@@ -453,7 +455,7 @@ public class State extends Stage {
 		 * ORDER MATTERS IN WHICH YOU PUT ONTO THE TABLE
 		 * Ensure static objects iterated over first
 		 */
-		EditorModel model = new EditorModel(rowActors, colActors);
+		EditorModel model = new EditorModel(this.rowActors, this.colActors);
 		TileTuple[][] encodedTable = model.getEncodedTable();
 		
 		// Static Objects
@@ -486,9 +488,9 @@ public class State extends Stage {
 	 */
 	public void restoreModel(EditorModel m) {
 		TileTuple[][] encodedTable = m.getEncodedTable();
-		
-		for(int i = 0; i < rowActors; i++) {
-			for(int j = 0; j < colActors; j++) {
+
+		for(int i = 0; i < this.rowActors; i++) {
+			for(int j = 0; j < this.colActors; j++) {
 				TileTuple enc_tile = encodedTable[i][j];
 				
 				if(enc_tile == null || enc_tile.isEmpty())
@@ -530,5 +532,23 @@ public class State extends Stage {
 	public int getColumn() {
 		// TODO Auto-generated method stub
 		return this.colActors;
+	}
+	
+	public void resize(int rows, int cols) {
+		// TODO Auto-generated method stub
+		this.clear();
+		this.rowActors = rows;
+		this.colActors = cols;
+		
+		this.tileList = null;
+		this.dynamicList = null;
+		this.staticList = null;
+		
+		this.tileList = new ArrayList<Tile>();
+		this.dynamicList = new ArrayList<DynamicObject>();
+		this.staticList = new ArrayList<GameObject>();
+		this.player = null;
+		this.win = null;
+		initialise();
 	}
 }

@@ -368,6 +368,14 @@ public class Editor extends Stage {
 				@Override
 		        public void clicked(InputEvent event, float x, float y) {
 					System.out.println("Reload State");
+					if (rowField.getText().matches("^-?\\d+$") && colField.getText().matches("^-?\\d+$")) {		// Check if number
+						int rows = Integer.parseInt(rowField.getText());
+						int cols = Integer.parseInt(colField.getText());
+						if (rows >= 5 && rows <= 50 && cols >= 5 && cols <= 50) {
+							related.resize(rows, cols);									// Deletes all of the old data, resizes map
+						}
+					}
+					System.out.println(rowField.getText() + ", " + colField.getText());
 		        }
 			});
 			newTable.add(refreshButton);
