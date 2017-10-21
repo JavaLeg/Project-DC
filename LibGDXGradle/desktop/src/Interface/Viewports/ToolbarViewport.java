@@ -27,7 +27,7 @@ public class ToolbarViewport extends Viewport{
 		Vector2 scaled = scaling.apply(getWorldWidth(), getWorldHeight(), screenWidth, screenHeight);
 		int viewportWidth = Math.round(scaled.x);
 		int viewportHeight = Math.round(scaled.y);
-		setScreenBounds(0, screenHeight*57/120, viewportWidth, viewportHeight);
+		setScreenBounds(0, screenHeight/2, viewportWidth, viewportHeight);
 		apply(centerCamera);
 	}
 
