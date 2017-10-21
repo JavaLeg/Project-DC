@@ -2,18 +2,14 @@ package State;
 
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
+
 
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
-import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import Tileset.*;
-import Tileset.DynamicObject.ActionState;
 import Tileset.GameObject.ObjectType;
 import Interface.EditorModel;
 import Interface.TileTuple;
@@ -70,12 +66,12 @@ public class State extends Stage {
 		this.player = null;
 	}
 	
-	public State(Viewport v, int width, int height) {
-		this(v);
-		this.rowActors = height;
-		this.colActors = width;
-			
-	}
+//	public State(Viewport v, int width, int height) {
+//		this(v);
+//		this.rowActors = height;
+//		this.colActors = width;
+//			
+//	}
 		
 		
 	private void initialise() {
@@ -491,11 +487,8 @@ public class State extends Stage {
 	 * Directly sets the objects
 	 */
 	public void restoreModel(EditorModel m) {
-		TileTuple[][] encodedTable = m.getEncodedTable();
-		
-		rowActors = m.getRows();
-		colActors = m.getCols();
-		initialise();
+		TileTuple[][] encodedTable = m.getEncodedTable();	
+		resize(m.getRows(), m.getCols());
 
 		for(int i = 0; i < this.rowActors; i++) {
 			for(int j = 0; j < this.colActors; j++) {
@@ -505,7 +498,6 @@ public class State extends Stage {
 					continue;
 
 				ObjectType type = enc_tile.getID();
-				Tile tile = getTile(new Coord(i, j));
 				
 				GameObject base = null;
 				DynamicObject d_obj = null;

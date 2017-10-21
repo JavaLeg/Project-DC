@@ -222,7 +222,7 @@ public class Editor extends Stage {
 				
 				tooltip_labels = labels + "\nHealth: " + obj.getHp() 
 										+ "\nDamage: " + obj.getContactDamage() 
-										+ "\nAtk Rate: " + ((Enemy) obj).getAttackRate();				
+										+ "\nAtk Rate: " + ((Enemy) obj).getAttackTime();				
 				break;
 			case ITEM:
 				labels = "Name: " + obj.getName();
@@ -528,7 +528,7 @@ public class Editor extends Stage {
 		
 		// Special attributes for objects
 		if(type == ObjectType.ENEMY) {
-			atk = ((Enemy) obj).getAttackRate();
+			atk = ((Enemy) obj).getAttackTime();
 		}else if(type == ObjectType.ITEM) {
 			restore = ((Item) obj).getRestoreValue();
 		}
