@@ -81,6 +81,7 @@ public class MainMenuScreen implements Screen {
         TextButton editorButton = new TextButton(" Editor ", skin);
         TextButton LibButton = new TextButton(" Library ", skin);
         TextButton helpButton = new TextButton(" Help ", skin);
+        TextButton optionsButton = new TextButton(" Options ", skin);
         TextButton exitButton = new TextButton(" Exit ", skin);
 
         //Add listeners to buttons        
@@ -97,7 +98,6 @@ public class MainMenuScreen implements Screen {
             	try {
 					((Game)Gdx.app.getApplicationListener()).setScreen(new EditorScreen(game));
 				} catch (IOException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
             }
@@ -109,7 +109,6 @@ public class MainMenuScreen implements Screen {
             	try {
 					((Game)Gdx.app.getApplicationListener()).setScreen(new LibraryScreen(game));
 				} catch (IOException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
             }
@@ -121,7 +120,17 @@ public class MainMenuScreen implements Screen {
             	try {
 					((Game)Gdx.app.getApplicationListener()).setScreen(new HelpScreen(game));
 				} catch (IOException e) {
-					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+            }
+        });
+        
+        optionsButton.addListener(new ClickListener(){
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+            	try {
+					((Game)Gdx.app.getApplicationListener()).setScreen(new OptionsScreen(game));
+				} catch (IOException e) {
 					e.printStackTrace();
 				}
             }
@@ -150,6 +159,8 @@ public class MainMenuScreen implements Screen {
         mainTable.add(LibButton);
         mainTable.row();
         mainTable.add(helpButton);
+        mainTable.row();
+        mainTable.add(optionsButton);
         mainTable.setPosition(0, WORLD_HEIGHT/6);
         
         //Add table to stage
