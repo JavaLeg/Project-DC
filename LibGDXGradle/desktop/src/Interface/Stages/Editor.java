@@ -20,6 +20,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField;
+import com.badlogic.gdx.scenes.scene2d.ui.TextTooltip;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.engine.desktop.SaveSys;
@@ -85,18 +86,19 @@ public class Editor extends Stage {
 		titleTable.setPosition(titlePos.getX(), titlePos.getY(), 0);
 		
 		// Add background and title
-		super.addActor(new Image(new TextureRegion(new Texture(Gdx.files.internal("EditorScreen/midwall_background_side.png")))));
+		super.addActor(new Image(new TextureRegion(new Texture(Gdx.files.internal("EditorScreen/Inventory_tab_resize.png")))));
 		super.addActor(titleTable);
 	}
 	
 	/*
 	 * Display a table on the stage
+	 * After updating
 	 */
 	private void display(Table newTable) {
 		newTable.setPosition(tablePos.getX(), tablePos.getY());
 		newTable.top();
 
-		super.addActor(new Image(new TextureRegion(new Texture(Gdx.files.internal("EditorScreen/midwall_background_side.png")))));
+		super.addActor(new Image(new TextureRegion(new Texture(Gdx.files.internal("EditorScreen/Inventory_tab_resize.png")))));
 		ScrollPane scroll = new ScrollPane(newTable);
 		scroll.setSize(220,470);
 		scroll.moveBy(10, 0);
@@ -140,6 +142,12 @@ public class Editor extends Stage {
 		FileHandle[] files = Gdx.files.internal(quick_path).list();
 		
 		final Table newTable = new Table();
+		
+		Label title = new Label(s.toString() + " - Custom", 
+        		new Label.LabelStyle(new BitmapFont(), Color.BLACK));
+		
+		newTable.add(title);
+		newTable.row();
 		
 		TextButton editButton = null;
 		TextButton customButton = null;
@@ -187,22 +195,29 @@ public class Editor extends Stage {
 			
 			
 			String labels = null;
+			String tooltip_labels = null;
 			
 			switch(type) {
 			case PLAYER:
-				labels = "Name: " + obj.getName() + "\n" + 
-						 "Health: " + obj.getHp() + "\n" +
-						 "Damage: " + obj.getContactDamage() + "\n";
+				labels = "Name: " + obj.getName();
+
+				
+				tooltip_labels = labels + "\nHealth: " + obj.getHp() 
+				+ "\nDamage: " + obj.getContactDamage() 
+				+ "\nAtk Rate: " + ((Enemy) obj).getAttackRate();		
+				
 				break;
 			case ENEMY:
-				labels = "Name: " + obj.getName() + "\n" + 
-						 "Health: " + obj.getHp() + "\n" +
-						 "Damage: " + obj.getContactDamage() + "\n";
-						 //"Atk Rate: " + ((Enemy) obj).getAttackRate() + "\n";
+				labels = "Name: " + obj.getName();
+				
+				tooltip_labels = labels + "\nHealth: " + obj.getHp() 
+										+ "\nDamage: " + obj.getContactDamage() 
+										+ "\nAtk Rate: " + ((Enemy) obj).getAttackRate();				
 				break;
 			case ITEM:
-				labels = "Name: " + obj.getName() + "\n"; 
-						 //"Restore: " + ((Item) obj).getRestoreValue() + "\n";
+				labels = "Name: " + obj.getName();
+				
+				tooltip_labels = labels + "\nRestore: " + ((Item) obj).getRestoreValue();
 				break;
 			default:
 				break;
@@ -210,9 +225,13 @@ public class Editor extends Stage {
 
 				
 			Label icon_labels = new Label(labels, new Label.LabelStyle(new BitmapFont(), Color.BLACK));
-				
+			
+			//Tool-tip (More information)
+			icon.addListener(new TextTooltip(tooltip_labels, skin));
+			
 			newTable.add(icon).size(40, 40);
-			newTable.add(icon_labels).pad(5);
+			newTable.add(icon_labels);
+			newTable.row();
 				
 
 			icon.addListener(new ClickListener(){
@@ -252,7 +271,7 @@ public class Editor extends Stage {
 
 		newTable.add(title);
 		newTable.row();
-		int i = 0;
+		int i = 1;
 		
 		// If editor tab contains other stuff
 		// Hard coded for now
@@ -371,30 +390,18 @@ public class Editor extends Stage {
 			
 			// Display Images on the editor tab as Icons
 			// No object correspondence
-			final String fileName = file.name();
+			final String fileName = file.name().split("\\.", 2)[0];
 			final String filePath = file.path();
 			
-			String labels = fileName;
+			//String labels = fileName;
 			
 			final ObjectType cur = ObjectType.valueOf(s.toString());
-
-			if (cur == ObjectType.ENEMY || cur == ObjectType.PLAYER) {
-				labels = "Health: 1\nDamage: 1\nSpeed: 1";
-			} else if (cur == ObjectType.ITEM) {
-				labels = "Item";
-			} else if (cur == ObjectType.WALL) {
-				labels = "Wall";
-			} else if (cur == ObjectType.FLOOR) {
-				labels = "Floor";
-			}
 
 			// Display the sprite (Information)
 			final Texture texture = new Texture(file);	
 			Image icon = new Image(new TextureRegion(texture));
-			Label icon_name = new Label(labels, new Label.LabelStyle(new BitmapFont(), Color.BLACK));
-			
-			newTable.add(icon).size(40, 40);
-			newTable.add(icon_name).pad(5);
+			icon.addListener(new TextTooltip("Preset: " + fileName, skin));
+			newTable.add(icon).size(40, 40).pad(5);
 			
 			switch(cur){
 			case PLAYER:
@@ -447,6 +454,7 @@ public class Editor extends Stage {
 						related.setStaticSelection(obj);
 			        }
 				});
+				break;
 			case WALL:
 				icon.addListener(new ClickListener(){
 					@Override
@@ -457,15 +465,14 @@ public class Editor extends Stage {
 						related.setStaticSelection(obj);
 			        }
 				});
+				break;
 			default:
 				break;
 			}
 		
-			if (i % 2 == 1 && i != 0) newTable.row();
-			
-			// Don't let it go over the edge
-			if (i > 20 && s == ToolbarSelection.FLOOR) break;
-			if (i > 14 && s == ToolbarSelection.ENEMY) break;
+			if (i % 3 == 0) {
+				newTable.row();
+			}
 			i++;
 			
 		}
@@ -478,8 +485,8 @@ public class Editor extends Stage {
 	 */	
 	public void newEdit(DynamicObject obj) {
 		final DynamicObject object = obj;
-		ObjectType type = object.getType();
-		
+		final ObjectType type = object.getType();
+				
 		Table editTable = new Table();
 		Image icon = processPath(obj.getImgPath());
 		
@@ -567,15 +574,28 @@ public class Editor extends Stage {
 						check = false;
 					}
 					
-					if(!resField.getText().matches("[0-9]+")) {
-						System.out.println("Invalid restore value!");
-						check = false;
-					}
 					
-					if(!atkField.getText().matches("[0-9]+")) {
-						System.out.println("Invalid restore value!");
-						check = false;
+					// Custom attributes
+					switch(type) {
+					case PLAYER:
+
+						break;
+					case ENEMY:
+						if(!atkField.getText().matches("[0-9]+")) {
+							System.out.println("Invalid attack value!");
+							check = false;
+						}
+						break;
+					case ITEM:
+						if(!resField.getText().matches("[0-9]+")) {
+							System.out.println("Invalid restore value!");
+							check = false;
+						}
+						break;
+					default:
+						break;
 					}
+
 					
 					if(!check)
 						return;
