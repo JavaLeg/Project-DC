@@ -35,6 +35,8 @@ public class State extends Stage {
 	// private Coord playerCoord;
 	private ArrayList<Tile> tileList;
 
+	private DynamicObject win;			// The win condition 
+	
 	private Player player;
 	private ArrayList<DynamicObject> dynamicList;
 	private ArrayList<GameObject> staticList;
@@ -52,6 +54,7 @@ public class State extends Stage {
 		this.dynamicList = new ArrayList<DynamicObject>();
 		this.staticList = new ArrayList<GameObject>();
 		this.player = null;
+		this.win = null;
 		initialise();
 		
 		// assumes no player initially
@@ -125,11 +128,12 @@ public class State extends Stage {
 		if(type == ObjectType.ENEMY || type == ObjectType.ITEM || type == ObjectType.PLAYER) {
 			obj = cur_d_object.clone();
 			obj.setCoord(tile.getCoord());
-			dynamicList.add((DynamicObject) obj);
+			// dynamicList.add((DynamicObject) obj);
+			obj.setName(cur_d_object.getName());
 		}else {
 			obj = cur_object.clone();
 			obj.setCoord(tile.getCoord());
-			staticList.add(obj);
+			// staticList.add(obj);
 		}
 		// tile.setObject(obj);
 		this.setObject(obj, obj.getCoord());
@@ -185,7 +189,11 @@ public class State extends Stage {
 		
 		switch(type) {
 		case PLAYER:
+			// Delete the old player and the flag if we're overriding it
 			if (this.hasPlayer() == true) this.deletePlayer(player.getCoord());
+			if (cur.getObjectType() == ObjectType.ITEM
+					&& cur.getObject().getName() == "win") win = null;
+			
 			newObject.setCoord(coord);
 			player = (Player) newObject;
 			cur.setObject(player);
@@ -193,8 +201,15 @@ public class State extends Stage {
 		case ENEMY:
 		case ITEM:
 			if (cur.getObjectType() == ObjectType.PLAYER) player = null;
-			dynamicList.add((DynamicObject) newObject);
 			newObject.setCoord(coord);
+			String name = newObject.getName();
+			
+			// Win condition handling
+			if (name != null && name.equals("win")) {						
+				if (win != null) this.deleteWin(win.getCoord());
+				win = (DynamicObject) newObject;
+			} 
+			dynamicList.add((DynamicObject) newObject);
 			cur.setDynamicObject((DynamicObject) newObject);
 			break;
 		case WALL:
@@ -211,6 +226,25 @@ public class State extends Stage {
 			break;
 
 		}
+	}
+	
+	/*
+	 * Gets the co-ordinates of the finish line
+	 * returns null if no finish line (allow players to roam freely)
+	 * OSCAR
+	 */
+	public Coord getFinish() {
+		if (win == null) return null;
+		return win.getCoord();
+	}
+	
+	/*
+	 * Same as deletePlayer but didn't want to cause any conflicts right now
+	 * Up for refactoring
+	 */
+	public void deleteWin(Coord coord) {
+		Tile tile = tileList.get(coord.getX() * colActors + coord.getY());
+		tile.deleteObject();
 	}
 	
 	/*
@@ -405,13 +439,9 @@ public class State extends Stage {
 				// type will only show the top-most layer
 				if(type == ObjectType.ENEMY || type == ObjectType.PLAYER || type == ObjectType.ITEM) {
 					setObject(enc_tile.getDynamic(), new Coord(i, j));
-				}
+				} 
 				
-				// If the tile only contains GameObjects
-				if(type == ObjectType.FLOOR || type == ObjectType.WALL) {
-					base = enc_tile.getBase();
-				}
-				
+				base = enc_tile.getBase();
 				if(base != null)
 					setObject(base, new Coord(i, j));
 									

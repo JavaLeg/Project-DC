@@ -27,7 +27,6 @@ public class EditorViewport extends Viewport{
 		int viewportWidth = Math.round(scaled.x);
 		int viewportHeight = Math.round(scaled.y);
 
-	
 		// Override
 		setScreenBounds(0, 0, viewportWidth, viewportHeight);
 		apply(centerCamera);
