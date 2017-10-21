@@ -50,6 +50,7 @@ public class Editor extends Stage {
 	private DynamicObject selected_Dyn;
 	
 	private ToolbarSelection current;
+	private int PAD;
 		
 	//private Stage related;
 	private State related;
@@ -63,11 +64,15 @@ public class Editor extends Stage {
 	public Editor(Viewport v, Skin skin) throws IOException {
 		super(v);
 		this.skin = skin;
-		this.titlePos = new TableTuple(50, 450);		
-		this.tablePos = new TableTuple(v.getScreenWidth()*7/40, v.getScreenHeight());
+		this.titlePos = new TableTuple(50, 450);
+		
+		//v.getScreenWidth()*17/40 this value is 0???
+		this.tablePos = new TableTuple(10, v.getScreenHeight());
 		this.path = "SpriteFamily/";
 		this.tableMap = new HashMap<ToolbarSelection, Table>();
 		this.saver = new SaveSys();
+		this.PAD = 6;
+		
 		initialise();
 		update(ToolbarSelection.FLOOR);
 	}
@@ -400,7 +405,7 @@ public class Editor extends Stage {
 			final Texture texture = new Texture(file);	
 			Image icon = new Image(new TextureRegion(texture));
 			icon.addListener(new TextTooltip("Preset: " + fileName, skin));
-			newTable.add(icon).size(40, 40).pad(5);
+			newTable.add(icon).size(40, 40).pad(PAD);
 			
 			switch(cur){
 			case PLAYER:
@@ -470,7 +475,7 @@ public class Editor extends Stage {
 				break;
 			}
 		
-			if (i % 3 == 0) {
+			if (i % 4 == 0) {
 				newTable.row();
 			}
 			i++;

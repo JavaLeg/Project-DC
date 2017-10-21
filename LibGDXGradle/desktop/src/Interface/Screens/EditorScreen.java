@@ -22,7 +22,6 @@ import com.engine.desktop.DCGame;
 import Interface.EditorModel;
 import Interface.Stages.Editor;
 import Interface.Stages.Toolbar;
-import Interface.Viewports.CameraTestMain;
 import Interface.Viewports.EditorViewport;
 import Interface.Viewports.PreviewProcessor;
 import Interface.Viewports.PreviewViewport;
@@ -55,7 +54,7 @@ public class EditorScreen implements Screen {
 		Skin skin = new Skin(Gdx.files.internal("uiskin.json"), atlas);
 
 		// Every viewport initializes with (0, 0) at bottom left of the stage
-		Viewport editor_viewport = new EditorViewport(APP_WIDTH*7/20, APP_HEIGHT);
+		Viewport editor_viewport = new EditorViewport(APP_WIDTH*7/40, APP_HEIGHT);
 		Viewport preview_viewport = new PreviewViewport(APP_WIDTH, APP_HEIGHT);
 		Viewport toolbar_viewport = new ToolbarViewport(APP_WIDTH, APP_HEIGHT);
 		

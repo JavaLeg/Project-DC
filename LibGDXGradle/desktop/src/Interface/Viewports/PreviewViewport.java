@@ -39,6 +39,7 @@ public class PreviewViewport extends Viewport{
 		
 		//setScreenBounds((screenWidth - viewportWidth) / 2, (screenHeight - viewportHeight) / 2, viewportWidth, viewportHeight);
 		//setScreenBounds(0, 0, viewportWidth, viewportHeight);
+		
 		setScreenBounds(0, 0, viewportWidth, viewportHeight);
 
 		apply(centerCamera);
