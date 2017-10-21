@@ -65,7 +65,8 @@ public class DynamicGame {
 		Coord curr = activeState.findPlayer();
 		Player p = (Player) activeState.getPlayer();
 		Coord toMove = null;
-		System.out.println("attempt");
+		System.out.println(activeState.getRow() + ", " + activeState.getColumn());
+		System.out.println("Current pos = " + curr.getX() + ", " + curr.getY());
 		switch (a) {
 		case ATTACK:
 			p.selectLight();
@@ -79,28 +80,28 @@ public class DynamicGame {
 			break;
 		case MOVE_SOUTH:
 			toMove = (Direction.SOUTH).moveInDirection(curr);
-			if (p.canChangePosition() && !activeState.isBlocked(toMove) && activeState.isValid(toMove)) {
+			if (p.canChangePosition() && activeState.isValid(toMove) && !activeState.isBlocked(toMove)) {
 				activeState.movePlayer(toMove);
 			}
 			System.out.print("USER INPUT: DOWN\n");
 			break;
 		case MOVE_WEST:
 			toMove = (Direction.WEST).moveInDirection(curr);
-			if (p.canChangePosition() && !activeState.isBlocked(toMove) && activeState.isValid(toMove)) {
+			if (p.canChangePosition() && activeState.isValid(toMove) && !activeState.isBlocked(toMove)) {
 				activeState.movePlayer(toMove);
 			}
 			System.out.print("USER INPUT: LEFT\n");
 			break;
 		case MOVE_EAST:
 			toMove = (Direction.EAST).moveInDirection(curr);
-			if (p.canChangePosition() && !activeState.isBlocked(toMove) && activeState.isValid(toMove)) {
+			if (p.canChangePosition() && activeState.isValid(toMove) && !activeState.isBlocked(toMove)) {
 				activeState.movePlayer(toMove);
 			}
 			System.out.print("USER INPUT: RIGHT\n");
 			break;
 		case MOVE_NORTH:
 			toMove = (Direction.NORTH).moveInDirection(curr);
-			if (p.canChangePosition() && !activeState.isBlocked(toMove) && activeState.isValid(toMove)) {
+			if (p.canChangePosition() && activeState.isValid(toMove) && !activeState.isBlocked(toMove)) {
 				activeState.movePlayer(toMove);
 			}
 			System.out.print("USER INPUT: UP\n");
@@ -109,6 +110,8 @@ public class DynamicGame {
 		default:
 			break;
 		}
+		curr = activeState.findPlayer();
+		System.out.println("Current pos = " + curr.getX() + ", " + curr.getY());
 		return false;
 	}
 	
