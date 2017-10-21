@@ -216,7 +216,6 @@ public class Editor extends Stage {
 				break;
 			case ITEM:
 				labels = "Name: " + obj.getName();
-				
 				tooltip_labels = labels + "\nRestore: " + ((Item) obj).getRestoreValue();
 				break;
 			default:
@@ -438,6 +437,7 @@ public class Editor extends Stage {
 						
 						// Right now all attributes initialized as null (Changed through edit)
 						Item obj = new Item(filePath);
+						if (fileName.equals("win")) obj.setName(fileName);
 						selected_Dyn = obj;
 						related.setDynamicSelection(obj);
 			        }
