@@ -6,7 +6,7 @@ import com.badlogic.gdx.graphics.Camera;
 
 public class PreviewProcessor implements InputProcessor{
 	private int dragX, dragY;
-	private float intensity = 150f;
+	private float intensity = 450f;
 	private Camera camera;
 	
 	public PreviewProcessor(Camera cam) {
@@ -30,7 +30,6 @@ public class PreviewProcessor implements InputProcessor{
 	}
 	@Override
 	public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-		System.out.println("TOUCH DOWN!!");
 		dragX = screenX;
 		dragY = screenY;
 		return true;
