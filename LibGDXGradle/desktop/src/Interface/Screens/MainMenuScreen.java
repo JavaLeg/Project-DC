@@ -108,6 +108,7 @@ public class MainMenuScreen implements Screen {
             public void clicked(InputEvent event, float x, float y) {
             	try {
 					((Game)Gdx.app.getApplicationListener()).setScreen(new LibraryScreen(game));
+					dispose();
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
@@ -119,6 +120,7 @@ public class MainMenuScreen implements Screen {
             public void clicked(InputEvent event, float x, float y) {
             	try {
 					((Game)Gdx.app.getApplicationListener()).setScreen(new HelpScreen(game));
+					dispose();
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
@@ -130,6 +132,7 @@ public class MainMenuScreen implements Screen {
             public void clicked(InputEvent event, float x, float y) {
             	try {
 					((Game)Gdx.app.getApplicationListener()).setScreen(new OptionsScreen(game));
+					dispose();
 				} catch (IOException e) {
 					e.printStackTrace();
 				}

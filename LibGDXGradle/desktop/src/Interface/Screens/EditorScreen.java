@@ -33,7 +33,7 @@ public class EditorScreen implements Screen {
 	
     protected ArrayList<Stage> UI;
 	
-    private SpriteBatch batch;
+    //private SpriteBatch batch;
     private DCGame game;
         
     private int APP_WIDTH = Gdx.graphics.getWidth();
@@ -70,7 +70,7 @@ public class EditorScreen implements Screen {
 		
 		
 		previewStage = new State(preview_viewport);
-		Toolbar toolbarStage = new Toolbar(toolbar_viewport, skin);
+		Toolbar toolbarStage = new Toolbar(toolbar_viewport, skin, this);
 		
 		try {
 			editorStage = new Editor(editor_viewport, skin);
@@ -87,9 +87,7 @@ public class EditorScreen implements Screen {
 	            public boolean keyDown(int keycode) {
 
 	                if ((keycode == Keys.ESCAPE) || (keycode == Keys.BACK)) {
-	                	for(Stage s : UI) {
-	                		s.dispose();
-	                	}
+
 	                	((Game)Gdx.app.getApplicationListener()).setScreen(new MainMenuScreen(game));
 	                }
 	                return false;
@@ -109,6 +107,8 @@ public class EditorScreen implements Screen {
 			e.printStackTrace();
 		}
 	}
+	
+
 	
 	public void loadModel(EditorModel m) {
 		System.out.println("Loaded model.");	
@@ -155,7 +155,15 @@ public class EditorScreen implements Screen {
 
 	@Override
 	public void dispose() {
-        batch.dispose();
-		// TODO Auto-generated method stub	
+		for(Stage s : UI) {
+			s.dispose();
+		}
 	}
+	
+	public void exit() {
+		((Game)Gdx.app.getApplicationListener()).setScreen(new MainMenuScreen(game));
+		dispose();
+
+	}
+	
 }

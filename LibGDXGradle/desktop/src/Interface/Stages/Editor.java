@@ -192,7 +192,6 @@ public class Editor extends Stage {
 					try {
 						update(s);
 					} catch (IOException e) {
-						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
 				}
@@ -766,4 +765,5 @@ public class Editor extends Stage {
 	public void setDependence(State s) {
 		this.related = s;
 	}
+	
 }
