@@ -35,7 +35,7 @@ public class SplashScreen implements Screen{
 	}
 	
 	// TEST ANIMATION
-	private Attack att = new Attack();
+	private Attack att = new Attack(Attack.Dir.RIGHT);
 	private TextureRegion tR;
 	private float animateTime = 0f;
 
@@ -54,7 +54,6 @@ public class SplashScreen implements Screen{
         	   s.draw(batch);
         	   animateTime += Gdx.graphics.getDeltaTime();
         }
-
         /*
          * Delay before showing main menu
          */

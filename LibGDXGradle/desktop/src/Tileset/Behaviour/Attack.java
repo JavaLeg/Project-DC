@@ -22,12 +22,14 @@ public class Attack {
 	private String path = "SpriteFamily/attack/";
 	
 	private Animation animation;
+	private Dir dir;
 	
 	private enum Type {
-		ONE,
-		TWO,
-		THREE,
-		FOUR
+		ONE, TWO, THREE, FOUR
+	}
+	
+	public enum Dir {
+		LEFT, RIGHT, DOWN, UP
 	}
 	
 	// likely takes in some sort of id or animaton
@@ -37,13 +39,19 @@ public class Attack {
 		this.targets = targets;
 		this.animationFrames = new Sprite[NUM_FRAMES];
 		// load the attack image
-		this.loadImage(Type.FOUR);
+//		this.loadImage(Type.FOUR);
 	}
 	
 	public Attack() {
 		this.animationFrames = new Sprite[NUM_FRAMES];
 		// load the attack image
-		this.loadImage(Type.ONE);
+		this.loadImage(Type.ONE, Dir.LEFT);
+	}
+	
+	public Attack(Dir dir) {
+		this.animationFrames = new Sprite[NUM_FRAMES];
+		// load the attack image
+		this.loadImage(Type.ONE, dir);
 	}
 	
 	public Animation getAttack() {
@@ -61,7 +69,7 @@ public class Attack {
 		
 	}
 	
-	private void loadImage(Type type) {
+	private void loadImage(Type type, Dir dir) {
 		switch (type) {
 		case ONE:
 			path += "cut_a/";
@@ -80,12 +88,31 @@ public class Attack {
 		for (int i = 0; i < NUM_FRAMES; i++) {
 			String filePath = path + (i + 1) + ".png";
 			Sprite sprite = new Sprite(new Texture(filePath));
-//			sprite.setScale((float) 0.1);
+			// sets the size and position
 			sprite.setBounds(0, 0, 40, 40);
-			System.out.println("scale = " + sprite.getScaleX());
+			// sets the rotation origin to the middle
+			sprite.setOrigin(sprite.getWidth()/2f, sprite.getHeight()/2f);
+			// rotate
+			sprite.setRotation(this.getRotation(dir));
+			
 			animationFrames[i] = sprite;
 		}
 		animation = new Animation(1f/20f, animationFrames);
+	}
+	
+	private float getRotation(Dir dir) {
+		switch (dir) {
+		case LEFT:
+			return 0;
+		case RIGHT:
+			return 180;
+		case UP:
+			return 90;
+		case DOWN:
+			return 270;
+		default:
+			return 0;	
+		}
 	}
 	
 	
