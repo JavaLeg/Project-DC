@@ -62,6 +62,6 @@ com.badlogic.gdx.scenes.scene2d.ui.Tree$TreeStyle: {
 	default: { minus: tree-minus, plus: tree-plus, selection: default-select-selection }
 },
 com.badlogic.gdx.scenes.scene2d.ui.TextTooltip$TextTooltipStyle: {
-    default: {label: {font: default-font}, background: default-rect, wrapWidth: 400}
+    default: {label: {font: default-font}, background: default-pane-noborder, wrapWidth: 400}
 },
 }

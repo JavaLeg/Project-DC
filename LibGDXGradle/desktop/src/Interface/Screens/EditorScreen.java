@@ -26,6 +26,7 @@ import Interface.EditorModel;
 import Interface.Stages.Editor;
 import Interface.Stages.Toolbar;
 import Interface.Viewports.CameraTestMain;
+import Interface.Viewports.EditorViewport;
 import Interface.Viewports.PreviewProcessor;
 import Interface.Viewports.PreviewViewport;
 import Interface.Viewports.ToolbarViewport;
@@ -55,15 +56,11 @@ public class EditorScreen implements Screen {
 		
 		TextureAtlas atlas = new TextureAtlas(Gdx.files.internal("uiskin.atlas"));
 		Skin skin = new Skin(Gdx.files.internal("uiskin.json"), atlas);
-		
-		Camera editor_camera = new OrthographicCamera();
-		Camera preview_camera = new OrthographicCamera();
-		Camera toolbar_camera = new OrthographicCamera();
-		
+				
 		// Every viewport initializes with (0, 0) at bottom left of the stage
-		Viewport editor_viewport = new FitViewport(APP_WIDTH, APP_HEIGHT, editor_camera);
-		Viewport preview_viewport = new PreviewViewport(APP_WIDTH, APP_HEIGHT, preview_camera);
-		Viewport toolbar_viewport = new ToolbarViewport(APP_WIDTH, APP_HEIGHT, toolbar_camera);
+		Viewport editor_viewport = new EditorViewport(APP_WIDTH*7/20, APP_HEIGHT);
+		Viewport preview_viewport = new PreviewViewport(APP_WIDTH, APP_HEIGHT);
+		Viewport toolbar_viewport = new ToolbarViewport(APP_WIDTH, APP_HEIGHT);
 		
 		UI = new ArrayList<Stage>();
 		
@@ -105,7 +102,7 @@ public class EditorScreen implements Screen {
 	        };
 	        
 	        
-			PreviewProcessor pp = new PreviewProcessor(preview_camera);
+			PreviewProcessor pp = new PreviewProcessor(preview_viewport.getCamera());
 
 			
 			InputMultiplexer multiplexer = new InputMultiplexer(editorStage, previewStage, toolbarStage, backProcessor, pp);

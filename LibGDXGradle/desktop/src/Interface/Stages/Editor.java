@@ -189,22 +189,34 @@ public class Editor extends Stage {
 			
 			
 			String labels = null;
+			String tooltip_labels = null;
 			
 			switch(type) {
 			case PLAYER:
 				labels = "Name: " + obj.getName() + "\n" + 
 						 "Health: " + obj.getHp() + "\n" +
 						 "Damage: " + obj.getContactDamage() + "\n";
+				
+				tooltip_labels = labels;
+				
+				// More info on player
+				//tooltip_labels += ""
+				
 				break;
 			case ENEMY:
 				labels = "Name: " + obj.getName() + "\n" + 
 						 "Health: " + obj.getHp() + "\n" +
 						 "Damage: " + obj.getContactDamage() + "\n";
-						 //"Atk Rate: " + ((Enemy) obj).getAttackRate() + "\n";
+				
+				tooltip_labels = labels;
+				tooltip_labels += "Atk Rate: " + ((Enemy) obj).getAttackRate();
+				
 				break;
 			case ITEM:
 				labels = "Name: " + obj.getName() + "\n"; 
-						 //"Restore: " + ((Item) obj).getRestoreValue() + "\n";
+				
+				tooltip_labels = labels;
+				tooltip_labels += "Restore: " + ((Item) obj).getRestoreValue();
 				break;
 			default:
 				break;
@@ -212,7 +224,10 @@ public class Editor extends Stage {
 
 				
 			Label icon_labels = new Label(labels, new Label.LabelStyle(new BitmapFont(), Color.BLACK));
-				
+			
+			//Tool-tip (More information)
+			icon.addListener(new TextTooltip(tooltip_labels, skin));
+			
 			newTable.add(icon).size(40, 40);
 			newTable.add(icon_labels).pad(5);
 				
