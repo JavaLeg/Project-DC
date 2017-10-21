@@ -117,7 +117,9 @@ public class Editor extends Stage {
 		super.addActor(new Image(new TextureRegion(new Texture(Gdx.files.internal("EditorScreen/Inventory_tab_resize.png")))));
 		ScrollPane scroll = new ScrollPane(newTable);
 		scroll.setSize(220,470);
-		scroll.moveBy(10, 0);
+		scroll.moveBy(25, 0);
+		scroll.setForceScroll(false, true);
+		scroll.setScrollingDisabled(true, false);
 		super.addActor(scroll);
 	}
 

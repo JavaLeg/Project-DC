@@ -19,9 +19,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
-import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
-import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
@@ -37,22 +35,18 @@ public class MainMenuScreen implements Screen {
     final DCGame game;
     
     private static final int WORLD_WIDTH  = 800;
-    private static final int WORLD_HEIGHT = 480;
+    private static final int WORLD_HEIGHT = 450;
 	
     public MainMenuScreen(final DCGame game)
     {
     	this.game = game;
     	
-        atlas = new TextureAtlas(Gdx.files.internal("uiskin.atlas"));
-        skin = new Skin(Gdx.files.internal("uiskin.json"), atlas);
+        atlas = new TextureAtlas(Gdx.files.internal("cloud-form-ui.atlas"));
+        skin = new Skin(Gdx.files.internal("cloud-form-ui.json"), atlas);
 
         camera = new OrthographicCamera();
         viewport = new FitViewport(WORLD_WIDTH, WORLD_HEIGHT,  camera);
         viewport.apply();
-
-//        camera.position.set(camera.viewportWidth / 2, camera.viewportHeight / 2, 0);
-//        camera.update();
-
         stage = new Stage(viewport);    
     }
 	
@@ -69,7 +63,7 @@ public class MainMenuScreen implements Screen {
         //mainTable.top();
         
         // Place background
-        stage.addActor(new Image(new TextureRegion(new Texture(Gdx.files.internal("LibScreen/bg_resize2.jpg")))));
+        stage.addActor(new Image(new TextureRegion(new Texture(Gdx.files.internal("MainScreen/rsz_menubg.jpg")))));
         
         
         /*
@@ -138,13 +132,10 @@ public class MainMenuScreen implements Screen {
 
         
         // Main Table
-        // Add title
-        BitmapFont titleFont = new BitmapFont();
-        titleFont.getData().setScale(2, 2);        
-        Label title = new Label("Dungeon Creator", 
-        		new Label.LabelStyle(titleFont, Color.WHITE));
-        mainTable.add(title);
-        
+        // Add title  
+        Image titleImage = new Image(new TextureRegion(new Texture(Gdx.files.internal("MainScreen/logo.png"))));
+        mainTable.add(titleImage);        
+              
         // Add blank line after title
         BitmapFont itemFont = new BitmapFont();
         itemFont.getData().setScale(1, 1);  
@@ -173,9 +164,7 @@ public class MainMenuScreen implements Screen {
         backTable.left();
         backTable.padBottom(10);
         backTable.padLeft(10);
-        
-        stage.addActor(backTable);
-        
+        stage.addActor(backTable);    
 	}
 
 	@Override

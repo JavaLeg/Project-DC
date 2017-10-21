@@ -27,72 +27,67 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.engine.desktop.DCGame;
 
 public class HelpScreen implements Screen {
 
+	protected Stage stage;
+	private Viewport viewport;
+	private OrthographicCamera camera;
 	private TextureAtlas atlas;
-    protected Skin skin;
-    private DCGame game;
-    private Viewport viewport;
-    private Camera camera;
-    private Stage mainStage;
+	protected Skin skin;
+	final DCGame game;
+	    
+	private static final int WORLD_WIDTH  = 800;
+	private static final int WORLD_HEIGHT = 450;
 	
     public HelpScreen(DCGame game) throws IOException {
     	this.game = game;
+    	atlas = new TextureAtlas(Gdx.files.internal("cloud-form-ui.atlas"));
+    	skin = new Skin(Gdx.files.internal("cloud-form-ui.json"), atlas);
+    	camera = new OrthographicCamera();
+    	viewport = new FitViewport(WORLD_WIDTH, WORLD_HEIGHT,  camera);
+    	viewport.apply();
+    	stage = new Stage(viewport);
     }
 	
 	@Override
 	public void show() {
-		atlas = new TextureAtlas(Gdx.files.internal("uiskin.atlas"));
-        skin = new Skin(Gdx.files.internal("uiskin.json"), atlas);
-
-        camera = new OrthographicCamera();
-        viewport = new ScreenViewport();
-        mainStage = new Stage(viewport);
-		
-        
-        //Create Table
-        Table mainTable = new Table();
+		// Main Table
+		Table mainTable = new Table();
         mainTable.setFillParent(true);
+        mainTable.setPosition(0, WORLD_HEIGHT/6);
+             
         
-        // Main Table
-        // FONTS
-        BitmapFont titleFont = new BitmapFont();
-        titleFont.getData().setScale(4, 4);
-        
+        // FONTS      
         BitmapFont itemFont = new BitmapFont();
-        itemFont.getData().setScale(2, 2);
-        
-        //Set alignment of contents in the table.
-        Label title = new Label("Need help?", 
-        		new Label.LabelStyle(titleFont, Color.WHITE));
-        
-        mainTable.top();
-        mainTable.add(title);
+        itemFont.getData().setScale(1, 1);
         
         
-        /* Add things to help page here */
-        final String fileName1 = "";
-    	final Label fileLabel1 = new Label(fileName1, new LabelStyle(itemFont, Color.WHITE));
+        // Title
+        Image titleImage = new Image(new TextureRegion(new Texture(Gdx.files.internal("HelpScreen/helpheader.png"))));
+        mainTable.add(titleImage);               
+        
+        Label blank = new Label("", new Label.LabelStyle(itemFont, Color.BLACK));
         mainTable.row();
-    	mainTable.add(fileLabel1);
-    	
-    	final String fileName3 = "Find documentation at";
-    	final Label fileLabel3 = new Label(fileName3, new LabelStyle(itemFont, Color.WHITE));
+        mainTable.add(blank);
+        
+        
+    	final Label fileLabel3 = new Label("Find it at:", new LabelStyle(itemFont, Color.BLACK));
         mainTable.row();
     	mainTable.add(fileLabel3);
     	
         final String fileName2 = "https://github.com/JavaLeg/Project-DC";
-    	final Label fileLabel2 = new Label(fileName2, new LabelStyle(itemFont, Color.WHITE));
+    	final Label fileLabel2 = new Label(fileName2, new LabelStyle(itemFont, Color.BLACK));
         mainTable.row();
     	mainTable.add(fileLabel2);
     	
         
-        mainStage.addActor(new Image(new TextureRegion(new Texture(Gdx.files.internal("LibScreen/bg2.jpg")))));
-        mainStage.addActor(mainTable);
+        stage.addActor(new Image(new TextureRegion(new Texture(Gdx.files.internal("HelpScreen/helpbg.jpg")))));
+        stage.addActor(mainTable);
         
         
         // Add back button
@@ -101,7 +96,7 @@ public class HelpScreen implements Screen {
         backButton.addListener(new ClickListener(){
 			@Override
 	        public void clicked(InputEvent event, float x, float y) {
-				mainStage.dispose();
+				stage.dispose();
             	((Game)Gdx.app.getApplicationListener()).setScreen(new MainMenuScreen(game));
 			}
 		});
@@ -110,7 +105,7 @@ public class HelpScreen implements Screen {
         backTable.left();
         backTable.padLeft(10);
         backTable.padBottom(10);        
-        mainStage.addActor(backTable);
+        stage.addActor(backTable);
         
         
         // ESC key to return to main menu
@@ -119,7 +114,7 @@ public class HelpScreen implements Screen {
 	         public boolean keyDown(int keycode) {
 	
 	             if ((keycode == Keys.ESCAPE) || (keycode == Keys.BACK)) {
-	             	mainStage.dispose();
+	             	stage.dispose();
 	             	((Game)Gdx.app.getApplicationListener()).setScreen(new MainMenuScreen(game));
 	             }
 	             return false;
@@ -127,7 +122,7 @@ public class HelpScreen implements Screen {
 	     };
 	     
 		//Stage should control input:
-		InputMultiplexer multiplexer = new InputMultiplexer(mainStage, backProcessor);
+		InputMultiplexer multiplexer = new InputMultiplexer(stage, backProcessor);
 		Gdx.input.setInputProcessor(multiplexer);
 	}
 
@@ -136,8 +131,8 @@ public class HelpScreen implements Screen {
         Gdx.gl.glClearColor(.1f, .12f, .16f, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
-        mainStage.act();
-        mainStage.draw();
+        stage.act();
+        stage.draw();
 	}
 
 	@Override
