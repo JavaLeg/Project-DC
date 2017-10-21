@@ -36,7 +36,8 @@ public class Toolbar extends Stage{
 	public Toolbar(Viewport v, Skin skin) {
 		super(v);
 		this.skin = skin;
-		this.toolbarPos = new TableTuple(v.getScreenWidth()*2/23, v.getScreenHeight()/45);
+		this.toolbarPos = new TableTuple(v.getScreenWidth()/14, v.getScreenHeight()/46);
+
 		
 		
 		initialise();
