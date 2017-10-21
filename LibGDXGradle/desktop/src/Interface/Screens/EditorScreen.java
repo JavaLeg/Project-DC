@@ -12,20 +12,16 @@ import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.engine.desktop.DCGame;
 
 import Interface.EditorModel;
 import Interface.Stages.Editor;
 import Interface.Stages.Toolbar;
-import Interface.Viewports.CameraTestMain;
 import Interface.Viewports.EditorViewport;
 import Interface.Viewports.PreviewProcessor;
 import Interface.Viewports.PreviewViewport;
@@ -56,9 +52,9 @@ public class EditorScreen implements Screen {
 		
 		TextureAtlas atlas = new TextureAtlas(Gdx.files.internal("uiskin.atlas"));
 		Skin skin = new Skin(Gdx.files.internal("uiskin.json"), atlas);
-				
+
 		// Every viewport initializes with (0, 0) at bottom left of the stage
-		Viewport editor_viewport = new EditorViewport(APP_WIDTH*7/20, APP_HEIGHT);
+		Viewport editor_viewport = new EditorViewport(APP_WIDTH*7/40, APP_HEIGHT);
 		Viewport preview_viewport = new PreviewViewport(APP_WIDTH, APP_HEIGHT);
 		Viewport toolbar_viewport = new ToolbarViewport(APP_WIDTH, APP_HEIGHT);
 		
@@ -78,14 +74,13 @@ public class EditorScreen implements Screen {
 		
 		try {
 			editorStage = new Editor(editor_viewport, skin);
+			UI.add(previewStage);
 			UI.add(editorStage);
-			UI.add(previewStage); 
+
 			UI.add(toolbarStage);
 			toolbarStage.setDependence(editorStage);
 			editorStage.setDependence(previewStage);
 			
-			CameraTestMain camTest = new CameraTestMain();
-
 			// ESC key to return to main menu
 			InputProcessor backProcessor = new InputAdapter() {
 	            @Override
@@ -104,8 +99,10 @@ public class EditorScreen implements Screen {
 	        
 			PreviewProcessor pp = new PreviewProcessor(preview_viewport.getCamera());
 
-			//TEMP
-			InputMultiplexer multiplexer = new InputMultiplexer(editorStage, previewStage, toolbarStage, backProcessor, pp);
+
+			
+			InputMultiplexer multiplexer = new InputMultiplexer(editorStage, toolbarStage, previewStage, backProcessor, pp);
+			//InputMultiplexer multiplexer = new InputMultiplexer(editorStage, previewStage, toolbarStage, backProcessor, pp);
 			Gdx.input.setInputProcessor(multiplexer);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
