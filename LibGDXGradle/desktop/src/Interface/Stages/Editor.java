@@ -39,7 +39,6 @@ import Tileset.GameObject.ObjectType;
 import Tileset.Item;
 import Tileset.Player;
 import Tileset.Behaviour.Attack;
-import Tileset.Behaviour.MoveBehaviour;
 import Tileset.Behaviour.MoveRandom;
 
 /*
@@ -102,7 +101,7 @@ public class Editor extends Stage {
 		titleTable.setPosition(titlePos.getX(), titlePos.getY(), 0);
 		
 		// Add background and title
-		super.addActor(new Image(new TextureRegion(new Texture(Gdx.files.internal("EditorScreen/Inventory_tab_2.png")))));
+		super.addActor(new Image(new TextureRegion(new Texture(Gdx.files.internal("EditorScreen/Inventory_tab_4.png")))));
 		super.addActor(titleTable);
 	}
 	
@@ -114,7 +113,7 @@ public class Editor extends Stage {
 		newTable.setPosition(tablePos.getX(), tablePos.getY());
 		newTable.top();
 
-		super.addActor(new Image(new TextureRegion(new Texture(Gdx.files.internal("EditorScreen/Inventory_tab_2.png")))));
+		super.addActor(new Image(new TextureRegion(new Texture(Gdx.files.internal("EditorScreen/Inventory_tab_4.png")))));
 		ScrollPane scroll = new ScrollPane(newTable);
 		scroll.setSize(220,470);
 		scroll.moveBy(10, 0);
@@ -215,10 +214,10 @@ public class Editor extends Stage {
 			
 			switch(type) {
 			case PLAYER:
-				labels = "Name: " + obj.getName();
+				labels = obj.getName();
 
 				
-				tooltip_labels = labels + "\nHealth: " + obj.getHp() 
+				tooltip_labels = "Name: " + labels + "\nHealth: " + obj.getHp() 
 				+ "\nDamage: " + obj.getContactDamage();
 
 				
