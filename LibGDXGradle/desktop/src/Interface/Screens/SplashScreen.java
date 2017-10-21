@@ -9,6 +9,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.utils.TimeUtils;
 import com.engine.desktop.DCGame;
 
+import Tileset.Behaviour.Attack;
 import externals.GifDecoder;
 
 public class SplashScreen implements Screen{
@@ -31,6 +32,10 @@ public class SplashScreen implements Screen{
 				Gdx.files.internal("Splash/splash.gif").read());
 		
 	}
+	
+	// TEST ANIMATION
+	private Attack att = new Attack();
+	private TextureRegion tR;
 
 	@Override
 	public void render(float delta) {
@@ -38,22 +43,25 @@ public class SplashScreen implements Screen{
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         batch.begin();
-        batch.draw(animation.getKeyFrame(elapsed), 20.0f, 20.0f);        
+//        batch.draw(animation.getKeyFrame(elapsed), 20.0f, 20.0f);   
+        batch.draw((TextureRegion)att.getAttack().getKeyFrame(elapsed,true),0,0);
         batch.end();
 
         /*
          * Delay before showing main menu
          */
         if(TimeUtils.timeSinceMillis((long) startTime) > 5000){
-            g.setScreen(new MainMenuScreen(g));
+//            g.setScreen(new MainMenuScreen(g));
         }
         
-        if(Gdx.input.justTouched())
-        	g.setScreen(new MainMenuScreen(g));
-        
+//        if(Gdx.input.justTouched())
+        	
+//        	g.setScreen(new MainMenuScreen(g));
 
 	}
 
+	
+	
 	@Override
 	public void resize(int width, int height) {
 		// TODO Auto-generated method stub
