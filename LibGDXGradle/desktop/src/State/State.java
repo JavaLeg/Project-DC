@@ -388,8 +388,16 @@ public class State extends Stage {
 		return (g != null) && (g.getType() == ObjectType.WALL);
 	}
 	
+	/*
+	 * Returns if the next position will block
+	 * Also checks win condition
+	 */
 	public boolean isBlocked(Coord pos) {
-		return getTile(pos).hasObject();
+		if (win != null && pos.equals(win.getCoord())) {		// If winnable
+			System.out.println("Win!");
+			return false;
+		}
+		return (getTile(pos).hasObject());
 	}
 	
 	
