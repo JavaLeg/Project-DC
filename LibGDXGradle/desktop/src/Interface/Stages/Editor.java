@@ -3,6 +3,7 @@ package Interface.Stages;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 
 import com.badlogic.gdx.Gdx;
@@ -27,6 +28,7 @@ import com.engine.desktop.SaveSys;
 
 import Interface.EditorModel;
 import Interface.Stages.Selections.ToolbarSelection;
+import State.Coord;
 import State.State;
 import Tileset.DynamicObject;
 import Tileset.Enemy;
@@ -34,6 +36,9 @@ import Tileset.GameObject;
 import Tileset.GameObject.ObjectType;
 import Tileset.Item;
 import Tileset.Player;
+import Tileset.Behaviour.Attack;
+import Tileset.Behaviour.MoveBehaviour;
+import Tileset.Behaviour.MoveRandom;
 
 /*
  * Stage for the editor UI (Tools on the left of the screen)
@@ -409,8 +414,15 @@ public class Editor extends Stage {
 			        public void clicked(InputEvent event, float x, float y) {
 						System.out.println("Selected - " + fileName);
 						
-						// Right now all attributes initialized as null (Changed through edit)
-						Player obj = new Player(filePath);
+						
+						// DEFAULTS FOR ATTACKS
+						Attack light = new Attack(Arrays.asList(new Coord(0,1)), 
+								5, Arrays.asList(ObjectType.ENEMY), 15 , 10);
+						Attack heavy = new Attack(Arrays.asList(new Coord(0,1), new Coord(1,1), new Coord(-1,1)), 
+								5, Arrays.asList(ObjectType.ENEMY), 45 , 10);
+						
+						Player obj = new Player(10, 10, light, heavy, filePath);
+						//System.out.print(getActionState());
 						selected_Dyn = obj;
 						related.setDynamicSelection(obj);
 			        }
@@ -423,7 +435,8 @@ public class Editor extends Stage {
 						System.out.println("Selected - " + fileName);
 						
 						// Right now all attributes initialized as null (Changed through edit)
-						Enemy obj = new Enemy(filePath);
+						Enemy obj = new Enemy(10, 2, 30, new MoveRandom(), filePath);
+						// double hp, double damage, int moveRate, MoveBehaviour b, String img_path
 						selected_Dyn = obj;
 						related.setDynamicSelection(obj);
 			        }
@@ -553,6 +566,7 @@ public class Editor extends Stage {
 		saveButton.addListener(new ClickListener(){
 			@Override
 	        public void clicked(InputEvent event, float x, float y) {
+
 				
 					DynamicObject clone = object.clone(); //CLONE
 					
@@ -608,6 +622,7 @@ public class Editor extends Stage {
 					clone.setContactDamage(Double.valueOf(dmgField.getText()));
 					
 					saveObject(clone);
+
 				
 	        }
 		});

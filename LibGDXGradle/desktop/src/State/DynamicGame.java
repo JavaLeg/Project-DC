@@ -4,8 +4,13 @@ import com.badlogic.gdx.InputProcessor;
 
 import Interface.GameInputProcessor;
 import Tileset.DynamicObject;
+import Tileset.DynamicObject.ActionState;
 import Tileset.GameObject;
+import Tileset.GameObject.ObjectType;
 import Tileset.Player;
+import Tileset.Enemy;
+import Tileset.Behaviour.Attack;
+import Tileset.Behaviour.Direction;
 
 //temporary class for Game, 
 // showing interface necessary for higher level input and step processing
@@ -14,23 +19,16 @@ import Tileset.Player;
 public class DynamicGame {
 	private int steps;
 	private State activeState;
-	private GameInputProcessor input;
-	private int last_move;					// 0 for N/A, 1 for left, 2 for right
 	
 	public DynamicGame() {
 		steps = 0;
 	}
 	
 	// GENERAL FUNCTIONALITY
-	public void initialise(State startState, GameInputProcessor input) {
+	public void initialise(State startState) {
 		// take in a new GameState, and execute any other preamble
 		this.activeState = startState;
-		this.last_move = 0;
 		System.out.print("Initiated\n");
-		this.input = input;
-		if (this.input == null) {
-			System.out.print("shitttdsyyucjsvcblskb\n");
-		}
 	}
 	
 	public void step() {
@@ -39,11 +37,11 @@ public class DynamicGame {
 		// get all gameworld objects
 		// iterate upon these objects running their step()
 
-		// TODO: when state fixed
+		//System.out.print(activeState.getAllDynamicObjects().size());
 		for (DynamicObject o : activeState.getAllDynamicObjects()) {
 			o.step(activeState);
 		}
-		input.step();
+		
 		
 		// Conflict Resolution
 		
@@ -58,53 +56,54 @@ public class DynamicGame {
 		return activeState;
 	}
 	
-	
-	
-	/* Player actions, returns false if unable to perform
-	 * Does checks for valid next position
-	 */
+
+	// Player Actions:
+	// 	Movement and attack
+	// false means action can not be made and no changes are made to the state
 	
 	public boolean makeAction(Action a) {
-		GameObject curr = activeState.getPlayer();
-		
-		if (curr == null) return false;
-		Coord pos = curr.getCoord();
-		
-		// Two things to consider, if the move is valid and if 
-		// we need to flip the image
+		Coord curr = activeState.findPlayer();
+		Player p = (Player) activeState.getPlayer();
+		Coord toMove = null;
 		switch (a) {
 		case ATTACK:
-			System.out.print("USER INPUT: ATTACK\n");
+			p.selectLight();
+			p.setActionState(ActionState.ATTACK);
+			System.out.print("USER INPUT: LIGHT ATTACK\n");
 			break;
-		case MOVE_DOWN:
-			Coord down = new Coord(pos.getX(), pos.getY() - 1);
-			if (activeState.isValid(down) == false) return false;
-			activeState.movePlayer(down);
+		case SPECIAL:
+			p.selectSpecial();
+			p.setActionState(ActionState.ATTACK);
+			System.out.print("USER INPUT: HEAVY ATTACK\n");
+			break;
+		case MOVE_SOUTH:
+			toMove = (Direction.SOUTH).moveInDirection(curr);
+			if (p.canChangePosition() && !activeState.isBlocked(toMove)) {
+				activeState.movePlayer(toMove);
+			}
 			System.out.print("USER INPUT: DOWN\n");
 			break;
-		case MOVE_UP:
-			Coord up = new Coord(pos.getX(), pos.getY() + 1);
-			if (activeState.isValid(up) == false) return false;
-			activeState.movePlayer(up);
-			System.out.print("USER INPUT: UP\n");
-			break;
-		case MOVE_LEFT:
-			Coord left = new Coord(pos.getX() - 1, pos.getY());
-			if (activeState.isValid(left) == false) return false;
-			activeState.movePlayer(left);
-			if (last_move == 2) curr.getTexture().flip(true, false);			// flip(boolean x-axis flip, boolean y-axis flip)
-			last_move = 1;
-			
+		case MOVE_WEST:
+			toMove = (Direction.WEST).moveInDirection(curr);
+			if (p.canChangePosition() && !activeState.isBlocked(toMove)) {
+				activeState.movePlayer(toMove);
+			}
 			System.out.print("USER INPUT: LEFT\n");
 			break;
-		case MOVE_RIGHT:
-			Coord right = new Coord(pos.getX() + 1, pos.getY());
-			if (activeState.isValid(right) == false) return false;
-			activeState.movePlayer(right);
-			
-			if (last_move == 1) curr.getTexture().flip(true, false);			// flip(boolean x-axis flip, boolean y-axis flip)
-			last_move = 2;
+		case MOVE_EAST:
+			toMove = (Direction.EAST).moveInDirection(curr);
+			if (p.canChangePosition() && !activeState.isBlocked(toMove)) {
+				activeState.movePlayer(toMove);
+			}
 			System.out.print("USER INPUT: RIGHT\n");
+			break;
+		case MOVE_NORTH:
+			toMove = (Direction.NORTH).moveInDirection(curr);
+			if (p.canChangePosition() && !activeState.isBlocked(toMove)) {
+				activeState.movePlayer(toMove);
+			}
+			System.out.print("USER INPUT: UP\n");
+
 			break;
 		default:
 			break;

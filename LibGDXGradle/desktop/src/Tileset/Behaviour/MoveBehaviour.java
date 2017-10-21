@@ -1,5 +1,6 @@
 package Tileset.Behaviour;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -7,9 +8,14 @@ import java.util.PriorityQueue;
 
 import State.Coord;
 import State.State;
-import Tileset.GameObject.ObjectType;
 
-public class MoveBehaviour {
+public class MoveBehaviour implements Serializable  {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 595534154089190386L;
+
+
 	// Default behaviour returns current position
 	// 		Behaviours should override this
 	public Coord nextStep(State s, Coord currentPos) {
@@ -34,26 +40,39 @@ public class MoveBehaviour {
 	
 	
 	// gets adjacent coordinates restricted by walls
-	public List<Coord> getAdjacent(Coord c, State s, ObjectType type) {
+	public List<Coord> getAdjacent(Coord c, State s) {
 		List<Coord> adj = new LinkedList<Coord>();
-//		TODO: Oscar!
-//		if (!s.isBlocked(new Coord(c.getX() + 1, c.getY()), type))
-//			adj.add(new Coord(c.getX() + 1, c.getY()));
-//		if (!s.isBlocked(new Coord(c.getX() - 1, c.getY()), type))
-//			adj.add(new Coord(c.getX() - 1, c.getY()));
-//		if (!s.isBlocked(new Coord(c.getX(), c.getY() + 1), type))
-//			adj.add(new Coord(c.getX(), c.getY() + 1));
-//		if (!s.isBlocked(new Coord(c.getX(), c.getY() - 1), type))
-//			adj.add(new Coord(c.getX(), c.getY() - 1));
+		if (!s.hasWall(new Coord(c.getX() + 1, c.getY())))
+			adj.add(new Coord(c.getX() + 1, c.getY()));
+		if (!s.hasWall(new Coord(c.getX() - 1, c.getY())))
+			adj.add(new Coord(c.getX() - 1, c.getY()));
+		if (!s.hasWall(new Coord(c.getX(), c.getY() + 1)))
+			adj.add(new Coord(c.getX(), c.getY() + 1));
+		if (!s.hasWall(new Coord(c.getX(), c.getY() - 1)))
+			adj.add(new Coord(c.getX(), c.getY() - 1));
 		return adj;
 	}
+	
+	public List<Coord> getAdjacentBlocked(Coord c, State s) {
+		List<Coord> adj = new LinkedList<Coord>();
+		if (!s.isBlocked(new Coord(c.getX() + 1, c.getY())))
+			adj.add(new Coord(c.getX() + 1, c.getY()));
+		if (!s.isBlocked(new Coord(c.getX() - 1, c.getY())))
+			adj.add(new Coord(c.getX() - 1, c.getY()));
+		if (!s.isBlocked(new Coord(c.getX(), c.getY() + 1)))
+			adj.add(new Coord(c.getX(), c.getY() + 1));
+		if (!s.isBlocked(new Coord(c.getX(), c.getY() - 1)))
+			adj.add(new Coord(c.getX(), c.getY() - 1));
+		return adj;
+	}
+	
 	
 	
 	// Astar search finding shortest path from one location to other
 	//		Does not take into account active objects, only whether terrain is passable
 	public List<Coord> findRoute(State s, Coord src, Coord dst) {
 		// SEARCH STATE
-		System.out.print("From " + src.toString() + " to " + dst.toString() + "\n");
+		//System.out.print("From " + src.toString() + " to " + dst.toString() + "\n");
 		
 		
 		class SearchState implements Comparable<SearchState> {
@@ -90,7 +109,7 @@ public class MoveBehaviour {
 			
 			SearchState curr = searchQueue.poll();
 			pred.put(curr.c, curr.p);
-			System.out.print("added: " + curr.c + " h, f: " + curr.h + "," +  curr.f +  " from: " + pred.get(curr.c) + "\n");
+			//System.out.print("added: " + curr.c + " h, f: " + curr.h + "," +  curr.f +  " from: " + pred.get(curr.c) + "\n");
 			if (curr.c.equals(dst)) {
 				// found path, extract from predecessor array
 				List<Coord> path = new LinkedList<Coord>();
@@ -103,11 +122,11 @@ public class MoveBehaviour {
 			
 			seen.put(curr.c, true);
 			
-			for (Coord conn : getAdjacent(curr.c, s, null)) {
+			for (Coord conn : getAdjacent(curr.c, s)) {
 				if (seen.get(conn) != null) {
 					continue;
 				}
-				System.out.print(conn.toString() + " from " + curr.c.toString() + "\n");
+				//System.out.print(conn.toString() + " from " + curr.c.toString() + "\n");
 				SearchState newState  = curr.next(conn, curr.c, dst);
 				
 				searchQueue.add(newState);
