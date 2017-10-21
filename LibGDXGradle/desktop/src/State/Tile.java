@@ -13,7 +13,7 @@ import Tileset.*;
 import Tileset.GameObject.ObjectType;
 
 
-public class Tile extends Group{
+public class Tile extends Group {
 	private final Coord coordinates; 
 	
 	private DynamicObject d_obj;
@@ -130,6 +130,7 @@ public class Tile extends Group{
 		}
 		deleteObject();
 		g_obj = new_object;
+
 		this.addActor(processPath(new_object.getImgPath()), "object", 2);
 	}	
 	
@@ -138,6 +139,7 @@ public class Tile extends Group{
 	 * Object setter for dynamic objects (player, enemy)
 	 * Only 1 GameObject should be allowed at once
 	 */
+
 	public void setDynamicObject(DynamicObject new_d_object) {
 		if (this.hasObject()) {
 			deleteObject();
@@ -172,5 +174,4 @@ public class Tile extends Group{
 		this.d_obj = null;
 		this.g_obj = null;
 	}*/
-	
 }

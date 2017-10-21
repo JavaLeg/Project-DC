@@ -42,12 +42,13 @@ public class GameScreen implements Screen {
 		previewStage = new State(gameViewport);
 
 		lerp = 0.1f;
+		
         g = new DynamicGame();
 		inputProcessor = new GameInputProcessor(g);
-		g.initialise(previewStage, inputProcessor); // input player created state here
+		g.initialise(previewStage); // input player created state here
 		Gdx.input.setInputProcessor(inputProcessor);
 		
-		gameThread = new RunGame(g, 30);
+		gameThread = new RunGame(g, inputProcessor, 150);
 		gameThread.run();
 	}
 
@@ -57,24 +58,26 @@ public class GameScreen implements Screen {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
         // Make sure there is actually a player object
-        Coord centre = g.getState().getPlayer().getCoord();
-        
+        Coord centre = null;
+        if (g.getState().getPlayer() != null) {
+        	centre = g.getState().getPlayer().getCoord();
+        }
+        //System.out.println(centre.toString());
         // Lerp the camera so it looks smooth, so smooth, what a feature
         if (centre != null && camera != null) {
         	Vector3 position = camera.position;
         	// Can change the variable 0.4 (faster means faster camera flicks)
         	position.x += (centre.getX() * 40 - position.x) * lerp * 0.4;
         	position.y += (centre.getY() * 40 - position.y) * lerp * 0.4;
+        	//System.out.println(position.toString());
 	        camera.position.set(position.x, position.y, 0);
 	        camera.update();
         }
         
         previewStage.act();
         previewStage.draw();
-        
-        inputProcessor = new GameInputProcessor(g);
-        Gdx.input.setInputProcessor(inputProcessor);
-        
+
+
 	}
 
 	@Override

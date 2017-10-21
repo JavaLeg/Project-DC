@@ -58,6 +58,4 @@ public class Coord implements Serializable, Cloneable{
 	public String toString() {
 		return "(" + x + "," + y + ")";
 	}
-		
-
 }
