@@ -100,7 +100,8 @@ public class EditorScreen implements Screen {
 			PreviewProcessor pp = new PreviewProcessor(preview_viewport.getCamera());
 
 			
-			InputMultiplexer multiplexer = new InputMultiplexer(editorStage, previewStage, toolbarStage, backProcessor, pp);
+			InputMultiplexer multiplexer = new InputMultiplexer(editorStage, toolbarStage, previewStage, backProcessor, pp);
+			//InputMultiplexer multiplexer = new InputMultiplexer(editorStage, previewStage, toolbarStage, backProcessor, pp);
 			Gdx.input.setInputProcessor(multiplexer);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
