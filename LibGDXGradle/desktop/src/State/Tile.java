@@ -17,7 +17,7 @@ import Tileset.Behaviour.Direction;
 public class Tile extends Group {
 	private final Coord coordinates; 
 	
-	private DynamicObject d_obj;
+	private GameObject d_obj;
 	private GameObject g_obj;
 	
 	
@@ -112,7 +112,7 @@ public class Tile extends Group {
 	public GameObject getObject() {
 		if (this.hasObject()) {
 			if (this.hasActor("object"))
-				return g_obj;
+				return d_obj;
 		}
 		return null;
 	}
@@ -142,17 +142,17 @@ public class Tile extends Group {
 			return;
 		}
 		deleteObject();
-		g_obj = new_object;
+		d_obj = new_object;
 		
 		this.addActor(processPath(new_object.getImgPath()), "object", 2);
 	}	
 	
 	public void moveObjectTo(Tile from) {
 		Actor a = from.getActor("object");
-		this.g_obj = from.g_obj;
-		this.g_obj.setCoord(this.getCoord());
+		this.d_obj = from.d_obj;
+		this.d_obj.setCoord(this.getCoord());
 		this.addActor(a, "object", 2);
-		from.g_obj = null;
+		from.d_obj = null;
 		from.removeActor(a);
 	}
 
@@ -170,7 +170,7 @@ public class Tile extends Group {
 			return;
 		}
 		deleteObject();
-		g_obj = new_d_object;
+		d_obj = new_d_object;
 		this.addActor(processPath(new_d_object.getImgPath()), "object", 2);		
 	}
 	
