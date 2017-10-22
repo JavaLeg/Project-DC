@@ -71,7 +71,7 @@ public class Editor extends Stage {
 	
 	// Map size constraints
 	private final static int MAP_MIN = 10;
-	private final static int MAP_MAX = 50;
+	private final static int MAP_MAX = 1000;
 		
 	/*
 	 * Dimensions: 280 x 480
@@ -851,7 +851,7 @@ public class Editor extends Stage {
 			prevSelected.addAction(Actions.alpha(1));
 		}
 		
-		icon.addAction(Actions.forever(Actions.sequence(Actions.alpha(0, 0.3f),Actions.alpha(1, 0.3f))));
+		icon.addAction(Actions.forever(Actions.sequence(Actions.alpha(0, 0.3f),Actions.alpha(1, 0.6f))));
 		
 		prevSelected = icon;
 	}
