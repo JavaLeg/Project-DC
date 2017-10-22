@@ -154,6 +154,7 @@ public class DynamicGame {
 		default:
 			break;
 		}
+		p.setHp(p.getHp() - 1);
 		activeState.getTile(curr).flipObject(p.facingRight(), p.getImgPath());
 		return false;
 	}

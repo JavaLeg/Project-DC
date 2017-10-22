@@ -2,9 +2,24 @@ package Interface.Screens;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.Pixmap;
+import com.badlogic.gdx.graphics.Pixmap.Format;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.graphics.g2d.NinePatch;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import com.badlogic.gdx.scenes.scene2d.ui.ProgressBar;
+import com.badlogic.gdx.scenes.scene2d.ui.ProgressBar.ProgressBarStyle;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.engine.desktop.DCGame;
@@ -14,6 +29,7 @@ import Interface.GameInputProcessor;
 import State.DynamicGame;
 import State.RunGame;
 import State.State;
+import Tileset.DynamicObject;
 import State.Coord;
 
 public class GameScreen implements Screen {
@@ -25,6 +41,10 @@ public class GameScreen implements Screen {
 	private DynamicGame g;
 	private GameInputProcessor inputProcessor;
     private float lerp;
+    private Image green_bar;
+    private Image red_bar;
+/*    private ProgressBar bar;
+    private ProgressBarStyle barStyle;*/
 	
 	public GameScreen(DCGame g) {
 		this.game = g;
@@ -56,11 +76,11 @@ public class GameScreen implements Screen {
 	public void render(float delta) {
 		Gdx.gl.glClearColor(8/255f, 23/255f, 30/255f, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-
         // Make sure there is actually a player object
         Coord centre = null;
         if (g.getState().getPlayer() != null) {
         	centre = g.getState().getPlayer().getCoord();
+        	if (green_bar == null) HealthBarSetup();
         }
         //System.out.println(centre.toString());
         // Lerp the camera so it looks smooth, so smooth, what a feature
@@ -69,15 +89,71 @@ public class GameScreen implements Screen {
         	// Can change the variable 0.4 (faster means faster camera flicks)
         	position.x += (centre.getX() * 40 - position.x) * lerp * 0.4;
         	position.y += (centre.getY() * 40 - position.y) * lerp * 0.4;
-        	//System.out.println(position.toString());
 	        camera.position.set(position.x, position.y, 0);
+	        updateBar(centre);
 	        camera.update();
         }
-        
         previewStage.act();
         previewStage.draw();
-
-
+	}
+	
+/*	public void HealthBarSetup() {
+		//
+		Skin skin = new Skin();
+		Pixmap pixmap = new Pixmap(40, 5, Format.RGBA8888);
+		pixmap.setColor(Color.WHITE);
+		pixmap.fill();
+		skin.add("white", new Texture(pixmap));
+		
+		TextureRegion green_bar = new TextureRegion(new Texture(Gdx.files.internal("green_bar.jpg")));
+		green_bar.setRegionHeight(5);
+		green_bar.setRegionWidth(40);
+		TextureRegionDrawable textureBar = new TextureRegionDrawable(green_bar);
+		
+        barStyle = new ProgressBarStyle(skin.newDrawable("white", Color.DARK_GRAY), textureBar);
+        barStyle.knobBefore = barStyle.knob;
+		bar = new ProgressBar(0, 5, 1.0f, false, barStyle);
+		
+		if (g.getState().hasPlayer()) {
+			Coord play = g.getState().getPlayer().getCoord();
+			bar.setPosition(play.getX() * 40, play.getY() * 40 + 35);
+			bar.setHeight(5);
+			bar.setWidth(20);
+			previewStage.addActor(bar);
+		}
+		//
+	}*/
+	
+	public void updateBar(Coord centre) {
+        green_bar.setPosition(centre.getX() * 40, centre.getY() * 40 + 35);		// Update position of hp bar
+        red_bar.setPosition(centre.getX() * 40, centre.getY() * 40 + 35);		// Update position of hp bar
+        
+        DynamicObject play = g.getState().getPlayer();
+        if (play != null && play.getHp() > 0) {
+        	int width = (int)(play.getHp() / play.getMaxHp() * 40);
+        	green_bar.setWidth(width);
+        }
+        
+        
+	}
+	
+	
+	public void HealthBarSetup() {
+		if (g.getState().hasPlayer()) {
+			Coord play = g.getState().getPlayer().getCoord();
+			TextureRegion green = new TextureRegion(new Texture(Gdx.files.internal("green_bar.jpg")));
+			green_bar = new Image(green);
+			green_bar.setSize(40, 5);
+			green_bar.setPosition(play.getX() * 40, play.getY() * 40 + 35);
+			
+			TextureRegion red = new TextureRegion(new Texture(Gdx.files.internal("red_bar.jpg")));
+			red_bar = new Image(red);
+			red_bar.setSize(40, 5);
+			red_bar.setPosition(play.getX() * 40, play.getY() * 40 + 35);
+			
+			previewStage.addActor(red_bar);
+			previewStage.addActor(green_bar);
+		}
 	}
 	
 	public void showAttack() {

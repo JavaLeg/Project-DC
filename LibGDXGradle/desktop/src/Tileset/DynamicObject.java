@@ -46,6 +46,7 @@ public class DynamicObject extends GameObject implements Cloneable {
 	public DynamicObject(ObjectType type, Coord position, double hp, double damage, String img_path) {
 		super(type, position, img_path);
 		this.hp = hp;
+		this.maxHp = hp;
 		this.contactDamage = damage;
 		this.iFrames = 0;
 		statuses = new HashMap<Status, Integer>();
@@ -69,12 +70,22 @@ public class DynamicObject extends GameObject implements Cloneable {
 		statuses = new HashMap<Status, Integer>();
 		facing = Direction.NORTH;
 		state = ActionState.MOVE;
+		this.maxHp = -1;
+		this.hp = -1;
 	}
 	
 	public double getHp() {
 		return hp;
 	}
 
+	public double getMaxHp() {
+		return this.maxHp;
+	}
+	
+	public void setMaxHp(double hp) {
+		this.maxHp = hp;
+	}
+	
 	public void setHp(double hp) {
 		this.hp = hp;
 	}
