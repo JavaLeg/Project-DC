@@ -17,7 +17,9 @@ public class Player extends DynamicObject implements Cloneable {
 	private Attack selected;
 	
 	private int attackCooldown;
-
+	
+	private Direction dir = Direction.EAST;
+	private boolean right;							// What direction we face (moving up and down)
 	
 	public Player(Coord position,  double hp, double damage, Attack light, Attack special, String img_path) {
 		// type, width, height, coords, hp, damage
@@ -25,6 +27,7 @@ public class Player extends DynamicObject implements Cloneable {
 		this.light = light;
 		this.special = special;
 		this.selected = light; 
+		this.right = true;
 	}
 	
 	public Player(double hp, double damage, Attack light, Attack special, String img_path) {
@@ -33,6 +36,7 @@ public class Player extends DynamicObject implements Cloneable {
 		this.light = light;
 		this.special = special;
 		this.selected = light; 
+		this.right = true;
 	}
 	
 	
@@ -69,6 +73,33 @@ public class Player extends DynamicObject implements Cloneable {
 		selected = light;
 	}
 	
+	public void setDirection(Direction dir) {
+		this.dir = dir;
+		if (dir.equals(Direction.EAST)) {
+			this.right = true;
+		} else if (dir.equals(Direction.WEST)) {
+			this.right = false;
+		}
+	}
+	
+	/*
+	 * Returns if the player is facing right
+	 */
+	public boolean facingRight() {
+		return this.right;
+	}
+	
+	/*
+	 * Sets the player to face right
+	 */
+	public void setFacingRight() {
+		this.right = true;
+	}
+	
+	public Direction getDirection(){
+		return this.dir;
+	}
+	
 	@Override
 	public Attack getAttack() {
 		return selected;
@@ -85,4 +116,5 @@ public class Player extends DynamicObject implements Cloneable {
 	public void destroy(State s) {
 		// does not destroy self
 	}
+	
 }
