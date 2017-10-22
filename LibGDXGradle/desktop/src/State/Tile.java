@@ -150,7 +150,7 @@ public class Tile extends Group {
 	public void moveObjectTo(Tile from) {
 		Actor a = from.getActor("object");
 		this.d_obj = from.d_obj;
-		this.d_obj.setCoord(this.getCoord().clone());
+		this.d_obj.setCoord(this.getCoord());
 		this.addActor(a, "object", 2);
 		from.d_obj = null;
 		from.removeActor(a);
