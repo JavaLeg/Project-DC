@@ -134,7 +134,7 @@ public class State extends Stage {
 		
 		GameObject obj = null;
 
-		if(type == ObjectType.ENEMY || type == ObjectType.ITEM || type == ObjectType.PLAYER) {
+		if(type == ObjectType.ENEMY || type == ObjectType.ITEM || type == ObjectType.PLAYER || type == ObjectType.WAYPOINT) {
 			obj = cur_d_object.clone();
 			obj.setCoord(tile.getCoord());
 			// dynamicList.add((DynamicObject) obj);
@@ -222,8 +222,8 @@ public class State extends Stage {
 		case PLAYER:
 			// Delete the old player and the flag if we're overriding it
 			if (this.hasPlayer() == true) this.deletePlayer(player.getCoord());
-//			if (cur.getObjectType() == ObjectType.ITEM
-//					&& cur.getObject().getName() == "win") win = null;
+//			if (cur.getObjectType() == ObjectType.WAYPOINT)
+//					win = null;
 			
 			newObject.setCoord(coord);
 			player = (Player) newObject;
@@ -232,7 +232,8 @@ public class State extends Stage {
 			break;
 		case ENEMY:
 		case ITEM:
-			
+//			if (cur.getObjectType() == ObjectType.WAYPOINT)
+//				win = null;
 			newObject.setCoord(coord);
 //			String name = newObject.getName();
 			
@@ -255,9 +256,10 @@ public class State extends Stage {
 			cur.setFloor(newObject);
 			break;
 		case WAYPOINT:
-			if (cur.getObjectType() == ObjectType.PLAYER) player = null;
+			if(cur.getObjectType() == ObjectType.PLAYER) player = null;
+			//if(cur.getObjectType() == ObjectType.ENEMY || cur.getObjectType() == ObjectType.ITEM) cur_d_object = null;
 			
-			staticList.add(newObject);
+			dynamicList.add((DynamicObject) newObject);
 			newObject.setCoord(coord);
 			cur.setObject(newObject);
 			win = (DynamicObject) newObject;
@@ -523,7 +525,7 @@ public class State extends Stage {
 				DynamicObject d_obj = null;
 				
 				// type will only show the top-most layer
-				if(type == ObjectType.ENEMY || type == ObjectType.PLAYER || type == ObjectType.ITEM) {
+				if(type == ObjectType.ENEMY || type == ObjectType.PLAYER || type == ObjectType.ITEM || type == ObjectType.WAYPOINT) {
 					setObject(enc_tile.getDynamic(), new Coord(i, j));
 				} 
 				
