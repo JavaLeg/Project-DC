@@ -126,7 +126,7 @@ public class GameScreen implements Screen {
         	green_bar.setWidth(width);
         } else if (play != null && play.getHp() <= 0) {
         	((Game)Gdx.app.getApplicationListener()).setScreen(new EndScreen(game));
-        	this.dispose();
+        	//this.dispose();
         }
         
         
