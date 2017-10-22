@@ -6,6 +6,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.PriorityQueue;
 
+import Interface.Stages.Selections.BehaviourSelection;
 import State.Coord;
 import State.State;
 
@@ -14,7 +15,7 @@ public class MoveBehaviour implements Serializable  {
 	 * 
 	 */
 	private static final long serialVersionUID = 595534154089190386L;
-
+	private BehaviourSelection selection;
 
 	// Default behaviour returns current position
 	// 		Behaviours should override this
@@ -22,6 +23,14 @@ public class MoveBehaviour implements Serializable  {
 		return currentPos;
 	}
 	
+	public BehaviourSelection getSelection() {
+		return selection;
+	}
+	
+	public void setSelection(BehaviourSelection selection) {
+		this.selection = selection;
+	}
+
 	
 	
 	// Path finding helper functions:
