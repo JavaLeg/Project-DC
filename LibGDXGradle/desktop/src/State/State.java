@@ -112,6 +112,7 @@ public class State extends Stage {
 	// Fill grid with selected floor
 	// TODO
 	public void fillGrid() {
+		if (!selection.equals(ObjectType.FLOOR)) return;
 		for(Tile tile : tileList) {
 			setTile(tile, selection);
 		}
