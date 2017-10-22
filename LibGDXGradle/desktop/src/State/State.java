@@ -233,7 +233,7 @@ public class State extends Stage {
 				player.setMaxHp(10);
 			}
 			
-			cur.setObject(player);
+			cur.setDynamicObject(player);
 			break;
 		case ENEMY:
 		case ITEM:
@@ -334,13 +334,11 @@ public class State extends Stage {
 		this.tileList.get(coord.getX()* colActors  + coord.getY()).deleteObject();
 	}
 	
-	/*
-	 * TODO, does this need a clone?
-	 */
+
 	public void moveObject(Coord from, Coord to) {
-		GameObject temp = this.getObject(from);
-		this.deleteObject(from);
-		this.setObject(temp, to);
+		//System.out.println("From: " + from.toString() + "To: " + to.toString());
+		Tile t = getTile(to);
+		t.moveObjectTo(getTile(from));
 	}
 	
 	
@@ -395,22 +393,19 @@ public class State extends Stage {
 	 * Just delete the tile object
 	 */
 	public void movePlayer(Coord to) {
-		if (player == null) return;				// Only move existent players	
-		Coord pos = player.getCoord();
-		this.tileList.get(pos.getX() * colActors + pos.getY()).deleteObject();
-		this.setObject(player, to);
+		if (player == null) return;		
 		
-		// Purely for aesthetic purposes
-		Tile new_tile = this.tileList.get(to.getX() * colActors + to.getY());
-		new_tile.flipObject(player.facingRight(), player.getImgPath());
+		moveObject(player.getCoord(), to);
+		
+		//Tile new_tile = this.tileList.get(to.getX() * colActors + to.getY());
+		//new_tile.flipObject(player.facingRight(), player.getImgPath());
 	}
-	
-	
 	//************************//
 	//******* TERRAIN ********//
 	//************************//
 	
 	public boolean hasWall(Coord pos) {
+		if ( !isValid(pos) ) return true;	
 		GameObject g = getTile(pos).getObject();
 		return (g != null) && (g.getType() == ObjectType.WALL);
 	}
@@ -420,10 +415,11 @@ public class State extends Stage {
 	 * Also checks win condition
 	 */
 	public boolean isBlocked(Coord pos) {
-		if (win != null && pos.equals(win.getCoord())) {		// If winnable
-			System.out.println("Win!");
-			return false;
-		}
+		//if (win != null && pos.equals(win.getCoord())) {		// If winnable
+		//	System.out.println("Win!");
+		//	return false;
+		//}
+		if ( !isValid(pos) ) return true;	
 		return (getTile(pos).hasObject());
 	}
 	
