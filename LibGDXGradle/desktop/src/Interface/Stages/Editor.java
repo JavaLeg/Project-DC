@@ -496,7 +496,7 @@ public class Editor extends Stage {
 						// Right now all attributes initialized as null (Changed through edit)
 						
 						Attack enemyAttack = new Attack(Arrays.asList(new Coord(0,1)), 
-								5, Arrays.asList(ObjectType.PLAYER), 15, 180);
+								2, Arrays.asList(ObjectType.PLAYER), 15, 180);
 						Enemy obj = new Enemy(10, 2, 60, new MovePathToPoint(true), enemyAttack, filePath);
 						// double hp, double damage, int moveRate, MoveBehaviour b, String img_path
 						selected_Dyn = obj;
