@@ -2,7 +2,7 @@ package Tileset;
 
 import java.io.Serializable;
 
-public class Waypoint extends GameObject implements Serializable{
+public class Waypoint extends DynamicObject implements Serializable{
 
 	/**
 	 * 
@@ -11,6 +11,10 @@ public class Waypoint extends GameObject implements Serializable{
 
 	public Waypoint(ObjectType type, String imgPath) {
 		super(type, imgPath);
+	}
+	
+	public Waypoint(String imgPath) {
+		super(ObjectType.WAYPOINT, imgPath);
 	}
 	
 	public Waypoint clone() {

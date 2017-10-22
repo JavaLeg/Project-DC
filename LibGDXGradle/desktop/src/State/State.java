@@ -258,7 +258,7 @@ public class State extends Stage {
 			cur.setFloor(newObject);
 			break;
 		case WAYPOINT:
-			staticList.add(newObject);
+			dynamicList.add((DynamicObject) newObject);
 			newObject.setCoord(coord);
 			cur.setObject(newObject);
 			break;
@@ -527,7 +527,7 @@ public class State extends Stage {
 				DynamicObject d_obj = null;
 				
 				// type will only show the top-most layer
-				if(type == ObjectType.ENEMY || type == ObjectType.PLAYER || type == ObjectType.ITEM) {
+				if(type == ObjectType.ENEMY || type == ObjectType.PLAYER || type == ObjectType.ITEM || type == ObjectType.WAYPOINT) {
 					setObject(enc_tile.getDynamic(), new Coord(i, j));
 				} 
 				

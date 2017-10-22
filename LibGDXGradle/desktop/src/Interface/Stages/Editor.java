@@ -38,6 +38,7 @@ import Tileset.GameObject;
 import Tileset.GameObject.ObjectType;
 import Tileset.Item;
 import Tileset.Player;
+import Tileset.Waypoint;
 import Tileset.Behaviour.Attack;
 import Tileset.Behaviour.MoveRandom;
 
@@ -528,7 +529,7 @@ public class Editor extends Stage {
 			        public void clicked(InputEvent event, float x, float y) {
 						System.out.println("Selected - " + fileName);
 						
-						GameObject obj = new GameObject(cur, filePath);
+						Waypoint obj = new Waypoint(filePath);
 						related.setStaticSelection(obj);
 			        }
 				});
