@@ -13,6 +13,7 @@ import Tileset.*;
 import Tileset.GameObject.ObjectType;
 import Interface.EditorModel;
 import Interface.TileTuple;
+import Interface.Stages.Editor;
 import Interface.Stages.TableTuple;
 
 
@@ -24,7 +25,7 @@ public class State extends Stage {
 	private int rowActors;
 	private int colActors;
 
-
+	private Editor related;
 /**			
  * 			{PLAYER}{ENEMY}{ITEM} ------------ Uppermost layer
  * 				{FLOOR} {WALL}    ------------ Static objects
@@ -416,7 +417,6 @@ public class State extends Stage {
 	 */
 	public boolean isBlocked(Coord pos) {
 		if (win != null && pos.equals(win.getCoord())) {		// If winnable
-			System.out.println("Win!");
 			return false;
 		}
 		return (getTile(pos).hasObject());

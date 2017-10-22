@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 
+import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;
@@ -26,9 +27,11 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextTooltip;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.viewport.Viewport;
+import com.engine.desktop.DCGame;
 import com.engine.desktop.SaveSys;
 
 import Interface.EditorModel;
+import Interface.Screens.MainMenuScreen;
 import Interface.Stages.Selections.ToolbarSelection;
 import State.Coord;
 import State.State;
@@ -64,6 +67,8 @@ public class Editor extends Stage {
 	private String path;
 	private SaveSys saver;
 	
+	private DCGame g;
+	
 	// Map size constraints
 	private final static int MAP_MIN = 10;
 	private final static int MAP_MAX = 50;
@@ -72,7 +77,7 @@ public class Editor extends Stage {
 	 * Dimensions: 280 x 480
 	 * Stage takes in a viewport and a skin
 	 */
-	public Editor(Viewport v, Skin skin) throws IOException {
+	public Editor(Viewport v, Skin skin, DCGame g) throws IOException {
 		super(v);
 		this.skin = skin;
 		this.titlePos = new TableTuple(50, 450);
@@ -83,6 +88,7 @@ public class Editor extends Stage {
 		this.tableMap = new HashMap<ToolbarSelection, Table>();
 		this.saver = new SaveSys();
 		this.PAD = 6;
+		this.g = g;
 		
 		initialise();
 		update(ToolbarSelection.FLOOR);
@@ -820,6 +826,12 @@ public class Editor extends Stage {
 	
 	public void setDependence(State s) {
 		this.related = s;
+	}
+	
+	
+	public void endGame() {
+		((Game)Gdx.app.getApplicationListener()).setScreen(new MainMenuScreen(g));
+		this.dispose();
 	}
 	
 }
