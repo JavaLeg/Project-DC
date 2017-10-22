@@ -96,9 +96,9 @@ public class DynamicGame {
 			Attack att = new Attack(p.getDirection() , coord);
 			activeState.addActor(att);
 			activeState.attackObject(coord);
-			
+			p.setActionState(ActionState.ATTACK);
 //			p.selectLight();
-//			p.setActionState(ActionState.ATTACK);
+//			
 			System.out.print("USER INPUT: LIGHT ATTACK\n");
 			break;
 		case SPECIAL:
