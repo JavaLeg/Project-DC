@@ -95,7 +95,6 @@ public class Editor extends Stage {
 		this.tableMap = new HashMap<ToolbarSelection, Table>();
 		this.saver = new SaveSys();
 		this.PAD = 6;
-
 		
 		initialise();
 		update(ToolbarSelection.FLOOR);
@@ -478,7 +477,7 @@ public class Editor extends Stage {
 						Attack heavy = new Attack(Arrays.asList(new Coord(0,1), new Coord(1,1), new Coord(-1,1)), 
 								5, Arrays.asList(ObjectType.ENEMY), 45 , 10);
 						
-						Player obj = new Player(10, 10, light, heavy, filePath);
+						Player obj = new Player(100, 10, light, heavy, filePath);
 						//System.out.print(getActionState());
 						selected_Dyn = obj;
 						related.setDynamicSelection(obj);
@@ -497,7 +496,7 @@ public class Editor extends Stage {
 						
 						Attack enemyAttack = new Attack(Arrays.asList(new Coord(0,1)), 
 								2, Arrays.asList(ObjectType.PLAYER), 15, 180);
-						Enemy obj = new Enemy(10, 2, 60, new MovePathToPoint(true), enemyAttack, filePath);
+						Enemy obj = new Enemy(10, 2, 30, new MovePathToPoint(true), enemyAttack, filePath);
 						// double hp, double damage, int moveRate, MoveBehaviour b, String img_path
 						selected_Dyn = obj;
 						related.setDynamicSelection(obj);

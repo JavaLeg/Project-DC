@@ -2,6 +2,7 @@ package Tileset;
 
 
 import java.io.Serializable;
+import java.util.Random;
 
 import Interface.Stages.Selections.BehaviourSelection;
 import State.Coord;
@@ -33,9 +34,9 @@ public class Enemy extends DynamicObject implements Cloneable {
 	public Enemy(Coord position, double hp, double damage, int moveRate, MoveBehaviour b, Attack attack, String img_path) {
 		super(ObjectType.ENEMY, position,  hp, damage, img_path);
 		this.moveRate = moveRate;
-		this.sinceLastMove = 0;
+		this.sinceLastMove = new Random().nextInt((int) moveRate/5);
 		this.attackTime = 0;
-		this.sinceLastAttack = 0;
+		this.sinceLastAttack = new Random().nextInt((int) attack.getAttackCooldown()/5);;
 		this.moveBehaviour = b;
 		this.attack = attack;
 	}
@@ -44,16 +45,16 @@ public class Enemy extends DynamicObject implements Cloneable {
 	public Enemy(double hp, double damage, int moveRate, MoveBehaviour b, String img_path) {
 		super(ObjectType.ENEMY, hp, damage, img_path);
 		this.moveRate = moveRate;
-		this.sinceLastMove = 0;
-		this.sinceLastAttack = 0;
+		this.sinceLastMove = new Random().nextInt((int) moveRate/5);;
+		this.sinceLastAttack = new Random().nextInt((int) attack.getAttackCooldown()/5);;
 		this.moveBehaviour = b;
 	}
 	
 	public Enemy(double hp, double damage, int moveRate, MoveBehaviour b, Attack attack, String img_path) {
 		super(ObjectType.ENEMY, hp, damage, img_path);
 		this.moveRate = moveRate;
-		this.sinceLastMove = 0;
-		this.sinceLastAttack = 0;
+		this.sinceLastMove = new Random().nextInt((int) moveRate/5);;
+		this.sinceLastAttack = new Random().nextInt((int) attack.getAttackCooldown()/5);;
 		this.moveBehaviour = b;
 		this.attack = attack;
 	}
@@ -117,7 +118,7 @@ public class Enemy extends DynamicObject implements Cloneable {
 					}
 				}
 				
-				this.setLastMove(0);
+				this.sinceLastMove = new Random().nextInt((int) moveRate/5);
 			} else {
 				sinceLastMove++;
 			}
@@ -137,7 +138,7 @@ public class Enemy extends DynamicObject implements Cloneable {
 					setActionState(ActionState.ATTACK);
 					//System.out.print("Switched to Attack.\n");
 					attackTime = attack.getAttackSpeed();
-					sinceLastAttack = 0;
+					sinceLastAttack = new Random().nextInt((int) attack.getAttackCooldown()/5);
 				} else {
 					sinceLastAttack++;
 				}

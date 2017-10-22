@@ -1,6 +1,5 @@
 package Interface.Screens;
 
-import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
@@ -124,9 +123,6 @@ public class GameScreen implements Screen {
         if (play != null && play.getHp() > 0) {
         	int width = (int)(play.getHp() / play.getMaxHp() * 40);
         	green_bar.setWidth(width);
-        } else if (play != null && play.getHp() <= 0) {
-        	((Game)Gdx.app.getApplicationListener()).setScreen(new EndScreen(game));
-        	//this.dispose();
         }
         
         
