@@ -77,7 +77,7 @@ public class GameScreen implements Screen {
                 return false;
             }
         };
-		InputMultiplexer multiplexer = new InputMultiplexer(previewStage, backProcessor);
+		InputMultiplexer multiplexer = new InputMultiplexer(previewStage, backProcessor, inputProcessor);
 		Gdx.input.setInputProcessor(multiplexer);
 		isRunning = true;
 		stepRate = 60;
