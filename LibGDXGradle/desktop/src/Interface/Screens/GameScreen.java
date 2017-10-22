@@ -58,7 +58,7 @@ public class GameScreen implements Screen {
 		//gameThread.create();
 		//gameThread.run();
 		isRunning = true;
-		stepRate = 30;
+		stepRate = 60;
 	}
 
 	@Override

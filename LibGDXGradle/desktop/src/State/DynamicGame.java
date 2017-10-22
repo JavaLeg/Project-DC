@@ -111,11 +111,67 @@ public class DynamicGame {
 				p.setActionState(ActionState.ATTACK);
 				//activeState.attackObject(coord, p.getAttack());
 			}
-			
-			
-//			
-			System.out.print("USER INPUT: LIGHT ATTACK\n");
 			break;
+			
+		case ATTACK_SOUTH:
+			
+			if (p.canAttack()) {
+				p.setFacing(Direction.SOUTH);
+				Coord coord = p.getFacing().moveInDirection(curr);
+				playerAttack.add(coord,  p.getFacing());
+				//AttackAnimation att = new AttackAnimation(p.getDirection() , coord);
+				activeState.addActor(playerAttack);
+				p.selectLight();
+				p.setActionState(ActionState.ATTACK);
+				//activeState.attackObject(coord, p.getAttack());
+			}
+			
+			break;
+		case ATTACK_NORTH:
+			
+			if (p.canAttack()) {
+				p.setFacing(Direction.NORTH);
+				Coord coord = p.getFacing().moveInDirection(curr);
+				playerAttack.add(coord,  p.getFacing());
+				//AttackAnimation att = new AttackAnimation(p.getDirection() , coord);
+				activeState.addActor(playerAttack);
+				p.selectLight();
+				p.setActionState(ActionState.ATTACK);
+				//activeState.attackObject(coord, p.getAttack());
+			}
+			
+			break;
+			
+		case ATTACK_EAST:
+			
+			if (p.canAttack()) {
+				p.setFacing(Direction.EAST);
+				Coord coord = p.getFacing().moveInDirection(curr);
+				playerAttack.add(coord,  p.getFacing());
+				//AttackAnimation att = new AttackAnimation(p.getDirection() , coord);
+				activeState.addActor(playerAttack);
+				p.selectLight();
+				p.setActionState(ActionState.ATTACK);
+				//activeState.attackObject(coord, p.getAttack());
+			}
+			
+			break;
+			
+		case ATTACK_WEST:
+			
+			if (p.canAttack()) {
+				p.setFacing(Direction.WEST);
+				Coord coord = p.getFacing().moveInDirection(curr);
+				playerAttack.add(coord,  p.getFacing());
+				//AttackAnimation att = new AttackAnimation(p.getDirection() , coord);
+				activeState.addActor(playerAttack);
+				p.selectLight();
+				p.setActionState(ActionState.ATTACK);
+				//activeState.attackObject(coord, p.getAttack());
+			}
+			
+			break;	
+			
 		case SPECIAL:
 //			p.selectSpecial();
 //			p.setActionState(ActionState.ATTACK);

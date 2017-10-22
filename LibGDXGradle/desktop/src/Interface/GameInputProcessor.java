@@ -39,20 +39,32 @@ public class GameInputProcessor implements InputProcessor {
 		
 		// PLAYER MOVEMENT
 		case Keys.LEFT:
-		case Keys.A:
 			toMake = Action.MOVE_WEST;
 			break;
 		case Keys.RIGHT:
-		case Keys.D:	
+			
 			toMake = Action.MOVE_EAST;
 			break;
 		case Keys.UP:
-		case Keys.W:
+		
 			toMake = Action.MOVE_NORTH;
 			break;
 		case Keys.DOWN:
-		case Keys.S:
+		
 			toMake = Action.MOVE_SOUTH;
+			break;
+			
+		case Keys.A:	
+			toMake = Action.ATTACK_WEST;
+			break;
+		case Keys.D:
+			toMake = Action.ATTACK_EAST;
+			break;
+		case Keys.W:
+			toMake = Action.ATTACK_NORTH;
+			break;
+		case Keys.S:
+			toMake = Action.ATTACK_SOUTH;
 			break;
 			
 		// PLAYER SPECIAL/ATTACK

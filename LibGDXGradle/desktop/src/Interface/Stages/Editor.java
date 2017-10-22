@@ -44,6 +44,7 @@ import Tileset.Item;
 import Tileset.Player;
 import Tileset.Waypoint;
 import Tileset.Behaviour.Attack;
+import Tileset.Behaviour.MovePathToPoint;
 import Tileset.Behaviour.MoveRandom;
 
 /*
@@ -471,7 +472,7 @@ public class Editor extends Stage {
 						
 						// DEFAULTS FOR ATTACKS
 						Attack light = new Attack(Arrays.asList(new Coord(0,1)), 
-								5, Arrays.asList(ObjectType.ENEMY), 60 , 10);
+								5, Arrays.asList(ObjectType.ENEMY), 15 , 10);
 						Attack heavy = new Attack(Arrays.asList(new Coord(0,1), new Coord(1,1), new Coord(-1,1)), 
 								5, Arrays.asList(ObjectType.ENEMY), 45 , 10);
 						
@@ -491,7 +492,10 @@ public class Editor extends Stage {
 						System.out.println("Selected - " + fileName);
 						
 						// Right now all attributes initialized as null (Changed through edit)
-						Enemy obj = new Enemy(10, 2, 30, new MoveRandom(), filePath);
+						
+						Attack enemyAttack = new Attack(Arrays.asList(new Coord(0,1)), 
+								5, Arrays.asList(ObjectType.PLAYER), 15, 180);
+						Enemy obj = new Enemy(10, 2, 60, new MovePathToPoint(true), enemyAttack, filePath);
 						// double hp, double damage, int moveRate, MoveBehaviour b, String img_path
 						selected_Dyn = obj;
 						related.setDynamicSelection(obj);

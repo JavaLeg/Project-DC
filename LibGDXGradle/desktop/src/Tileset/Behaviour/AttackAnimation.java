@@ -32,7 +32,7 @@ public class AttackAnimation extends Actor implements Serializable {
 	private Animation<Sprite> animation;
 	private Direction dir;
 	
-	private enum Type {
+	public enum AttackType {
 		ONE, TWO, THREE, FOUR
 	}
 
@@ -42,7 +42,16 @@ public class AttackAnimation extends Actor implements Serializable {
 		// load the attack image
 		this.coord = new Coord(0,0);
 		this.dir = Direction.EAST;
-		this.loadImage(Type.ONE);
+		this.loadImage(AttackType.ONE);
+		this.setVisible(false);
+	}
+	
+	public AttackAnimation(AttackType t) {
+		this.animationFrames = new Sprite[NUM_FRAMES];
+		// load the attack image
+		this.coord = new Coord(0,0);
+		this.dir = Direction.EAST;
+		this.loadImage(t);
 		this.setVisible(false);
 	}
 	
@@ -51,7 +60,7 @@ public class AttackAnimation extends Actor implements Serializable {
 		this.coord = coord;
 		this.dir = dir;
 		// load the attack image
-		this.loadImage(Type.ONE);
+		this.loadImage(AttackType.ONE);
 		
 	}
 	
@@ -70,7 +79,7 @@ public class AttackAnimation extends Actor implements Serializable {
 
 	
 
-	private void loadImage(Type type) {
+	private void loadImage(AttackType type) {
 		switch (type) {
 		case ONE:
 			path += "cut_a/";
