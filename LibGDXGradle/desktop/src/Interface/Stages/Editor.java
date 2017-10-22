@@ -367,7 +367,9 @@ public class Editor extends Stage {
 									"Min - " + Integer.toString(MAP_MIN) + " x " + Integer.toString(MAP_MIN) + "\n" +
 									"Max - " + Integer.toString(MAP_MAX) + " x " + Integer.toString(MAP_MAX);
 			
-			ib.addListener(new TextTooltip(description, skin));
+			TextTooltip tip = new TextTooltip(description, skin);
+			tip.setInstant(true);
+			ib.addListener(tip);
 			
 			newTable.add(ib).size(40);
 			
