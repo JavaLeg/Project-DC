@@ -19,7 +19,7 @@ public class DynamicObject extends GameObject implements Cloneable {
 	// Dynamic types are: Enemy, Player, Trap
 	// Not dynamic types are: Terrain, Item
 	public static enum DynamicObjectType {
-		PLAYER, ENEMY, ITEM
+		PLAYER, ENEMY, ITEM, WAYPOINT
 	} 
 	
 	public static enum Status {

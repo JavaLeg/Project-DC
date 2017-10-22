@@ -137,6 +137,7 @@ public class State extends Stage {
 		GameObject obj = null;
 
 		if(type == ObjectType.ENEMY || type == ObjectType.ITEM || type == ObjectType.PLAYER) {
+			// need to handle clones separately otherwise data is lost
 			switch(type) {
 			case ENEMY:
 				obj = ((Enemy) cur_d_object).clone();
@@ -236,8 +237,8 @@ public class State extends Stage {
 		case PLAYER:
 			// Delete the old player and the flag if we're overriding it
 			if (this.hasPlayer() == true) this.deletePlayer(player.getCoord());
-			if (cur.getObjectType() == ObjectType.ITEM
-					&& cur.getObject().getName() == "win") win = null;
+//			if (cur.getObjectType() == ObjectType.WAYPOINT)
+//					win = null;
 			
 			newObject.setCoord(coord);
 			player = (Player) newObject;
@@ -246,15 +247,16 @@ public class State extends Stage {
 			break;
 		case ENEMY:
 		case ITEM:
-			if (cur.getObjectType() == ObjectType.PLAYER) player = null;
+//			if (cur.getObjectType() == ObjectType.WAYPOINT)
+//				win = null;
 			newObject.setCoord(coord);
-			String name = newObject.getName();
+//			String name = newObject.getName();
 			
 			// Win condition handling
-			if (name != null && name.equals("win")) {						
-				if (win != null) this.deleteWin(win.getCoord());
-				win = (DynamicObject) newObject;
-			} 
+//			if (name != null && name.equals("win")) {						
+//				if (win != null) this.deleteWin(win.getCoord());
+//				win = (DynamicObject) newObject;
+//			} 
 			dynamicList.add((DynamicObject) newObject);
 			cur.setDynamicObject((DynamicObject) newObject);
 			break;
@@ -269,9 +271,13 @@ public class State extends Stage {
 			cur.setFloor(newObject);
 			break;
 		case WAYPOINT:
-			staticList.add(newObject);
+			//if(cur.getObjectType() == ObjectType.PLAYER) player = null;
+			//if(cur.getObjectType() == ObjectType.ENEMY || cur.getObjectType() == ObjectType.ITEM) cur_d_object = null;
+			
+			dynamicList.add((DynamicObject) newObject);
 			newObject.setCoord(coord);
 			cur.setObject(newObject);
+			win = (DynamicObject) newObject;
 			break;
 		default:
 			break;
@@ -561,7 +567,7 @@ public class State extends Stage {
 				DynamicObject d_obj = null;
 				
 				// type will only show the top-most layer
-				if(type == ObjectType.ENEMY || type == ObjectType.PLAYER || type == ObjectType.ITEM) {
+				if(type == ObjectType.ENEMY || type == ObjectType.PLAYER || type == ObjectType.ITEM || type == ObjectType.WAYPOINT) {
 					setObject(enc_tile.getDynamic(), new Coord(i, j));
 				} 
 				

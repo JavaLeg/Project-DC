@@ -92,7 +92,6 @@ public class Tile extends Group {
 	public void setFloor(GameObject obj) {
 		this.deleteFloor();
 		this.addActor(processPath(obj.getImgPath()), "floor", 1);
-		// FOR JAMES
 		this.g_obj = obj;
 	}
 
@@ -107,6 +106,8 @@ public class Tile extends Group {
 	
 	public boolean hasObject() {
 		return this.hasActor("object");
+		
+		
 	}
 
 	public GameObject getObject() {
@@ -129,7 +130,7 @@ public class Tile extends Group {
 		if (this.hasObject()) {
 			TextureRegion new_img = new TextureRegion(new Texture(Gdx.files.internal(path)));
 			this.removeActor("object");
-			System.out.println("called");
+			System.out.println("Image flip called");
 			// The only other orientation is looking left
 			if (!facing_right) new_img.flip(true, false);
 			

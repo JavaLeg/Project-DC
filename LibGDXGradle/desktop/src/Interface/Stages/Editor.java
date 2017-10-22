@@ -12,8 +12,10 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.scenes.scene2d.Action;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
@@ -25,7 +27,9 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.scenes.scene2d.ui.TextTooltip;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
+import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.Viewport;
+import com.engine.desktop.DCGame;
 import com.engine.desktop.SaveSys;
 
 import Interface.EditorModel;
@@ -38,6 +42,7 @@ import Tileset.GameObject;
 import Tileset.GameObject.ObjectType;
 import Tileset.Item;
 import Tileset.Player;
+import Tileset.Waypoint;
 import Tileset.Behaviour.Attack;
 import Tileset.Behaviour.MoveRandom;
 
@@ -63,15 +68,21 @@ public class Editor extends Stage {
 	private String path;
 	private SaveSys saver;
 	
+
+
+	// for blinking selected
+	private Image prevSelected;
+
+	
 	// Map size constraints
 	private final static int MAP_MIN = 10;
-	private final static int MAP_MAX = 50;
+	private final static int MAP_MAX = 100;
 		
 	/*
 	 * Dimensions: 280 x 480
 	 * Stage takes in a viewport and a skin
 	 */
-	public Editor(Viewport v, Skin skin) throws IOException {
+	public Editor(Viewport v, Skin skin, DCGame g) throws IOException {
 		super(v);
 		this.skin = skin;
 		this.titlePos = new TableTuple(50, 450);
@@ -82,6 +93,7 @@ public class Editor extends Stage {
 		this.tableMap = new HashMap<ToolbarSelection, Table>();
 		this.saver = new SaveSys();
 		this.PAD = 6;
+
 		
 		initialise();
 		update(ToolbarSelection.FLOOR);
@@ -201,7 +213,7 @@ public class Editor extends Stage {
 
 		for(FileHandle file: files) {
 			final DynamicObject obj = saver.Load(file.name(), type);
-			Image icon = processPath(obj.getImgPath());
+			final Image icon = processPath(obj.getImgPath());
 			
 			
 			String labels = null;
@@ -236,26 +248,31 @@ public class Editor extends Stage {
 			Label icon_labels = new Label(labels, new Label.LabelStyle(new BitmapFont(), Color.WHITE));
 			
 			//Tool-tip (More information)
-			icon.addListener(new TextTooltip(tooltip_labels, skin));
-			
-			newTable.add(icon).size(40, 40);
-			newTable.add(icon_labels);
-			newTable.row();
-				
-
+			TextTooltip tp1 = new TextTooltip(tooltip_labels, skin);
+			tp1.setInstant(true);
+			icon.addListener(tp1);
 			icon.addListener(new ClickListener(){
 				@Override
 				public void clicked(InputEvent event, float x, float y) {
 					System.out.println("Selected - " + obj.getName());
 					selected_Dyn = obj;
 					related.setDynamicSelection(obj);
+					
+					blink(icon);
 				}
 			});
+			
+			newTable.add(icon).size(40, 40);
+			newTable.add(icon_labels);
+			newTable.row();
+				
+
 				
 			// Need to format these
 			if (i % 2 == 1 && i != 0) newTable.row();
 				i++;		
-			}	
+			}
+	
 		return newTable;
 	}
 	
@@ -359,7 +376,9 @@ public class Editor extends Stage {
 									"Min - " + Integer.toString(MAP_MIN) + " x " + Integer.toString(MAP_MIN) + "\n" +
 									"Max - " + Integer.toString(MAP_MAX) + " x " + Integer.toString(MAP_MAX);
 			
-			ib.addListener(new TextTooltip(description, skin));
+			TextTooltip tip = new TextTooltip(description, skin);
+			tip.setInstant(true);
+			ib.addListener(tip);
 			
 			newTable.add(ib).size(40);
 			
@@ -435,9 +454,12 @@ public class Editor extends Stage {
 
 			// Display the sprite (Information)
 			final Texture texture = new Texture(file);	
-			Image icon = new Image(new TextureRegion(texture));
-			icon.addListener(new TextTooltip("Preset: " + fileName, skin));
+			final Image icon = new Image(new TextureRegion(texture));
+			TextTooltip tp2 = new TextTooltip("Preset: " + fileName, skin);
+			tp2.setInstant(true);
+			icon.addListener(tp2);
 			newTable.add(icon).size(40, 40).pad(PAD);
+		
 			
 			switch(cur){
 			case PLAYER:
@@ -457,6 +479,8 @@ public class Editor extends Stage {
 						//System.out.print(getActionState());
 						selected_Dyn = obj;
 						related.setDynamicSelection(obj);
+						
+						blink(icon);
 			        }
 				});
 				break;
@@ -471,6 +495,8 @@ public class Editor extends Stage {
 						// double hp, double damage, int moveRate, MoveBehaviour b, String img_path
 						selected_Dyn = obj;
 						related.setDynamicSelection(obj);
+						
+						blink(icon);
 			        }
 				});
 				
@@ -490,6 +516,8 @@ public class Editor extends Stage {
 						if (fileName.equals("win")) obj.setName(fileName);
 						selected_Dyn = obj;
 						related.setDynamicSelection(obj);
+						
+						blink(icon);
 			        }
 				});
 				
@@ -508,6 +536,8 @@ public class Editor extends Stage {
 						// Right now all attributes initialized as null (Changed through edit)
 						GameObject obj = new GameObject(cur, filePath);
 						related.setStaticSelection(obj);
+						
+						blink(icon);
 			        }
 				});
 				break;
@@ -519,6 +549,8 @@ public class Editor extends Stage {
 						
 						GameObject obj = new GameObject(cur, filePath);
 						related.setStaticSelection(obj);
+						
+						blink(icon);
 			        }
 				});
 				break;
@@ -528,8 +560,10 @@ public class Editor extends Stage {
 			        public void clicked(InputEvent event, float x, float y) {
 						System.out.println("Selected - " + fileName);
 						
-						GameObject obj = new GameObject(cur, filePath);
-						related.setStaticSelection(obj);
+						Waypoint obj = new Waypoint(filePath);
+						related.setDynamicSelection(obj);
+						
+						blink(icon);
 			        }
 				});
 				break;
@@ -821,4 +855,20 @@ public class Editor extends Stage {
 		this.related = s;
 	}
 	
+	
+
+	private void blink(Image icon) {
+		if(prevSelected != null) {
+			Array<Action> prevActions = prevSelected.getActions();
+			for(Action a : prevActions) {
+				prevSelected.removeAction(a);
+			}
+			prevSelected.addAction(Actions.alpha(1));
+		}
+		
+		icon.addAction(Actions.forever(Actions.sequence(Actions.alpha(0, 0.3f),Actions.alpha(1, 0.6f))));
+		
+		prevSelected = icon;
+	}
+
 }
