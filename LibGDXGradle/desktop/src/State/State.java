@@ -112,6 +112,7 @@ public class State extends Stage {
 	// Fill grid with selected floor
 	// TODO
 	public void fillGrid() {
+		
 		for(Tile tile : tileList) {
 			setTile(tile, selection);
 		}
@@ -325,6 +326,7 @@ public class State extends Stage {
 	}
 	
 	public void fillObject(GameObject g) {
+				
 		for (int x = 0; x < rowActors; x++) {
 			for (int y = 0; y < colActors; y++) {
 				setObject(g.clone(), new Coord(x,y));

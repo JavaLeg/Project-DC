@@ -6,6 +6,7 @@ import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -27,6 +28,7 @@ import com.engine.desktop.DCGame;
 
 import Interface.EditorModel;
 import Interface.GameInputProcessor;
+import Interface.Viewports.PreviewProcessor;
 import State.DynamicGame;
 import State.RunGame;
 import State.RunGame2;
@@ -72,11 +74,20 @@ public class GameScreen implements Screen {
         g = new DynamicGame();
 		inputProcessor = new GameInputProcessor(g);
 		g.initialise(previewStage); // input player created state here
-		Gdx.input.setInputProcessor(inputProcessor);
 		
-		//gameThread = new RunGame2(g, inputProcessor, 60);
-		//gameThread.create();
-		//gameThread.run();
+		
+		InputProcessor backProcessor = new InputAdapter() {
+            @Override
+            public boolean keyDown(int keycode) {
+
+                if ((keycode == Keys.ESCAPE) || (keycode == Keys.BACK)) {
+                	((Game)Gdx.app.getApplicationListener()).setScreen(new MainMenuScreen(game));
+                }
+                return false;
+            }
+        };
+		InputMultiplexer multiplexer = new InputMultiplexer(previewStage, backProcessor);
+		Gdx.input.setInputProcessor(multiplexer);
 		isRunning = true;
 		stepRate = 60;
 	}
