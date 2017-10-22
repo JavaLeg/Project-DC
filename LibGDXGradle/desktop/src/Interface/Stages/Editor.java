@@ -242,7 +242,9 @@ public class Editor extends Stage {
 			Label icon_labels = new Label(labels, new Label.LabelStyle(new BitmapFont(), Color.WHITE));
 			
 			//Tool-tip (More information)
-			icon.addListener(new TextTooltip(tooltip_labels, skin));
+			TextTooltip tp1 = new TextTooltip(tooltip_labels, skin);
+			tp1.setInstant(true);
+			icon.addListener(tp1);
 			
 			newTable.add(icon).size(40, 40);
 			newTable.add(icon_labels);
@@ -446,7 +448,9 @@ public class Editor extends Stage {
 			// Display the sprite (Information)
 			final Texture texture = new Texture(file);	
 			final Image icon = new Image(new TextureRegion(texture));
-			icon.addListener(new TextTooltip("Preset: " + fileName, skin));
+			TextTooltip tp2 = new TextTooltip("Preset: " + fileName, skin);
+			tp2.setInstant(true);
+			icon.addListener(tp2);
 			newTable.add(icon).size(40, 40).pad(PAD);
 		
 			
