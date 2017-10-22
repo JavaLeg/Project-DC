@@ -10,15 +10,10 @@ import java.io.ObjectOutputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Iterator;
 
 import Interface.EditorModel;
 import Tileset.DynamicObject;
-import Tileset.Enemy;
 import Tileset.GameObject.ObjectType;
-import Tileset.Player;
 
 
 /*

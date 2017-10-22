@@ -12,6 +12,7 @@ import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
@@ -33,7 +34,7 @@ public class EditorScreen implements Screen {
 	
     protected ArrayList<Stage> UI;
 	
-    private SpriteBatch batch;
+    //private SpriteBatch batch;
     private DCGame game;
         
     private int APP_WIDTH = Gdx.graphics.getWidth();
@@ -70,7 +71,7 @@ public class EditorScreen implements Screen {
 		
 		
 		previewStage = new State(preview_viewport);
-		Toolbar toolbarStage = new Toolbar(toolbar_viewport, skin);
+		Toolbar toolbarStage = new Toolbar(toolbar_viewport, skin, this);
 		
 		try {
 			editorStage = new Editor(editor_viewport, skin);
@@ -87,9 +88,7 @@ public class EditorScreen implements Screen {
 	            public boolean keyDown(int keycode) {
 
 	                if ((keycode == Keys.ESCAPE) || (keycode == Keys.BACK)) {
-	                	for(Stage s : UI) {
-	                		s.dispose();
-	                	}
+
 	                	((Game)Gdx.app.getApplicationListener()).setScreen(new MainMenuScreen(game));
 	                }
 	                return false;
@@ -110,6 +109,8 @@ public class EditorScreen implements Screen {
 		}
 	}
 	
+
+	
 	public void loadModel(EditorModel m) {
 		System.out.println("Loaded model.");	
 		previewStage.restoreModel(m);
@@ -117,7 +118,7 @@ public class EditorScreen implements Screen {
 	
 	@Override
 	public void render(float delta) {
-        Gdx.gl.glClearColor(1, 1, 1, 1);
+        Gdx.gl.glClearColor(8/255f, 23/255f, 30/255f, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
         for(Stage s: UI) {
@@ -155,7 +156,15 @@ public class EditorScreen implements Screen {
 
 	@Override
 	public void dispose() {
-        batch.dispose();
-		// TODO Auto-generated method stub	
+		for(Stage s : UI) {
+			s.dispose();
+		}
 	}
+	
+	public void exit() {
+		((Game)Gdx.app.getApplicationListener()).setScreen(new MainMenuScreen(game));
+		dispose();
+
+	}
+	
 }

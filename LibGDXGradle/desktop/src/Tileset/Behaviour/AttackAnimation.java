@@ -46,7 +46,7 @@ public class AttackAnimation extends Actor implements Serializable {
 			sprite.setBounds(c.getX() * 40, c.getY() * 40, 40, 40);
 			sprite.setRotation(getRotation(d));
 		}
-		//animation.
+		this.setVisible(true);
 	}
 	
 	

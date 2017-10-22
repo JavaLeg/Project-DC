@@ -2,12 +2,9 @@ package Tileset;
 
 import java.io.Serializable;
 
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
-
 import State.Coord;
 
-public class Item extends DynamicObject implements Serializable{
+public class Item extends DynamicObject implements Cloneable, Serializable{
 
 
 	/**
@@ -30,6 +27,10 @@ public class Item extends DynamicObject implements Serializable{
 
 	public void setRestoreValue(int restoreValue) {
 		this.restoreValue = restoreValue;
+	}
+	
+	public Item clone() {
+		return new Item(getImgPath());
 	}
 
 }

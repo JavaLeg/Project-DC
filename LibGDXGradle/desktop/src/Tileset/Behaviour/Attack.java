@@ -25,8 +25,6 @@ public class Attack extends Actor implements Serializable {
 	private List<ObjectType> targets;
 	private int speed;
 	private int cooldown;
-	private AttackAnimation animation;
-
 	
 	
 	
@@ -39,13 +37,12 @@ public class Attack extends Actor implements Serializable {
 	 * @param speed : Amount of time the Attack lasts
 	 * @param cooldown : Amount of time it takes to use attack again (applicable to enemies)
 	 */
-	public Attack(List<Coord> hitbox, int damage, List<ObjectType> targets, int speed, int cooldown, AttackAnimation animation) {
+	public Attack(List<Coord> hitbox, int damage, List<ObjectType> targets, int speed, int cooldown) {
 		this.hitbox = hitbox;
 		this.damage = damage;
 		this.targets = targets;
 		this.speed = speed;
 		this.cooldown = cooldown;
-		this.animation = animation;
 	}
 	
 	

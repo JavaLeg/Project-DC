@@ -19,6 +19,8 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
+
+import Interface.Screens.EditorScreen;
 import Interface.Stages.Selections.NewToolbarSelection;
 import Interface.Stages.Selections.ToolbarSelection;
 
@@ -29,19 +31,19 @@ public class Toolbar extends Stage{
 
 	private TableTuple toolbarPos;
 	private final int PAD = 1;
+	
+	private EditorScreen es;
 
 	/*
 	 * Dimensions: 280 x 40
 	 */
-	public Toolbar(Viewport v, Skin skin) {
+	public Toolbar(Viewport v, Skin skin, EditorScreen es) {
 		super(v);
 		this.skin = skin;
-
-//		System.out.println("Viewport width: " + v.getScreenWidth());
-//		System.out.println("Viewport height: " + v.getScreenHeight());
-//		this.toolbarPos = new TableTuple(v.getScreenWidth()*3/7, v.getScreenHeight()/47);
-
-		this.toolbarPos = new TableTuple(v.getScreenWidth()*2/23, v.getScreenHeight()/45);
+		System.out.println("Viewport width: " + v.getScreenWidth());
+		System.out.println("Viewport height: " + v.getScreenHeight());
+		this.toolbarPos = new TableTuple(v.getScreenWidth()*3/7, v.getScreenHeight()/46);
+		this.es = es;
 		
 		
 		initialise();
@@ -125,7 +127,7 @@ public class Toolbar extends Stage{
 				yb.addListener(new ClickListener(){
 					@Override
 			        public void clicked(InputEvent event, float x, float y) {
-						System.out.println("EXIT!");
+						es.exit();
 			        }
 				});
 				break;
