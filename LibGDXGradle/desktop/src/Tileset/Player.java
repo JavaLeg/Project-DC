@@ -28,6 +28,7 @@ public class Player extends DynamicObject implements Cloneable {
 		this.special = special;
 		this.selected = light; 
 		this.right = true;
+		this.attackCooldown = 0;
 	}
 	
 	public Player(double hp, double damage, Attack light, Attack special, String img_path) {
@@ -37,12 +38,14 @@ public class Player extends DynamicObject implements Cloneable {
 		this.special = special;
 		this.selected = light; 
 		this.right = true;
+		this.attackCooldown = 0;
 	}
 	
 	
 	public Player(double hp, double damage, String img_path) {
 		// type, width, height, coords, hp, damage
 		super(ObjectType.PLAYER, hp, damage, img_path);
+		this.attackCooldown = 0;
 	}
 	
 	@Override
@@ -117,4 +120,10 @@ public class Player extends DynamicObject implements Cloneable {
 		// does not destroy self
 	}
 	
+	@Override
+	public void setActionState(ActionState a) {
+		if (a == ActionState.ATTACK) {
+			this.attackCooldown = light.getAttackCooldown();
+		}
+	}
 }
