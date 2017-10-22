@@ -1,5 +1,7 @@
 package State;
 
+import java.util.Iterator;
+
 import com.badlogic.gdx.InputProcessor;
 
 import Interface.GameInputProcessor;
@@ -10,6 +12,7 @@ import Tileset.GameObject.ObjectType;
 import Tileset.Player;
 import Tileset.Enemy;
 import Tileset.Behaviour.Attack;
+import Tileset.Behaviour.AttackAnimation;
 import Tileset.Behaviour.Direction;
 
 //temporary class for Game, 
@@ -22,6 +25,9 @@ public class DynamicGame {
 	
 	// private int last_move;					// Only move in the direction you face, otherwise turn. 
 
+	AttackAnimation playerAttack;
+	
+	
 	public DynamicGame() {
 		steps = 0;
 	}
@@ -30,7 +36,8 @@ public class DynamicGame {
 	public void initialise(State startState) {
 		// take in a new GameState, and execute any other preamble
 		this.activeState = startState;
-		System.out.print("Initiated\n");
+		
+		playerAttack = new AttackAnimation();
 	}
 	
 	public void step() {
@@ -40,13 +47,15 @@ public class DynamicGame {
 		// iterate upon these objects running their step()
 
 		//System.out.print(activeState.getAllDynamicObjects().size());
-		for (DynamicObject o : activeState.getAllDynamicObjects()) {
+		Iterator<DynamicObject> iterator = activeState.getAllDynamicObjects().iterator();
+		while(iterator.hasNext()) {
+			DynamicObject o = iterator.next();
 			o.step(activeState);
 		}
 		
 		
 		// Conflict Resolution
-		
+		activeState.resolveConflicts();
 		
 		// game over check
 		if (activeState.getPlayer() == null) {
@@ -84,21 +93,26 @@ public class DynamicGame {
 		Coord curr = activeState.findPlayer();
 		Player p = (Player) activeState.getPlayer();
 		
-		if (p.getDirection() == null) p.setDirection(Direction.EAST);		
+		if (p.getFacing() == null) p.setFacing(Direction.EAST);		
 		// Set starting direction to EAST when starting the game
 		
 		Coord toMove = null;
-		System.out.println("coord = " + curr);
+		//System.out.println("coord = " + curr);
 
 		switch (a) {
 		case ATTACK:
-			assert(p.getDirection() != null);
-			Coord coord = p.getDirection().moveInDirection(curr);
-			Attack att = new Attack(p.getDirection() , coord);
-			activeState.addActor(att);
-			activeState.attackObject(coord);
-			p.setActionState(ActionState.ATTACK);
-//			p.selectLight();
+			//assert(p.getDirection() != null);
+			if (p.canAttack()) {
+				Coord coord = p.getFacing().moveInDirection(curr);
+				playerAttack.add(coord,  p.getFacing());
+				//AttackAnimation att = new AttackAnimation(p.getDirection() , coord);
+				activeState.addActor(playerAttack);
+				p.selectLight();
+				p.setActionState(ActionState.ATTACK);
+				//activeState.attackObject(coord, p.getAttack());
+			}
+			
+			
 //			
 			System.out.print("USER INPUT: LIGHT ATTACK\n");
 			break;
@@ -114,30 +128,30 @@ public class DynamicGame {
 			if (p.canChangePosition() && !activeState.isBlocked(toMove)) {
 				activeState.movePlayer(toMove);
 			}
-			p.setDirection(Direction.SOUTH);
+			p.setFacing(Direction.SOUTH);
 			System.out.print("USER INPUT: DOWN\n");
 			break;
 		case MOVE_WEST:
 			// If looking left, we can move left. Otherwise turn left
-			if (p.getDirection() == Direction.WEST) {
+			if (p.getFacing() == Direction.WEST) {
 				toMove = (Direction.WEST).moveInDirection(curr);
 				if (p.canChangePosition() && !activeState.isBlocked(toMove)) {
 					activeState.movePlayer(toMove);
 				}
 			} else {
-				p.setDirection(Direction.WEST);
+				p.setFacing(Direction.WEST);
 			}
 			System.out.print("USER INPUT: LEFT\n");
 			break;
 		case MOVE_EAST:
 			// If looking right, we can move right. Otherwise turn right
-			if (p.getDirection() == Direction.EAST) {
+			if (p.getFacing() == Direction.EAST) {
 				toMove = (Direction.EAST).moveInDirection(curr);
 				if (p.canChangePosition() && !activeState.isBlocked(toMove)) {
 					activeState.movePlayer(toMove);
 				}
 			} else {
-				p.setDirection(Direction.EAST);
+				p.setFacing(Direction.EAST);
 			}
 			System.out.print("USER INPUT: RIGHT\n");
 			break;
@@ -148,14 +162,14 @@ public class DynamicGame {
 			if (p.canChangePosition() && !activeState.isBlocked(toMove)) {
 				activeState.movePlayer(toMove);
 			}
-			p.setDirection(Direction.NORTH);
+			p.setFacing(Direction.NORTH);
 			System.out.print("USER INPUT: UP\n");
 
 			break;
 		default:
 			break;
 		}
-
+		activeState.getTile(curr).flipObject(p.facingRight(), p.getImgPath());
 		return false;
 	}
 	

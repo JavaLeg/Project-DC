@@ -119,7 +119,7 @@ public class DynamicObject extends GameObject implements Cloneable {
 	
 	public void destroy(State s) {
 		// animation!!!
-		s.deleteObject(getCoord());
+		//s.deleteObject(this);
 	}
 	
 	
@@ -155,8 +155,8 @@ public class DynamicObject extends GameObject implements Cloneable {
 		}
 		
 		// general management
-		if (getHp() < 0) {
-			destroy(s);
+		if (getHp() <= 0) {
+			//destroy(s);
 		}
 		if (iFrames > 0) {
 			iFrames--;
@@ -192,6 +192,10 @@ public class DynamicObject extends GameObject implements Cloneable {
 		return facing;
 	}
 
+	public void setFacing(Direction d) {
+		facing = d;
+	}
+	
 	public Attack getAttack() {
 		return null;
 	}

@@ -118,6 +118,14 @@ public class Tile extends Group {
 		return null;
 	}
 	
+	public GameObject getDynamicObject() {
+		if (this.hasObject()) {
+			if (this.hasActor("object"))
+				return d_obj;
+		}
+		return null;
+	}
+	
 	public void flipObject(boolean facing_right, String path) {
 		if (this.hasObject()) {
 			TextureRegion new_img = new TextureRegion(new Texture(Gdx.files.internal(path)));
@@ -150,6 +158,7 @@ public class Tile extends Group {
 	
 	public void moveObjectTo(Tile from) {
 		Actor a = from.getActor("object");
+		if (a == null) return;
 		this.d_obj = from.d_obj;
 		this.d_obj.setCoord(this.getCoord());
 		this.addActor(a, "object", 2);

@@ -471,7 +471,7 @@ public class Editor extends Stage {
 						
 						// DEFAULTS FOR ATTACKS
 						Attack light = new Attack(Arrays.asList(new Coord(0,1)), 
-								5, Arrays.asList(ObjectType.ENEMY), 15 , 10);
+								5, Arrays.asList(ObjectType.ENEMY), 60 , 10);
 						Attack heavy = new Attack(Arrays.asList(new Coord(0,1), new Coord(1,1), new Coord(-1,1)), 
 								5, Arrays.asList(ObjectType.ENEMY), 45 , 10);
 						

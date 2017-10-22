@@ -50,10 +50,11 @@ public class Player extends DynamicObject implements Cloneable {
 	
 	@Override
 	public void step(State s) {
-		super.step(s);
 		
 		switch (getActionState()) {
 		case ATTACK:
+			//System.out.print(attackCooldown);
+			System.out.println(getFacing());
 			selected.applyAttack(s, getCoord(), getFacing());
 			if (attackCooldown > 0) {
 				attackCooldown--;
@@ -66,6 +67,7 @@ public class Player extends DynamicObject implements Cloneable {
 		case MOVE:
 			break;
 		}
+		super.step(s);
 	}
 	
 	public void selectSpecial() {
@@ -76,14 +78,24 @@ public class Player extends DynamicObject implements Cloneable {
 		selected = light;
 	}
 	
-	public void setDirection(Direction dir) {
-		this.dir = dir;
+
+	public void setFacing(Direction dir) {
+		super.setFacing(dir);
 		if (dir.equals(Direction.EAST)) {
 			this.right = true;
 		} else if (dir.equals(Direction.WEST)) {
 			this.right = false;
 		}
 	}
+	
+//	public void setDirection(Direction dir) {
+//		this.dir = dir;
+//		if (dir.equals(Direction.EAST)) {
+//			this.right = true;
+//		} else if (dir.equals(Direction.WEST)) {
+//			this.right = false;
+//		}
+//	}
 	
 	/*
 	 * Returns if the player is facing right
@@ -99,14 +111,19 @@ public class Player extends DynamicObject implements Cloneable {
 		this.right = true;
 	}
 	
-	public Direction getDirection(){
-		return this.dir;
-	}
+//	public Direction getDirection(){
+//		return this.dir;
+//	}
 	
 	@Override
 	public Attack getAttack() {
 		return selected;
 	}
+	
+	public boolean canAttack() {
+		return (getActionState() == ActionState.MOVE);
+	}
+	
 	
 	@Override
 	public Player clone() {
@@ -122,8 +139,9 @@ public class Player extends DynamicObject implements Cloneable {
 	
 	@Override
 	public void setActionState(ActionState a) {
+		super.setActionState(a);
 		if (a == ActionState.ATTACK) {
-			this.attackCooldown = light.getAttackCooldown();
+			this.attackCooldown = light.getAttackSpeed();
 		}
 	}
 }

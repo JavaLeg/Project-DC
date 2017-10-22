@@ -2,6 +2,7 @@ package State;
 
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 
@@ -11,6 +12,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import Tileset.*;
 import Tileset.GameObject.ObjectType;
+import Tileset.Behaviour.Attack;
 import Interface.EditorModel;
 import Interface.TileTuple;
 import Interface.Stages.TableTuple;
@@ -134,8 +136,20 @@ public class State extends Stage {
 		
 		GameObject obj = null;
 
-		if(type == ObjectType.ENEMY || type == ObjectType.ITEM || type == ObjectType.PLAYER || type == ObjectType.WAYPOINT) {
-			obj = cur_d_object.clone();
+		if(type == ObjectType.ENEMY || type == ObjectType.ITEM || type == ObjectType.PLAYER) {
+			// need to handle clones separately otherwise data is lost
+			switch(type) {
+			case ENEMY:
+				obj = ((Enemy) cur_d_object).clone();
+				break;
+			case PLAYER:
+				obj = ((Player) cur_d_object).clone();
+				break;
+			case ITEM:
+				obj = ((Item) cur_d_object).clone();
+				break;
+			}
+			
 			obj.setCoord(tile.getCoord());
 			// dynamicList.add((DynamicObject) obj);
 			obj.setName(cur_d_object.getName());
@@ -201,7 +215,8 @@ public class State extends Stage {
 	
 	
 	public DynamicObject getDynamicObject(Coord c) {
-		GameObject g = getObject(c);
+		GameObject g = this.tileList.get(c.getX()* colActors  + c.getY()).getDynamicObject();
+		if (g == null) return null;
 		if (g.isDynamic()) {
 			return (DynamicObject) g;
 		} else {
@@ -227,6 +242,7 @@ public class State extends Stage {
 			
 			newObject.setCoord(coord);
 			player = (Player) newObject;
+			dynamicList.add((DynamicObject) newObject);
 			
 			if (player.getHp() == -1) {
 				player.setHp(10);
@@ -314,29 +330,54 @@ public class State extends Stage {
 	/*
 	 * Attack the object that we're facing
 	 */
-	public void attackObject(Coord coord) {
+	public void attackObject(Coord coord, Attack a) {
 		
 		// Check if the position is in bounds
 		if (!this.isValid(coord)) return;
-		Tile tile = tileList.get(coord.getX()* colActors  + coord.getY());
-		if (tile.getObject() != null && tile.getObject().getType().equals(ObjectType.ENEMY)) {
-			deleteObject(coord);
+		DynamicObject g = getDynamicObject(coord);
+		if (g != null && a.isTarget(g.getType())) {
+			g.damage(a.getDamage());
 		}
 	}
 	
+	public void deleteObject(GameObject g) {
+		if (g.isDynamic()) {
+			dynamicList.remove(g);
+			Tile t = getTile(g.getCoord());
+			t.deleteObject();
+		} else {
+			deleteObject(g.getCoord());
+		}
+	}
+	
+	
+	
 	public void deleteObject(Coord coord) {
-
+		
 		Tile tile = tileList.get(coord.getX()* colActors  + coord.getY());
 		GameObject obj = tile.getObject();
 		
 		ObjectType type = obj.getType();
 		
 		if(type == ObjectType.PLAYER || type == ObjectType.ITEM || type == ObjectType.ENEMY) {
+			System.out.print("Deletes...");
 			dynamicList.remove(obj);
 		}else {
 			staticList.remove(obj);
 		}	
 		this.tileList.get(coord.getX()* colActors  + coord.getY()).deleteObject();
+	}
+	
+	public void resolveConflicts() {
+		// remove anything that has less than 0 health
+		Iterator<DynamicObject> iterator = dynamicList.iterator();
+		while(iterator.hasNext()) {
+			DynamicObject o = iterator.next();
+			if (o.getHp() <= 0) {
+				iterator.remove();
+				this.tileList.get(o.getCoord().getX()* colActors  + o.getCoord().getY()).deleteObject();
+			}
+		}
 	}
 	
 
@@ -366,6 +407,8 @@ public class State extends Stage {
 	public List<DynamicObject> getAllDynamicObjects() {
 		return dynamicList;
 	}
+	
+	
 	
 	
 	//************************//
@@ -402,8 +445,8 @@ public class State extends Stage {
 		
 		moveObject(player.getCoord(), to);
 		
-		//Tile new_tile = this.tileList.get(to.getX() * colActors + to.getY());
-		//new_tile.flipObject(player.facingRight(), player.getImgPath());
+		Tile new_tile = this.tileList.get(to.getX() * colActors + to.getY());
+		new_tile.flipObject(player.facingRight(), player.getImgPath());
 	}
 	//************************//
 	//******* TERRAIN ********//

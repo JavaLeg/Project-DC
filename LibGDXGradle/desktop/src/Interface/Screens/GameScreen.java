@@ -16,10 +16,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
-import com.badlogic.gdx.scenes.scene2d.ui.ProgressBar;
-import com.badlogic.gdx.scenes.scene2d.ui.ProgressBar.ProgressBarStyle;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
+import com.badlogic.gdx.utils.TimeUtils;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.engine.desktop.DCGame;
@@ -28,6 +25,7 @@ import Interface.EditorModel;
 import Interface.GameInputProcessor;
 import State.DynamicGame;
 import State.RunGame;
+import State.RunGame2;
 import State.State;
 import Tileset.DynamicObject;
 import State.Coord;
@@ -35,7 +33,7 @@ import State.Coord;
 public class GameScreen implements Screen {
 
     private OrthographicCamera camera;	
-	private RunGame gameThread;
+	private RunGame2 gameThread;
 	private DCGame game;
 	private State previewStage;
 	private DynamicGame g;
@@ -46,6 +44,10 @@ public class GameScreen implements Screen {
 /*    private ProgressBar bar;
     private ProgressBarStyle barStyle;*/
 	
+    private int stepRate;
+	private boolean isRunning;
+	private double timeOfLastUpdate;
+    
 	public GameScreen(DCGame g) {
 		this.game = g;
 	}
@@ -68,8 +70,11 @@ public class GameScreen implements Screen {
 		g.initialise(previewStage); // input player created state here
 		Gdx.input.setInputProcessor(inputProcessor);
 		
-		gameThread = new RunGame(g, inputProcessor, 30);
-		gameThread.run();
+		//gameThread = new RunGame2(g, inputProcessor, 60);
+		//gameThread.create();
+		//gameThread.run();
+		isRunning = true;
+		stepRate = 120;
 	}
 
 	@Override
@@ -95,6 +100,18 @@ public class GameScreen implements Screen {
         }
         previewStage.act();
         previewStage.draw();
+
+        // handle game running : this is a quick fix 
+        if (isRunning) {
+			double newTime = TimeUtils.millis() / 1000;
+			double diff = newTime - timeOfLastUpdate;
+			
+			if (diff >= 1/stepRate) {
+				timeOfLastUpdate -= stepRate/1000;
+				g.step();
+				inputProcessor.step();
+			}
+        }
 	}
 
 	
