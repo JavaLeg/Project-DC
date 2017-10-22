@@ -134,7 +134,7 @@ public class State extends Stage {
 		
 		GameObject obj = null;
 
-		if(type == ObjectType.ENEMY || type == ObjectType.ITEM || type == ObjectType.PLAYER) {
+		if(type == ObjectType.ENEMY || type == ObjectType.ITEM || type == ObjectType.PLAYER || type == ObjectType.WAYPOINT) {
 			obj = cur_d_object.clone();
 			obj.setCoord(tile.getCoord());
 			// dynamicList.add((DynamicObject) obj);

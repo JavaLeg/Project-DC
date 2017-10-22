@@ -4,7 +4,7 @@ public enum NewToolbarSelection {
 	DROP,
 	PLAYER,
 	ENEMY,
-	GROUP,
+	WAYPOINT,
 	TOOLS,
 	HOME;
 }

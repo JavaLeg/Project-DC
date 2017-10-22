@@ -13,7 +13,7 @@ public class GameObject implements Cloneable, Serializable {
 
 
 	public static enum ObjectType {
-		PLAYER, ENEMY, WALL, ITEM, FLOOR;
+		PLAYER, ENEMY, WALL, ITEM, FLOOR, WAYPOINT;
 	}
 	
 	private ObjectType type;

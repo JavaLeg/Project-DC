@@ -152,16 +152,21 @@ public class Toolbar extends Stage{
 			        }
 				});
 				break;
-			case GROUP:
+			case WAYPOINT:
 				tr = new TextureRegionDrawable(new TextureRegion
-					(new Texture(Gdx.files.internal("EditorScreen/ToolbarButtons/group.png"))));
+					(new Texture(Gdx.files.internal("EditorScreen/ToolbarButtons/waypoint.png"))));
 			
 				ib = new ImageButton(tr);
 				mainTable.add(ib).size(40).pad(PAD);
 				ib.addListener(new ClickListener(){
 					@Override
 					public void clicked(InputEvent event, float x, float y) {
-						System.out.println("Something should go here!");
+						try {
+							related.update(ToolbarSelection.WAYPOINT);
+						} catch (IOException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
 					}
 				});
 				break;

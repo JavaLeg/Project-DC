@@ -522,6 +522,17 @@ public class Editor extends Stage {
 			        }
 				});
 				break;
+			case WAYPOINT:
+				icon.addListener(new ClickListener(){
+					@Override
+			        public void clicked(InputEvent event, float x, float y) {
+						System.out.println("Selected - " + fileName);
+						
+						GameObject obj = new GameObject(cur, filePath);
+						related.setStaticSelection(obj);
+			        }
+				});
+				break;
 			default:
 				break;
 			}
