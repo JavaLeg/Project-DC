@@ -194,6 +194,14 @@ public class Enemy extends DynamicObject implements Cloneable {
 	public void setAttack(Attack attack) {
 		this.attack = attack;
 	}
+	
+	//public void setAttackDamage(int damage) {
+	//	attack.
+	//}
+	
+	public int getAttackDamage() {
+		return attack.getDamage();
+	}
 
 	public int getAttackTime() {
 		return attackTime;
