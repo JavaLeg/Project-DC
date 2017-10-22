@@ -8,12 +8,16 @@ import java.util.List;
 import java.util.Set;
 
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import Tileset.*;
 import Tileset.DynamicObject.ActionState;
 import Tileset.GameObject.ObjectType;
+import Tileset.Behaviour.Attack;
+import Tileset.Behaviour.AttackAnimation;
+import Tileset.Behaviour.Direction;
 import Interface.EditorModel;
 import Interface.TileTuple;
 import Interface.Stages.TableTuple;
@@ -311,6 +315,15 @@ public class State extends Stage {
 			deleteObject(coord);
 		}
 	}
+	
+	public void applyAttack(Attack attack, Coord c, Direction d) {
+		if (isOutOfBounds(c)) return;
+		AttackAnimation a = attack.getAttackAnimation();
+		Tile t = getTile(c);
+		a.renderAttack(c, d);
+		t.addActor(a);
+	}
+	
 	
 	public void deleteObject(Coord coord) {
 

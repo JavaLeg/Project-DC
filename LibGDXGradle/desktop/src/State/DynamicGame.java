@@ -99,7 +99,7 @@ public class DynamicGame {
 			if (p.canAttack()) {
 				p.selectLight();
 				p.setActionState(ActionState.ATTACK);
-				
+				activeState.applyAttack(p.getAttack(), p.getCoord(), p.getFacing());
 				System.out.print("USER INPUT: LIGHT ATTACK\n");
 			}
 			

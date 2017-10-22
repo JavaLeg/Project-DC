@@ -113,12 +113,12 @@ public class AttackAnimation extends Actor implements Serializable {
 		super.draw(batch, parentAlpha);
 		 if (this.isVisible()) {
 			 if (time < this.animation.getAnimationDuration()) {
-				 Sprite s = (Sprite)this.animation.getKeyFrame(time,false);
+				 Sprite s = (Sprite)this.animation.getKeyFrame(time, false);
 			 	 s.draw(batch);
 			 } else if (time > this.animation.getAnimationDuration()) {
 				 this.setVisible(false);
 				 time = 0f;
-				 
+				 this.remove();
 			 }
 		 }
 		 
