@@ -218,14 +218,14 @@ public class Editor extends Stage {
 				
 				break;
 			case ENEMY:
-				labels = "Name: " + obj.getName();
+				labels = obj.getName();
 				
 				tooltip_labels = labels + "\nHealth: " + obj.getHp() 
 										+ "\nDamage: " + obj.getContactDamage() 
 										+ "\nAtk Rate: " + ((Enemy) obj).getAttackTime();				
 				break;
 			case ITEM:
-				labels = "Name: " + obj.getName();
+				labels = obj.getName();
 				tooltip_labels = labels + "\nRestore: " + ((Item) obj).getRestoreValue();
 				break;
 			default:
@@ -587,6 +587,7 @@ public class Editor extends Stage {
 			break;
 			
 		case ITEM:
+			fieldList.add(nameField);
 			fieldList.add(resField);
 			break;
 		default:
@@ -603,70 +604,105 @@ public class Editor extends Stage {
 		editTable.add(saveButton);
 		editTable.row();
 		
-		
 		// If save gets clicked, clone it with new attributes
 		// before saving
 		saveButton.addListener(new ClickListener(){
 			@Override
 	        public void clicked(InputEvent event, float x, float y) {
 
+				// Sanitation check
+				boolean check = true;
 				
-					DynamicObject clone = object.clone(); //CLONE
+				if(nameField.getText().isEmpty()) {
+					System.out.println("Invalid name field!");
+					check = false;
+				}
 					
-					// Sanitation check
-					boolean check = true;
-					
-					if(nameField.getText().isEmpty()) {
-						System.out.println("Invalid name field!");
-						check = false;
-					}
-					
+				DynamicObject clone = null;
+
+				
+				// Custom attributes
+				switch(type) {
+				case ENEMY:
+					Enemy e_clone = (Enemy) object.clone(); //CLONE
+
+						
 					if(!hpField.getText().matches("[0-9]+")) {
 						System.out.println("Invalid HP value!");
 						check = false;
 					}
-					
+						
 					if(!dmgField.getText().matches("[0-9]+")) {
 						System.out.println("Invalid Damage value!");
 						check = false;
 					}
-					
-					
-					// Custom attributes
-					switch(type) {
-					case PLAYER:
 
-						break;
-					case ENEMY:
-						if(!atkField.getText().matches("[0-9]+")) {
-							System.out.println("Invalid attack value!");
-							check = false;
-						}
-						break;
-					case ITEM:
-						if(!resField.getText().matches("[0-9]+")) {
-							System.out.println("Invalid restore value!");
-							check = false;
-						}
-						break;
-					default:
-						break;
+
+					if(!atkField.getText().matches("[0-9]+")) {
+						System.out.println("Invalid attack value!");
+						check = false;
 					}
-
 					
 					if(!check)
 						return;
-					
-					
-					String s = nameField.getText().replaceAll(" ","_");
-					
-					clone.setName(s);
-					clone.setHp(Double.valueOf(hpField.getText()));
-					clone.setContactDamage(Double.valueOf(dmgField.getText()));
-					
-					saveObject(clone);
+						
 
-				
+					e_clone.setName(nameField.getText().replaceAll(" ","_"));
+					e_clone.setHp(Double.valueOf(hpField.getText()));
+					e_clone.setContactDamage(Double.valueOf(dmgField.getText()));
+					e_clone.setAttackTime(Integer.valueOf(atkField.getText()));
+					clone = e_clone;
+					break;
+				case PLAYER:
+						
+					Player p_clone = (Player) object.clone(); //CLONE
+						
+
+						
+					if(!hpField.getText().matches("[0-9]+")) {
+						System.out.println("Invalid HP value!");
+						check = false;
+					}
+						
+					if(!dmgField.getText().matches("[0-9]+")) {
+						System.out.println("Invalid Damage value!");
+						check = false;
+					}
+
+
+					if(!check)
+						return;
+												
+					p_clone.setName(nameField.getText().replaceAll(" ","_"));
+					p_clone.setHp(Double.valueOf(hpField.getText()));
+					p_clone.setContactDamage(Double.valueOf(dmgField.getText()));
+					clone = p_clone;
+
+					break;
+				case ITEM:
+					
+					Item i_clone = (Item) object.clone();
+					
+					if(!resField.getText().matches("[0-9]+")) {
+						System.out.println("Invalid restore value!");
+						check = false;
+					}
+						
+						
+					if(!check)
+						return;
+												
+					i_clone.setName(nameField.getText().replaceAll(" ","_"));
+					i_clone.setHp(Double.valueOf(0));
+					i_clone.setContactDamage(0);
+					i_clone.setRestoreValue(Integer.valueOf(resField.getText()));
+						
+					clone = i_clone;
+					break;
+				default:
+					break;
+				}
+				saveObject(clone);
 	        }
 		});
 		
