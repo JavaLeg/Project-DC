@@ -35,7 +35,7 @@ public class Player extends DynamicObject implements Cloneable {
 		// type, width, height, coords, hp, damage
 		super(ObjectType.PLAYER, hp, damage, img_path);
 		this.light = light;
-		System.out.println("Hey" + this.attackCooldown);
+		//System.out.println("Hey" + this.attackCooldown);
 		this.special = special;
 		this.selected = light; 
 		this.right = true;
@@ -55,7 +55,7 @@ public class Player extends DynamicObject implements Cloneable {
 		switch (getActionState()) {
 		case ATTACK:
 			//System.out.print(attackCooldown);
-			System.out.println(getFacing());
+			//System.out.println(getFacing());
 			selected.applyAttack(s, getCoord(), getFacing());
 			if (attackCooldown > 0) {
 				attackCooldown--;
@@ -143,7 +143,7 @@ public class Player extends DynamicObject implements Cloneable {
 		super.setActionState(a);
 		if (a == ActionState.ATTACK) {
 			this.attackCooldown = light.getAttackSpeed();
-			System.out.print(this.attackCooldown);
+			//System.out.print(this.attackCooldown);
 		}
 	}
 }
