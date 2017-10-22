@@ -70,12 +70,12 @@ public class Editor extends Stage {
 	private String path;
 	private SaveSys saver;
 	
-<<<<<<< HEAD
+
 	private DCGame g;
-=======
+
 	// for blinking selected
 	private Image prevSelected;
->>>>>>> refs/remotes/origin/master
+
 	
 	// Map size constraints
 	private final static int MAP_MIN = 10;
@@ -254,12 +254,6 @@ public class Editor extends Stage {
 			TextTooltip tp1 = new TextTooltip(tooltip_labels, skin);
 			tp1.setInstant(true);
 			icon.addListener(tp1);
-			
-			newTable.add(icon).size(40, 40);
-			newTable.add(icon_labels);
-			newTable.row();
-				
-
 			icon.addListener(new ClickListener(){
 				@Override
 				public void clicked(InputEvent event, float x, float y) {
@@ -270,11 +264,18 @@ public class Editor extends Stage {
 					blink(icon);
 				}
 			});
+			
+			newTable.add(icon).size(40, 40);
+			newTable.add(icon_labels);
+			newTable.row();
+				
+
 				
 			// Need to format these
 			if (i % 2 == 1 && i != 0) newTable.row();
 				i++;		
-			}	
+			}
+	
 		return newTable;
 	}
 	
