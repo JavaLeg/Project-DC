@@ -1,7 +1,8 @@
 package Interface.Stages.Selections;
 
 public enum LibrarySelection {
-	EDIT,
-	PLAY,
-	DELETE;
+	Edit,
+	Play,
+	Delete,
+	Delete_All;
 }

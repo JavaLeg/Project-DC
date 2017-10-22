@@ -138,23 +138,25 @@ public class LibraryScreen implements Screen{
 		        public void clicked(InputEvent event, float x, float y) {
 					Screen s = null;
 					
-					if(selected_map == null) {
-						System.out.println("No map selected!");
-						return;
-					}
-					
 						try {
 							switch(selection) {
-							case EDIT:
-	
+							case Edit:
+								if(selected_map == null) {
+									System.out.println("No map selected!");
+									return;
+								}
+								
 								s = new EditorScreen(game);
 								System.out.println("Loading into Game: " + selected_map + "...");
 								((Game)Gdx.app.getApplicationListener()).setScreen(s);
 								((EditorScreen) s).loadModel(fileHandle.Load(selected_map));
 								break;
 								
-							case PLAY:
-	
+							case Play:
+								if(selected_map == null) {
+									System.out.println("No map selected!");
+									return;
+								}
 								
 								s = new GameScreen(game);
 								System.out.println("Loading in Editor: " + selected_map + "...");
@@ -162,11 +164,23 @@ public class LibraryScreen implements Screen{
 								((GameScreen) s).loadModel(fileHandle.Load(selected_map));
 								break;
 								
-							case DELETE:
+							case Delete:
+								if(selected_map == null) {
+									System.out.println("No map selected!");
+									return;
+								}
 								
 								System.out.println("Deleting map: " + selected_map + "...");
 								fileHandle.Delete(selected_map);
 								// Refresh screen
+								((Game)Gdx.app.getApplicationListener()).setScreen(new LibraryScreen(game));
+								break;
+							case Delete_All:
+								File[] delList = fileHandle.getLibrary();
+						        for (final File f : delList) {
+						        	f.delete();
+						        }
+						        // Refresh screen
 								((Game)Gdx.app.getApplicationListener()).setScreen(new LibraryScreen(game));
 							default:
 								break;	
@@ -270,6 +284,9 @@ public class LibraryScreen implements Screen{
 	}
 	
 	private TextButton generateButton(String s) {
+		if (s.equals("Delete_All")) {
+			s = "Delete All";
+		}
 		String newString = " " + s + " ";
 		TextButton button = new TextButton(newString, skin);
 		return button;
