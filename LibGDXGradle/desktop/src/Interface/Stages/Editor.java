@@ -561,7 +561,7 @@ public class Editor extends Stage {
 						System.out.println("Selected - " + fileName);
 						
 						Waypoint obj = new Waypoint(filePath);
-						related.setStaticSelection(obj);
+						related.setDynamicSelection(obj);
 						
 						blink(icon);
 			        }

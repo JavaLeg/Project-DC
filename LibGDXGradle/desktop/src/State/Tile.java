@@ -106,6 +106,8 @@ public class Tile extends Group {
 	
 	public boolean hasObject() {
 		return this.hasActor("object");
+		
+		
 	}
 
 	public GameObject getObject() {
