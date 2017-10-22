@@ -71,19 +71,27 @@ public class HelpScreen implements Screen {
         Image titleImage = new Image(new TextureRegion(new Texture(Gdx.files.internal("HelpScreen/helpheader.png"))));
         mainTable.add(titleImage);               
         
-        Label blank = new Label("", new Label.LabelStyle(itemFont, Color.BLACK));
+        Label blank = new Label("", new Label.LabelStyle(itemFont, Color.WHITE));
         mainTable.row();
         mainTable.add(blank);
         
         
-    	final Label fileLabel3 = new Label("Find it at:", new LabelStyle(itemFont, Color.BLACK));
+    	final Label fileLabel3 = new Label("Find it at:", new LabelStyle(itemFont, Color.WHITE));
         mainTable.row();
     	mainTable.add(fileLabel3);
     	
-        final String fileName2 = "https://github.com/JavaLeg/Project-DC";
-    	final Label fileLabel2 = new Label(fileName2, new LabelStyle(itemFont, Color.BLACK));
+        final String link = "https://github.com/JavaLeg/Project-DC";
+    	final TextButton linkButton = generateButton("Click me!");
+    	
+    	
+    	linkButton.addListener(new ClickListener(){
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                Gdx.net.openURI(link);
+            }
+        });
         mainTable.row();
-    	mainTable.add(fileLabel2);
+    	mainTable.add(linkButton);
     	
         
         stage.addActor(new Image(new TextureRegion(new Texture(Gdx.files.internal("HelpScreen/helpbg.jpg")))));
