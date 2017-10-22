@@ -92,7 +92,6 @@ public class Tile extends Group {
 	public void setFloor(GameObject obj) {
 		this.deleteFloor();
 		this.addActor(processPath(obj.getImgPath()), "floor", 1);
-		// FOR JAMES
 		this.g_obj = obj;
 	}
 

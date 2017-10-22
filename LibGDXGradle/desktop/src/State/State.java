@@ -237,13 +237,6 @@ public class State extends Stage {
 		case ITEM:
 			if (cur.getObjectType() == ObjectType.PLAYER) player = null;
 			newObject.setCoord(coord);
-			String name = newObject.getName();
-			
-			// Win condition handling
-			if (name != null && name.equals("win")) {						
-				if (win != null) this.deleteWin(win.getCoord());
-				win = (DynamicObject) newObject;
-			} 
 			dynamicList.add((DynamicObject) newObject);
 			cur.setDynamicObject((DynamicObject) newObject);
 			break;
@@ -261,6 +254,7 @@ public class State extends Stage {
 			dynamicList.add((DynamicObject) newObject);
 			newObject.setCoord(coord);
 			cur.setObject(newObject);
+			win = (DynamicObject) newObject;
 			break;
 		default:
 			break;
