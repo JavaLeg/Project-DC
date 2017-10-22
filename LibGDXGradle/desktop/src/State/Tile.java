@@ -11,6 +11,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Image;
 
 import Tileset.*;
 import Tileset.GameObject.ObjectType;
+import Tileset.Behaviour.Direction;
 
 
 public class Tile extends Group {
@@ -116,6 +117,18 @@ public class Tile extends Group {
 		return null;
 	}
 	
+	public void flipObject(boolean facing_right, String path) {
+		if (this.hasObject()) {
+			TextureRegion new_img = new TextureRegion(new Texture(Gdx.files.internal(path)));
+			this.removeActor("object");
+			System.out.println("called");
+			// The only other orientation is looking left
+			if (!facing_right) new_img.flip(true, false);
+			
+			// System.out.println(this.getObject().getImgPath());
+			this.addActor(new Image(new_img), "object", 2);
+		}
+	}
 	// Overwrites current object if any
 
 	// Setters overwrite current object if any
@@ -130,7 +143,7 @@ public class Tile extends Group {
 		}
 		deleteObject();
 		g_obj = new_object;
-
+		
 		this.addActor(processPath(new_object.getImgPath()), "object", 2);
 	}	
 	

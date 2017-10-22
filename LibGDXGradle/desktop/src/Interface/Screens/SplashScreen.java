@@ -5,6 +5,7 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.Animation;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -12,6 +13,7 @@ import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.engine.desktop.DCGame;
 
+import Tileset.Behaviour.Attack;
 import externals.GifDecoder;
 
 public class SplashScreen implements Screen{
@@ -57,17 +59,34 @@ public class SplashScreen implements Screen{
         camera.update();
         
         batch.begin();
+/*<<<<<<< HEAD
+        batch.draw(animation.getKeyFrame(elapsed), 20.0f, 20.0f);   
+
+=======*/
         batch.draw(animation.getKeyFrame(elapsed, true), 0, 0);        
         batch.end();
         
         
+/*>>>>>>> refs/remotes/origin/master*/
         /*
          * Delay before showing main menu
-         */        
+<<<<<<< HEAD
+         */
+/*        if(TimeUtils.timeSinceMillis((long) startTime) > 5000){
+            g.setScreen(new MainMenuScreen(g));
+        }
+        
+        // event to trigger the animation
+        if(Gdx.input.justTouched()){
+=======*/
+                
         if(Gdx.input.justTouched())
         	g.setScreen(new MainMenuScreen(g));
+
 	}
 
+	
+	
 	@Override
 	public void resize(int width, int height) {
 		viewport.update(width, height);

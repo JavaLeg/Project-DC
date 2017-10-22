@@ -125,8 +125,8 @@ public class LibraryScreen implements Screen{
 
         Table scrolltable = new Table();
         scrolltable.setBounds(175,45, 450, 322 );
-        scrolltable.add(scroll);
-        
+        scrolltable.add(scroll).fill().expand();
+      
         
         // SIDE TABLE
         // Edit / Run functionality

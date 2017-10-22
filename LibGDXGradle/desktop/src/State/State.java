@@ -230,6 +230,7 @@ public class State extends Stage {
 			
 			newObject.setCoord(coord);
 			player = (Player) newObject;
+			
 			cur.setObject(player);
 			break;
 		case ENEMY:
@@ -298,7 +299,18 @@ public class State extends Stage {
 		}
 	}
 	
-	
+	/*
+	 * Attack the object that we're facing
+	 */
+	public void attackObject(Coord coord) {
+		
+		// Check if the position is in bounds
+		if (this.isOutOfBounds(coord)) return;
+		Tile tile = tileList.get(coord.getX()* colActors  + coord.getY());
+		if (tile.getObject() != null && tile.getObject().getType().equals(ObjectType.ENEMY)) {
+			deleteObject(coord);
+		}
+	}
 	
 	public void deleteObject(Coord coord) {
 
@@ -377,6 +389,8 @@ public class State extends Stage {
 	public void movePlayer(Coord to) {
 		if (player == null) return;		
 		moveObject(player.getCoord(), to);
+		//Tile new_tile = this.tileList.get(to.getX() * colActors + to.getY());
+		//new_tile.flipObject(player.facingRight(), player.getImgPath());
 	}
 	
 	
