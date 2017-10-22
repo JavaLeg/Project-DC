@@ -2,9 +2,6 @@ package Tileset;
 
 import java.io.Serializable;
 
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
-
 import State.Coord;
 
 public class Item extends DynamicObject implements Cloneable, Serializable{
