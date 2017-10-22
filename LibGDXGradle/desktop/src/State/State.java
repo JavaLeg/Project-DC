@@ -254,6 +254,11 @@ public class State extends Stage {
 			newObject.setCoord(coord);
 			cur.setFloor(newObject);
 			break;
+		case WAYPOINT:
+			staticList.add(newObject);
+			newObject.setCoord(coord);
+			cur.setObject(newObject);
+			break;
 		default:
 			break;
 

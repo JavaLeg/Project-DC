@@ -39,7 +39,6 @@ import Tileset.GameObject.ObjectType;
 import Tileset.Item;
 import Tileset.Player;
 import Tileset.Behaviour.Attack;
-import Tileset.Behaviour.MoveBehaviour;
 import Tileset.Behaviour.MoveRandom;
 
 /*
@@ -95,15 +94,9 @@ public class Editor extends Stage {
 	 * Initialise stage contents (Tables, Titles, Background etc...)
 	 */
 	private void initialise() {
-		Table titleTable = new Table();	
-        Label HUDlabel = new Label("Editor Mode", 
-        		new Label.LabelStyle(new BitmapFont(), Color.CYAN));
-        titleTable.add(HUDlabel);
-		titleTable.setPosition(titlePos.getX(), titlePos.getY(), 0);
 		
 		// Add background and title
-		super.addActor(new Image(new TextureRegion(new Texture(Gdx.files.internal("EditorScreen/Inventory_tab_2.png")))));
-		super.addActor(titleTable);
+		super.addActor(new Image(new TextureRegion(new Texture(Gdx.files.internal("EditorScreen/Inventory_tab_4.png")))));
 	}
 	
 	/*
@@ -114,7 +107,7 @@ public class Editor extends Stage {
 		newTable.setPosition(tablePos.getX(), tablePos.getY());
 		newTable.top();
 
-		super.addActor(new Image(new TextureRegion(new Texture(Gdx.files.internal("EditorScreen/Inventory_tab_2.png")))));
+		super.addActor(new Image(new TextureRegion(new Texture(Gdx.files.internal("EditorScreen/Inventory_tab_4.png")))));
 		ScrollPane scroll = new ScrollPane(newTable);
 		scroll.setSize(220,470);
 		scroll.moveBy(25, 0);
@@ -162,7 +155,7 @@ public class Editor extends Stage {
 		final Table newTable = new Table();
 		
 		Label title = new Label(s.toString() + " - Custom", 
-        		new Label.LabelStyle(new BitmapFont(), Color.BLACK));
+        		new Label.LabelStyle(new BitmapFont(), Color.WHITE));
 		
 		newTable.add(title);
 		newTable.row();
@@ -195,7 +188,6 @@ public class Editor extends Stage {
 					try {
 						update(s);
 					} catch (IOException e) {
-						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
 				}
@@ -217,23 +209,23 @@ public class Editor extends Stage {
 			
 			switch(type) {
 			case PLAYER:
-				labels = "Name: " + obj.getName();
+				labels = obj.getName();
 
 				
-				tooltip_labels = labels + "\nHealth: " + obj.getHp() 
+				tooltip_labels = "Name: " + labels + "\nHealth: " + obj.getHp() 
 				+ "\nDamage: " + obj.getContactDamage();
 
 				
 				break;
 			case ENEMY:
-				labels = "Name: " + obj.getName();
+				labels = obj.getName();
 				
 				tooltip_labels = labels + "\nHealth: " + obj.getHp() 
 										+ "\nDamage: " + obj.getContactDamage() 
 										+ "\nAtk Rate: " + ((Enemy) obj).getAttackTime();				
 				break;
 			case ITEM:
-				labels = "Name: " + obj.getName();
+				labels = obj.getName();
 				tooltip_labels = labels + "\nRestore: " + ((Item) obj).getRestoreValue();
 				break;
 			default:
@@ -241,7 +233,7 @@ public class Editor extends Stage {
 			}
 
 				
-			Label icon_labels = new Label(labels, new Label.LabelStyle(new BitmapFont(), Color.BLACK));
+			Label icon_labels = new Label(labels, new Label.LabelStyle(new BitmapFont(), Color.WHITE));
 			
 			//Tool-tip (More information)
 			icon.addListener(new TextTooltip(tooltip_labels, skin));
@@ -262,7 +254,7 @@ public class Editor extends Stage {
 				
 			// Need to format these
 			if (i % 2 == 1 && i != 0) newTable.row();
-			i++;		
+				i++;		
 			}	
 		return newTable;
 	}
@@ -277,6 +269,7 @@ public class Editor extends Stage {
 	private Table generateTable(final ToolbarSelection s) {
 		
 		final Table newTable = new Table();
+		newTable.padLeft(10);
 		/*
 		 * Make a custom image icon class later
 		 * Includes image and name
@@ -284,7 +277,7 @@ public class Editor extends Stage {
 		FileHandle[] files = Gdx.files.internal(path + s.toString().toLowerCase()).list();
 		
 		Label title = new Label(s.toString(), 
-        		new Label.LabelStyle(new BitmapFont(), Color.BLACK));
+        		new Label.LabelStyle(new BitmapFont(), Color.WHITE));
 
 		newTable.add(title);
 		newTable.row();
@@ -338,12 +331,12 @@ public class Editor extends Stage {
 			newTable.row();
 			break;
 			
-		case MAP:
+		case TOOLS:
 			final TextField textField = new TextField("", skin);
 			textField.setMessageText("Save as...");
 			
 			// Map Title
-	        Label map_info = new Label("Map size", new Label.LabelStyle(new BitmapFont(), Color.BLACK));
+	        Label map_info = new Label("Map size", new Label.LabelStyle(new BitmapFont(), Color.WHITE));
 			newTable.add(map_info);
 			newTable.row();
 
@@ -480,7 +473,12 @@ public class Editor extends Stage {
 						related.setDynamicSelection(obj);
 			        }
 				});
-				break;
+				
+				if (i % 3 == 0) {
+					newTable.row();
+				}
+				i++;
+				continue;
 			case ITEM:
 				icon.addListener(new ClickListener(){
 					@Override
@@ -494,7 +492,13 @@ public class Editor extends Stage {
 						related.setDynamicSelection(obj);
 			        }
 				});
-				break;
+				
+				if (i % 3 == 0) {
+					newTable.row();
+				}
+				i++;
+				
+				continue;
 			case FLOOR:
 				icon.addListener(new ClickListener(){
 					@Override
@@ -508,6 +512,17 @@ public class Editor extends Stage {
 				});
 				break;
 			case WALL:
+				icon.addListener(new ClickListener(){
+					@Override
+			        public void clicked(InputEvent event, float x, float y) {
+						System.out.println("Selected - " + fileName);
+						
+						GameObject obj = new GameObject(cur, filePath);
+						related.setStaticSelection(obj);
+			        }
+				});
+				break;
+			case WAYPOINT:
 				icon.addListener(new ClickListener(){
 					@Override
 			        public void clicked(InputEvent event, float x, float y) {
@@ -583,6 +598,7 @@ public class Editor extends Stage {
 			break;
 			
 		case ITEM:
+			fieldList.add(nameField);
 			fieldList.add(resField);
 			break;
 		default:
@@ -599,70 +615,105 @@ public class Editor extends Stage {
 		editTable.add(saveButton);
 		editTable.row();
 		
-		
 		// If save gets clicked, clone it with new attributes
 		// before saving
 		saveButton.addListener(new ClickListener(){
 			@Override
 	        public void clicked(InputEvent event, float x, float y) {
 
+				// Sanitation check
+				boolean check = true;
 				
-					DynamicObject clone = object.clone(); //CLONE
+				if(nameField.getText().isEmpty()) {
+					System.out.println("Invalid name field!");
+					check = false;
+				}
 					
-					// Sanitation check
-					boolean check = true;
-					
-					if(nameField.getText().isEmpty()) {
-						System.out.println("Invalid name field!");
-						check = false;
-					}
-					
+				DynamicObject clone = null;
+
+				
+				// Custom attributes
+				switch(type) {
+				case ENEMY:
+					Enemy e_clone = (Enemy) object.clone(); //CLONE
+
+						
 					if(!hpField.getText().matches("[0-9]+")) {
 						System.out.println("Invalid HP value!");
 						check = false;
 					}
-					
+						
 					if(!dmgField.getText().matches("[0-9]+")) {
 						System.out.println("Invalid Damage value!");
 						check = false;
 					}
-					
-					
-					// Custom attributes
-					switch(type) {
-					case PLAYER:
 
-						break;
-					case ENEMY:
-						if(!atkField.getText().matches("[0-9]+")) {
-							System.out.println("Invalid attack value!");
-							check = false;
-						}
-						break;
-					case ITEM:
-						if(!resField.getText().matches("[0-9]+")) {
-							System.out.println("Invalid restore value!");
-							check = false;
-						}
-						break;
-					default:
-						break;
+
+					if(!atkField.getText().matches("[0-9]+")) {
+						System.out.println("Invalid attack value!");
+						check = false;
 					}
-
 					
 					if(!check)
 						return;
-					
-					
-					String s = nameField.getText().replaceAll(" ","_");
-					
-					clone.setName(s);
-					clone.setHp(Double.valueOf(hpField.getText()));
-					clone.setContactDamage(Double.valueOf(dmgField.getText()));
-					
-					saveObject(clone);
+						
 
-				
+					e_clone.setName(nameField.getText().replaceAll(" ","_"));
+					e_clone.setHp(Double.valueOf(hpField.getText()));
+					e_clone.setContactDamage(Double.valueOf(dmgField.getText()));
+					e_clone.setAttackTime(Integer.valueOf(atkField.getText()));
+					clone = e_clone;
+					break;
+				case PLAYER:
+						
+					Player p_clone = (Player) object.clone(); //CLONE
+						
+
+						
+					if(!hpField.getText().matches("[0-9]+")) {
+						System.out.println("Invalid HP value!");
+						check = false;
+					}
+						
+					if(!dmgField.getText().matches("[0-9]+")) {
+						System.out.println("Invalid Damage value!");
+						check = false;
+					}
+
+
+					if(!check)
+						return;
+												
+					p_clone.setName(nameField.getText().replaceAll(" ","_"));
+					p_clone.setHp(Double.valueOf(hpField.getText()));
+					p_clone.setContactDamage(Double.valueOf(dmgField.getText()));
+					clone = p_clone;
+
+					break;
+				case ITEM:
+					
+					Item i_clone = (Item) object.clone();
+					
+					if(!resField.getText().matches("[0-9]+")) {
+						System.out.println("Invalid restore value!");
+						check = false;
+					}
+						
+						
+					if(!check)
+						return;
+												
+					i_clone.setName(nameField.getText().replaceAll(" ","_"));
+					i_clone.setHp(Double.valueOf(0));
+					i_clone.setContactDamage(0);
+					i_clone.setRestoreValue(Integer.valueOf(resField.getText()));
+						
+					clone = i_clone;
+					break;
+				default:
+					break;
+				}
+				saveObject(clone);
 	        }
 		});
 		
@@ -769,4 +820,5 @@ public class Editor extends Stage {
 	public void setDependence(State s) {
 		this.related = s;
 	}
+	
 }

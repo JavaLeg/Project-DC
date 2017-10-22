@@ -1,9 +1,10 @@
 package Interface.Stages.Selections;
 
 public enum NewToolbarSelection {
-	TERRAIN,
-	OBJECTS,
+	DROP,
+	PLAYER,
+	ENEMY,
+	WAYPOINT,
 	TOOLS,
-	GROUP,
 	HOME;
 }
