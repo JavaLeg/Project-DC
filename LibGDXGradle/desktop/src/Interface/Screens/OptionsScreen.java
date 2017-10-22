@@ -41,7 +41,7 @@ public class OptionsScreen implements Screen {
 	private static final int WORLD_WIDTH  = 800;
 	private static final int WORLD_HEIGHT = 450;
     
-    static private int resolutionBoxIndex = 1;
+    static private int resolutionBoxIndex;
 	
     public OptionsScreen(DCGame game) throws IOException {
     	this.game = game;
