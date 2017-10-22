@@ -12,8 +12,10 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.scenes.scene2d.Action;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
@@ -25,6 +27,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.scenes.scene2d.ui.TextTooltip;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
+import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.engine.desktop.SaveSys;
 
@@ -63,9 +66,12 @@ public class Editor extends Stage {
 	private String path;
 	private SaveSys saver;
 	
+	// for blinking selected
+	private Image prevSelected;
+	
 	// Map size constraints
 	private final static int MAP_MIN = 10;
-	private final static int MAP_MAX = 50;
+	private final static int MAP_MAX = 100;
 		
 	/*
 	 * Dimensions: 280 x 480
@@ -201,7 +207,7 @@ public class Editor extends Stage {
 
 		for(FileHandle file: files) {
 			final DynamicObject obj = saver.Load(file.name(), type);
-			Image icon = processPath(obj.getImgPath());
+			final Image icon = processPath(obj.getImgPath());
 			
 			
 			String labels = null;
@@ -249,6 +255,8 @@ public class Editor extends Stage {
 					System.out.println("Selected - " + obj.getName());
 					selected_Dyn = obj;
 					related.setDynamicSelection(obj);
+					
+					blink(icon);
 				}
 			});
 				
@@ -435,9 +443,10 @@ public class Editor extends Stage {
 
 			// Display the sprite (Information)
 			final Texture texture = new Texture(file);	
-			Image icon = new Image(new TextureRegion(texture));
+			final Image icon = new Image(new TextureRegion(texture));
 			icon.addListener(new TextTooltip("Preset: " + fileName, skin));
 			newTable.add(icon).size(40, 40).pad(PAD);
+		
 			
 			switch(cur){
 			case PLAYER:
@@ -457,6 +466,8 @@ public class Editor extends Stage {
 						//System.out.print(getActionState());
 						selected_Dyn = obj;
 						related.setDynamicSelection(obj);
+						
+						blink(icon);
 			        }
 				});
 				break;
@@ -471,6 +482,8 @@ public class Editor extends Stage {
 						// double hp, double damage, int moveRate, MoveBehaviour b, String img_path
 						selected_Dyn = obj;
 						related.setDynamicSelection(obj);
+						
+						blink(icon);
 			        }
 				});
 				
@@ -490,6 +503,8 @@ public class Editor extends Stage {
 						if (fileName.equals("win")) obj.setName(fileName);
 						selected_Dyn = obj;
 						related.setDynamicSelection(obj);
+						
+						blink(icon);
 			        }
 				});
 				
@@ -508,6 +523,8 @@ public class Editor extends Stage {
 						// Right now all attributes initialized as null (Changed through edit)
 						GameObject obj = new GameObject(cur, filePath);
 						related.setStaticSelection(obj);
+						
+						blink(icon);
 			        }
 				});
 				break;
@@ -519,6 +536,8 @@ public class Editor extends Stage {
 						
 						GameObject obj = new GameObject(cur, filePath);
 						related.setStaticSelection(obj);
+						
+						blink(icon);
 			        }
 				});
 				break;
@@ -530,6 +549,8 @@ public class Editor extends Stage {
 						
 						GameObject obj = new GameObject(cur, filePath);
 						related.setStaticSelection(obj);
+						
+						blink(icon);
 			        }
 				});
 				break;
@@ -821,4 +842,17 @@ public class Editor extends Stage {
 		this.related = s;
 	}
 	
+	private void blink(Image icon) {
+		if(prevSelected != null) {
+			Array<Action> prevActions = prevSelected.getActions();
+			for(Action a : prevActions) {
+				prevSelected.removeAction(a);
+			}
+			prevSelected.addAction(Actions.alpha(1));
+		}
+		
+		icon.addAction(Actions.forever(Actions.sequence(Actions.alpha(0, 0.3f),Actions.alpha(1, 0.6f))));
+		
+		prevSelected = icon;
+	}
 }
