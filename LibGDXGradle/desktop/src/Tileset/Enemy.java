@@ -130,6 +130,7 @@ public class Enemy extends DynamicObject implements Cloneable {
 					AttackAnimation a = new AttackAnimation(AttackType.TWO);
 					Direction d = getFacing().getDirection(getCoord(), s.findPlayer());
 					Coord coord = d.moveInDirection(getCoord());
+					setFacing(d);
 					a.add(coord,  d);
 					//AttackAnimation att = new AttackAnimation(p.getDirection() , coord);
 					s.addActor(a);
