@@ -39,6 +39,7 @@ import Tileset.GameObject.ObjectType;
 import Tileset.Item;
 import Tileset.Player;
 import Tileset.Behaviour.Attack;
+import Tileset.Behaviour.AttackAnimation;
 import Tileset.Behaviour.MoveBehaviour;
 import Tileset.Behaviour.MoveRandom;
 
@@ -454,11 +455,12 @@ public class Editor extends Stage {
 						System.out.println("Selected - " + fileName);
 						
 						
+						AttackAnimation animate = new AttackAnimation();
 						// DEFAULTS FOR ATTACKS
 						Attack light = new Attack(Arrays.asList(new Coord(0,1)), 
-								5, Arrays.asList(ObjectType.ENEMY), 15 , 10);
+								5, Arrays.asList(ObjectType.ENEMY), 15 , 10, animate);
 						Attack heavy = new Attack(Arrays.asList(new Coord(0,1), new Coord(1,1), new Coord(-1,1)), 
-								5, Arrays.asList(ObjectType.ENEMY), 45 , 10);
+								5, Arrays.asList(ObjectType.ENEMY), 45 , 10, animate);
 						
 						Player obj = new Player(10, 10, light, heavy, filePath);
 						//System.out.print(getActionState());

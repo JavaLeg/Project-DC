@@ -91,20 +91,28 @@ public class DynamicGame {
 
 		switch (a) {
 		case ATTACK:
-			assert(p.getDirection() != null);
-			Coord coord = p.getDirection().moveInDirection(curr);
-			Attack att = new Attack(p.getDirection() , coord);
-			activeState.addActor(att);
-			activeState.attackObject(coord);
+			//assert(p.getDirection() != null);
+			//Coord coord = p.getDirection().moveInDirection(curr);
+			//Attack att = new Attack(p.getDirection() , coord);
+			//activeState.addActor(att);
+			//activeState.attackObject(coord);
+			if (p.canAttack()) {
+				p.selectLight();
+				p.setActionState(ActionState.ATTACK);
+				
+				System.out.print("USER INPUT: LIGHT ATTACK\n");
+			}
 			
-//			p.selectLight();
-//			p.setActionState(ActionState.ATTACK);
-			System.out.print("USER INPUT: LIGHT ATTACK\n");
 			break;
 		case SPECIAL:
-//			p.selectSpecial();
-//			p.setActionState(ActionState.ATTACK);
-			System.out.print("USER INPUT: HEAVY ATTACK\n");
+			if (p.canAttack()) {
+				p.selectSpecial();
+				p.setActionState(ActionState.ATTACK);
+				System.out.print("USER INPUT: HEAVY ATTACK\n");
+			}
+			
+			
+		
 			break;
 		case MOVE_SOUTH:
 			// Up and down are uncontested, however they preserve original

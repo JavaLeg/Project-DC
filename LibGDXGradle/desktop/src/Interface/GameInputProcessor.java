@@ -68,14 +68,11 @@ public class GameInputProcessor implements InputProcessor {
 		default:
 			// nothing 
 		}		
-		System.out.println("Make action.");
 		if (toMake != null) {
 			if (sinceLastAction > 0) {
-				System.out.println("Queueing: " + sinceLastAction);
 				queuedAction = toMake;
 			} else {
 				
-				System.out.println("Successfully made action");
 				activeGame.makeAction(toMake); // TODO: move to step to syncronise all actions
 				queuedAction = null;
 				sinceLastAction = actionSpeed;

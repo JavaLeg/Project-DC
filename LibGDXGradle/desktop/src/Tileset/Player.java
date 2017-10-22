@@ -101,9 +101,21 @@ public class Player extends DynamicObject implements Cloneable {
 		return this.dir;
 	}
 	
+	public boolean canAttack() {
+		return (getActionState() == ActionState.MOVE);
+	}
+	
 	@Override
 	public Attack getAttack() {
 		return selected;
+	}
+	
+	public Attack getLightAttack() {
+		return light;
+	}
+	
+	public Attack getHeavyAttack() {
+		return special;
 	}
 	
 	@Override

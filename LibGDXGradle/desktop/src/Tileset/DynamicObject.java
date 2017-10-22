@@ -181,6 +181,10 @@ public class DynamicObject extends GameObject implements Cloneable {
 	public Direction getFacing() {
 		return facing;
 	}
+	
+	public void setFacing(Direction facing) {
+		this.facing = facing;
+	}
 
 	public Attack getAttack() {
 		return null;
