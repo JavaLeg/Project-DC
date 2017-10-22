@@ -374,8 +374,10 @@ public class State extends Stage {
 		while(iterator.hasNext()) {
 			DynamicObject o = iterator.next();
 			if (o.getHp() <= 0) {
-				iterator.remove();
-				this.tileList.get(o.getCoord().getX()* colActors  + o.getCoord().getY()).deleteObject();
+				if (o.getType() != ObjectType.PLAYER) {
+					iterator.remove();
+					this.tileList.get(o.getCoord().getX()* colActors  + o.getCoord().getY()).deleteObject();
+				}
 			}
 		}
 	}
