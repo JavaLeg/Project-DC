@@ -136,7 +136,7 @@ public class State extends Stage {
 		
 		GameObject obj = null;
 
-		if(type == ObjectType.ENEMY || type == ObjectType.ITEM || type == ObjectType.PLAYER) {
+		if(type == ObjectType.ENEMY || type == ObjectType.ITEM || type == ObjectType.PLAYER || type == ObjectType.WAYPOINT) {
 			// need to handle clones separately otherwise data is lost
 			switch(type) {
 			case ENEMY:
@@ -147,6 +147,11 @@ public class State extends Stage {
 				break;
 			case ITEM:
 				obj = ((Item) cur_d_object).clone();
+				break;
+			case WAYPOINT:
+				obj = cur_d_object.clone();
+				break;
+			default:
 				break;
 			}
 			
@@ -531,7 +536,6 @@ public class State extends Stage {
 		
 		// Static Objects
 		for(GameObject obj : staticList) {
-			System.out.println("hi");
 			Coord c = obj.getCoord();
 			encodedTable[c.getX()][c.getY()].setBase(obj);
 		}
