@@ -96,9 +96,9 @@ public class DynamicGame {
 			Attack att = new Attack(p.getDirection() , coord);
 			activeState.addActor(att);
 			activeState.attackObject(coord);
-			
+			p.setActionState(ActionState.ATTACK);
 //			p.selectLight();
-//			p.setActionState(ActionState.ATTACK);
+//			
 			System.out.print("USER INPUT: LIGHT ATTACK\n");
 			break;
 		case SPECIAL:
@@ -110,7 +110,7 @@ public class DynamicGame {
 			// Up and down are uncontested, however they preserve original
 			// direction player faces (either left or right)
 			toMove = (Direction.SOUTH).moveInDirection(curr);
-			if (p.canChangePosition() && activeState.isValid(toMove) && !activeState.isBlocked(toMove)) {
+			if (p.canChangePosition() && !activeState.isBlocked(toMove)) {
 				activeState.movePlayer(toMove);
 			}
 			p.setDirection(Direction.SOUTH);
@@ -120,7 +120,7 @@ public class DynamicGame {
 			// If looking left, we can move left. Otherwise turn left
 			if (p.getDirection() == Direction.WEST) {
 				toMove = (Direction.WEST).moveInDirection(curr);
-				if (p.canChangePosition() && activeState.isValid(toMove) && !activeState.isBlocked(toMove)) {
+				if (p.canChangePosition() && !activeState.isBlocked(toMove)) {
 					activeState.movePlayer(toMove);
 				}
 			} else {
@@ -132,7 +132,7 @@ public class DynamicGame {
 			// If looking right, we can move right. Otherwise turn right
 			if (p.getDirection() == Direction.EAST) {
 				toMove = (Direction.EAST).moveInDirection(curr);
-				if (p.canChangePosition() && activeState.isValid(toMove) && !activeState.isBlocked(toMove)) {
+				if (p.canChangePosition() && !activeState.isBlocked(toMove)) {
 					activeState.movePlayer(toMove);
 				}
 			} else {
@@ -144,7 +144,7 @@ public class DynamicGame {
 			// Up and down are uncontested, however they preserve original
 			// direction player faces (either left or right)
 			toMove = (Direction.NORTH).moveInDirection(curr);
-			if (p.canChangePosition() && activeState.isValid(toMove) && !activeState.isBlocked(toMove)) {
+			if (p.canChangePosition() && !activeState.isBlocked(toMove)) {
 				activeState.movePlayer(toMove);
 			}
 			p.setDirection(Direction.NORTH);
@@ -154,7 +154,7 @@ public class DynamicGame {
 		default:
 			break;
 		}
-		activeState.getTile(curr).flipObject(p.facingRight(), p.getImgPath());
+		//activeState.getTile(curr).flipObject(p.facingRight(), p.getImgPath());
 		return false;
 	}
 	
