@@ -84,7 +84,7 @@ public class Enemy extends DynamicObject implements Cloneable {
 			}
 			break;
 		case MOVE:
-			System.out.println(sinceLastMove + " " + moveRate + " " + moveBehaviour);
+			//System.out.println(sinceLastMove + " " + moveRate + " " + moveBehaviour);
 			// movement behavior
 			if (sinceLastMove >= moveRate && moveBehaviour != null) {
 				// move one step

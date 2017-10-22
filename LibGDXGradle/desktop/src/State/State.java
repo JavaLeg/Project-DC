@@ -2,14 +2,17 @@ package State;
 
 
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
-
+import java.util.Set;
 
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import Tileset.*;
+import Tileset.DynamicObject.ActionState;
 import Tileset.GameObject.ObjectType;
 import Interface.EditorModel;
 import Interface.TileTuple;
@@ -184,16 +187,16 @@ public class State extends Stage {
 	//************************//
 	
 
-//	//WHY is this needed?
-//	public List<Coord> getAttackedLocations() {
-//		//Set<Coord> s = new HashSet<Coord>();
-//		for (DynamicObject d : dynamicList) {
-//			if (d.getActionState() == ActionState.ATTACK) {
-//				
-//			}
-//		}
-//		//return new LinkedList<Coord>(s);
-//	}
+
+	public List<Coord> getAttackedLocations() {
+		Set<Coord> s = new HashSet<Coord>();
+		for (DynamicObject d : dynamicList) {
+			if (d.getActionState() == ActionState.ATTACK) {
+				
+			}
+		}
+		return new LinkedList<Coord>(s);
+	}
 
 	public GameObject getObject(Coord coord) {
 		return this.tileList.get(coord.getX()* colActors  + coord.getY()).getObject();
@@ -312,9 +315,7 @@ public class State extends Stage {
 		this.tileList.get(coord.getX()* colActors  + coord.getY()).deleteObject();
 	}
 	
-	/*
-	 * TODO, does this need a clone?
-	 */
+
 	public void moveObject(Coord from, Coord to) {
 		Tile t = getTile(to);
 		t.moveObjectTo(getTile(from));
@@ -516,12 +517,7 @@ public class State extends Stage {
 		}
 	}
 	
-	public boolean isValid(Coord next) {
-		// TODO Auto-generated method stub
-		return (next.getX() >= 0 && next.getX() < colActors) &&
-				(next.getY() >= 0 && next.getY() < rowActors);
-	}
-		
+
 	public TableTuple getDim() {
 		return new TableTuple(rowActors, colActors);
 	}

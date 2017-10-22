@@ -153,6 +153,7 @@ public class DynamicObject extends GameObject implements Cloneable {
 	}
 	
 	public void setActionState(ActionState s) {
+		//System.out.println(getName() + " switched to " + s);
 		state = s;
 	}
 	

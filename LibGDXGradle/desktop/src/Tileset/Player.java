@@ -44,9 +44,10 @@ public class Player extends DynamicObject implements Cloneable {
 	@Override
 	public void step(State s) {
 		super.step(s);
-		
+		System.out.println("here..?");
 		switch (getActionState()) {
 		case ATTACK:
+			
 			selected.applyAttack(s, getCoord(), getFacing());
 			if (attackCooldown > 0) {
 				attackCooldown--;
