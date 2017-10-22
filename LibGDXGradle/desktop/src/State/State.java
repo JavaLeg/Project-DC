@@ -2,6 +2,7 @@ package State;
 
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 
@@ -355,6 +356,18 @@ public class State extends Stage {
 		this.tileList.get(coord.getX()* colActors  + coord.getY()).deleteObject();
 	}
 	
+	public void resolveConflicts() {
+		// remove anything that has less than 0 health
+		Iterator<DynamicObject> iterator = dynamicList.iterator();
+		while(iterator.hasNext()) {
+			DynamicObject o = iterator.next();
+			if (o.getHp() <= 0) {
+				iterator.remove();
+				this.tileList.get(o.getCoord().getX()* colActors  + o.getCoord().getY()).deleteObject();
+			}
+		}
+	}
+	
 
 	public void moveObject(Coord from, Coord to) {
 		//System.out.println("From: " + from.toString() + "To: " + to.toString());
@@ -382,6 +395,8 @@ public class State extends Stage {
 	public List<DynamicObject> getAllDynamicObjects() {
 		return dynamicList;
 	}
+	
+	
 	
 	
 	//************************//
@@ -418,8 +433,8 @@ public class State extends Stage {
 		
 		moveObject(player.getCoord(), to);
 		
-		//Tile new_tile = this.tileList.get(to.getX() * colActors + to.getY());
-		//new_tile.flipObject(player.facingRight(), player.getImgPath());
+		Tile new_tile = this.tileList.get(to.getX() * colActors + to.getY());
+		new_tile.flipObject(player.facingRight(), player.getImgPath());
 	}
 	//************************//
 	//******* TERRAIN ********//

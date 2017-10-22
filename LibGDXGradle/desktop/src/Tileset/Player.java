@@ -53,7 +53,8 @@ public class Player extends DynamicObject implements Cloneable {
 		
 		switch (getActionState()) {
 		case ATTACK:
-			System.out.print(attackCooldown);
+			//System.out.print(attackCooldown);
+			System.out.println(getFacing());
 			selected.applyAttack(s, getCoord(), getFacing());
 			if (attackCooldown > 0) {
 				attackCooldown--;
@@ -77,14 +78,24 @@ public class Player extends DynamicObject implements Cloneable {
 		selected = light;
 	}
 	
-	public void setDirection(Direction dir) {
-		this.dir = dir;
+
+	public void setFacing(Direction dir) {
+		super.setFacing(dir);
 		if (dir.equals(Direction.EAST)) {
 			this.right = true;
 		} else if (dir.equals(Direction.WEST)) {
 			this.right = false;
 		}
 	}
+	
+//	public void setDirection(Direction dir) {
+//		this.dir = dir;
+//		if (dir.equals(Direction.EAST)) {
+//			this.right = true;
+//		} else if (dir.equals(Direction.WEST)) {
+//			this.right = false;
+//		}
+//	}
 	
 	/*
 	 * Returns if the player is facing right
@@ -100,9 +111,9 @@ public class Player extends DynamicObject implements Cloneable {
 		this.right = true;
 	}
 	
-	public Direction getDirection(){
-		return this.dir;
-	}
+//	public Direction getDirection(){
+//		return this.dir;
+//	}
 	
 	@Override
 	public Attack getAttack() {

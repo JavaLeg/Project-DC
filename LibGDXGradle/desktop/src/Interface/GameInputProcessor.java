@@ -13,6 +13,7 @@ import State.DynamicGame;
 public class GameInputProcessor implements InputProcessor {
 	private DynamicGame activeGame;
 	private Action queuedAction;
+	private Action nextAction; 
 	private final int actionSpeed = 5;
 	private int sinceLastAction;
 	private boolean enabled;
@@ -21,7 +22,7 @@ public class GameInputProcessor implements InputProcessor {
 	public GameInputProcessor(DynamicGame g) {
 		this.activeGame = g;
 		sinceLastAction = 0;
-		enabled = false;
+		enabled = true;
 	}
 	
 	
@@ -68,13 +69,14 @@ public class GameInputProcessor implements InputProcessor {
 		default:
 			// nothing 
 		}		
+		System.out.println("make Action");
 		if (toMake != null) {
 			if (sinceLastAction > 0) {
 				queuedAction = toMake;
 			} else {
 				sinceLastAction = actionSpeed;
 				activeGame.makeAction(toMake); // TODO: move to step to syncronise all actions
-				queuedAction = null;
+				//nextAction = toMake;
 			}
 		}
 		
@@ -84,16 +86,23 @@ public class GameInputProcessor implements InputProcessor {
 	
 	
 	public void step() {
-		if (sinceLastAction > 0) {
-			//System.out.println(sinceLastAction);
-			sinceLastAction--;
-		} else {
-			if (queuedAction != null) {
-				sinceLastAction = actionSpeed;
-				activeGame.makeAction(queuedAction);
-				queuedAction = null;
+		//System.out.println("sup");
+		//if (nextAction != null) {
+		//	activeGame.makeAction(nextAction);
+		//	nextAction = null;
+		//	queuedAction = null;
+		//} else {
+			if (sinceLastAction > 0) {
+				//System.out.println(sinceLastAction);
+				sinceLastAction--;
+			} else {
+				if (queuedAction != null) {
+					sinceLastAction = actionSpeed;
+					activeGame.makeAction(queuedAction);
+					queuedAction = null;
+				}
 			}
-		}
+		//}
 	}
 	
 	

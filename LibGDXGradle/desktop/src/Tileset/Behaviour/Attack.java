@@ -58,6 +58,7 @@ public class Attack implements Serializable {
 		// grabs valid objects from State and damages all
 		List<Coord> adjustedHitBox = new LinkedList<Coord>();
 		for (Coord c : hitbox) {
+			System.out.println(facing.rotate(c).toString());
 			adjustedHitBox.add(facing.rotate(c));
 		}
 		
@@ -82,15 +83,6 @@ public class Attack implements Serializable {
 		return speed;
 	}
 
-
-
-	
-	public void add(Coord c) {
-		
-	}
-	
-
-	
 	
 	public int getAttackCooldown() {
 		return cooldown;

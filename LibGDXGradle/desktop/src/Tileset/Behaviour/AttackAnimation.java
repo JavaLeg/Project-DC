@@ -29,7 +29,7 @@ public class AttackAnimation extends Actor implements Serializable {
 	
 	private String path = "SpriteFamily/attack/";
 	
-	private Animation animation;
+	private Animation<Sprite> animation;
 	private Direction dir;
 	
 	private enum Type {
@@ -43,6 +43,7 @@ public class AttackAnimation extends Actor implements Serializable {
 		this.coord = new Coord(0,0);
 		this.dir = Direction.EAST;
 		this.loadImage(Type.ONE);
+		this.setVisible(false);
 	}
 	
 	public AttackAnimation(Direction dir, Coord coord) {
@@ -51,6 +52,7 @@ public class AttackAnimation extends Actor implements Serializable {
 		this.dir = dir;
 		// load the attack image
 		this.loadImage(Type.ONE);
+		
 	}
 	
 	public Animation getAttack() {
@@ -96,7 +98,7 @@ public class AttackAnimation extends Actor implements Serializable {
 			
 			animationFrames[i] = sprite;
 		}
-		animation = new Animation(1f/20f, animationFrames);
+		animation = new Animation<Sprite>(1f/20f, animationFrames);
 	}
 	
 	private float getRotation2() {
@@ -120,19 +122,31 @@ public class AttackAnimation extends Actor implements Serializable {
 		time += delta;
 	}
 	
-	public void add(Coord c) {
-		
+	public void add(Coord c, Direction d) {
+		time = 0;
+		this.dir = d;
+		this.coord = c;
+		for (Sprite s : animation.getKeyFrames()) {
+			s.setRotation(getRotation2());
+			s.setBounds(this.coord.getX() * 40, this.coord.getY() * 40, 40, 40);
+		}
+		this.setVisible(true);
 	}
 	
 	@Override
 	public void draw(Batch batch, float parentAlpha) {
-		super.draw(batch, parentAlpha);
-		 if (time < this.animation.getAnimationDuration()) {
-			 Sprite s = (Sprite)this.animation.getKeyFrame(time,false);
-		 	 s.draw(batch);
-		 } else if (time > this.animation.getAnimationDuration()) {
-			 this.remove();
-		 }
+		
+		if (this.isVisible()) {
+			super.draw(batch, parentAlpha);
+			 if (time < this.animation.getAnimationDuration()) {
+				 Sprite s = (Sprite)this.animation.getKeyFrame(time,false);
+			 	 s.draw(batch);
+			 } else if (time > this.animation.getAnimationDuration()) {
+				 this.remove();
+				 this.setVisible(false);
+			 }
+		}
+		
 	}
 	
 	

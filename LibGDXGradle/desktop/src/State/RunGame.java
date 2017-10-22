@@ -28,8 +28,10 @@ public class RunGame {
 		final Runnable stepThread = new Runnable() {
             public void run() { 
             	 try {
+            		 System.out.println("Start");
             		 activeGame.step(); 
             		 input.step();
+            		 System.out.println("Stop");
                  } catch (Exception e) {
                      e.printStackTrace();
                  }
