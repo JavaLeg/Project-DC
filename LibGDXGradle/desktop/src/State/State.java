@@ -228,6 +228,11 @@ public class State extends Stage {
 			newObject.setCoord(coord);
 			player = (Player) newObject;
 			
+			if (player.getHp() == -1) {
+				player.setHp(10);
+				player.setMaxHp(10);
+			}
+			
 			cur.setDynamicObject(player);
 			break;
 		case ENEMY:
