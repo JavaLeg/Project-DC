@@ -316,10 +316,11 @@ public class State extends Stage {
 	 * TODO, does this need a clone?
 	 */
 	public void moveObject(Coord from, Coord to) {
-		GameObject temp = this.getObject(from);
-		this.deleteObject(from);
-		this.setObject(temp, to);
+		Tile t = getTile(to);
+		t.moveObjectTo(getTile(from));
 	}
+	
+	
 	
 	
 	public void swapObject(Coord from, Coord to) {
@@ -373,10 +374,8 @@ public class State extends Stage {
 	 * Just delete the tile object
 	 */
 	public void movePlayer(Coord to) {
-		if (player == null) return;				// Only move existent players	
-		Coord pos = player.getCoord();
-		this.tileList.get(pos.getX() * colActors + pos.getY()).deleteObject();
-		this.setObject(player, to);
+		if (player == null) return;		
+		moveObject(player.getCoord(), to);
 	}
 	
 	
@@ -385,22 +384,24 @@ public class State extends Stage {
 	//************************//
 	
 	public boolean hasWall(Coord pos) {
+		if (isOutOfBounds(pos)) return true;
 		GameObject g = getTile(pos).getObject();
 		return (g != null) && (g.getType() == ObjectType.WALL);
 	}
 	
 	/*
 	 * Returns if the next position will block
-	 * Also checks win condition
 	 */
 	public boolean isBlocked(Coord pos) {
-		if (win != null && pos.equals(win.getCoord())) {		// If winnable
-			System.out.println("Win!");
-			return false;
-		}
+		if (isOutOfBounds(pos)) return true;
 		return (getTile(pos).hasObject());
 	}
 	
+	
+	public boolean isOutOfBounds(Coord c) {
+		return (c.getX() < 0 || c.getY() < 0 || c.getX() >= rowActors || c.getY() >= colActors);
+				
+	}
 	
 	//************************//
 	//******** TILES *********//

@@ -134,6 +134,17 @@ public class Tile extends Group {
 		this.addActor(processPath(new_object.getImgPath()), "object", 2);
 	}	
 	
+	public void moveObjectTo(Tile from) {
+		Actor a = from.getActor("object");
+		this.g_obj = from.g_obj;
+		this.g_obj.setCoord(this.getCoord());
+		this.addActor(a, "object", 2);
+		from.g_obj = null;
+		from.removeActor(a);
+	}
+
+	
+	
 	
 	/*
 	 * Object setter for dynamic objects (player, enemy)
