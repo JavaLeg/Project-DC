@@ -6,7 +6,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 
-import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;
@@ -34,7 +33,6 @@ import com.engine.desktop.DCGame;
 import com.engine.desktop.SaveSys;
 
 import Interface.EditorModel;
-import Interface.Screens.MainMenuScreen;
 import Interface.Stages.Selections.ToolbarSelection;
 import State.Coord;
 import State.State;
@@ -71,7 +69,6 @@ public class Editor extends Stage {
 	private SaveSys saver;
 	
 
-	private DCGame g;
 
 	// for blinking selected
 	private Image prevSelected;
@@ -96,7 +93,7 @@ public class Editor extends Stage {
 		this.tableMap = new HashMap<ToolbarSelection, Table>();
 		this.saver = new SaveSys();
 		this.PAD = 6;
-		this.g = g;
+
 		
 		initialise();
 		update(ToolbarSelection.FLOOR);
@@ -858,14 +855,8 @@ public class Editor extends Stage {
 		this.related = s;
 	}
 	
-<<<<<<< HEAD
 	
-	public void endGame() {
-		((Game)Gdx.app.getApplicationListener()).setScreen(new MainMenuScreen(g));
-		this.dispose();
-	}
-	
-=======
+
 	private void blink(Image icon) {
 		if(prevSelected != null) {
 			Array<Action> prevActions = prevSelected.getActions();
@@ -879,5 +870,5 @@ public class Editor extends Stage {
 		
 		prevSelected = icon;
 	}
->>>>>>> refs/remotes/origin/master
+
 }

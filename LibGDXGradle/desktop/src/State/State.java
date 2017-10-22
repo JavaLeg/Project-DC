@@ -412,10 +412,10 @@ public class State extends Stage {
 	 */
 	public boolean isBlocked(Coord pos) {
 
-		//if (win != null && pos.equals(win.getCoord())) {		// If winnable
-		//	System.out.println("Win!");
-		//	return false;
-		//}
+		if (win != null && pos.equals(win.getCoord())) {		// If winnable
+			System.out.println("Win!");
+			return false;
+		}
 		
 		if ( !isValid(pos) ) return true;
 
