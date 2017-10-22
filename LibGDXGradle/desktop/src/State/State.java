@@ -2,16 +2,14 @@ package State;
 
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
+
 
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import Tileset.*;
-import Tileset.DynamicObject.ActionState;
 import Tileset.GameObject.ObjectType;
 import Interface.EditorModel;
 import Interface.TileTuple;
@@ -20,8 +18,8 @@ import Interface.Stages.TableTuple;
 
 public class State extends Stage {
 	
-	private static final int DEFAULT_MAP_WIDTH = 10; 
-	private static final int DEFAULT_MAP_HEIGHT = 10;
+	private static final int DEFAULT_MAP_WIDTH = 25; 
+	private static final int DEFAULT_MAP_HEIGHT = 25;
 	
 	private int rowActors;
 	private int colActors;
@@ -67,16 +65,19 @@ public class State extends Stage {
 		// assumes no player initially
 		this.player = null;
 	}
-		public State(Viewport v, int height, int width) {
-			this(v);
-			this.rowActors = height;
-			this.colActors = width;
-			
-		}
-	private void initialise() {
+	
+//	public State(Viewport v, int width, int height) {
+//		this(v);
+//		this.rowActors = height;
+//		this.colActors = width;
+//			
+//	}
 		
-		for(int i = 0; i < rowActors; i++) {
-			for(int j = 0; j < colActors; j++) {
+		
+	private void initialise() {
+				
+		for(int i = 0; i < this.rowActors; i++) {
+			for(int j = 0; j < this.colActors; j++) {
 								
 				final Tile tile = new Tile(new Coord(i,j));
 				tileList.add(tile);
@@ -469,11 +470,12 @@ public class State extends Stage {
 		 * ORDER MATTERS IN WHICH YOU PUT ONTO THE TABLE
 		 * Ensure static objects iterated over first
 		 */
-		EditorModel model = new EditorModel(rowActors, colActors);
+		EditorModel model = new EditorModel(this.rowActors, this.colActors);
 		TileTuple[][] encodedTable = model.getEncodedTable();
 		
 		// Static Objects
 		for(GameObject obj : staticList) {
+			System.out.println("hi");
 			Coord c = obj.getCoord();
 			encodedTable[c.getX()][c.getY()].setBase(obj);
 		}
@@ -501,17 +503,17 @@ public class State extends Stage {
 	 * Directly sets the objects
 	 */
 	public void restoreModel(EditorModel m) {
-		TileTuple[][] encodedTable = m.getEncodedTable();
-		
-		for(int i = 0; i < rowActors; i++) {
-			for(int j = 0; j < colActors; j++) {
+		TileTuple[][] encodedTable = m.getEncodedTable();	
+		resize(m.getRows(), m.getCols());
+
+		for(int i = 0; i < this.rowActors; i++) {
+			for(int j = 0; j < this.colActors; j++) {
 				TileTuple enc_tile = encodedTable[i][j];
 				
 				if(enc_tile == null || enc_tile.isEmpty())
 					continue;
 
 				ObjectType type = enc_tile.getID();
-				Tile tile = getTile(new Coord(i, j));
 				
 				GameObject base = null;
 				DynamicObject d_obj = null;
@@ -546,5 +548,23 @@ public class State extends Stage {
 	public int getColumn() {
 		// TODO Auto-generated method stub
 		return this.colActors;
+	}
+	
+	public void resize(int rows, int cols) {
+		// TODO Auto-generated method stub
+		this.clear();
+		this.rowActors = rows;
+		this.colActors = cols;
+		
+		this.tileList = null;
+		this.dynamicList = null;
+		this.staticList = null;
+		
+		this.tileList = new ArrayList<Tile>();
+		this.dynamicList = new ArrayList<DynamicObject>();
+		this.staticList = new ArrayList<GameObject>();
+		this.player = null;
+		this.win = null;
+		initialise();
 	}
 }

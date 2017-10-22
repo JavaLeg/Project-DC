@@ -15,6 +15,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
@@ -23,6 +24,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.scenes.scene2d.ui.TextTooltip;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.engine.desktop.SaveSys;
 
@@ -61,6 +63,10 @@ public class Editor extends Stage {
 	private State related;
 	private String path;
 	private SaveSys saver;
+	
+	// Map size constraints
+	private final static int MAP_MIN = 10;
+	private final static int MAP_MAX = 50;
 		
 	/*
 	 * Dimensions: 280 x 480
@@ -111,7 +117,9 @@ public class Editor extends Stage {
 		super.addActor(new Image(new TextureRegion(new Texture(Gdx.files.internal("EditorScreen/Inventory_tab_2.png")))));
 		ScrollPane scroll = new ScrollPane(newTable);
 		scroll.setSize(220,470);
-		scroll.moveBy(10, 0);
+		scroll.moveBy(25, 0);
+		scroll.setForceScroll(false, true);
+		scroll.setScrollingDisabled(true, false);
 		super.addActor(scroll);
 	}
 
@@ -345,7 +353,26 @@ public class Editor extends Stage {
 			final TextField colField = generateTextField(Integer.toString(dim.getY()));
 
 			newTable.add(rowField).size(40, 30);
-			newTable.add(colField).size(40, 30);
+			newTable.add(colField).size(40, 30).pad(PAD);
+			
+			
+			TextureRegionDrawable tr = new TextureRegionDrawable(new TextureRegion
+					(new Texture(Gdx.files.internal("EditorScreen/info_icon.png"))));
+			
+			
+			ImageButton ib = new ImageButton(tr);
+			
+			String description = "Dimension constraints:\n" +
+									"Min - " + Integer.toString(MAP_MIN) + " x " + Integer.toString(MAP_MIN) + "\n" +
+									"Max - " + Integer.toString(MAP_MAX) + " x " + Integer.toString(MAP_MAX);
+			
+			ib.addListener(new TextTooltip(description, skin));
+			
+			newTable.add(ib).size(40);
+			
+			
+			
+			
 			newTable.row();
 			
 			newTable.add(textField).size(80, 30);			
@@ -368,6 +395,13 @@ public class Editor extends Stage {
 				@Override
 		        public void clicked(InputEvent event, float x, float y) {
 					System.out.println("Reload State");
+					if (rowField.getText().matches("^-?\\d+$") && colField.getText().matches("^-?\\d+$")) {		// Check if number
+						int rows = Integer.parseInt(rowField.getText());
+						int cols = Integer.parseInt(colField.getText());
+						if (rows >= MAP_MIN && rows <= MAP_MAX && cols >= MAP_MIN && cols <= MAP_MAX)
+							related.resize(rows, cols);									// Deletes all of the old data, resizes map
+					}
+					System.out.println(rowField.getText() + ", " + colField.getText());
 		        }
 			});
 			newTable.add(refreshButton);
