@@ -256,7 +256,7 @@ public class State extends Stage {
 			cur.setFloor(newObject);
 			break;
 		case WAYPOINT:
-			if(cur.getObjectType() == ObjectType.PLAYER) player = null;
+			//if(cur.getObjectType() == ObjectType.PLAYER) player = null;
 			//if(cur.getObjectType() == ObjectType.ENEMY || cur.getObjectType() == ObjectType.ITEM) cur_d_object = null;
 			
 			dynamicList.add((DynamicObject) newObject);
