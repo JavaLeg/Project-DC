@@ -226,7 +226,10 @@ public class State extends Stage {
 			// Delete the old player and the flag if we're overriding it
 			if (this.hasPlayer() == true) this.deletePlayer(player.getCoord());
 			if (cur.getObjectType() == ObjectType.ITEM
-					&& cur.getObject().getName() == "win") win = null;
+					&& cur.getObject().getName() == "win") {
+				win = null;
+				//System.out.println("Waypoint reached");
+			}
 			
 			newObject.setCoord(coord);
 			player = (Player) newObject;
