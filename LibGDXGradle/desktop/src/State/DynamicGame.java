@@ -111,15 +111,71 @@ public class DynamicGame {
 				p.setActionState(ActionState.ATTACK);
 				//activeState.attackObject(coord, p.getAttack());
 			}
-			
-			
-//			
-			System.out.print("USER INPUT: LIGHT ATTACK\n");
 			break;
+			
+		case ATTACK_SOUTH:
+			
+			if (p.canAttack()) {
+				p.setFacing(Direction.SOUTH);
+				Coord coord = p.getFacing().moveInDirection(curr);
+				playerAttack.add(coord,  p.getFacing());
+				//AttackAnimation att = new AttackAnimation(p.getDirection() , coord);
+				activeState.addActor(playerAttack);
+				p.selectLight();
+				p.setActionState(ActionState.ATTACK);
+				//activeState.attackObject(coord, p.getAttack());
+			}
+			
+			break;
+		case ATTACK_NORTH:
+			
+			if (p.canAttack()) {
+				p.setFacing(Direction.NORTH);
+				Coord coord = p.getFacing().moveInDirection(curr);
+				playerAttack.add(coord,  p.getFacing());
+				//AttackAnimation att = new AttackAnimation(p.getDirection() , coord);
+				activeState.addActor(playerAttack);
+				p.selectLight();
+				p.setActionState(ActionState.ATTACK);
+				//activeState.attackObject(coord, p.getAttack());
+			}
+			
+			break;
+			
+		case ATTACK_EAST:
+			
+			if (p.canAttack()) {
+				p.setFacing(Direction.EAST);
+				Coord coord = p.getFacing().moveInDirection(curr);
+				playerAttack.add(coord,  p.getFacing());
+				//AttackAnimation att = new AttackAnimation(p.getDirection() , coord);
+				activeState.addActor(playerAttack);
+				p.selectLight();
+				p.setActionState(ActionState.ATTACK);
+				//activeState.attackObject(coord, p.getAttack());
+			}
+			
+			break;
+			
+		case ATTACK_WEST:
+			
+			if (p.canAttack()) {
+				p.setFacing(Direction.WEST);
+				Coord coord = p.getFacing().moveInDirection(curr);
+				playerAttack.add(coord,  p.getFacing());
+				//AttackAnimation att = new AttackAnimation(p.getDirection() , coord);
+				activeState.addActor(playerAttack);
+				p.selectLight();
+				p.setActionState(ActionState.ATTACK);
+				//activeState.attackObject(coord, p.getAttack());
+			}
+			
+			break;	
+			
 		case SPECIAL:
 //			p.selectSpecial();
 //			p.setActionState(ActionState.ATTACK);
-			System.out.print("USER INPUT: HEAVY ATTACK\n");
+			//System.out.print("USER INPUT: HEAVY ATTACK\n");
 			break;
 		case MOVE_SOUTH:
 			// Up and down are uncontested, however they preserve original
@@ -129,31 +185,31 @@ public class DynamicGame {
 				activeState.movePlayer(toMove);
 			}
 			p.setFacing(Direction.SOUTH);
-			System.out.print("USER INPUT: DOWN\n");
+			//System.out.print("USER INPUT: DOWN\n");
 			break;
 		case MOVE_WEST:
 			// If looking left, we can move left. Otherwise turn left
-			if (p.getFacing() == Direction.WEST) {
+			//if (p.getFacing() == Direction.WEST) {
 				toMove = (Direction.WEST).moveInDirection(curr);
 				if (p.canChangePosition() && !activeState.isBlocked(toMove)) {
 					activeState.movePlayer(toMove);
 				}
-			} else {
+			//} else {
 				p.setFacing(Direction.WEST);
-			}
-			System.out.print("USER INPUT: LEFT\n");
+			//}
+			//System.out.print("USER INPUT: LEFT\n");
 			break;
 		case MOVE_EAST:
 			// If looking right, we can move right. Otherwise turn right
-			if (p.getFacing() == Direction.EAST) {
+			//if (p.getFacing() == Direction.EAST) {
 				toMove = (Direction.EAST).moveInDirection(curr);
 				if (p.canChangePosition() && !activeState.isBlocked(toMove)) {
 					activeState.movePlayer(toMove);
 				}
-			} else {
+			//} else {
 				p.setFacing(Direction.EAST);
-			}
-			System.out.print("USER INPUT: RIGHT\n");
+			//}
+			//System.out.print("USER INPUT: RIGHT\n");
 			break;
 		case MOVE_NORTH:
 			// Up and down are uncontested, however they preserve original
@@ -163,7 +219,7 @@ public class DynamicGame {
 				activeState.movePlayer(toMove);
 			}
 			p.setFacing(Direction.NORTH);
-			System.out.print("USER INPUT: UP\n");
+			//System.out.print("USER INPUT: UP\n");
 
 			break;
 		default:

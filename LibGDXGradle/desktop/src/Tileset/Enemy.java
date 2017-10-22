@@ -7,8 +7,11 @@ import Interface.Stages.Selections.BehaviourSelection;
 import State.Coord;
 import State.State;
 import Tileset.Behaviour.Attack;
+import Tileset.Behaviour.AttackAnimation;
+import Tileset.Behaviour.AttackAnimation.AttackType;
 import Tileset.Behaviour.Direction;
 import Tileset.Behaviour.MoveBehaviour;
+import Tileset.DynamicObject.ActionState;
 
 public class Enemy extends DynamicObject implements Cloneable {
 	
@@ -44,6 +47,15 @@ public class Enemy extends DynamicObject implements Cloneable {
 		this.sinceLastMove = 0;
 		this.sinceLastAttack = 0;
 		this.moveBehaviour = b;
+	}
+	
+	public Enemy(double hp, double damage, int moveRate, MoveBehaviour b, Attack attack, String img_path) {
+		super(ObjectType.ENEMY, hp, damage, img_path);
+		this.moveRate = moveRate;
+		this.sinceLastMove = 0;
+		this.sinceLastAttack = 0;
+		this.moveBehaviour = b;
+		this.attack = attack;
 	}
 	
 	
@@ -84,7 +96,7 @@ public class Enemy extends DynamicObject implements Cloneable {
 			if (attackTime > 0) {
 				attackTime--;
 			} else {
-				System.out.print("Switched to Move.\n");
+				//System.out.print("Switched to Move.\n");
 				setActionState(ActionState.MOVE);
 			}
 			break;
@@ -93,13 +105,18 @@ public class Enemy extends DynamicObject implements Cloneable {
 			// movement behavior
 			if (sinceLastMove >= moveRate && moveBehaviour != null) {
 				// move one step
+				
 				Coord next;
 				next = moveBehaviour.nextStep(s, this.getCoord());
 				if (s.findPlayer().equals(next)) { // may never happen how movement currently is handled
 					s.getPlayer().damage(this.getContactDamage()); // contact damage
 				} else {
-					s.moveObject(getCoord(), next);
+					if (!s.isBlocked(next)) {
+						s.moveObject(getCoord(), next);
+						setFacing(getFacing().getDirection(getCoord(), next));
+					}
 				}
+				
 				this.setLastMove(0);
 			} else {
 				sinceLastMove++;
@@ -107,9 +124,18 @@ public class Enemy extends DynamicObject implements Cloneable {
 			
 			// attack behaviour
 			if (attack != null) {
-				if (sinceLastAttack >= attack.getAttackCooldown() && attack != null) {
+				if (sinceLastAttack >= attack.getAttackCooldown()) {
+					// face player
+					AttackAnimation a = new AttackAnimation(AttackType.TWO);
+					Direction d = getFacing().getDirection(getCoord(), s.findPlayer());
+					Coord coord = d.moveInDirection(getCoord());
+					a.add(coord,  d);
+					//AttackAnimation att = new AttackAnimation(p.getDirection() , coord);
+					s.addActor(a);
+
+					
 					setActionState(ActionState.ATTACK);
-					System.out.print("Switched to Attack.\n");
+					//System.out.print("Switched to Attack.\n");
 					attackTime = attack.getAttackSpeed();
 					sinceLastAttack = 0;
 				} else {
@@ -128,7 +154,7 @@ public class Enemy extends DynamicObject implements Cloneable {
 	}
 	
 	public Enemy clone() {
-		return new Enemy(getHp(), getContactDamage(), moveRate, moveBehaviour, getImgPath());
+		return new Enemy(getHp(), getContactDamage(), moveRate, moveBehaviour, attack, getImgPath());
 	}
 
 	public int getMoveRate() {

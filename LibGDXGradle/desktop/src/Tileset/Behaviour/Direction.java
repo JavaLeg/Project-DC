@@ -12,7 +12,7 @@ public enum Direction {NORTH, SOUTH, EAST, WEST;
 			return WEST;
 		} else if (from.getY() < to.getY()) {
 			return NORTH;
-		} else if (from.getX() > to.getX()) {
+		} else if (from.getY() > to.getY()) {
 			return SOUTH;
 		}
 		return this;
