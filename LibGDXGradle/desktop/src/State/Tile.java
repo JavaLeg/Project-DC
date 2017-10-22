@@ -17,7 +17,7 @@ import Tileset.Behaviour.Direction;
 public class Tile extends Group {
 	private final Coord coordinates; 
 	
-	private DynamicObject d_obj;
+	private GameObject d_obj;
 	private GameObject g_obj;
 	
 	
@@ -148,19 +148,19 @@ public class Tile extends Group {
 	}	
 	
 	public void moveObjectTo(Tile from) {
-		System.out.println("Tile from: " + from.getCoord());
-		System.out.println("Tile to: " + this.getCoord());
-		
-		this.g_obj = from.g_obj;
-		System.out.println( "Before " + g_obj.getCoord().toString());
-		this.g_obj.setCoord(this.getCoord());
-		System.out.println( "After " + g_obj.getCoord().toString());
-		from.g_obj = null;
-		
 		Actor a = from.getActor("object");
+		this.d_obj = from.d_obj;
+		this.d_obj.setCoord(this.getCoord().clone());
 		this.addActor(a, "object", 2);
+		from.d_obj = null;
 		from.removeActor(a);
 		
+		//Actor a = from.getActor("object");
+		//this.d_obj = from.d_obj;
+		//this.d_obj.setCoord(this.getCoord());
+		//this.addActor(a, "object", 2);
+		//from.d_obj = null;
+		//from.removeActor(a);
 		
 		
 	}
@@ -177,7 +177,7 @@ public class Tile extends Group {
 			return;
 		}
 		deleteObject();
-		g_obj = new_d_object;
+		d_obj = new_d_object;
 		this.addActor(processPath(new_d_object.getImgPath()), "object", 2);		
 	}
 	
@@ -194,7 +194,7 @@ public class Tile extends Group {
 	
 	public void deleteObject() {
 		this.removeActor("object");
-//		this.d_obj = null;
+		this.d_obj = null;
 		this.g_obj = null;
 	}
 	
