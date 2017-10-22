@@ -93,7 +93,7 @@ public class OptionsScreen implements Screen {
       
         
         if(Gdx.graphics.isFullscreen()) {
-        	TextButton windowedButton = generateButton("Windowed");
+        	TextButton windowedButton = generateButton("Fullscreen");
         	windowedButton.addListener(new ClickListener(){
                @Override
                public void clicked(InputEvent event, float x, float y) {
@@ -112,7 +112,7 @@ public class OptionsScreen implements Screen {
         	mainTable.row();
         	mainTable.add(windowedButton);
        } else {
-    	   TextButton fullscreenButton = generateButton("Fullscreen");
+    	   TextButton fullscreenButton = generateButton("Windowed");
            fullscreenButton.addListener(new ClickListener(){
                @Override
                public void clicked(InputEvent event, float x, float y) {
