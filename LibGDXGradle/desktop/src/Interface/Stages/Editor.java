@@ -29,6 +29,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.Viewport;
+import com.engine.desktop.DCGame;
 import com.engine.desktop.SaveSys;
 
 import Interface.EditorModel;
@@ -41,6 +42,7 @@ import Tileset.GameObject;
 import Tileset.GameObject.ObjectType;
 import Tileset.Item;
 import Tileset.Player;
+import Tileset.Waypoint;
 import Tileset.Behaviour.Attack;
 import Tileset.Behaviour.MoveRandom;
 
@@ -66,8 +68,11 @@ public class Editor extends Stage {
 	private String path;
 	private SaveSys saver;
 	
+
+
 	// for blinking selected
 	private Image prevSelected;
+
 	
 	// Map size constraints
 	private final static int MAP_MIN = 10;
@@ -77,7 +82,7 @@ public class Editor extends Stage {
 	 * Dimensions: 280 x 480
 	 * Stage takes in a viewport and a skin
 	 */
-	public Editor(Viewport v, Skin skin) throws IOException {
+	public Editor(Viewport v, Skin skin, DCGame g) throws IOException {
 		super(v);
 		this.skin = skin;
 		this.titlePos = new TableTuple(50, 450);
@@ -88,6 +93,7 @@ public class Editor extends Stage {
 		this.tableMap = new HashMap<ToolbarSelection, Table>();
 		this.saver = new SaveSys();
 		this.PAD = 6;
+
 		
 		initialise();
 		update(ToolbarSelection.FLOOR);
@@ -245,12 +251,6 @@ public class Editor extends Stage {
 			TextTooltip tp1 = new TextTooltip(tooltip_labels, skin);
 			tp1.setInstant(true);
 			icon.addListener(tp1);
-			
-			newTable.add(icon).size(40, 40);
-			newTable.add(icon_labels);
-			newTable.row();
-				
-
 			icon.addListener(new ClickListener(){
 				@Override
 				public void clicked(InputEvent event, float x, float y) {
@@ -261,11 +261,18 @@ public class Editor extends Stage {
 					blink(icon);
 				}
 			});
+			
+			newTable.add(icon).size(40, 40);
+			newTable.add(icon_labels);
+			newTable.row();
+				
+
 				
 			// Need to format these
 			if (i % 2 == 1 && i != 0) newTable.row();
 				i++;		
-			}	
+			}
+	
 		return newTable;
 	}
 	
@@ -553,7 +560,7 @@ public class Editor extends Stage {
 			        public void clicked(InputEvent event, float x, float y) {
 						System.out.println("Selected - " + fileName);
 						
-						GameObject obj = new GameObject(cur, filePath);
+						Waypoint obj = new Waypoint(filePath);
 						related.setStaticSelection(obj);
 						
 						blink(icon);
@@ -848,6 +855,8 @@ public class Editor extends Stage {
 		this.related = s;
 	}
 	
+	
+
 	private void blink(Image icon) {
 		if(prevSelected != null) {
 			Array<Action> prevActions = prevSelected.getActions();
@@ -861,4 +870,5 @@ public class Editor extends Stage {
 		
 		prevSelected = icon;
 	}
+
 }

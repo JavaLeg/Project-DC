@@ -222,8 +222,8 @@ public class State extends Stage {
 		case PLAYER:
 			// Delete the old player and the flag if we're overriding it
 			if (this.hasPlayer() == true) this.deletePlayer(player.getCoord());
-			if (cur.getObjectType() == ObjectType.ITEM
-					&& cur.getObject().getName() == "win") win = null;
+//			if (cur.getObjectType() == ObjectType.ITEM
+//					&& cur.getObject().getName() == "win") win = null;
 			
 			newObject.setCoord(coord);
 			player = (Player) newObject;
@@ -232,15 +232,15 @@ public class State extends Stage {
 			break;
 		case ENEMY:
 		case ITEM:
-			if (cur.getObjectType() == ObjectType.PLAYER) player = null;
+			
 			newObject.setCoord(coord);
-			String name = newObject.getName();
+//			String name = newObject.getName();
 			
 			// Win condition handling
-			if (name != null && name.equals("win")) {						
-				if (win != null) this.deleteWin(win.getCoord());
-				win = (DynamicObject) newObject;
-			} 
+//			if (name != null && name.equals("win")) {						
+//				if (win != null) this.deleteWin(win.getCoord());
+//				win = (DynamicObject) newObject;
+//			} 
 			dynamicList.add((DynamicObject) newObject);
 			cur.setDynamicObject((DynamicObject) newObject);
 			break;
@@ -255,9 +255,12 @@ public class State extends Stage {
 			cur.setFloor(newObject);
 			break;
 		case WAYPOINT:
+			if (cur.getObjectType() == ObjectType.PLAYER) player = null;
+			
 			staticList.add(newObject);
 			newObject.setCoord(coord);
 			cur.setObject(newObject);
+			win = (DynamicObject) newObject;
 			break;
 		default:
 			break;
