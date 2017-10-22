@@ -79,6 +79,10 @@ public class GameScreen implements Screen {
 
 
 	}
+	
+	public void showAttack() {
+		
+	}
 
 	@Override
 	public void resize(int width, int height) {
