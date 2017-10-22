@@ -51,9 +51,9 @@ public class Player extends DynamicObject implements Cloneable {
 	@Override
 	public void step(State s) {
 		super.step(s);
-		
 		switch (getActionState()) {
 		case ATTACK:
+			System.out.print(attackCooldown);
 			selected.applyAttack(s, getCoord(), getFacing());
 			if (attackCooldown > 0) {
 				attackCooldown--;
@@ -108,6 +108,11 @@ public class Player extends DynamicObject implements Cloneable {
 		return selected;
 	}
 	
+	public boolean canAttack() {
+		return (getActionState() == ActionState.MOVE);
+	}
+	
+	
 	@Override
 	public Player clone() {
 		Player p = new Player( getHp(), getContactDamage(), light, special, getImgPath());
@@ -122,6 +127,7 @@ public class Player extends DynamicObject implements Cloneable {
 	
 	@Override
 	public void setActionState(ActionState a) {
+		super.setActionState(a);
 		if (a == ActionState.ATTACK) {
 			this.attackCooldown = light.getAttackCooldown();
 		}

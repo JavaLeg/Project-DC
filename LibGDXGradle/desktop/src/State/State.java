@@ -11,6 +11,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import Tileset.*;
 import Tileset.GameObject.ObjectType;
+import Tileset.Behaviour.Attack;
 import Interface.EditorModel;
 import Interface.TileTuple;
 import Interface.Stages.TableTuple;
@@ -135,7 +136,18 @@ public class State extends Stage {
 		GameObject obj = null;
 
 		if(type == ObjectType.ENEMY || type == ObjectType.ITEM || type == ObjectType.PLAYER) {
-			obj = cur_d_object.clone();
+			switch(type) {
+			case ENEMY:
+				obj = ((Enemy) cur_d_object).clone();
+				break;
+			case PLAYER:
+				obj = ((Player) cur_d_object).clone();
+				break;
+			case ITEM:
+				obj = ((Item) cur_d_object).clone();
+				break;
+			}
+			
 			obj.setCoord(tile.getCoord());
 			// dynamicList.add((DynamicObject) obj);
 			obj.setName(cur_d_object.getName());
@@ -201,7 +213,8 @@ public class State extends Stage {
 	
 	
 	public DynamicObject getDynamicObject(Coord c) {
-		GameObject g = getObject(c);
+		GameObject g = this.tileList.get(c.getX()* colActors  + c.getY()).getDynamicObject();
+		if (g == null) return null;
 		if (g.isDynamic()) {
 			return (DynamicObject) g;
 		} else {
@@ -227,7 +240,7 @@ public class State extends Stage {
 			
 			newObject.setCoord(coord);
 			player = (Player) newObject;
-			
+			dynamicList.add((DynamicObject) newObject);
 			cur.setDynamicObject(player);
 			break;
 		case ENEMY:
@@ -304,13 +317,13 @@ public class State extends Stage {
 	/*
 	 * Attack the object that we're facing
 	 */
-	public void attackObject(Coord coord) {
+	public void attackObject(Coord coord, Attack a) {
 		
 		// Check if the position is in bounds
 		if (!this.isValid(coord)) return;
-		Tile tile = tileList.get(coord.getX()* colActors  + coord.getY());
-		if (tile.getObject() != null && tile.getObject().getType().equals(ObjectType.ENEMY)) {
-			deleteObject(coord);
+		DynamicObject g = getDynamicObject(coord);
+		if (g != null && a.isTarget(g.getType())) {
+			g.damage(a.getDamage());
 		}
 	}
 	

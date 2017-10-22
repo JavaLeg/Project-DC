@@ -10,6 +10,7 @@ import Tileset.GameObject.ObjectType;
 import Tileset.Player;
 import Tileset.Enemy;
 import Tileset.Behaviour.Attack;
+import Tileset.Behaviour.AttackAnimation;
 import Tileset.Behaviour.Direction;
 
 //temporary class for Game, 
@@ -29,7 +30,8 @@ public class DynamicGame {
 	public void initialise(State startState) {
 		// take in a new GameState, and execute any other preamble
 		this.activeState = startState;
-		System.out.print("Initiated\n");
+		
+		
 	}
 	
 	public void step() {
@@ -92,12 +94,16 @@ public class DynamicGame {
 		switch (a) {
 		case ATTACK:
 			assert(p.getDirection() != null);
-			Coord coord = p.getDirection().moveInDirection(curr);
-			Attack att = new Attack(p.getDirection() , coord);
-			activeState.addActor(att);
-			activeState.attackObject(coord);
-			p.setActionState(ActionState.ATTACK);
-//			p.selectLight();
+			if (p.canAttack()) {
+				Coord coord = p.getDirection().moveInDirection(curr);
+				AttackAnimation att = new AttackAnimation(p.getDirection() , coord);
+				activeState.addActor(att);
+				p.selectLight();
+				p.setActionState(ActionState.ATTACK);
+				//activeState.attackObject(coord, p.getAttack());
+			}
+			
+			
 //			
 			System.out.print("USER INPUT: LIGHT ATTACK\n");
 			break;
