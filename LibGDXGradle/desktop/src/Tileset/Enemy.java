@@ -3,6 +3,7 @@ package Tileset;
 
 import java.io.Serializable;
 
+import Interface.Stages.Selections.BehaviourSelection;
 import State.Coord;
 import State.State;
 import Tileset.Behaviour.Attack;
@@ -59,6 +60,10 @@ public class Enemy extends DynamicObject implements Cloneable {
 		
 	public void setBehaviour(MoveBehaviour b) {
 		moveBehaviour = b;
+	}
+	
+	public BehaviourSelection getBehaviour() {
+		return moveBehaviour.getSelection();
 	}
 	
 	public void removeBehaviour() {

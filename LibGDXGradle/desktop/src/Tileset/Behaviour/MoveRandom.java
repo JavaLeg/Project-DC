@@ -4,6 +4,7 @@ package Tileset.Behaviour;
 import java.util.List;
 import java.util.Random;
 
+import Interface.Stages.Selections.BehaviourSelection;
 import State.Coord;
 import State.State;
 
@@ -17,7 +18,7 @@ public class MoveRandom extends MoveBehaviour {
 
 
 	public MoveRandom() {
-		
+		super.setSelection(BehaviourSelection.RANDOM);
 	}
 	
 	
