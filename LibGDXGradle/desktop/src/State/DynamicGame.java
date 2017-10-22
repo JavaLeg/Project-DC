@@ -175,7 +175,7 @@ public class DynamicGame {
 		case SPECIAL:
 //			p.selectSpecial();
 //			p.setActionState(ActionState.ATTACK);
-			System.out.print("USER INPUT: HEAVY ATTACK\n");
+			//System.out.print("USER INPUT: HEAVY ATTACK\n");
 			break;
 		case MOVE_SOUTH:
 			// Up and down are uncontested, however they preserve original
@@ -185,7 +185,7 @@ public class DynamicGame {
 				activeState.movePlayer(toMove);
 			}
 			p.setFacing(Direction.SOUTH);
-			System.out.print("USER INPUT: DOWN\n");
+			//System.out.print("USER INPUT: DOWN\n");
 			break;
 		case MOVE_WEST:
 			// If looking left, we can move left. Otherwise turn left
@@ -197,7 +197,7 @@ public class DynamicGame {
 			//} else {
 				p.setFacing(Direction.WEST);
 			//}
-			System.out.print("USER INPUT: LEFT\n");
+			//System.out.print("USER INPUT: LEFT\n");
 			break;
 		case MOVE_EAST:
 			// If looking right, we can move right. Otherwise turn right
@@ -209,7 +209,7 @@ public class DynamicGame {
 			//} else {
 				p.setFacing(Direction.EAST);
 			//}
-			System.out.print("USER INPUT: RIGHT\n");
+			//System.out.print("USER INPUT: RIGHT\n");
 			break;
 		case MOVE_NORTH:
 			// Up and down are uncontested, however they preserve original
@@ -219,7 +219,7 @@ public class DynamicGame {
 				activeState.movePlayer(toMove);
 			}
 			p.setFacing(Direction.NORTH);
-			System.out.print("USER INPUT: UP\n");
+			//System.out.print("USER INPUT: UP\n");
 
 			break;
 		default:

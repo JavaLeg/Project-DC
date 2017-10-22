@@ -130,7 +130,7 @@ public class Tile extends Group {
 		if (this.hasObject()) {
 			TextureRegion new_img = new TextureRegion(new Texture(Gdx.files.internal(path)));
 			this.removeActor("object");
-			System.out.println("Image flip called");
+			//System.out.println("Image flip called");
 			// The only other orientation is looking left
 			if (!facing_right) new_img.flip(true, false);
 			

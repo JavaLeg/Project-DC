@@ -91,7 +91,7 @@ public class Enemy extends DynamicObject implements Cloneable {
 			if (attackTime > 0) {
 				attackTime--;
 			} else {
-				System.out.print("Switched to Move.\n");
+				//System.out.print("Switched to Move.\n");
 				setActionState(ActionState.MOVE);
 			}
 			break;
@@ -130,7 +130,7 @@ public class Enemy extends DynamicObject implements Cloneable {
 
 					
 					setActionState(ActionState.ATTACK);
-					System.out.print("Switched to Attack.\n");
+					//System.out.print("Switched to Attack.\n");
 					attackTime = attack.getAttackSpeed();
 					sinceLastAttack = 0;
 				} else {

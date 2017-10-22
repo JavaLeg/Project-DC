@@ -68,20 +68,20 @@ public class GameInputProcessor implements InputProcessor {
 			break;
 			
 		// PLAYER SPECIAL/ATTACK
-		case Keys.Z:
-		case Keys.J:
-			toMake = Action.ATTACK;
-			break;
+		//case Keys.Z:
+		//case Keys.J:
+		//	toMake = Action.ATTACK;
+		//	break;
 		
-		case Keys.X:
-		case Keys.K:
-			toMake = Action.SPECIAL;
-			break;
+		//case Keys.X:
+		//case Keys.K:
+		//	toMake = Action.SPECIAL;
+		//	break;
 			
 		default:
 			// nothing 
 		}		
-		System.out.println("make Action");
+		//System.out.println("make Action");
 		if (toMake != null) {
 			if (sinceLastAction > 0) {
 				queuedAction = toMake;
