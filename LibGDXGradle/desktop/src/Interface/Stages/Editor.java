@@ -785,7 +785,7 @@ public class Editor extends Stage {
 	 * Spaces replaced with underscore and .txt appended
 	 * 
 	 */
-	private void saveMap(String s) throws IOException {
+	public void saveMap(String s) throws IOException {
 		
 		if(s.isEmpty()) {
 			System.out.println("Blank Save String!");

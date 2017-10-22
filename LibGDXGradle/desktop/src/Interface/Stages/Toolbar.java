@@ -148,6 +148,12 @@ public class Toolbar extends Stage{
 				ib.addListener(new ClickListener(){
 					@Override
 			        public void clicked(InputEvent event, float x, float y) {
+						try {
+							related.saveMap("auto-save");
+						} catch (IOException e) {
+							System.out.println("Cannot auto-save!");
+							e.printStackTrace();
+						}
 						es.exit();
 			        }
 				});

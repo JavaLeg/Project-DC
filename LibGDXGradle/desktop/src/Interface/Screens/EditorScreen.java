@@ -12,9 +12,7 @@ import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.viewport.Viewport;
@@ -88,7 +86,6 @@ public class EditorScreen implements Screen {
 	            public boolean keyDown(int keycode) {
 
 	                if ((keycode == Keys.ESCAPE) || (keycode == Keys.BACK)) {
-
 	                	((Game)Gdx.app.getApplicationListener()).setScreen(new MainMenuScreen(game));
 	                }
 	                return false;
