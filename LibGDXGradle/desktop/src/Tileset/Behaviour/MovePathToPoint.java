@@ -2,6 +2,7 @@ package Tileset.Behaviour;
 
 import java.util.List;
 
+import Interface.Stages.Selections.BehaviourSelection;
 import State.Coord;
 import State.State;
 
@@ -14,6 +15,7 @@ public class MovePathToPoint extends MoveBehaviour {
 	private boolean focus;
 	 
 	public MovePathToPoint(boolean focus) {
+		super.setSelection(BehaviourSelection.PATH2POINT);
 		this.focus = focus;
 	}
 	

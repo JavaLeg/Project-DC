@@ -20,6 +20,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
+import com.badlogic.gdx.scenes.scene2d.ui.SelectBox;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
@@ -33,6 +34,7 @@ import com.engine.desktop.DCGame;
 import com.engine.desktop.SaveSys;
 
 import Interface.EditorModel;
+import Interface.Stages.Selections.BehaviourSelection;
 import Interface.Stages.Selections.ToolbarSelection;
 import State.Coord;
 import State.State;
@@ -55,7 +57,6 @@ public class Editor extends Stage {
 	private Skin skin;
 	private HashMap<ToolbarSelection, Table> tableMap;
 	
-	private TableTuple titlePos;
 	private TableTuple tablePos;
 	
 	// Used purely for edits
@@ -86,10 +87,10 @@ public class Editor extends Stage {
 	public Editor(Viewport v, Skin skin, DCGame g) throws IOException {
 		super(v);
 		this.skin = skin;
-		this.titlePos = new TableTuple(50, 450);
+		//this.titlePos = new TableTuple(50, 450);
 		
 		//v.getScreenWidth()*17/40 this value is 0???
-		this.tablePos = new TableTuple(10, v.getScreenHeight());
+		this.tablePos = new TableTuple(0, v.getScreenHeight());
 		this.path = "SpriteFamily/";
 		this.tableMap = new HashMap<ToolbarSelection, Table>();
 		this.saver = new SaveSys();
@@ -225,7 +226,7 @@ public class Editor extends Stage {
 
 				
 				tooltip_labels = "Name: " + labels + "\nHealth: " + obj.getHp() 
-				+ "\nDamage: " + obj.getContactDamage();
+							+ "\nDamage: " + obj.getContactDamage();
 
 				
 				break;
@@ -234,7 +235,8 @@ public class Editor extends Stage {
 				
 				tooltip_labels = labels + "\nHealth: " + obj.getHp() 
 										+ "\nDamage: " + obj.getContactDamage() 
-										+ "\nAtk Rate: " + ((Enemy) obj).getAttackTime();				
+										+ "\nAtk Rate: " + ((Enemy) obj).getAttackTime()
+										+ "\nBehaviour: " + ((Enemy) obj).getBehaviour();
 				break;
 			case ITEM:
 				labels = obj.getName();
@@ -619,6 +621,9 @@ public class Editor extends Stage {
 		final TextField resField = generateTextField("Restore - " + Integer.toString(restore));
 		
 
+		
+		
+
 		switch(type) {
 		case PLAYER:
 			fieldList.add(nameField);
@@ -644,6 +649,15 @@ public class Editor extends Stage {
 		
 		for(TextField tf : fieldList) {
 			editTable.add(tf);
+			editTable.row();
+		}
+		
+		// FOR ENEMY ONLY
+		final SelectBox<BehaviourSelection> listDrop = new SelectBox<BehaviourSelection>(skin);
+		if(type == ObjectType.ENEMY) {
+			BehaviourSelection[] behaviourBlob = {BehaviourSelection.PATH2POINT, BehaviourSelection.RANDOM};
+			listDrop.setItems(behaviourBlob);
+			editTable.add(listDrop);
 			editTable.row();
 		}
 		
@@ -693,7 +707,20 @@ public class Editor extends Stage {
 					if(!check)
 						return;
 						
-
+					BehaviourSelection behaviour = listDrop.getSelected();
+					
+					switch(behaviour) {
+					case PATH2POINT:
+						MovePathToPoint new_P2P = new MovePathToPoint(true);
+						e_clone.setBehaviour(new_P2P);
+						break;
+					case RANDOM:
+						MoveRandom new_rand = new MoveRandom();
+						e_clone.setBehaviour(new_rand);
+					default:
+						break;
+					
+					}
 					e_clone.setName(nameField.getText().replaceAll(" ","_"));
 					e_clone.setHp(Double.valueOf(hpField.getText()));
 					e_clone.setContactDamage(Double.valueOf(dmgField.getText()));
