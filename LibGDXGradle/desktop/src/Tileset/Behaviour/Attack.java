@@ -1,5 +1,6 @@
 package Tileset.Behaviour;
 
+import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -49,6 +50,13 @@ public class Attack implements Serializable {
 		this.cooldown = cooldown;
 	}
 	
+	public Attack(int damage, int speed, int cooldown) {
+		this.hitbox = Arrays.asList(new Coord(0,1));
+		this.damage = damage;
+		this.targets = Arrays.asList(ObjectType.PLAYER);
+		this.speed = speed;
+		this.cooldown = cooldown;
+	}
 
 
 
