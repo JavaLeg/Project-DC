@@ -63,6 +63,7 @@ public class Attack implements Serializable {
 		}
 		
 		for (Coord c : applyHitBox(adjustedHitBox, origin)) {
+			if (!s.isValid(c)) continue;
 			DynamicObject g = s.getDynamicObject(c);
 			if (g != null && targets.contains(g.getType())) {
 				g.damage(damage);
@@ -98,5 +99,10 @@ public class Attack implements Serializable {
 	
 	public int getDamage() {
 		return damage;
+	}
+	
+	
+	public void setDamage(int damage) {
+		this.damage = damage;
 	}
 }

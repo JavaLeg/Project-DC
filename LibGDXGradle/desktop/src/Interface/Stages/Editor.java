@@ -145,9 +145,9 @@ public class Editor extends Stage {
 		return button;
 	}
 	
-	private TextField generateTextField(String s) {
-		TextField tf = new TextField("", skin);
-		tf.setMessageText(s);
+	private TextField generateTextField(String placeholder, String def) {
+		TextField tf = new TextField(def, skin);
+		tf.setMessageText(placeholder);
 		return tf;
 	}
 	
@@ -361,8 +361,8 @@ public class Editor extends Stage {
 
 			TableTuple dim = related.getDim();
 			
-			final TextField rowField = generateTextField(Integer.toString(dim.getX()));
-			final TextField colField = generateTextField(Integer.toString(dim.getY()));
+			final TextField rowField = generateTextField(Integer.toString(dim.getX()), Integer.toString(dim.getX()));
+			final TextField colField = generateTextField(Integer.toString(dim.getY()), Integer.toString(dim.getX()));
 
 			newTable.add(rowField).size(40, 30);
 			newTable.add(colField).size(40, 30).pad(PAD);
@@ -614,11 +614,12 @@ public class Editor extends Stage {
 		
 		ArrayList<TextField> fieldList = new ArrayList<TextField>();
 		
-		final TextField nameField = generateTextField("Name - " + name);
-		final TextField hpField = generateTextField("HP - " + Double.toString(hp));
-		final TextField dmgField = generateTextField("DMG - " + Double.toString(dmg));
-		final TextField atkField = generateTextField("Atk rate - " + Integer.toString(atk));
-		final TextField resField = generateTextField("Restore - " + Integer.toString(restore));
+		final TextField nameField = generateTextField("Name - " + name, "Custom Monster");
+		final TextField hpField = generateTextField("HP - " + Double.toString(hp), "");
+		final TextField dmgField = generateTextField("DMG - " + Double.toString(dmg), "");
+		final TextField atkField = generateTextField("Atk rate - " + Integer.toString(atk), "");
+		final TextField resField = generateTextField("Restore - " + Integer.toString(restore), "");
+		
 		
 
 		
@@ -711,7 +712,7 @@ public class Editor extends Stage {
 					
 					switch(behaviour) {
 					case PATH2POINT:
-						MovePathToPoint new_P2P = new MovePathToPoint(true);
+						MovePathToPoint new_P2P = new MovePathToPoint(false);
 						e_clone.setBehaviour(new_P2P);
 						break;
 					case RANDOM:
