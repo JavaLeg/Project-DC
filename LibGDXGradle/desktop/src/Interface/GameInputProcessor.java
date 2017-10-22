@@ -71,11 +71,14 @@ public class GameInputProcessor implements InputProcessor {
 		System.out.println("Make action.");
 		if (toMake != null) {
 			if (sinceLastAction > 0) {
+				System.out.println("Queueing: " + sinceLastAction);
 				queuedAction = toMake;
 			} else {
-				sinceLastAction = actionSpeed;
+				
+				System.out.println("Successfully made action");
 				activeGame.makeAction(toMake); // TODO: move to step to syncronise all actions
 				queuedAction = null;
+				sinceLastAction = actionSpeed;
 			}
 		}
 		
@@ -90,7 +93,7 @@ public class GameInputProcessor implements InputProcessor {
 		} else {
 			if (queuedAction != null) {
 				sinceLastAction = actionSpeed;
-				//activeGame.makeAction(queuedAction);
+				activeGame.makeAction(queuedAction);
 				queuedAction = null;
 			}
 		}
