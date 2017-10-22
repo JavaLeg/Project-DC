@@ -80,7 +80,7 @@ public class GameScreen implements Screen {
         Coord centre = null;
         if (g.getState().getPlayer() != null) {
         	centre = g.getState().getPlayer().getCoord();
-        	if (green_bar == null) HealthBarSetup();
+        //	if (green_bar == null) HealthBarSetup();
         }
         //System.out.println(centre.toString());
         // Lerp the camera so it looks smooth, so smooth, what a feature
@@ -90,7 +90,7 @@ public class GameScreen implements Screen {
         	position.x += (centre.getX() * 40 - position.x) * lerp * 0.4;
         	position.y += (centre.getY() * 40 - position.y) * lerp * 0.4;
 	        camera.position.set(position.x, position.y, 0);
-	        updateBar(centre);
+	    //    updateBar(centre);
 	        camera.update();
         }
         previewStage.act();
