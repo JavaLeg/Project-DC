@@ -71,7 +71,7 @@ public class Editor extends Stage {
 	
 	// Map size constraints
 	private final static int MAP_MIN = 10;
-	private final static int MAP_MAX = 1000;
+	private final static int MAP_MAX = 100;
 		
 	/*
 	 * Dimensions: 280 x 480
