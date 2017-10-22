@@ -329,13 +329,10 @@ public class State extends Stage {
 		this.tileList.get(coord.getX()* colActors  + coord.getY()).deleteObject();
 	}
 	
-	/*
-	 * TODO, does this need a clone?
-	 */
+
 	public void moveObject(Coord from, Coord to) {
-		GameObject temp = this.getObject(from);
-		this.deleteObject(from);
-		this.setObject(temp, to);
+		Tile t = getTile(to);
+		t.moveObjectTo(getTile(from));
 	}
 	
 	
@@ -390,17 +387,12 @@ public class State extends Stage {
 	 * Just delete the tile object
 	 */
 	public void movePlayer(Coord to) {
-		if (player == null) return;				// Only move existent players	
-		Coord pos = player.getCoord();
-		this.tileList.get(pos.getX() * colActors + pos.getY()).deleteObject();
-		this.setObject(player, to);
+		if (player == null) return;		
+		moveObject(player.getCoord(), to);
 		
-		// Purely for aesthetic purposes
 		Tile new_tile = this.tileList.get(to.getX() * colActors + to.getY());
 		new_tile.flipObject(player.facingRight(), player.getImgPath());
 	}
-	
-	
 	//************************//
 	//******* TERRAIN ********//
 	//************************//
