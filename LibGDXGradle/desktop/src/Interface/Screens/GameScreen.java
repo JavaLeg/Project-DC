@@ -2,19 +2,16 @@ package Interface.Screens;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.InputAdapter;
+import com.badlogic.gdx.InputMultiplexer;
+import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.Pixmap;
-import com.badlogic.gdx.graphics.Pixmap.Format;
+
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.Batch;
-import com.badlogic.gdx.graphics.g2d.NinePatch;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.utils.TimeUtils;
@@ -25,7 +22,6 @@ import com.engine.desktop.DCGame;
 import Interface.EditorModel;
 import Interface.GameInputProcessor;
 import State.DynamicGame;
-import State.RunGame;
 import State.RunGame2;
 import State.State;
 import Tileset.DynamicObject;
@@ -69,13 +65,30 @@ public class GameScreen implements Screen {
         g = new DynamicGame();
 		inputProcessor = new GameInputProcessor(g);
 		g.initialise(previewStage); // input player created state here
-		Gdx.input.setInputProcessor(inputProcessor);
+		
+		
+		// ESC key to return to main menu
+		InputProcessor backProcessor = new InputAdapter() {
+            @Override
+            public boolean keyDown(int keycode) {
+
+                if ((keycode == Keys.ESCAPE) || (keycode == Keys.BACK)) {
+                	((Game)Gdx.app.getApplicationListener()).setScreen(new MainMenuScreen(game));
+                }
+                return false;
+            }
+        };
+		
+		InputMultiplexer multiplexer = new InputMultiplexer(previewStage, backProcessor, inputProcessor);
+		Gdx.input.setInputProcessor(multiplexer);
 		
 		//gameThread = new RunGame2(g, inputProcessor, 60);
 		//gameThread.create();
 		//gameThread.run();
 		isRunning = true;
 		stepRate = 60;
+		
+		
 	}
 
 	@Override
