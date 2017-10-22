@@ -123,6 +123,8 @@ public class GameScreen implements Screen {
         if (play != null && play.getHp() > 0) {
         	int width = (int)(play.getHp() / play.getMaxHp() * 40);
         	green_bar.setWidth(width);
+        } else if (play != null && play.getHp() <= 0) {
+        	
         }
         
         
