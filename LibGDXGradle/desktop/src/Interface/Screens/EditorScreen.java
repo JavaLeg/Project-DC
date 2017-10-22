@@ -50,8 +50,8 @@ public class EditorScreen implements Screen {
 	@Override
 	public void show() {
 		
-		TextureAtlas atlas = new TextureAtlas(Gdx.files.internal("uiskin.atlas"));
-		Skin skin = new Skin(Gdx.files.internal("uiskin.json"), atlas);
+		TextureAtlas atlas = new TextureAtlas(Gdx.files.internal("cloud-form-ui.atlas"));
+		Skin skin = new Skin(Gdx.files.internal("cloud-form-ui.json"), atlas);
 
 		// Every viewport initializes with (0, 0) at bottom left of the stage
 		Viewport editor_viewport = new EditorViewport(APP_WIDTH*7/40, APP_HEIGHT);

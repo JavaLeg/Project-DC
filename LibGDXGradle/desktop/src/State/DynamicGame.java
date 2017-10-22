@@ -29,7 +29,6 @@ public class DynamicGame {
 	public void initialise(State startState) {
 		// take in a new GameState, and execute any other preamble
 		this.activeState = startState;
-		
 		System.out.print("Initiated\n");
 	}
 	
@@ -61,14 +60,16 @@ public class DynamicGame {
 	/*
 	 * Sets up the player direction initially
 	 */
-	public void playerSetup() {
+/*	public void playerSetup() {
 		// Start the game with orientation
+		System.out.println("Has player = " + activeState.hasPlayer());
 		if (activeState.getPlayer() != null) {
 			Player cur = (Player) activeState.getPlayer();
 			cur.setFacingRight();
 			cur.setDirection(Direction.EAST);
+			System.out.println("Initialised");
 		}	
-	}
+	}*/
 	// Player Actions:
 	// 	Movement and attack
 	// false means action can not be made and no changes are made to the state
@@ -81,7 +82,12 @@ public class DynamicGame {
 	public boolean makeAction(Action a) {
 		Coord curr = activeState.findPlayer();
 		Player p = (Player) activeState.getPlayer();
+		
+		if (p.getDirection() == null) p.setDirection(Direction.EAST);		
+		// Set starting direction to EAST when starting the game
+		
 		Coord toMove = null;
+		System.out.println("coord = " + curr);
 
 		switch (a) {
 		case ATTACK:
