@@ -37,7 +37,7 @@ public class DynamicObject extends GameObject implements Cloneable {
 	private double contactDamage; // how much damage entity deals
 	
 	private int iFrames;
-	private static int iFramesMax = 30; // quarter second
+	private static int iFramesMax = 30; // second
 	
 	private HashMap<Status, Integer> statuses;
 	private ActionState state;
