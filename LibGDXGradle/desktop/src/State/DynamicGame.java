@@ -19,6 +19,7 @@ import Tileset.Behaviour.Direction;
 public class DynamicGame {
 	private int steps;
 	private State activeState;
+	
 	// private int last_move;					// Only move in the direction you face, otherwise turn. 
 
 	public DynamicGame() {

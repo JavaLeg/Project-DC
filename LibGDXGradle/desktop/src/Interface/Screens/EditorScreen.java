@@ -61,18 +61,18 @@ public class EditorScreen implements Screen {
 		
 
 		Editor editorStage;
-		try {
-			editorStage = new Editor(editor_viewport, skin);
-		} catch (IOException e1) {
-			e1.printStackTrace();
-		}
-		
+//		try {
+//			editorStage = new Editor(editor_viewport, skin);
+//		} catch (IOException e1) {
+//			e1.printStackTrace();
+//		}
+//		
 		
 		previewStage = new State(preview_viewport);
 		Toolbar toolbarStage = new Toolbar(toolbar_viewport, skin, this);
 		
 		try {
-			editorStage = new Editor(editor_viewport, skin);
+			editorStage = new Editor(editor_viewport, skin, game);
 			UI.add(previewStage);
 			UI.add(editorStage);
 

@@ -80,7 +80,7 @@ public class GameScreen implements Screen {
         Coord centre = null;
         if (g.getState().getPlayer() != null) {
         	centre = g.getState().getPlayer().getCoord();
-        //	if (green_bar == null) HealthBarSetup();
+        	if (green_bar == null) HealthBarSetup();
         }
         //System.out.println(centre.toString());
         // Lerp the camera so it looks smooth, so smooth, what a feature
@@ -90,39 +90,13 @@ public class GameScreen implements Screen {
         	position.x += (centre.getX() * 40 - position.x) * lerp * 0.4;
         	position.y += (centre.getY() * 40 - position.y) * lerp * 0.4;
 	        camera.position.set(position.x, position.y, 0);
-	    //    updateBar(centre);
+	        updateBar(centre);
 	        camera.update();
         }
         previewStage.act();
         previewStage.draw();
 	}
-	
-/*	public void HealthBarSetup() {
-		//
-		Skin skin = new Skin();
-		Pixmap pixmap = new Pixmap(40, 5, Format.RGBA8888);
-		pixmap.setColor(Color.WHITE);
-		pixmap.fill();
-		skin.add("white", new Texture(pixmap));
-		
-		TextureRegion green_bar = new TextureRegion(new Texture(Gdx.files.internal("green_bar.jpg")));
-		green_bar.setRegionHeight(5);
-		green_bar.setRegionWidth(40);
-		TextureRegionDrawable textureBar = new TextureRegionDrawable(green_bar);
-		
-        barStyle = new ProgressBarStyle(skin.newDrawable("white", Color.DARK_GRAY), textureBar);
-        barStyle.knobBefore = barStyle.knob;
-		bar = new ProgressBar(0, 5, 1.0f, false, barStyle);
-		
-		if (g.getState().hasPlayer()) {
-			Coord play = g.getState().getPlayer().getCoord();
-			bar.setPosition(play.getX() * 40, play.getY() * 40 + 35);
-			bar.setHeight(5);
-			bar.setWidth(20);
-			previewStage.addActor(bar);
-		}
-		//
-	}*/
+
 	
 	public void updateBar(Coord centre) {
         green_bar.setPosition(centre.getX() * 40, centre.getY() * 40 + 35);		// Update position of hp bar
