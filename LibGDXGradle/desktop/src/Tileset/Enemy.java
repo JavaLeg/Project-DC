@@ -72,7 +72,7 @@ public class Enemy extends DynamicObject implements Cloneable {
 	
 	@Override
 	public void step(State s) {
-		super.step(s);
+		
 		switch (getActionState()) {
 		case ATTACK:
 			attack.applyAttack(s, getCoord(), getFacing());
@@ -119,6 +119,7 @@ public class Enemy extends DynamicObject implements Cloneable {
 			break;
 		
 		}
+		super.step(s);
 	}
 	
 	public Enemy clone() {

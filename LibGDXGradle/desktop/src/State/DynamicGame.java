@@ -89,7 +89,7 @@ public class DynamicGame {
 		// Set starting direction to EAST when starting the game
 		
 		Coord toMove = null;
-		System.out.println("coord = " + curr);
+		//System.out.println("coord = " + curr);
 
 		switch (a) {
 		case ATTACK:

@@ -85,7 +85,7 @@ public class GameInputProcessor implements InputProcessor {
 	
 	public void step() {
 		if (sinceLastAction > 0) {
-			System.out.println(sinceLastAction);
+			//System.out.println(sinceLastAction);
 			sinceLastAction--;
 		} else {
 			if (queuedAction != null) {

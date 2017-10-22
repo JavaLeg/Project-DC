@@ -327,14 +327,27 @@ public class State extends Stage {
 		}
 	}
 	
+	public void deleteObject(GameObject g) {
+		if (g.isDynamic()) {
+			dynamicList.remove(g);
+			Tile t = getTile(g.getCoord());
+			t.deleteObject();
+		} else {
+			deleteObject(g.getCoord());
+		}
+	}
+	
+	
+	
 	public void deleteObject(Coord coord) {
-
+		
 		Tile tile = tileList.get(coord.getX()* colActors  + coord.getY());
 		GameObject obj = tile.getObject();
 		
 		ObjectType type = obj.getType();
 		
 		if(type == ObjectType.PLAYER || type == ObjectType.ITEM || type == ObjectType.ENEMY) {
+			System.out.print("Deletes...");
 			dynamicList.remove(obj);
 		}else {
 			staticList.remove(obj);

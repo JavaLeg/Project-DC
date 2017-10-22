@@ -50,7 +50,7 @@ public class Player extends DynamicObject implements Cloneable {
 	
 	@Override
 	public void step(State s) {
-		super.step(s);
+		
 		switch (getActionState()) {
 		case ATTACK:
 			System.out.print(attackCooldown);
@@ -66,6 +66,7 @@ public class Player extends DynamicObject implements Cloneable {
 		case MOVE:
 			break;
 		}
+		super.step(s);
 	}
 	
 	public void selectSpecial() {
@@ -129,7 +130,7 @@ public class Player extends DynamicObject implements Cloneable {
 	public void setActionState(ActionState a) {
 		super.setActionState(a);
 		if (a == ActionState.ATTACK) {
-			this.attackCooldown = light.getAttackCooldown();
+			this.attackCooldown = light.getAttackSpeed();
 		}
 	}
 }
