@@ -115,7 +115,10 @@ public class GameScreen implements Screen {
         }
 	}
 
-	
+
+	/* 
+	 * Also the end screen 
+	 */
 	public void updateBar(Coord centre) {
         green_bar.setPosition(centre.getX() * 40, centre.getY() * 40 + 35);		// Update position of hp bar
         red_bar.setPosition(centre.getX() * 40, centre.getY() * 40 + 35);		// Update position of hp bar
