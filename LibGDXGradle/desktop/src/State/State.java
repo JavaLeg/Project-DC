@@ -107,9 +107,12 @@ public class State extends Stage {
 		this.cur_object = obj;
 	}
 	
-	// Fill grid with selected floor
-	// TODO
+
 	public void fillGrid() {
+		
+		if(selection != ObjectType.FLOOR)
+			return;
+		
 		for(Tile tile : tileList) {
 			setTile(tile, selection);
 		}
