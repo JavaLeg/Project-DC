@@ -67,7 +67,7 @@ public class Enemy extends DynamicObject implements Cloneable {
 	public Enemy(String img_path) {
 		super(ObjectType.ENEMY, img_path);
 		this.sinceLastMove = 0;
-		this.sinceLastAttack = 0;
+		this.sinceLastAttack = 1;
 		//this.moveBehaviour = b;
 	}
 		

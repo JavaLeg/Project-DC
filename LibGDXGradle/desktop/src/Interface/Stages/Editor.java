@@ -495,8 +495,8 @@ public class Editor extends Stage {
 						// Right now all attributes initialized as null (Changed through edit)
 						
 						Attack enemyAttack = new Attack(Arrays.asList(new Coord(0,1)), 
-								10, Arrays.asList(ObjectType.PLAYER), 15, 180);
-						Enemy obj = new Enemy(10, 10, 30, new MovePathToPoint(true), enemyAttack, filePath);
+								2, Arrays.asList(ObjectType.PLAYER), 15, 180);
+						Enemy obj = new Enemy(10, 2, 30, new MovePathToPoint(true), enemyAttack, filePath);
 						// double hp, double damage, int moveRate, MoveBehaviour b, String img_path
 						selected_Dyn = obj;
 						related.setDynamicSelection(obj);
@@ -620,7 +620,7 @@ public class Editor extends Stage {
 		final TextField dmgField = generateTextField("DMG - " + Double.toString(dmg), "");
 		final TextField atkField = generateTextField("Atk rate - " + Integer.toString(atk), "");
 		final TextField resField = generateTextField("Restore - " + Integer.toString(restore), "");
-		
+		final TextField coolField = generateTextField("Cooldown - " + Integer.toString(restore), "");
 		
 
 		
@@ -633,11 +633,14 @@ public class Editor extends Stage {
 			fieldList.add(dmgField);
 			break;
 			
+			
+			
 		case ENEMY:
 			fieldList.add(nameField);
 			fieldList.add(hpField);
 			fieldList.add(dmgField);
 			fieldList.add(atkField);
+			fieldList.add(coolField);
 			break;
 			
 		case ITEM:
@@ -723,10 +726,12 @@ public class Editor extends Stage {
 						break;
 					
 					}
+					
+					Attack a = new Attack(Integer.valueOf(dmgField.getText()), Integer.valueOf(atkField.getText()), Integer.valueOf(coolField.getText()));
+					
 					e_clone.setName(nameField.getText().replaceAll(" ","_"));
 					e_clone.setHp(Double.valueOf(hpField.getText()));
-					e_clone.setContactDamage(Double.valueOf(dmgField.getText()));
-					e_clone.setAttackTime(Integer.valueOf(atkField.getText()));
+					e_clone.setAttack(a);
 					clone = e_clone;
 					break;
 				case PLAYER:
