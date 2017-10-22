@@ -13,7 +13,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.SelectBox;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
@@ -30,7 +29,7 @@ public class Toolbar extends Stage{
 	private Editor related;
 
 	private TableTuple toolbarPos;
-	private final int PAD = 1;
+	private final int PAD = 0;
 	
 	private EditorScreen es;
 
@@ -53,44 +52,66 @@ public class Toolbar extends Stage{
 		Table mainTable = new Table();
 		int pad = 0;
 		
+		 final SelectBox<ToolbarSelection> listDrop = new SelectBox<ToolbarSelection>(skin);
+		 ToolbarSelection[] terrainBlob = {ToolbarSelection.MAP, ToolbarSelection.FLOOR, ToolbarSelection.WALL, ToolbarSelection.ITEM};
+		 TextureRegionDrawable tr = null;
+		 ImageButton ib = null;
+		
 		for(final NewToolbarSelection selection: NewToolbarSelection.values()) {
 			
 			switch(selection) {
-			case TERRAIN:
-				 final SelectBox<ToolbarSelection> terrainDrop = new SelectBox<ToolbarSelection>(skin);
-				 
-				 ToolbarSelection[] terrainBlob = {ToolbarSelection.FLOOR, ToolbarSelection.WALL};
-				 terrainDrop.setItems(terrainBlob);
-				 
-				 mainTable.add(terrainDrop).pad(PAD);
-				 
-				 terrainDrop.addListener(new ChangeListener(){
-
+			case PLAYER:
+				tr = new TextureRegionDrawable(new TextureRegion
+						(new Texture(Gdx.files.internal("EditorScreen/ToolbarButtons/player.png"))));
+				
+				ib = new ImageButton(tr);
+				mainTable.add(ib).size(40).pad(PAD);;
+				ib.addListener(new ClickListener(){
 					@Override
-					public void changed(ChangeEvent event, Actor actor) {
+			        public void clicked(InputEvent event, float x, float y) {
 						try {
-							related.update(terrainDrop.getSelected());
+							related.update(ToolbarSelection.PLAYER);
+							listDrop.setSelected(ToolbarSelection.MAP);
 						} catch (IOException e) {
-							// TODO Auto-generated catch block
 							e.printStackTrace();
 						}
-					}
-				 });
-				break;
-			case OBJECTS:
-				 final SelectBox<ToolbarSelection> objDrop = new SelectBox<ToolbarSelection>(skin);
 
-				 ToolbarSelection[] objBlob = {ToolbarSelection.PLAYER, ToolbarSelection.ENEMY, ToolbarSelection.ITEM};
-				 objDrop.setItems(objBlob);
+			        }
+				});
+				break;
+			case ENEMY:
+				tr = new TextureRegionDrawable(new TextureRegion
+						(new Texture(Gdx.files.internal("EditorScreen/ToolbarButtons/enemy.png"))));
+				
+				ib = new ImageButton(tr);
+				mainTable.add(ib).size(40).pad(PAD);;
+				ib.addListener(new ClickListener(){
+					@Override
+			        public void clicked(InputEvent event, float x, float y) {
+						try {
+							related.update(ToolbarSelection.ENEMY);
+							listDrop.setSelected(ToolbarSelection.MAP);
+						} catch (IOException e) {
+							e.printStackTrace();
+						}
+
+			        }
+				});
+				break;
+			case DROP:
+				 listDrop.setItems(terrainBlob);
+				 mainTable.add(listDrop).pad(PAD);
 				 
-				 mainTable.add(objDrop).pad(PAD);
-				 
-				 objDrop.addListener(new ChangeListener(){
+				 listDrop.addListener(new ChangeListener(){
 
 					@Override
 					public void changed(ChangeEvent event, Actor actor) {
 						try {
-							related.update(objDrop.getSelected());
+							
+							ToolbarSelection filler = listDrop.getSelected();
+							
+							if(filler != ToolbarSelection.MAP)
+								related.update(listDrop.getSelected());
 						} catch (IOException e) {
 							// TODO Auto-generated catch block
 							e.printStackTrace();
@@ -100,16 +121,17 @@ public class Toolbar extends Stage{
 				break;
 			case TOOLS:
 				
-				TextureRegionDrawable tr = new TextureRegionDrawable(new TextureRegion
+				tr = new TextureRegionDrawable(new TextureRegion
 						(new Texture(Gdx.files.internal("EditorScreen/ToolbarButtons/tools.png"))));
 				
-				ImageButton ib = new ImageButton(tr);
+				ib = new ImageButton(tr);
 				mainTable.add(ib).size(40).pad(PAD);;
 				ib.addListener(new ClickListener(){
 					@Override
 			        public void clicked(InputEvent event, float x, float y) {
 						try {
-							related.update(ToolbarSelection.MAP);
+							related.update(ToolbarSelection.TOOLS);
+							listDrop.setSelected(ToolbarSelection.MAP);
 						} catch (IOException e) {
 							e.printStackTrace();
 						}
@@ -119,12 +141,12 @@ public class Toolbar extends Stage{
 				break;
 				
 			case HOME:
-				TextureRegionDrawable trr = new TextureRegionDrawable(new TextureRegion
+				tr = new TextureRegionDrawable(new TextureRegion
 						(new Texture(Gdx.files.internal("EditorScreen/ToolbarButtons/home.png"))));
 				
-				ImageButton yb = new ImageButton(trr);
-				mainTable.add(yb).size(40).pad(PAD);
-				yb.addListener(new ClickListener(){
+				ib = new ImageButton(tr);
+				mainTable.add(ib).size(40).pad(PAD);
+				ib.addListener(new ClickListener(){
 					@Override
 			        public void clicked(InputEvent event, float x, float y) {
 						es.exit();
@@ -132,12 +154,12 @@ public class Toolbar extends Stage{
 				});
 				break;
 			case GROUP:
-				TextureRegionDrawable trrr = new TextureRegionDrawable(new TextureRegion
+				tr = new TextureRegionDrawable(new TextureRegion
 					(new Texture(Gdx.files.internal("EditorScreen/ToolbarButtons/group.png"))));
 			
-				ImageButton ybb = new ImageButton(trrr);
-				mainTable.add(ybb).size(40).pad(PAD);
-				ybb.addListener(new ClickListener(){
+				ib = new ImageButton(tr);
+				mainTable.add(ib).size(40).pad(PAD);
+				ib.addListener(new ClickListener(){
 					@Override
 					public void clicked(InputEvent event, float x, float y) {
 						System.out.println("Something should go here!");
@@ -154,13 +176,7 @@ public class Toolbar extends Stage{
 		super.addActor(new Image(new TextureRegion(new Texture(Gdx.files.internal("EditorScreen/tb_bg.jpg")))));
 		super.addActor(mainTable);
 	}
-	
-	private TextButton generateButton(String s) {
-		String newString = " " + s + " ";
-		TextButton button = new TextButton(newString, skin);
-		return button;
-	}
-		
+			
 	public void setDependence(Editor s) {
 		this.related = s;
 	}

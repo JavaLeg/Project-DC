@@ -331,7 +331,7 @@ public class Editor extends Stage {
 			newTable.row();
 			break;
 			
-		case MAP:
+		case TOOLS:
 			final TextField textField = new TextField("", skin);
 			textField.setMessageText("Save as...");
 			
