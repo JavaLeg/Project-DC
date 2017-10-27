@@ -67,10 +67,10 @@
 	S : Mode down
 	D : Move right
 
-	I : Attack up
-	J : Attack left
-	K : Attack down
-	L : Attack right
+	Arrow-up : Attack up
+	Arrow-left : Attack left
+	Arrow-down : Attack down
+	Arrow-right : Attack right
 
 	ESC : Quick exit
 	```
