@@ -22,9 +22,9 @@
   
   **Navigation**
 
-  [Navigation GUI](docs/main.png?raw=true)
-  [Options menu](docs/options.png?raw=true)
-  [Library menu](docs/library.png?raw=true)
+  ![Navigation GUI](docs/main.png?raw=true)
+  ![Options menu](docs/options.png?raw=true)
+  ![Library menu](docs/library.png?raw=true)
   
   - Main Menu for navigation  
   - Options menu for adjusting resolution  
