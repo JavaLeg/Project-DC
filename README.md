@@ -22,9 +22,9 @@
   
   **Navigation**
 
-  [Navigation GUI](docs/main.png)
-  [Options menu](docs/options.png)
-  [Library menu](docs/library.png)
+  [Navigation GUI](docs/main.png?raw=true)
+  [Options menu](docs/options.png?raw=true)
+  [Library menu](docs/library.png?raw=true)
   
   - Main Menu for navigation  
   - Options menu for adjusting resolution  
@@ -32,7 +32,7 @@
   
   **Editor**
 
-  [Editor GUI](docs/editor.png)
+  [Editor GUI](docs/editor.png?raw=true)
   
   - GUI interface consisting of an editor tab, toolbar, and preview grid  
   - Object placement logic for playable maps  
