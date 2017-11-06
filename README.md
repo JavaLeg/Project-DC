@@ -32,7 +32,7 @@
   
   **Editor**
 
-  [Editor GUI](docs/editor.png?raw=true)
+  ![Editor GUI](docs/editor.png?raw=true)
   
   - GUI interface consisting of an editor tab, toolbar, and preview grid  
   - Object placement logic for playable maps  
